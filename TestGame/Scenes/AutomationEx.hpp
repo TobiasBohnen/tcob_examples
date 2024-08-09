@@ -26,7 +26,7 @@ private:
     template <typename func1>
     void create_circle(asset_ptr<material> const& circleMat, point_f position, color color, func1 auto0)
     {
-        auto circle {_layer1.create_sprite()};
+        auto circle {_layer1.create_mesh<sprite>()};
         circle->Material = circleMat;
         circle->Bounds   = {position, {60.f, 60.f}};
         circle->Color    = color;
@@ -36,6 +36,6 @@ private:
         _tweens.push_back(auto0);
     }
 
-    sprite_batch                             _layer1;
+    mesh_batch                               _layer1;
     std::vector<std::shared_ptr<tween_base>> _tweens;
 };

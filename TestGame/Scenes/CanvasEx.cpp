@@ -59,8 +59,8 @@ void CanvasEx::on_key_down(keyboard::event& ev)
         get_game().pop_current_scene();
         break;
     case scan_code::X: {
-        auto sprite {_layer1.get_sprite_at(0)};
-        sprite->Bounds = sprite->Bounds->with_size({400, 200});
+        auto spr {std::static_pointer_cast<sprite>(_layer1.get_mesh_at(0))};
+        spr->Bounds = spr->Bounds->with_size({400, 200});
     } break;
     default:
         break;
@@ -86,7 +86,8 @@ void CanvasEx::prepare_canvas()
     BoxGradient     = _canvas.create_box_gradient({550, 80, 100, 100}, 8, 75, colorGradient);
     RadialGradient0 = _canvas.create_radial_gradient(rect_f {450, 0, 250, 250}.get_center(), 0, 125, colorGradient);
     RadialGradient1 = _canvas.create_radial_gradient(rect_f {550, 480, 100, 100}.get_center(), 0, 125, {0.5f, 1.f}, colorGradient);
-    auto sprite1 {_layer1.create_sprite()};
+
+    auto sprite1 {_layer1.create_mesh<sprite>()};
     sprite1->Material = _material;
     sprite1->Bounds   = {{0.f, 0.f}, {1000.f, 800.f}};
 }

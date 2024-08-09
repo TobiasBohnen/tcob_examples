@@ -89,12 +89,12 @@ private:
 
     box2d::world _world {};
 
-    sprite_batch _layer1;
-    bool         _forceOn {false};
-    bool         _colorizeContact {false};
+    mesh_batch _layer1;
+    bool       _forceOn {false};
+    bool       _colorizeContact {false};
 
     canvas                             _canvas;
-    sprite_batch                       _layer2;
+    mesh_batch                         _layer2;
     assets::manual_asset_ptr<material> _material {};
 };
 
@@ -139,5 +139,5 @@ private:
     chipmunk2d::space _space {};
     bool              _forceOn {false};
     bool              _colorizeContact {false};
-    sprite_batch      _layer1;
+    mesh_batch        _layer1;
 };

@@ -48,8 +48,8 @@ void MiscScene::on_start()
 
     get_root_node()->attach_entity(_htmlDoc);
 
-    rng                                  rnd;
-    std::vector<std::shared_ptr<sprite>> sprites;
+    rng                                rnd;
+    std::vector<std::shared_ptr<mesh>> sprites;
     for (i32 i {0}; i < 1000; i++) {
         f32 x {rnd(0.0f, 6000.f)};
         f32 y {rnd(0.0f, 6000.f)};
@@ -60,7 +60,7 @@ void MiscScene::on_start()
         sprite0->Bounds          = {{x, y}, {150, 150}};
         sprites.push_back(sprite0);
     }
-    _layer1 = std::make_shared<static_sprite_batch>(sprites);
+    _layer1 = std::make_shared<static_mesh_batch>(sprites);
 
     // _particleSystem0 = *resGrp->get_asset_ptr<particle_system>("system1");
     _particleSystem0->Material = resGrp->get<material>("particleMat");
@@ -145,11 +145,11 @@ void MiscScene::on_start()
         }
     });
 
-    _aniTexSprite           = _layer0.create_sprite();
+    _aniTexSprite           = _layer0.create_mesh<sprite>();
     _aniTexSprite->Bounds   = {{450, 0}, {320, 240}};
     _aniTexSprite->Material = resGrp->get<material>("aniSpriteMat");
 
-    auto sprite1      = _layer0.create_sprite();
+    auto sprite1      = _layer0.create_mesh<sprite>();
     sprite1->Bounds   = {point_f::Zero, {320, 240}};
     sprite1->Material = resGrp->get<material>("uniforms-buffer-test");
     _uniBuf.bind_base(1);

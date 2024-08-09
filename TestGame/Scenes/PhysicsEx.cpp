@@ -61,7 +61,7 @@ void Box2DEx::on_start()
 
     create_edge({0, 45}, {70, 45});
 
-    auto sprite1 {_layer2.create_sprite()};
+    auto sprite1 {_layer2.create_mesh<sprite>()};
     sprite1->Material = _material;
     sprite1->Bounds   = {{0.f, 0.f}, {800.f, 600.f}};
 }
@@ -189,7 +189,7 @@ void Box2DEx::create_box(point_f pos)
 
     obj.Body->create_fixture(shape, fixtureDef);
 
-    obj.Sprite           = _layer1.create_sprite();
+    obj.Sprite           = _layer1.create_mesh<sprite>();
     obj.Sprite->Material = _boxMat;
     obj.Sprite->Bounds   = rect * 12;
     obj.Sprite->Color    = colors::Red;
@@ -213,7 +213,7 @@ void Box2DEx::create_circle(point_f pos)
 
     obj.Body->create_fixture(shape, fixtureDef);
 
-    obj.Sprite           = _layer1.create_sprite();
+    obj.Sprite           = _layer1.create_mesh<sprite>();
     obj.Sprite->Material = _circleMat;
     obj.Sprite->Bounds   = rect * 12;
     obj.Sprite->Color    = colors::Yellow;
@@ -228,10 +228,10 @@ void Box2DEx::create_obstacle(rect_f const& rect)
 
     _obstacles->create_fixture(shape, {});
 
-    auto sprite {_layer1.create_sprite()};
-    sprite->Material = _boxMat;
-    sprite->Bounds   = rect * 12;
-    sprite->Color    = colors::Green;
+    auto spr {_layer1.create_mesh<sprite>()};
+    spr->Material = _boxMat;
+    spr->Bounds   = rect * 12;
+    spr->Color    = colors::Green;
 }
 
 void Box2DEx::create_edge(point_f pos0, point_f pos1)
@@ -239,10 +239,10 @@ void Box2DEx::create_edge(point_f pos0, point_f pos1)
     box2d::edge_shape shape;
     shape.set_two_sided(pos0, pos1);
 
-    auto sprite {_layer1.create_sprite()};
-    sprite->Material = _boxMat;
-    sprite->Bounds   = rect_f::FromLTRB(pos0.X, pos0.Y, pos1.X, pos1.Y + 5) * 12;
-    sprite->Color    = colors::Blue;
+    auto spr {_layer1.create_mesh<sprite>()};
+    spr->Material = _boxMat;
+    spr->Bounds   = rect_f::FromLTRB(pos0.X, pos0.Y, pos1.X, pos1.Y + 5) * 12;
+    spr->Color    = colors::Blue;
 
     _obstacles->create_fixture(shape, {});
 }
@@ -434,7 +434,7 @@ void Chipmunk2DEx::create_box(point_f pos)
         chipmunk2d::box_shape_settings {rect.get_size(), 0});
     shape->Friction = 0.3f;
 
-    obj.Sprite           = _layer1.create_sprite();
+    obj.Sprite           = _layer1.create_mesh<sprite>();
     obj.Sprite->Material = _boxMat;
     obj.Sprite->Bounds   = rect * 12;
     obj.Sprite->Color    = colors::Red;
@@ -456,7 +456,7 @@ void Chipmunk2DEx::create_circle(point_f pos)
         chipmunk2d::circle_shape_settings {rect.get_size().Width / 2, point_f::Zero});
     shape->Friction = 0.3f;
 
-    obj.Sprite           = _layer1.create_sprite();
+    obj.Sprite           = _layer1.create_mesh<sprite>();
     obj.Sprite->Material = _circleMat;
     obj.Sprite->Bounds   = rect * 12;
     obj.Sprite->Color    = colors::Yellow;
@@ -471,10 +471,10 @@ void Chipmunk2DEx::create_obstacle(rect_f const& rect)
 
     shape->Friction = 1;
 
-    auto sprite {_layer1.create_sprite()};
-    sprite->Material = _boxMat;
-    sprite->Bounds   = rect * 12;
-    sprite->Color    = colors::Green;
+    auto spr {_layer1.create_mesh<sprite>()};
+    spr->Material = _boxMat;
+    spr->Bounds   = rect * 12;
+    spr->Color    = colors::Green;
 }
 
 void Chipmunk2DEx::create_edge(point_f pos0, point_f pos1)
@@ -485,10 +485,10 @@ void Chipmunk2DEx::create_edge(point_f pos0, point_f pos1)
         chipmunk2d::box_shape_settings2 {rect, 0});
     shape->Friction = 1;
 
-    auto sprite {_layer1.create_sprite()};
-    sprite->Material = _boxMat;
-    sprite->Bounds   = rect * 12;
-    sprite->Color    = colors::Blue;
+    auto spr {_layer1.create_mesh<sprite>()};
+    spr->Material = _boxMat;
+    spr->Bounds   = rect * 12;
+    spr->Color    = colors::Blue;
 }
 
 void Chipmunk2DEx::on_begin_contact(chipmunk2d::contact_event const& ev)

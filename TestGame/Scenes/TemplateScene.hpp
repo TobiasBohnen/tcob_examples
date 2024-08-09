@@ -23,5 +23,5 @@ protected:
     void on_mouse_motion(mouse::motion_event& ev) override;
 
 private:
-    sprite_batch layer1;
+    mesh_batch layer1;
 };

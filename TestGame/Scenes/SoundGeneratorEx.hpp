@@ -23,8 +23,8 @@ protected:
     void on_mouse_motion(mouse::motion_event& ev) override;
 
 private:
-    void         draw_wave();
-    sprite_batch _layer1;
+    void       draw_wave();
+    mesh_batch _layer1;
 
     sound_generator                    _gen1;
     sound_wave                         _wave1;

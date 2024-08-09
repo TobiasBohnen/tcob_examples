@@ -35,7 +35,7 @@ private:
 
     canvas _canvas;
 
-    sprite_batch                       _layer1;
+    mesh_batch                         _layer1;
     assets::manual_asset_ptr<material> _material {};
     tweening::triange_wave_tween<f32>  _ninePatchTween;
 };
