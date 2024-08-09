@@ -46,7 +46,7 @@ void MiscScene::on_start()
 
     _htmlDoc->load("res/test.html");
 
-    get_root_node()->attach_entity(_htmlDoc);
+    get_root_node()->Entity = _htmlDoc;
 
     rng                                rnd;
     std::vector<std::shared_ptr<mesh>> sprites;
@@ -222,7 +222,7 @@ void MiscScene::on_start()
     auto q0 {get_root_node()->create_child()};
     auto ent {std::make_shared<simple_entity>()};
     ent->Drawable = _tileMap;
-    q0->attach_entity(ent);
+    q0->Entity    = ent;
 
     //   auto renderQ1 {std::make_shared<render_queue>(_rq1Cam)};
     // _rq1Cam->set_size({400, 400});

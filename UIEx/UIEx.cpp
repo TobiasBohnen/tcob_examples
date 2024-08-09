@@ -34,8 +34,8 @@ void UIEx::on_start()
     // _form0->Bounds = rect_f {{300, 450}, size_f {get_window().Size() * 2}};
     //_form0->Scale  = {0.5f, 0.5f};
 
-    _switch = false;
-    get_root_node()->attach_entity(_form0);
+    _switch                 = false;
+    get_root_node()->Entity = _form0;
 }
 
 void UIEx::on_draw_to(render_target& target)
