@@ -69,7 +69,7 @@ protected:
 
 private:
     struct Box2DExObject {
-        std::shared_ptr<sprite>      Sprite;
+        std::shared_ptr<rect_shape>  Sprite;
         std::shared_ptr<box2d::body> Body;
     };
 
@@ -89,12 +89,12 @@ private:
 
     box2d::world _world {};
 
-    mesh_batch _layer1;
-    bool       _forceOn {false};
-    bool       _colorizeContact {false};
+    shape_batch _layer1;
+    bool        _forceOn {false};
+    bool        _colorizeContact {false};
 
     canvas                             _canvas;
-    mesh_batch                         _layer2;
+    shape_batch                        _layer2;
     assets::manual_asset_ptr<material> _material {};
 };
 
@@ -118,7 +118,7 @@ protected:
 
 private:
     struct Chipmunk2DExObject {
-        std::shared_ptr<sprite>           Sprite;
+        std::shared_ptr<rect_shape>       Sprite;
         std::shared_ptr<chipmunk2d::body> Body;
     };
 
@@ -139,5 +139,5 @@ private:
     chipmunk2d::space _space {};
     bool              _forceOn {false};
     bool              _colorizeContact {false};
-    mesh_batch        _layer1;
+    shape_batch       _layer1;
 };

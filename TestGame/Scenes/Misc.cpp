@@ -48,19 +48,31 @@ void MiscScene::on_start()
 
     get_root_node()->Entity = _htmlDoc;
 
-    rng                                rnd;
-    std::vector<std::shared_ptr<mesh>> sprites;
-    for (i32 i {0}; i < 1000; i++) {
-        f32 x {rnd(0.0f, 6000.f)};
-        f32 y {rnd(0.0f, 6000.f)};
+    rng                                 rnd;
+    std::vector<std::shared_ptr<shape>> sprites;
+    for (i32 i {0}; i < 500; i++) {
+        f32 x {rnd(0.0f, 1200.f)};
+        f32 y {rnd(0.0f, 1200.f)};
+        f32 r {rnd(0.0f, 20.f)};
+        i32 seg {rnd(4, 9)};
 
-        auto sprite0 {std::make_shared<sprite>()};
-        sprite0->Material        = resGrp->get<material>("spriteMat");
-        sprite0->Material->Color = colors::Red;
-        sprite0->Bounds          = {{x, y}, {150, 150}};
-        sprites.push_back(sprite0);
+        if (i % 2 == 0) {
+            auto shape0 {std::make_shared<circle_shape>()};
+            shape0->Material = resGrp->get<material>("emptyMat");
+            shape0->Color    = colors::Red;
+            shape0->Center   = {x, y};
+            shape0->Radius   = r;
+            shape0->Segments = seg;
+            sprites.push_back(shape0);
+        } else {
+            auto shape0 {std::make_shared<rect_shape>()};
+            shape0->Material = resGrp->get<material>("emptyMat");
+            shape0->Color    = colors::Blue;
+            shape0->Bounds   = {x, y, r, r};
+            sprites.push_back(shape0);
+        }
     }
-    _layer1 = std::make_shared<static_mesh_batch>(sprites);
+    _layer1 = std::make_shared<static_shape_batch>(sprites);
 
     // _particleSystem0 = *resGrp->get_asset_ptr<particle_system>("system1");
     _particleSystem0->Material = resGrp->get<material>("particleMat");
@@ -145,11 +157,11 @@ void MiscScene::on_start()
         }
     });
 
-    _aniTexSprite           = _layer0.create_mesh<sprite>();
+    _aniTexSprite           = _layer0.create_shape<rect_shape>();
     _aniTexSprite->Bounds   = {{450, 0}, {320, 240}};
     _aniTexSprite->Material = resGrp->get<material>("aniSpriteMat");
 
-    auto sprite1      = _layer0.create_mesh<sprite>();
+    auto sprite1      = _layer0.create_shape<rect_shape>();
     sprite1->Bounds   = {point_f::Zero, {320, 240}};
     sprite1->Material = resGrp->get<material>("uniforms-buffer-test");
     _uniBuf.bind_base(1);
@@ -246,9 +258,9 @@ void MiscScene::on_draw_to(render_target& target)
     _layer0.draw_to(target);    _poly.render_to_target(target);
       */
     _layer1->draw_to(target);
-    _htmlDoc->draw_to(target);
-    _pointCloud->draw_to(target);
-    _particleSystem0->draw_to(target);
+    //   _htmlDoc->draw_to(target);
+    // _pointCloud->draw_to(target);
+    // _particleSystem0->draw_to(target);
 }
 
 void MiscScene::on_update(milliseconds deltaTime)

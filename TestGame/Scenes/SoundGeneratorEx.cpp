@@ -19,7 +19,7 @@ rect_f const crect {10, 10, 1000, 500};
 
 void SoundGeneratorEx::on_start()
 {
-    auto sprite1 {_layer1.create_mesh<sprite>()};
+    auto sprite1 {_layer1.create_shape<rect_shape>()};
     sprite1->Material = _material;
     sprite1->Bounds   = {{0, 0}, crect.get_size()};
 }

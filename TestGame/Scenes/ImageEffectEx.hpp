@@ -26,7 +26,7 @@ protected:
     void on_mouse_motion(mouse::motion_event& ev) override;
 
 private:
-    mesh_batch                 _layer1;
+    shape_batch                _layer1;
     manual_asset_ptr<material> _mat0 {};
     manual_asset_ptr<texture>  _tex0 {};
 };

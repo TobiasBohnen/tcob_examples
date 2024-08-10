@@ -67,16 +67,16 @@ private:
         }
     }
 
-    mesh_batch _layer0;
+    shape_batch _layer0;
 
     std::shared_ptr<particle_system> _particleSystem0 {std::make_shared<particle_system>()};
     assets::asset_ptr<font>          _font;
 
     std::shared_ptr<text> _text;
 
-    std::shared_ptr<static_mesh_batch> _layer1;
+    std::shared_ptr<static_shape_batch> _layer1;
 
-    std::shared_ptr<sprite> _aniTexSprite;
+    std::shared_ptr<rect_shape> _aniTexSprite;
 
     polygon_renderer _poly {buffer_usage_hint::StaticDraw};
 
