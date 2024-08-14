@@ -26,7 +26,7 @@ private:
     template <typename func1>
     void create_circle(asset_ptr<material> const& circleMat, point_f position, color color, func1 auto0)
     {
-        auto circle {_layer1.create_shape<rect_shape>()};
+        auto circle {_layer1.create_shape<gfx::rect_shape>()};
         circle->Material = circleMat;
         circle->Bounds   = {position, {60.f, 60.f}};
         circle->Color    = color;

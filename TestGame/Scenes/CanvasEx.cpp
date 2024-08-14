@@ -59,7 +59,7 @@ void CanvasEx::on_key_down(keyboard::event& ev)
         get_game().pop_current_scene();
         break;
     case scan_code::X: {
-        auto spr {std::static_pointer_cast<rect_shape>(_layer1.get_shape_at(0))};
+        auto spr {std::static_pointer_cast<gfx::rect_shape>(_layer1.get_shape_at(0))};
         spr->Bounds = spr->Bounds->with_size({400, 200});
     } break;
     default:
@@ -87,7 +87,7 @@ void CanvasEx::prepare_canvas()
     RadialGradient0 = _canvas.create_radial_gradient(rect_f {450, 0, 250, 250}.get_center(), 0, 125, colorGradient);
     RadialGradient1 = _canvas.create_radial_gradient(rect_f {550, 480, 100, 100}.get_center(), 0, 125, {0.5f, 1.f}, colorGradient);
 
-    auto sprite1 {_layer1.create_shape<rect_shape>()};
+    auto sprite1 {_layer1.create_shape<gfx::rect_shape>()};
     sprite1->Material = _material;
     sprite1->Bounds   = {{0.f, 0.f}, {1000.f, 800.f}};
 }

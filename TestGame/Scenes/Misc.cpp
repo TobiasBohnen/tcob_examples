@@ -48,8 +48,8 @@ void MiscScene::on_start()
 
     get_root_node()->Entity = _htmlDoc;
 
-    rng                                 rnd;
-    std::vector<std::shared_ptr<shape>> sprites;
+    rng                                      rnd;
+    std::vector<std::shared_ptr<gfx::shape>> sprites;
     for (i32 i {0}; i < 500; i++) {
         f32 x {rnd(0.0f, 1200.f)};
         f32 y {rnd(0.0f, 1200.f)};
@@ -57,7 +57,7 @@ void MiscScene::on_start()
         i32 seg {rnd(4, 9)};
 
         if (i % 2 == 0) {
-            auto shape0 {std::make_shared<circle_shape>()};
+            auto shape0 {std::make_shared<gfx::circle_shape>()};
             shape0->Material = resGrp->get<material>("emptyMat");
             shape0->Color    = colors::Red;
             shape0->Center   = {x, y};
@@ -65,7 +65,7 @@ void MiscScene::on_start()
             shape0->Segments = seg;
             sprites.push_back(shape0);
         } else {
-            auto shape0 {std::make_shared<rect_shape>()};
+            auto shape0 {std::make_shared<gfx::rect_shape>()};
             shape0->Material = resGrp->get<material>("emptyMat");
             shape0->Color    = colors::Blue;
             shape0->Bounds   = {x, y, r, r};
@@ -157,11 +157,11 @@ void MiscScene::on_start()
         }
     });
 
-    _aniTexSprite           = _layer0.create_shape<rect_shape>();
+    _aniTexSprite           = _layer0.create_shape<gfx::rect_shape>();
     _aniTexSprite->Bounds   = {{450, 0}, {320, 240}};
     _aniTexSprite->Material = resGrp->get<material>("aniSpriteMat");
 
-    auto sprite1      = _layer0.create_shape<rect_shape>();
+    auto sprite1      = _layer0.create_shape<gfx::rect_shape>();
     sprite1->Bounds   = {point_f::Zero, {320, 240}};
     sprite1->Material = resGrp->get<material>("uniforms-buffer-test");
     _uniBuf.bind_base(1);

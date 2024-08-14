@@ -76,7 +76,7 @@ private:
 
     std::shared_ptr<static_shape_batch> _layer1;
 
-    std::shared_ptr<rect_shape> _aniTexSprite;
+    std::shared_ptr<gfx::rect_shape> _aniTexSprite;
 
     polygon_renderer _poly {buffer_usage_hint::StaticDraw};
 
