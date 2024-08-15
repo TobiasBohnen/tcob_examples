@@ -105,7 +105,7 @@ void PhysicsEx::on_key_down(keyboard::event& ev)
     case scan_code::J: {
         if (_objects.size() >= 2) {
 
-            distance_joint_settings def;
+            distance_joint::settings def;
             def.BodyA        = _objects[_objects.size() - 2].Body;
             def.BodyB        = _objects[_objects.size() - 1].Body;
             def.LocalAnchorA = def.BodyA->get_local_center();
@@ -141,7 +141,7 @@ void PhysicsEx::create_box(point_f pos)
     rect_f        rect {pos, {3, 3}};
     obj.Body = _world.create_body({.Center = rect.get_center()}, {.Type = body_type::Dynamic});
 
-    rect_shape_settings shape;
+    physics::rect_shape::settings shape;
     shape.Friction = 0.3f;
     shape.Density  = 0.5f;
     shape.Extents  = {point_f::Zero, rect.get_size()};
@@ -162,7 +162,7 @@ void PhysicsEx::create_circle(point_f pos)
     rect_f        rect {pos, {3, 3}};
     obj.Body = _world.create_body({.Center = rect.get_center()}, {.Type = body_type::Dynamic});
 
-    circle_shape_settings shape;
+    physics::circle_shape::settings shape;
     shape.Friction = 0.3f;
     shape.Density  = 0.75f;
     shape.Radius   = rect.get_size().Width / 2;
@@ -179,7 +179,7 @@ void PhysicsEx::create_circle(point_f pos)
 
 void PhysicsEx::create_obstacle(rect_f const& rect)
 {
-    rect_shape_settings shape;
+    physics::rect_shape::settings shape;
     shape.Extents = {rect.get_center(), rect.get_size()};
 
     _obstacles->create_shape<physics::rect_shape>(shape);
@@ -192,7 +192,7 @@ void PhysicsEx::create_obstacle(rect_f const& rect)
 
 void PhysicsEx::create_edge(point_f pos0, point_f pos1)
 {
-    segment_shape_settings shape;
+    segment_shape::settings shape;
     shape.Point0 = pos0;
     shape.Point1 = pos1;
 
