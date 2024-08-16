@@ -64,6 +64,16 @@ void PhysicsEx::on_fixed_update(milliseconds deltaTime)
     get_window().Title = "TestGame " + stream.str();
 
     _world.update(deltaTime);
+
+    auto const contacts {_world.get_contact_events()};
+    if (!contacts.BeginTouch.empty() || !contacts.EndTouch.empty() || !contacts.Hit.empty()) {
+        std::cout << std::format("begin:{};end{},hit{}\n", contacts.BeginTouch.size(), contacts.EndTouch.size(), contacts.Hit.size());
+    }
+    auto const bodies {_world.get_body_events()};
+    if (!bodies.Move.empty()) {
+        std::cout << std::format("move:{}\n", bodies.Move.size());
+    }
+
     if (_forceOn) {
         for (auto& obj : _objects) {
             obj.Body->apply_force_to_center({10.f, -300.f});
@@ -132,6 +142,8 @@ void PhysicsEx::on_mouse_button_up(mouse::button_event& ev)
         create_box({pos});
     } else if (ev.Button == mouse::button::Right) {
         create_circle({pos});
+    } else {
+        _world.explode(pos, 120, 60);
     }
 }
 
