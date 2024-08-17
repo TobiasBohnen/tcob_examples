@@ -112,8 +112,8 @@ void PhysicsEx::on_key_down(keyboard::event& ev)
         if (_objects.size() >= 2) {
 
             distance_joint::settings def;
-            def.BodyA        = _objects[_objects.size() - 2].Body;
-            def.BodyB        = _objects[_objects.size() - 1].Body;
+            def.BodyA        = _objects[_objects.size() - 2].Body.get();
+            def.BodyB        = _objects[_objects.size() - 1].Body.get();
             def.LocalAnchorA = def.BodyA->get_local_center();
             def.LocalAnchorB = def.BodyB->get_local_center();
             def.Length       = def.BodyA->get_center().distance_to(def.BodyB->get_center());
