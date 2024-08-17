@@ -19,9 +19,6 @@ PhysicsEx::~PhysicsEx() = default;
 
 void PhysicsEx::on_start()
 {
-    // _world.BeginContact.connect<&PhysicsEx::on_begin_contact>(this);
-    //  _world.EndContact.connect<&PhysicsEx::on_end_contact>(this);
-
     auto* resGrp {get_game().get_library().get_group("res")};
 
     _boxMat    = resGrp->get<material>("mat-solid");
@@ -44,9 +41,17 @@ void PhysicsEx::on_draw_to(render_target& target)
 
 void PhysicsEx::on_update(milliseconds deltaTime)
 {
-    for (auto& box : _objects) {
-        box.Sprite->Center   = box.Body->Transform().Center * 12;
-        box.Sprite->Rotation = box.Body->Transform().Angle;
+    for (auto it {_objects.begin()}; it < _objects.end(); ++it) {
+        if (it->Sprite->Center != it->Body->Transform().Center * 12) {
+            it->Sprite->Center   = it->Body->Transform().Center * 12;
+            it->Sprite->Rotation = it->Body->Transform().Angle;
+            std::cout << it->Sprite->Center() << ":" << it->Sprite->Rotation() << "\n";
+            if (it->Sprite->Center->Y > 1000) {
+                _layer1.remove_shape(*it->Sprite);
+                _world.remove_body(*it->Body);
+                it = _objects.erase(it);
+            }
+        }
     }
 
     _layer1.update(deltaTime);
@@ -64,15 +69,6 @@ void PhysicsEx::on_fixed_update(milliseconds deltaTime)
     get_window().Title = "TestGame " + stream.str();
 
     _world.update(deltaTime);
-
-    auto const contacts {_world.get_contact_events()};
-    if (!contacts.BeginTouch.empty() || !contacts.EndTouch.empty() || !contacts.Hit.empty()) {
-        std::cout << std::format("begin:{};end{},hit{}\n", contacts.BeginTouch.size(), contacts.EndTouch.size(), contacts.Hit.size());
-    }
-    auto const bodies {_world.get_body_events()};
-    if (!bodies.Move.empty()) {
-        std::cout << std::format("move:{}\n", bodies.Move.size());
-    }
 
     if (_forceOn) {
         for (auto& obj : _objects) {

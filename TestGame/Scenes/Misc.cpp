@@ -55,20 +55,23 @@ void MiscScene::on_start()
         f32 y {rnd(0.0f, 1200.f)};
         f32 r {rnd(0.0f, 20.f)};
         i32 seg {rnd(4, 9)};
+        i32 rot {rnd(0, 360)};
 
         if (i % 2 == 0) {
             auto shape0 {std::make_shared<gfx::circle_shape>()};
-            shape0->Material = resGrp->get<material>("emptyMat");
-            shape0->Color    = colors::Red;
+            shape0->Material = resGrp->get<material>("circleShape");
+            //  shape0->Color    = colors::Red;
             shape0->Center   = {x, y};
             shape0->Radius   = r;
             shape0->Segments = seg;
+            shape0->Rotation = rot;
             sprites.push_back(shape0);
         } else {
             auto shape0 {std::make_shared<gfx::rect_shape>()};
-            shape0->Material = resGrp->get<material>("emptyMat");
-            shape0->Color    = colors::Blue;
+            shape0->Material = resGrp->get<material>("circleShape");
+            //  shape0->Color    = colors::Blue;
             shape0->Bounds   = {x, y, r, r};
+            shape0->Rotation = rot;
             sprites.push_back(shape0);
         }
     }
