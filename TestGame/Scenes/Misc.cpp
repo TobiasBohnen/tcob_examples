@@ -21,9 +21,6 @@ using namespace tcob::literals;
 MiscScene::MiscScene(game& game)
     : scene(game)
 {
-    game.DropFile.connect([](path const& file) {
-        std::cout << file << "\n";
-    });
 }
 
 MiscScene::~MiscScene() = default;
