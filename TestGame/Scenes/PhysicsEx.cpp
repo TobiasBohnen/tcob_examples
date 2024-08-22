@@ -5,7 +5,6 @@
 
 #include "PhysicsEx.hpp"
 #include <iomanip>
-#include <iostream>
 
 ////////////////////////////////////////////////////////////
 
@@ -45,7 +44,7 @@ void PhysicsEx::on_update(milliseconds deltaTime)
         if (it->Sprite->Center != it->Body->Transform().Center * 12) {
             it->Sprite->Center   = it->Body->Transform().Center * 12;
             it->Sprite->Rotation = it->Body->Transform().Angle;
-            std::cout << it->Sprite->Center() << ":" << it->Sprite->Rotation() << "\n";
+
             if (it->Sprite->Center->Y > 1000) {
                 _layer1.remove_shape(*it->Sprite);
                 _world.remove_body(*it->Body);
