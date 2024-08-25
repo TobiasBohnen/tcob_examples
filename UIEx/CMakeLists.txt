@@ -13,6 +13,10 @@ set_target_properties(UIEx PROPERTIES
     CXX_STANDARD_REQUIRED TRUE
 )
 
+target_compile_options(UIEx PRIVATE
+    $<$<CXX_COMPILER_ID:Clang>: -fexperimental-library>
+)
+
 if(NOT TCOB_BUILD_SHARED)
     target_link_libraries(UIEx PRIVATE tcob_static)
 else()
