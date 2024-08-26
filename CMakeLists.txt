@@ -4,4 +4,8 @@ if(TCOB_ENABLE_ADDON_PHYSICS_BOX2D
     AND TCOB_ENABLE_ADDON_GFX_LITEHTML)
     add_subdirectory(TestGame)
     add_subdirectory(UIEx)
+
+    if(EMSCRIPTEN)
+        add_subdirectory(EmscriptenTest)
+    endif()
 endif()
