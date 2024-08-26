@@ -13,9 +13,11 @@ set_target_properties(UIEx PROPERTIES
     CXX_STANDARD_REQUIRED TRUE
 )
 
-target_compile_options(UIEx PRIVATE
-    $<$<CXX_COMPILER_ID:Clang>: -fexperimental-library>
-)
+if(EMSCRIPTEN)
+    target_compile_options(UIEx PRIVATE -fexperimental-library -pthread)
+    configure_file(uiex.zip ${CMAKE_BINARY_DIR}/uiex.zip COPYONLY)
+    target_link_options(UIEx PRIVATE -sFULL_ES3 --embed-file uiex.zip)
+endif()
 
 if(NOT TCOB_BUILD_SHARED)
     target_link_libraries(UIEx PRIVATE tcob_static)

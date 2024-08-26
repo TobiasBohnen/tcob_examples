@@ -80,7 +80,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     auto gridLayout {gridPanel->create_layout<grid_layout>()};
     auto createGridWidget {
         [&](rect_i loc, std::string const& name) {
-            auto b {gridLayout->create_widget<button>(loc, "gridB" + name)};
+            auto b {gridLayout->create_widget<button>(loc, "gridB" + name, true)};
             b->Label   = name;
             b->Tooltip = tooltip0;
         }};

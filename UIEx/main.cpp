@@ -6,12 +6,31 @@
 #include "UIEx.hpp"
 
 #include <tcob/tcob.hpp>
+#if defined(__EMSCRIPTEN__)
+auto main(void) -> int
+{
+    tcob::data::config::object config;
 
-auto main(int argc, char* argv[]) -> int
+    tcob::data::video_config video;
+    video.FrameLimit           = 60;
+    video.FullScreen           = false;
+    video.UseDesktopResolution = false;
+    video.VSync                = false;
+    video.Resolution           = tcob::size_i {800, 600};
+    video.RenderSystem         = "OPENGLES30";
+    config["video"]            = video;
+
+    tcob::game game {{.Path           = ".",
+                      .Name           = "UIEx",
+                      .LogFile        = "stdout",
+                      .ConfigDefaults = config}};
+#else
+auto main(int /* argc */, char* argv[]) -> int
 {
     tcob::game game {{.Path    = argv[0],
                       .Name    = "UIEx",
                       .LogFile = "stdout"}};
+#endif
 
     auto& resMgr {game.get_library()};
     auto& resGrp {resMgr.create_or_get_group("ui")};
