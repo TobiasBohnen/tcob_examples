@@ -16,7 +16,7 @@ set_target_properties(UIEx PROPERTIES
 if(EMSCRIPTEN)
     target_compile_options(UIEx PRIVATE -fexperimental-library -pthread)
     configure_file(uiex.zip ${CMAKE_BINARY_DIR}/uiex.zip COPYONLY)
-    target_link_options(UIEx PRIVATE -sFULL_ES3 --embed-file uiex.zip)
+    target_link_options(UIEx PRIVATE -sFULL_ES3 -sASSERTIONS -sPTHREAD_POOL_SIZE=8 -sASYNCIFY -pthread --embed-file uiex.zip)
 endif()
 
 if(NOT TCOB_BUILD_SHARED)

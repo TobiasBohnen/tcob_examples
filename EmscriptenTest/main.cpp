@@ -8,11 +8,18 @@
 
 using namespace tcob;
 
-class my_scene : public tcob::scene {
+class my_scene : public scene {
 public:
-    my_scene(tcob::game& game)
-        : tcob::scene {game}
+    my_scene(game& game)
+        : scene {game}
     {
+        auto& resMgr {game.get_library()};
+        auto& resGrp {resMgr.create_or_get_group("res")};
+        resGrp.mount("./emtest.zip");
+        resMgr.load_all_groups();
+        _music0 = resGrp.get<audio::music>("test");
+        _music0->play();
+
         rng                                      rnd;
         std::vector<std::shared_ptr<gfx::shape>> sprites;
         for (i32 i {0}; i < 500; i++) {
@@ -44,12 +51,12 @@ public:
         logger::Info("ok");
     }
 
-    void on_draw_to(tcob::gfx::render_target& target) override
+    void on_draw_to(gfx::render_target& target) override
     {
         _layer1->draw_to(target);
     }
 
-    void on_update(tcob::milliseconds deltaTime) override
+    void on_update(milliseconds deltaTime) override
     {
         _layer1->update(deltaTime);
     }
@@ -57,15 +64,28 @@ public:
 private:
     std::shared_ptr<gfx::static_shape_batch> _layer1;
     assets::manual_asset_ptr<gfx::material>  _mat;
+    assets::asset_ptr<audio::music>          _music0;
 };
 
 auto main() -> int
 {
-    tcob::game game {{.Path    = ".",
-                      .Name    = "Empty",
-                      .LogFile = "stdout"}};
+    data::config::object config;
 
-    emscripten_console_log("push");
+    data::video_config video;
+    video.FrameLimit           = 60;
+    video.FullScreen           = false;
+    video.UseDesktopResolution = false;
+    video.VSync                = false;
+    video.Resolution           = size_i {800, 600};
+    video.RenderSystem         = "OPENGLES30";
+    config["video"]            = video;
+
+    game game {{.Path           = ".",
+                .Name           = "EMEX",
+                .LogFile        = "stdout",
+                .ConfigDefaults = config,
+                .WorkerThreads  = 0}};
+
     game.push_scene<my_scene>();
     game.start();
     return 0;

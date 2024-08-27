@@ -10,7 +10,8 @@ set_target_properties(EmscriptenTest PROPERTIES
 )
 
 target_compile_options(EmscriptenTest PRIVATE -fexperimental-library -pthread)
-target_link_options(EmscriptenTest PRIVATE -sFULL_ES3)
+configure_file(emtest.zip ${CMAKE_BINARY_DIR}/emtest.zip COPYONLY)
+target_link_options(EmscriptenTest PRIVATE -sFULL_ES3 -pthread --embed-file emtest.zip)
 
 if(NOT TCOB_BUILD_SHARED)
     target_link_libraries(EmscriptenTest PRIVATE tcob_static)

@@ -12,7 +12,7 @@ auto main(void) -> int
     tcob::data::config::object config;
 
     tcob::data::video_config video;
-    video.FrameLimit           = 60;
+    video.FrameLimit           = 100;
     video.FullScreen           = false;
     video.UseDesktopResolution = false;
     video.VSync                = false;
@@ -23,7 +23,8 @@ auto main(void) -> int
     tcob::game game {{.Path           = ".",
                       .Name           = "UIEx",
                       .LogFile        = "stdout",
-                      .ConfigDefaults = config}};
+                      .ConfigDefaults = config,
+                      .WorkerThreads  = 8}};
 #else
 auto main(int /* argc */, char* argv[]) -> int
 {
