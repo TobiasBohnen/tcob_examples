@@ -449,7 +449,7 @@ void MiscScene::on_key_down(keyboard::event& ev)
     } else if (ev.ScanCode == scan_code::D5) {
         asset_ptr<animated_texture> aniTex = resMgr.get_group("res")->get<texture>("test-ani");
         aniTex->start(true);
-        _pointTween.start(playback_style::AlternatedLooped);
+        _pointTween.start(playback_mode::AlternatedLooped);
     } else if (ev.ScanCode == scan_code::D6) {
         std::array<f32, 5> bufData {0, 1, 0, 1, 1};
         _uniBuf.update<f32>(bufData, 0);

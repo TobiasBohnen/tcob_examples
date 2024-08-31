@@ -34,7 +34,7 @@ void CanvasEx::on_fixed_update(milliseconds deltaTime)
 void CanvasEx::on_start()
 {
     prepare_canvas();
-    _ninePatchTween.start(playback_style::Looped);
+    _ninePatchTween.start(playback_mode::Looped);
 }
 
 void CanvasEx::on_update(milliseconds deltaTime)

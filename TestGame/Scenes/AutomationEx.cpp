@@ -79,7 +79,7 @@ void AutomationEx::on_start()
 
     ////////////////////////////////////////////////////////////
     for (auto& tween : _tweens) {
-        tween->start(playback_style::AlternatedLooped);
+        tween->start(playback_mode::AlternatedLooped);
     }
 }
 
