@@ -45,12 +45,12 @@ void TextEx::on_start()
     effects.create<effect::fade_out>(3, 3s);
     effects.create<effect::blink>(4, 3s, colors::Orange, colors::Teal, 5.f);
 
-    auto* eff5 {effects.create<effect::shake>(5, 3s, 3.f, 1.f, rng {12345})};
+    auto eff5 {effects.create<effect::shake>(5, 3s, 3.f, 1.f, rng {12345})};
     eff5->Interval = 25ms;
 
     effects.create<effect::wave>(6, 3s, 30.f, 4.f);
 
-    auto* eff7 {effects.create(7, 3s, effect::typing {}, effect::shake {3.f, 1.f, rng {12345}})};
+    auto eff7 {effects.create(7, 3s, effect::typing {}, effect::shake {3.f, 1.f, rng {12345}})};
     eff7->Interval = 100ms;
 
     effects.create(8, 3s, effect::blink {colors::Red, colors::Green, 5.f}, effect::wave {15.f, 10.f});
