@@ -101,7 +101,7 @@ void CanvasEx::paint_to_canvas()
     _canvas.rect({150, 150, 500, 500});
     _canvas.fill();
 
-    funcs::catmull_rom cm;
+    func::catmull_rom cm;
     cm.ControlPoints = {{150, 300},
                         {150, 150},
                         {350, 300},
