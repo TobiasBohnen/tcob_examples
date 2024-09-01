@@ -21,7 +21,7 @@ void TextEx::on_start()
     auto  fontFam {resGrp->get<font_family>("Poppins")};
     auto  font {fontFam->get_font({}, 32)};
 
-    seconds duration {3s};
+    seconds duration {4s};
 
     {
         auto& text0 {_texts.emplace_back(std::make_unique<text>(font))};
@@ -37,23 +37,25 @@ void TextEx::on_start()
                        "{EFFECT:2} FadeIn\n"
                        "{EFFECT:3} FadeOut\n"
                        "{EFFECT:4} Blink\n"
+                       "{EFFECT:9} Gradient\n"
                        "{EFFECT:7} Shrink\n"
                        "{EFFECT:8} Rotate\n"
                        "{EFFECT:5} Shake\n"
-                       "{EFFECT:6} {COLOR:blue}Wave{COLOR:lightblue}Wave\n\n";
+                       "{EFFECT:6} WaveWave\n\n";
         text0->Style = text::style {.Color = colors::White, .Alignment = {}, .KerningEnabled = false};
 
         text0->Bounds = {{420, 6}, {500, 1000}};
 
         auto& effects {text0->Effects};
         effects.create(1, duration, effect::typing {});
-        effects.create(2, duration, effect::fade_in {});
-        effects.create(3, duration, effect::fade_out {});
+        effects.create(2, duration, effect::fade_in {3});
+        effects.create(3, duration, effect::fade_out {2});
         effects.create(4, duration, effect::blink {colors::Orange, colors::Teal, 5.f});
         effects.create(5, duration, effect::shake {3.f, rng {12345}})->Interval = 25ms;
         effects.create(6, duration, effect::wave {30.f, 4.f});
         effects.create(7, duration, effect::size {1.0f, 0.0f, 1.0f, 0.0f, {horizontal_alignment::Centered, vertical_alignment::Middle}});
-        effects.create(8, duration, effect::rotate {});
+        effects.create(8, duration, effect::rotate {1.0f});
+        effects.create(9, duration, effect::gradient {color_gradient {colors::Orange, colors::LightBlue}.get_colors()});
 
         effects.start_all(playback_mode::Looped);
     }
@@ -71,7 +73,7 @@ void TextEx::on_start()
         effects.create(1, duration, effect::typing {}, effect::shake {3.f, rng {12345}})->Interval = 100ms;
         effects.create(2, duration, effect::blink {colors::Red, colors::Green, 5.f}, effect::wave {15.f, 10.f});
         effects.create(3, duration, effect::size {0.0f, 1.0f, 0.0f, 1.0f, {horizontal_alignment::Left, vertical_alignment::Middle}}, effect::wave {15.f, 10.f});
-        effects.create(4, duration, effect::rotate {}, effect::wave {30.f, 10.f});
+        effects.create(4, duration, effect::rotate {2.0f}, effect::wave {30.f, 10.f});
 
         effects.start_all(playback_mode::Looped);
     }
