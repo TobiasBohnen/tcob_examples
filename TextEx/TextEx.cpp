@@ -33,14 +33,15 @@ void TextEx::on_start()
 
     {
         auto& text0 {_texts.emplace_back(std::make_unique<text>(font))};
-        text0->Text = "{EFFECT:1} Typing\n"
-                      "{EFFECT:2} FadeIn\n"
-                      "{EFFECT:3} FadeOut\n"
-                      "{EFFECT:4} Blink\n"
-                      "{EFFECT:7} Shrink\n"
-                      "{EFFECT:8} Rotate\n"
-                      "{EFFECT:5} Shake\n"
-                      "{EFFECT:6} {COLOR:blue}Wave{COLOR:lightblue}Wave\n\n";
+        text0->Text  = "{EFFECT:1} Typing\n"
+                       "{EFFECT:2} FadeIn\n"
+                       "{EFFECT:3} FadeOut\n"
+                       "{EFFECT:4} Blink\n"
+                       "{EFFECT:7} Shrink\n"
+                       "{EFFECT:8} Rotate\n"
+                       "{EFFECT:5} Shake\n"
+                       "{EFFECT:6} {COLOR:blue}Wave{COLOR:lightblue}Wave\n\n";
+        text0->Style = text::style {.Color = colors::White, .Alignment = {}, .KerningEnabled = false};
 
         text0->Bounds = {{420, 6}, {500, 1000}};
 
@@ -49,12 +50,9 @@ void TextEx::on_start()
         effects.create(2, duration, effect::fade_in {});
         effects.create(3, duration, effect::fade_out {});
         effects.create(4, duration, effect::blink {colors::Orange, colors::Teal, 5.f});
-
-        auto eff5 {effects.create(5, duration, effect::shake {3.f, 1.f, rng {12345}})};
-        eff5->Interval = 25ms;
-
+        effects.create(5, duration, effect::shake {3.f, rng {12345}})->Interval = 25ms;
         effects.create(6, duration, effect::wave {30.f, 4.f});
-        effects.create(7, duration, effect::height {1.0f, 0.0f, vertical_alignment::Middle});
+        effects.create(7, duration, effect::size {1.0f, 0.0f, 1.0f, 0.0f, {horizontal_alignment::Centered, vertical_alignment::Middle}});
         effects.create(8, duration, effect::rotate {});
 
         effects.start_all(playback_mode::Looped);
@@ -63,15 +61,17 @@ void TextEx::on_start()
     {
         auto& text0 {_texts.emplace_back(std::make_unique<text>(font))};
         text0->Text = "{EFFECT:1} TypingShake\n"
-                      "{EFFECT:2} BlinkWave\n";
+                      "{EFFECT:2} BlinkWave\n\n"
+                      "{EFFECT:3} GrowWave\n\n"
+                      "{EFFECT:4} RotateWave\n";
 
         text0->Bounds = {{30, 206}, {500, 1000}};
 
         auto& effects {text0->Effects};
-        auto  eff7 {effects.create(1, duration, effect::typing {}, effect::shake {3.f, 1.f, rng {12345}})};
-        eff7->Interval = 100ms;
-
+        effects.create(1, duration, effect::typing {}, effect::shake {3.f, rng {12345}})->Interval = 100ms;
         effects.create(2, duration, effect::blink {colors::Red, colors::Green, 5.f}, effect::wave {15.f, 10.f});
+        effects.create(3, duration, effect::size {0.0f, 1.0f, 0.0f, 1.0f, {horizontal_alignment::Left, vertical_alignment::Middle}}, effect::wave {15.f, 10.f});
+        effects.create(4, duration, effect::rotate {}, effect::wave {30.f, 10.f});
 
         effects.start_all(playback_mode::Looped);
     }
