@@ -60,7 +60,7 @@ void start_scene::on_start()
     get_window().Cursor       = defaultCursor;
     defaultCursor->ActiveMode = "cursor1";
 
-    _text         = std::make_shared<text>(resGrp->get<font>("raster-font1"));
+    _text         = std::make_shared<text>(resGrp->get<font>("defaultFont"));
     _text->Shader = resGrp->get<shader>("default2darray");
 
     std::string sceneText {};

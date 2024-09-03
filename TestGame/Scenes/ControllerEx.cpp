@@ -24,14 +24,14 @@ void ControllerEx::on_start()
 
     auto* resGrp {get_game().get_library().get_group("res")};
 
-    _text         = std::make_shared<text>(resGrp->get<font>("raster-font1"));
+    _text         = std::make_shared<text>(resGrp->get<font>("defaultFont"));
     _text->Text   = "1: High freq \n"
                     "2: Low freq \n"
                     "3: both \n";
     _text->Bounds = {{30, 60}, {450, 800}};
     _text->Shader = resGrp->get<shader>("shader-font1");
 
-    _controllerDesc         = std::make_shared<text>(resGrp->get<font>("raster-font1"));
+    _controllerDesc         = std::make_shared<text>(resGrp->get<font>("defaultFont"));
     _controllerDesc->Bounds = {{330, 60}, {750, 450}};
     _controllerDesc->Pivot  = {{0, 0}};
     _controllerDesc->Shader = resGrp->get<shader>("shader-font1");
@@ -43,27 +43,27 @@ void ControllerEx::on_start()
 
     _controllerDesc->Scale = {0.5f, 0.5f};
 
-    _button         = std::make_shared<text>(resGrp->get<font>("raster-font1"));
+    _button         = std::make_shared<text>(resGrp->get<font>("defaultFont"));
     _button->Bounds = {{330.0, 120}, {450, 1050}};
     _button->Shader = resGrp->get<shader>("shader-font1");
 
-    _laxisx         = std::make_shared<text>(resGrp->get<font>("raster-font1"));
+    _laxisx         = std::make_shared<text>(resGrp->get<font>("defaultFont"));
     _laxisx->Bounds = {{30, 240}, {450, 1050}};
     _laxisx->Shader = resGrp->get<shader>("shader-font1");
 
-    _laxisy         = std::make_shared<text>(resGrp->get<font>("raster-font1"));
+    _laxisy         = std::make_shared<text>(resGrp->get<font>("defaultFont"));
     _laxisy->Bounds = {{30, 270}, {450, 1050}};
     _laxisy->Shader = resGrp->get<shader>("shader-font1");
 
-    _raxisx         = std::make_shared<text>(resGrp->get<font>("raster-font1"));
+    _raxisx         = std::make_shared<text>(resGrp->get<font>("defaultFont"));
     _raxisx->Bounds = {{30, 300}, {450, 1050}};
     _raxisx->Shader = resGrp->get<shader>("shader-font1");
 
-    _raxisy         = std::make_shared<text>(resGrp->get<font>("raster-font1"));
+    _raxisy         = std::make_shared<text>(resGrp->get<font>("defaultFont"));
     _raxisy->Bounds = {{30, 330}, {450, 1050}};
     _raxisy->Shader = resGrp->get<shader>("shader-font1");
 
-    _axis         = std::make_shared<text>(resGrp->get<font>("raster-font1"));
+    _axis         = std::make_shared<text>(resGrp->get<font>("defaultFont"));
     _axis->Bounds = {{30, 360}, {450, 1050}};
     _axis->Shader = resGrp->get<shader>("shader-font1");
 }

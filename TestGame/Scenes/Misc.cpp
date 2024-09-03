@@ -120,7 +120,7 @@ void MiscScene::on_start()
     });
     _particleSystem0->Position = {0.1f, 0.1f};
 
-    _font = resGrp->get<font>("raster-font2");
+    _font = resGrp->get<font>("defaultFont");
 
     _text         = std::make_shared<text>(_font);
     _text->Text   = "SÖ5";
