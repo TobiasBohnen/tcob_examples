@@ -9,8 +9,4 @@ if(TCOB_ENABLE_ADDON_PHYSICS_BOX2D
     add_subdirectory(TextEx)
     add_subdirectory(TweenEx)
     add_subdirectory(UIEx)
-
-    if(EMSCRIPTEN)
-        add_subdirectory(EmscriptenTest)
-    endif()
 endif()
