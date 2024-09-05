@@ -10,7 +10,6 @@
 #include "./Scenes/ControllerEx.hpp"
 #include "./Scenes/ImageEffectEx.hpp"
 #include "./Scenes/Misc.hpp"
-#include "./Scenes/PhysicsEx.hpp"
 #include "./Scenes/SoundGeneratorEx.hpp"
 #include "./Scenes/TileMapEx.hpp"
 
@@ -27,9 +26,8 @@ start_scene::start_scene(game& g)
     Scenes[2] = {"CanvasEx", [](game& g) { return std::make_shared<CanvasEx>(g); }};
     Scenes[3] = {"ControllerEx", [](game& g) { return std::make_shared<ControllerEx>(g); }};
     Scenes[4] = {"ImageEffectEx", [](game& g) { return std::make_shared<ImageEffectEx>(g); }};
-    Scenes[5] = {"PhysicsEx", [](game& g) { return std::make_shared<PhysicsEx>(g); }};
-    Scenes[6] = {"SoundGeneratorEx", [](game& g) { return std::make_shared<SoundGeneratorEx>(g); }};
-    Scenes[7] = {"TileMapEx", [](game& g) { return std::make_shared<TileMapEx>(g); }};
+    Scenes[5] = {"SoundGeneratorEx", [](game& g) { return std::make_shared<SoundGeneratorEx>(g); }};
+    Scenes[6] = {"TileMapEx", [](game& g) { return std::make_shared<TileMapEx>(g); }};
 }
 
 start_scene::~start_scene() = default;

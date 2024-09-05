@@ -18,11 +18,6 @@ PhysicsEx::~PhysicsEx() = default;
 
 void PhysicsEx::on_start()
 {
-    auto* resGrp {get_game().get_library().get_group("res")};
-
-    _boxMat    = resGrp->get<material>("mat-solid");
-    _circleMat = resGrp->get<material>("mat-circle");
-
     // obstacles
     rng r;
     _obstacles = _world.create_body({}, {});
@@ -155,10 +150,11 @@ void PhysicsEx::create_box(point_f pos)
 
     obj.Body->create_shape<physics::rect_shape>(shape);
 
-    obj.Sprite           = _layer1.create_shape<gfx::rect_shape>();
-    obj.Sprite->Material = _boxMat;
-    obj.Sprite->Bounds   = rect * 12;
-    obj.Sprite->Color    = colors::Red;
+    auto rectShape {_layer1.create_shape<gfx::rect_shape>()};
+    rectShape->Material = _mat;
+    rectShape->Bounds   = rect * 12;
+    rectShape->Color    = colors::Red;
+    obj.Sprite          = rectShape;
 
     _objects.push_back(obj);
 }
@@ -176,10 +172,12 @@ void PhysicsEx::create_circle(point_f pos)
 
     obj.Body->create_shape<physics::circle_shape>(shape);
 
-    obj.Sprite           = _layer1.create_shape<gfx::rect_shape>();
-    obj.Sprite->Material = _circleMat;
-    obj.Sprite->Bounds   = rect * 12;
-    obj.Sprite->Color    = colors::Yellow;
+    auto circleShape {_layer1.create_shape<gfx::circle_shape>()};
+    circleShape->Segments = 18;
+    circleShape->Material = _mat;
+    circleShape->Radius   = rect.Width / 2 * 12;
+    circleShape->Color    = colors::Yellow;
+    obj.Sprite            = circleShape;
 
     _objects.push_back(obj);
 }
@@ -187,12 +185,13 @@ void PhysicsEx::create_circle(point_f pos)
 void PhysicsEx::create_obstacle(rect_f const& rect)
 {
     physics::rect_shape::settings shape;
-    shape.Extents = {rect.get_center(), rect.get_size()};
+    shape.Extents     = {rect.get_center(), rect.get_size()};
+    shape.Restitution = 0.5f;
 
     _obstacles->create_shape<physics::rect_shape>(shape);
 
     auto spr {_layer1.create_shape<gfx::rect_shape>()};
-    spr->Material = _boxMat;
+    spr->Material = _mat;
     spr->Bounds   = rect * 12;
     spr->Color    = colors::Green;
 }
@@ -206,53 +205,7 @@ void PhysicsEx::create_edge(point_f pos0, point_f pos1)
     _obstacles->create_shape<segment_shape>(shape);
 
     auto spr {_layer1.create_shape<gfx::rect_shape>()};
-    spr->Material = _boxMat;
+    spr->Material = _mat;
     spr->Bounds   = rect_f::FromLTRB(pos0.X, pos0.Y, pos1.X, pos1.Y + 5) * 12;
     spr->Color    = colors::Blue;
 }
-
-/*
-void PhysicsEx::on_begin_contact(contact_event const& ev)
-{
-    if (!_colorizeContact) {
-        return;
-    }
-
-    auto& bodyA {ev.FixtureA->get_body()};
-    auto& bodyB {ev.FixtureB->get_body()};
-    if (*_obstacles == bodyA || *_obstacles == bodyB) {
-        return;
-    }
-
-    for (auto& obj : _objects) {
-        if (*obj.Body == bodyA) {
-            obj.Sprite->Color = colors::Beige;
-        }
-        if (*obj.Body == bodyB) {
-            obj.Sprite->Color = colors::Aquamarine;
-        }
-    }
-}
-
-void PhysicsEx::on_end_contact(contact_event const& ev)
-{
-    if (!_colorizeContact) {
-        return;
-    }
-
-    auto& bodyA {ev.FixtureA->get_body()};
-    auto& bodyB {ev.FixtureB->get_body()};
-    if (*_obstacles == bodyA || *_obstacles == bodyB) {
-        return;
-    }
-
-    for (auto& obj : _objects) {
-        if (*obj.Body == bodyA) {
-            obj.Sprite->Color = colors::Black;
-        }
-        if (*obj.Body == bodyB) {
-            obj.Sprite->Color = colors::Black;
-        }
-    }
-}
-*/

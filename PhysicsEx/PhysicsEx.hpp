@@ -4,7 +4,13 @@
 // https://opensource.org/licenses/MIT
 
 #pragma once
-#include "../Common.hpp"
+
+#include <tcob/tcob.hpp>
+using namespace tcob;
+using namespace tcob::gfx;
+using namespace tcob::assets;
+using namespace tcob::input;
+using namespace tcob::physics;
 
 ////////////////////////////////////////////////////////////
 
@@ -26,8 +32,8 @@ protected:
 
 private:
     struct Box2DExObject {
-        std::shared_ptr<gfx::rect_shape> Sprite;
-        std::shared_ptr<body>            Body;
+        std::shared_ptr<gfx::shape>    Sprite;
+        std::shared_ptr<physics::body> Body;
     };
 
     void create_box(point_f pos);
@@ -35,20 +41,14 @@ private:
     void create_circle(point_f pos);
     void create_obstacle(rect_f const& rect);
 
-    // void on_begin_contact(contact_event const& ev);
-    // void on_end_contact(contact_event const& ev);
+    physics::world _world {};
 
-    world _world {};
+    std::shared_ptr<physics::body> _obstacles {};
+    std::vector<Box2DExObject>     _objects {};
 
-    std::shared_ptr<body>      _obstacles {};
-    std::vector<Box2DExObject> _objects {};
-
-    assets::asset_ptr<material> _boxMat;
-    assets::asset_ptr<material> _circleMat;
+    assets::manual_asset_ptr<material> _mat;
 
     shape_batch _layer1;
     bool        _forceOn {false};
     bool        _colorizeContact {false};
-
-    assets::manual_asset_ptr<material> _material {};
 };

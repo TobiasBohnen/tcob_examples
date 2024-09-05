@@ -8,7 +8,6 @@ target_sources(TestGame PRIVATE
     Scenes/AutomationEx.cpp
     Scenes/CanvasEx.cpp
     Scenes/ControllerEx.cpp
-    Scenes/PhysicsEx.cpp
     Scenes/TileMapEx.cpp
     Scenes/SoundGeneratorEx.cpp
     Scenes/ImageEffectEx.cpp
