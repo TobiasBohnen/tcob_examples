@@ -5,7 +5,9 @@ if(TCOB_ENABLE_ADDON_PHYSICS_BOX2D
     add_subdirectory(TestGame)
 
     add_subdirectory(PhysicsEx)
+    add_subdirectory(SoundGeneratorEx)
     add_subdirectory(TextEx)
+    add_subdirectory(TweenEx)
     add_subdirectory(UIEx)
 
     if(EMSCRIPTEN)

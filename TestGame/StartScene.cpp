@@ -5,12 +5,10 @@
 
 #include "StartScene.hpp"
 
-#include "./Scenes/AutomationEx.hpp"
 #include "./Scenes/CanvasEx.hpp"
 #include "./Scenes/ControllerEx.hpp"
 #include "./Scenes/ImageEffectEx.hpp"
 #include "./Scenes/Misc.hpp"
-#include "./Scenes/SoundGeneratorEx.hpp"
 #include "./Scenes/TileMapEx.hpp"
 
 #include <iomanip>
@@ -22,12 +20,10 @@ start_scene::start_scene(game& g)
     : scene(g)
 {
     Scenes[0] = {"Misc", [](game& g) { return std::make_shared<MiscScene>(g); }};
-    Scenes[1] = {"AutomationEx", [](game& g) { return std::make_shared<AutomationEx>(g); }};
-    Scenes[2] = {"CanvasEx", [](game& g) { return std::make_shared<CanvasEx>(g); }};
-    Scenes[3] = {"ControllerEx", [](game& g) { return std::make_shared<ControllerEx>(g); }};
-    Scenes[4] = {"ImageEffectEx", [](game& g) { return std::make_shared<ImageEffectEx>(g); }};
-    Scenes[5] = {"SoundGeneratorEx", [](game& g) { return std::make_shared<SoundGeneratorEx>(g); }};
-    Scenes[6] = {"TileMapEx", [](game& g) { return std::make_shared<TileMapEx>(g); }};
+    Scenes[1] = {"CanvasEx", [](game& g) { return std::make_shared<CanvasEx>(g); }};
+    Scenes[2] = {"ControllerEx", [](game& g) { return std::make_shared<ControllerEx>(g); }};
+    Scenes[3] = {"ImageEffectEx", [](game& g) { return std::make_shared<ImageEffectEx>(g); }};
+    Scenes[4] = {"TileMapEx", [](game& g) { return std::make_shared<TileMapEx>(g); }};
 }
 
 start_scene::~start_scene() = default;

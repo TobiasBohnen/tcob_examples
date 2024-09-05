@@ -3,13 +3,10 @@ add_executable(TestGame)
 target_sources(TestGame PRIVATE
     main.cpp
     StartScene.cpp
-    Scenes/TemplateScene.cpp
     Scenes/Misc.cpp
-    Scenes/AutomationEx.cpp
     Scenes/CanvasEx.cpp
     Scenes/ControllerEx.cpp
     Scenes/TileMapEx.cpp
-    Scenes/SoundGeneratorEx.cpp
     Scenes/ImageEffectEx.cpp
 )
 
