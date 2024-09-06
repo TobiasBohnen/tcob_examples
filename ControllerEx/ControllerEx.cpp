@@ -4,12 +4,10 @@
 // https://opensource.org/licenses/MIT
 
 #include "ControllerEx.hpp"
-#include <cstring>
-#include <iomanip>
 
-static char const* fontTff {
-#include "../_common/trim.txt"
-};
+#include "../_common/Trim.hpp"
+
+#include <iomanip>
 
 using namespace std::chrono_literals;
 
@@ -27,10 +25,8 @@ void ControllerEx::on_start()
         return;
     }
 
-    std::span<ubyte const> fontSpan {reinterpret_cast<ubyte const*>(fontTff), strlen(fontTff)};
-    auto                   fontData {*io::z85_filter {}.from(fontSpan)};
-    io::isstream           fontStream {fontData};
-    [[maybe_unused]] auto  _ = _font->load(fontStream, 36);
+    io::isstream          fontStream {trim_ttf};
+    [[maybe_unused]] auto _ = _font->load(fontStream, 36);
 
     _text         = std::make_shared<text>(_font);
     _text->Text   = "1: High freq \n"
