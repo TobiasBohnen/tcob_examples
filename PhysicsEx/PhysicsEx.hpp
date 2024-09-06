@@ -5,12 +5,7 @@
 
 #pragma once
 
-#include <tcob/tcob.hpp>
-using namespace tcob;
-using namespace tcob::gfx;
-using namespace tcob::assets;
-using namespace tcob::input;
-using namespace tcob::physics;
+#include "../_common/Common.hpp"
 
 ////////////////////////////////////////////////////////////
 

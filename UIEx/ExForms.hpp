@@ -5,11 +5,8 @@
 
 #pragma once
 
-#include <tcob/tcob.hpp>
-using namespace tcob;
-using namespace tcob::gfx;
+#include "../_common/Common.hpp"
 using namespace tcob::gfx::ui;
-using namespace tcob::input;
 
 auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form>;
 auto create_form1(window* wnd) -> std::shared_ptr<form>;

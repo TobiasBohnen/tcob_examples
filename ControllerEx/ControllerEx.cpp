@@ -7,7 +7,7 @@
 #include <iomanip>
 
 static char const* fontTff {
-#include "trim.txt"
+#include "../_common/trim.txt"
 };
 
 using namespace std::chrono_literals;

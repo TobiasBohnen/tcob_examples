@@ -5,11 +5,7 @@
 
 #pragma once
 
-#include <tcob/tcob.hpp>
-using namespace tcob;
-using namespace tcob::gfx;
-using namespace tcob::assets;
-using namespace tcob::input;
+#include "../_common/Common.hpp"
 
 class ControllerEx : public scene {
 public:
