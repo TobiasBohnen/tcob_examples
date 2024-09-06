@@ -40,9 +40,6 @@ void UIEx::on_start()
 
 void UIEx::on_draw_to(render_target& target)
 {
-    if (_form0) {
-        _form0->draw_to(target);
-    }
 }
 
 void UIEx::on_update(milliseconds /* deltaTime */)

@@ -31,7 +31,6 @@ private:
     canvas_paint RadialGradient0;
     canvas_paint RadialGradient1;
 
-    canvas                             _canvas;
-    canvas_renderer                    _renderer {_canvas};
-    assets::manual_asset_ptr<material> _material {};
+    canvas          _canvas;
+    canvas_renderer _renderer {_canvas};
 };

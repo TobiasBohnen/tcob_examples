@@ -13,7 +13,6 @@ using namespace std;
 CanvasEx::CanvasEx(game& game)
     : scene {game}
 {
-    _material->Texture = _canvas.get_texture();
 }
 
 CanvasEx::~CanvasEx() = default;

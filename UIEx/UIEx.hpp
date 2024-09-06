@@ -5,11 +5,8 @@
 
 #pragma once
 
-#include <tcob/tcob.hpp>
-using namespace tcob;
-using namespace tcob::gfx;
+#include "../_common/Common.hpp"
 using namespace tcob::gfx::ui;
-using namespace tcob::input;
 
 class UIEx : public scene {
 public:
