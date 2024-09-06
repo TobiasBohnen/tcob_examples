@@ -4,7 +4,12 @@
 // https://opensource.org/licenses/MIT
 
 #pragma once
-#include "../Common.hpp" // IWYU pragma: keep
+
+#include <tcob/tcob.hpp>
+using namespace tcob;
+using namespace tcob::gfx;
+using namespace tcob::assets;
+using namespace tcob::input;
 
 class ControllerEx : public scene {
 public:
@@ -28,6 +33,8 @@ protected:
 
 private:
     input::system& _input {locate_service<input::system>()};
+
+    assets::manual_asset_ptr<font> _font;
 
     std::shared_ptr<text> _text;
     std::shared_ptr<text> _controllerDesc;

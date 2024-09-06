@@ -6,7 +6,6 @@
 #include "StartScene.hpp"
 
 #include "./Scenes/CanvasEx.hpp"
-#include "./Scenes/ControllerEx.hpp"
 #include "./Scenes/ImageEffectEx.hpp"
 #include "./Scenes/Misc.hpp"
 #include "./Scenes/TileMapEx.hpp"
@@ -21,7 +20,6 @@ start_scene::start_scene(game& g)
 {
     Scenes[0] = {"Misc", [](game& g) { return std::make_shared<MiscScene>(g); }};
     Scenes[1] = {"CanvasEx", [](game& g) { return std::make_shared<CanvasEx>(g); }};
-    Scenes[2] = {"ControllerEx", [](game& g) { return std::make_shared<ControllerEx>(g); }};
     Scenes[3] = {"ImageEffectEx", [](game& g) { return std::make_shared<ImageEffectEx>(g); }};
     Scenes[4] = {"TileMapEx", [](game& g) { return std::make_shared<TileMapEx>(g); }};
 }
@@ -30,6 +28,13 @@ start_scene::~start_scene() = default;
 
 void start_scene::on_start()
 {
+
+    {
+        io::ifstream istream {"trim.ttf"};
+        io::ofstream ostream {"trim.txt"};
+        ostream.write<ubyte>(*io::z85_filter {}.to(istream.read_all<ubyte>()));
+    }
+
     auto& resMgr {get_game().get_library()};
 
     lua::script script;
