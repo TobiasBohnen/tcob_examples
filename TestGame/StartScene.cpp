@@ -5,7 +5,6 @@
 
 #include "StartScene.hpp"
 
-#include "./Scenes/CanvasEx.hpp"
 #include "./Scenes/ImageEffectEx.hpp"
 #include "./Scenes/Misc.hpp"
 #include "./Scenes/TileMapEx.hpp"
@@ -19,7 +18,6 @@ start_scene::start_scene(game& g)
     : scene(g)
 {
     Scenes[0] = {"Misc", [](game& g) { return std::make_shared<MiscScene>(g); }};
-    Scenes[1] = {"CanvasEx", [](game& g) { return std::make_shared<CanvasEx>(g); }};
     Scenes[3] = {"ImageEffectEx", [](game& g) { return std::make_shared<ImageEffectEx>(g); }};
     Scenes[4] = {"TileMapEx", [](game& g) { return std::make_shared<TileMapEx>(g); }};
 }

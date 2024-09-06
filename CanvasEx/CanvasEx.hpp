@@ -4,7 +4,7 @@
 // https://opensource.org/licenses/MIT
 
 #pragma once
-#include "../Common.hpp"
+#include "../_common/Common.hpp"
 
 class CanvasEx : public scene {
 public:
@@ -23,19 +23,15 @@ protected:
     void on_mouse_motion(mouse::motion_event& ev) override;
 
 private:
-    void         prepare_canvas();
-    void         paint_to_canvas();
-    texture*     Image {0};
-    texture*     NP1 {0};
-    canvas_paint ImagePattern;
+    void prepare_canvas();
+    void paint_to_canvas();
+
     canvas_paint LinearGradient;
     canvas_paint BoxGradient;
     canvas_paint RadialGradient0;
     canvas_paint RadialGradient1;
 
-    canvas _canvas;
-
-    shape_batch                        _layer1;
+    canvas                             _canvas;
+    canvas_renderer                    _renderer {_canvas};
     assets::manual_asset_ptr<material> _material {};
-    tweening::triange_wave_tween<f32>  _ninePatchTween;
 };

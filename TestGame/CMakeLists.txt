@@ -4,7 +4,6 @@ target_sources(TestGame PRIVATE
     main.cpp
     StartScene.cpp
     Scenes/Misc.cpp
-    Scenes/CanvasEx.cpp
     Scenes/TileMapEx.cpp
     Scenes/ImageEffectEx.cpp
 )

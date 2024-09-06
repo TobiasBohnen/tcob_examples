@@ -4,6 +4,7 @@
 // https://opensource.org/licenses/MIT
 
 #include "ControllerEx.hpp"
+#include <cstring>
 #include <iomanip>
 
 static char const* fontTff {
