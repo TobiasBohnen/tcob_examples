@@ -150,49 +150,25 @@ void TileMapEx::on_key_down(keyboard::event& ev)
         break;
     }
 
-    float moveFactor {14.f};
-
-    auto& camera {*get_window().Camera};
-    if (ev.ScanCode == scan_code::A) {
-        camera.move_by({-moveFactor, 0});
-    } else if (ev.ScanCode == scan_code::D) {
-        camera.move_by({moveFactor, 0});
-    } else if (ev.ScanCode == scan_code::S) {
-        camera.move_by({0.0f, moveFactor});
-    } else if (ev.ScanCode == scan_code::W) {
-        camera.move_by({0.0f, -moveFactor});
-    }
+    _cam.on_key_down(ev);
 }
 
 void TileMapEx::on_mouse_button_down(mouse::button_event& ev)
 {
-    _mouseDown = false;
-    if (ev.Pressed && ev.Button == mouse::button::Left) {
-        _mouseDown = true;
-    }
+    _cam.on_mouse_button_down(ev);
 }
 
 void TileMapEx::on_mouse_button_up(mouse::button_event& ev)
 {
-    if (ev.Button == mouse::button::Left) {
-        _mouseDown = false;
-    }
+    _cam.on_mouse_button_up(ev);
 }
 
 void TileMapEx::on_mouse_motion(mouse::motion_event& ev)
 {
-    if (_mouseDown) {
-        auto& camera {*get_window().Camera};
-        auto  zoom {camera.get_zoom()};
-        camera.move_by(-(point_f {ev.RelativeMotion} / point_f {zoom.Width, zoom.Height}));
-    }
+    _cam.on_mouse_motion(ev);
 }
+
 void TileMapEx::on_mouse_wheel(mouse::wheel_event& ev)
 {
-    auto& camera {*get_window().Camera};
-    auto  zoom {camera.get_zoom()};
-    zoom += size_f {ev.Scroll.Y * 0.1f, ev.Scroll.Y * 0.1f};
-    if (zoom.Width > 0.099f && zoom.Height > 0.099f) {
-        camera.set_zoom(zoom);
-    }
+    _cam.on_mouse_wheel(ev);
 }

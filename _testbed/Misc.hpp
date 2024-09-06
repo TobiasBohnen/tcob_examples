@@ -80,8 +80,7 @@ private:
 
     shape_batch _layer0;
 
-    std::shared_ptr<particle_system> _particleSystem0 {std::make_shared<particle_system>()};
-    assets::asset_ptr<font>          _font;
+    assets::asset_ptr<font> _font;
 
     std::shared_ptr<text> _text;
 

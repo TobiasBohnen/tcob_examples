@@ -8,7 +8,6 @@
 #include "tcob/audio/Music.hpp"
 #include "tcob/audio/SoundFont.hpp"
 #include "tcob/core/AngleUnits.hpp"
-#include "tcob/core/Color.hpp"
 #include <cmath>
 
 #include <iomanip>
@@ -95,52 +94,6 @@ void MiscScene::on_start()
         }
     }
     _layer1 = std::make_shared<static_shape_batch>(sprites);
-
-    // _particleSystem0 = *resGrp->get_asset_ptr<particle_system>("system1");
-    _particleSystem0->Material = resGrp->get<material>("particleMat");
-
-    auto& emi0     = _particleSystem0->create_emitter();
-    emi0.SpawnArea = {0, 60, 600, 150};
-    emi0.Lifetime  = 1000ms;
-    emi0.IsLooping = true;
-    emi0.SpawnRate = 50;
-    emi0.Template  = {
-         .Acceleration = std::minmax(15.f, 15.f),
-         .Direction    = std::minmax(175_deg, 185_deg),
-         .Lifetime     = std::minmax(7500ms, 12500ms),
-         .Scale        = std::minmax(0.75f, 1.5f),
-         .Size         = {30, 30},
-         .Speed        = std::minmax(30.f, 150.f),
-         .Spin         = std::minmax(-150_deg, 150_deg),
-         .Texture      = "snowflake",
-         .Transparency = std::minmax(0.0f, 0.55f)};
-
-    _particleSystem0->ParticleUpdate.connect([](particle& p) {
-        if (std::any_cast<i32>(p.UserData) == 0) {
-            if (p.get_lifetime_ratio() <= 0.95f) {
-                p.Direction = p.Direction - 180_deg;
-                p.UserData  = 1;
-                p.Color     = colors::Red;
-            }
-        } else if (std::any_cast<i32>(p.UserData) == 1) {
-            if (p.get_lifetime_ratio() <= 0.75f) {
-                p.Direction = p.Direction - 45_deg;
-                p.UserData  = 2;
-                p.Color     = colors::Yellow;
-            }
-        } else if (std::any_cast<i32>(p.UserData) == 2) {
-            if (p.get_lifetime_ratio() <= 0.50f) {
-                p.Direction = p.Direction + 90_deg;
-                p.UserData  = 3;
-                p.Color     = colors::Blue;
-            }
-        }
-    });
-
-    _particleSystem0->ParticleUpdate.connect([](particle& p) {
-        p.Color.A = static_cast<u8>(255.f * p.get_lifetime_ratio());
-    });
-    _particleSystem0->Position = {0.1f, 0.1f};
 
     _font = resGrp->get<font>("defaultFont");
 
@@ -282,7 +235,7 @@ void MiscScene::on_draw_to(render_target& target)
     _layer1->draw_to(target);
     //   _htmlDoc->draw_to(target);
     // _pointCloud->draw_to(target);
-    // _particleSystem0->draw_to(target);
+    //
 }
 
 void MiscScene::on_update(milliseconds deltaTime)
@@ -294,7 +247,7 @@ void MiscScene::on_update(milliseconds deltaTime)
     */
     _layer0.update(deltaTime);
     _layer1->update(deltaTime);
-    _particleSystem0->update(deltaTime);
+
     //  _htmlDoc->update(deltaTime);
     _pointCloud->update(deltaTime);
     _pointTween.update(deltaTime);
@@ -331,9 +284,7 @@ void MiscScene::on_key_down(keyboard::event& ev)
     auto& camera {*window.Camera};
     auto& resMgr {get_game().get_library()};
 
-    if (ev.ScanCode == scan_code::D1) {
-        _particleSystem0->restart();
-    } else if (ev.ScanCode == scan_code::D2) {
+    if (ev.ScanCode == scan_code::D2) {
     } else if (ev.ScanCode == scan_code::D3) {
         if (!resMgr.is_loading_complete()) {
             return;
@@ -547,10 +498,6 @@ void MiscScene::on_key_down(keyboard::event& ev)
         std::cout << _sound_opus.get_duration().count() / 1000 << "\n";
     } else if (ev.ScanCode == scan_code::K) {
         _music0->play();
-    } else if (ev.ScanCode == scan_code::J) {
-
-    } else if (ev.ScanCode == scan_code::V) {
-        _particleSystem0->VisibilityMask = ~_particleSystem0->VisibilityMask;
     } else if (ev.ScanCode == scan_code::L) {
         _midi0->stop();
         [[maybe_unused]] auto _ = _midi0->open("res/audio/42337.mid");

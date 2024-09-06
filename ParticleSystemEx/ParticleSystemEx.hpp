@@ -7,10 +7,10 @@
 
 #include "../_common/Common.hpp"
 
-class TileMapEx : public scene {
+class ParticleSystemEx : public scene {
 public:
-    TileMapEx(game& game);
-    ~TileMapEx() override;
+    ParticleSystemEx(game& game);
+    ~ParticleSystemEx();
 
 protected:
     void on_start() override;
@@ -27,9 +27,6 @@ protected:
     void on_mouse_wheel(mouse::wheel_event& ev) override;
 
 private:
-    orthogonal_tilemap _tileMapOrtho;
-    isometric_tilemap  _tileMapIso;
-
-    timer     _timer;
-    basic_cam _cam;
+    std::shared_ptr<particle_system> _particleSystem0 {std::make_shared<particle_system>()};
+    basic_cam                        _cam;
 };
