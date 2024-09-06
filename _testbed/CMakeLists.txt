@@ -2,8 +2,7 @@ add_executable(TestGame)
 
 target_sources(TestGame PRIVATE
     main.cpp
-    StartScene.cpp
-    Scenes/Misc.cpp
+    Misc.cpp
 )
 
 set_target_properties(TestGame PROPERTIES

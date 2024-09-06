@@ -29,7 +29,29 @@ f32 pointSize {1.0f};
 
 void MiscScene::on_start()
 {
-    auto* resGrp {get_game().get_library().get_group("res")};
+    auto& resMgr {get_game().get_library()};
+
+    lua::script script;
+    if (io::exists("bootstrap.lua")) {
+        auto result {script.run_file<std::unordered_map<std::string, std::vector<std::string>>>("bootstrap.lua")};
+        if (result.has_value()) {
+            for (auto& [groupName, sources] : result.value()) {
+                auto& group {resMgr.create_or_get_group(groupName)};
+                for (auto& source : sources) {
+                    group.mount(source);
+                }
+            }
+        }
+    }
+
+    resMgr.load_all_groups();
+    get_window().load_icon("res/tex/testing.webp");
+
+    auto* resGrp {resMgr.get_group("res")};
+
+    auto defaultCursor {resGrp->get<cursor>("default")};
+    get_window().Cursor       = defaultCursor;
+    defaultCursor->ActiveMode = "cursor1";
 
     _htmlDoc = std::make_shared<html::document>(
         html::document::config {.AssetGroup      = resGrp,
