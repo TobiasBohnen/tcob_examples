@@ -3,21 +3,17 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 
-#include "ImageEffectEx.hpp"
-#include "tcob/core/Point.hpp"
-#include "tcob/core/assets/Asset.hpp"
-#include "tcob/gfx/Image.hpp"
-#include "tcob/gfx/ImageFilters.hpp"
-#include "tcob/gfx/Texture.hpp"
+#include "ImageFilterEx.hpp"
+
+#include "image.hpp"
 #include <iomanip>
 #include <memory>
 
-ImageEffectEx::ImageEffectEx(game& game)
+ImageFilterEx::ImageFilterEx(game& game)
     : scene(game)
 {
     _mat0->Texture = _tex0;
-    image img0 {*image::Load("res/tex/tee1.png")};
-    //  image img0 {grayscale_filter {}(img)};
+    image img0 {image::Create({64, 64}, image::format::RGBA, smile)};
     auto  imgSize {img0.get_info().Size};
     _tex0->create(imgSize, 7, texture::format::RGBA8);
 
@@ -69,64 +65,64 @@ ImageEffectEx::ImageEffectEx(game& game)
     }
 }
 
-ImageEffectEx::~ImageEffectEx() = default;
+ImageFilterEx::~ImageFilterEx() = default;
 
-void ImageEffectEx::on_start()
+void ImageFilterEx::on_start()
 {
     auto sprite0           = _layer1.create_shape<gfx::rect_shape>();
     sprite0->Material      = _mat0;
     sprite0->TextureRegion = "normal";
-    sprite0->Bounds        = {{0, 0}, {128, 192}};
+    sprite0->Bounds        = {{0, 0}, {128, 128}};
     sprite0->Center        = rect_f {0, 0, 800, 600}.get_center();
 
     //////////
     auto sprite1           = _layer1.create_shape<gfx::rect_shape>();
     sprite1->Material      = _mat0;
     sprite1->TextureRegion = "blur";
-    sprite1->Bounds        = {{0.f, 0.f}, {128, 192}};
+    sprite1->Bounds        = {{0.f, 0.f}, {128, 128}};
 
     //////////
     auto sprite2           = _layer1.create_shape<gfx::rect_shape>();
     sprite2->Material      = _mat0;
     sprite2->TextureRegion = "edgedetect";
-    sprite2->Bounds        = {{0.f, 200.f}, {128, 192}};
+    sprite2->Bounds        = {{0.f, 200.f}, {128, 128}};
 
     //////////
     auto sprite3           = _layer1.create_shape<gfx::rect_shape>();
     sprite3->Material      = _mat0;
     sprite3->TextureRegion = "emboss";
-    sprite3->Bounds        = {{0.f, 400.f}, {128, 192}};
+    sprite3->Bounds        = {{0.f, 400.f}, {128, 128}};
 
     //////////
     auto sprite4           = _layer1.create_shape<gfx::rect_shape>();
     sprite4->Material      = _mat0;
     sprite4->TextureRegion = "edgeenhance";
-    sprite4->Bounds        = {{600.f, 0.f}, {128, 192}};
+    sprite4->Bounds        = {{600.f, 0.f}, {128, 128}};
 
     //////////
     auto sprite5           = _layer1.create_shape<gfx::rect_shape>();
     sprite5->Material      = _mat0;
     sprite5->TextureRegion = "motionblur";
-    sprite5->Bounds        = {{600.f, 200.f}, {128, 192}};
+    sprite5->Bounds        = {{600.f, 200.f}, {128, 128}};
 
     //////////
     auto sprite6           = _layer1.create_shape<gfx::rect_shape>();
     sprite6->Material      = _mat0;
     sprite6->TextureRegion = "sharpen";
-    sprite6->Bounds        = {{600.f, 400.f}, {128, 192}};
+    sprite6->Bounds        = {{600.f, 400.f}, {128, 128}};
 }
 
-void ImageEffectEx::on_draw_to(render_target& target)
+void ImageFilterEx::on_draw_to(render_target& target)
 {
     _layer1.draw_to(target);
 }
 
-void ImageEffectEx::on_update(milliseconds deltaTime)
+void ImageFilterEx::on_update(milliseconds deltaTime)
 {
     _layer1.update(deltaTime);
 }
 
-void ImageEffectEx::on_fixed_update(milliseconds deltaTime)
+void ImageFilterEx::on_fixed_update(milliseconds deltaTime)
 {
     std::stringstream stream;
     stream << std::fixed << std::setprecision(2);
@@ -138,7 +134,7 @@ void ImageEffectEx::on_fixed_update(milliseconds deltaTime)
     get_window().Title = "TestGame " + stream.str();
 }
 
-void ImageEffectEx::on_key_down(keyboard::event& ev)
+void ImageFilterEx::on_key_down(keyboard::event& ev)
 {
     switch (ev.ScanCode) {
     case scan_code::BACKSPACE:
@@ -149,6 +145,6 @@ void ImageEffectEx::on_key_down(keyboard::event& ev)
     }
 }
 
-void ImageEffectEx::on_mouse_motion(mouse::motion_event& ev)
+void ImageFilterEx::on_mouse_motion(mouse::motion_event& ev)
 {
 }

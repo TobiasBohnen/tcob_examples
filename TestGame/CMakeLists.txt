@@ -5,7 +5,6 @@ target_sources(TestGame PRIVATE
     StartScene.cpp
     Scenes/Misc.cpp
     Scenes/TileMapEx.cpp
-    Scenes/ImageEffectEx.cpp
 )
 
 set_target_properties(TestGame PROPERTIES

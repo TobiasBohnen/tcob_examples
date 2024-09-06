@@ -5,14 +5,12 @@
 
 #pragma once
 
-#include "../Common.hpp"
-#include "tcob/gfx/Material.hpp"
-#include <memory>
+#include "../_common/Common.hpp"
 
-class ImageEffectEx : public scene {
+class ImageFilterEx : public scene {
 public:
-    ImageEffectEx(game& game);
-    ~ImageEffectEx() override;
+    ImageFilterEx(game& game);
+    ~ImageFilterEx() override;
 
 protected:
     void on_start() override;
