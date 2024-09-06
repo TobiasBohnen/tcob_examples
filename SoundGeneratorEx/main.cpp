@@ -17,7 +17,7 @@ auto main(void) -> int
     video.FullScreen           = false;
     video.UseDesktopResolution = false;
     video.VSync                = false;
-    video.Resolution           = tcob::size_i {800, 600};
+    video.Resolution           = tcob::size_i {1600, 900};
     video.RenderSystem         = "OPENGLES30";
     config["video"]            = video;
 
