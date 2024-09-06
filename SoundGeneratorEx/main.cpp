@@ -29,9 +29,8 @@ auto main(void) -> int
 #else
 auto main(int /* argc */, char* argv[]) -> int
 {
-    tcob::game game {{.Path    = argv[0],
-                      .Name    = "SoundGeneratorEx",
-                      .LogFile = "stdout"}};
+    tcob::game game {{.Path = argv[0],
+                      .Name = "SoundGeneratorEx"}};
 #endif
 
     game.push_scene<SoundGeneratorEx>();

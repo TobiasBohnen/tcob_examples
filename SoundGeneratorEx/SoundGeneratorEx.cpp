@@ -49,11 +49,11 @@ generator_form::generator_form(window* window)
         lblText->Label = name;
         auto lblValue {mainPanelLayout->create_widget<label>({bounds.X + 4, bounds.Y, bounds.Width / 2, bounds.Height}, "lbl" + name + "Val")};
         lblValue->Label = "0";
-        retValue->Value.Changed.connect([ptr = lblValue.get()](auto val) {
+        retValue->Value.Changed.connect([lbl = lblValue.get()](auto val) {
             std::string str {std::to_string(val / 100.f)};
             str.erase(str.find_last_not_of('0') + 1, std::string::npos);
             str.erase(str.find_last_not_of('.') + 1, std::string::npos);
-            ptr->Label = str;
+            lbl->Label = str;
         });
         retValue->MouseUp.connect([this]() {
             NewWave();
@@ -93,6 +93,7 @@ generator_form::generator_form(window* window)
     _valWaveType->add_item("Sine");
     _valWaveType->add_item("Noise");
     _valWaveType->add_item("Triangle");
+    _valWaveType->SelectedItemIndex = 0;
     _valWaveType->SelectedItemIndex.Changed.connect([&]() { NewWave(); });
 
     Play          = mainPanelLayout->create_widget<button>({1, 29, 4, 2}, "Play");
@@ -159,7 +160,7 @@ void generator_form::gen_styles()
         style->ThumbClass        = "slider_thumb";
         style->Bar.Type          = element::bar::type::Continuous;
         style->Bar.Size          = 95_pct;
-        style->Bar.Delay         = 200ms;
+        style->Bar.Delay         = 0ms;
         style->Bar.Border.Size   = 3_px;
         style->Bar.Border.Radius = 5_px;
 
@@ -346,7 +347,11 @@ SoundGeneratorEx::~SoundGeneratorEx() = default;
 void SoundGeneratorEx::on_start()
 {
     get_root_node()->Entity = _form0;
-    _form0->NewWave.connect([&] { _waveDirty = true; });
+    _form0->NewWave.connect([&] {
+        if (_waveState == wave_state::Clean) {
+            _waveState = wave_state::Dirty;
+        }
+    });
     _form0->GenPickupCoin->MouseDown.connect([&]() { _form0->set_values(_gen1.generate_pickup_coin()); });
     _form0->GenLaserShot->MouseDown.connect([&]() { _form0->set_values(_gen1.generate_laser_shoot()); });
     _form0->GenExplosion->MouseDown.connect([&]() { _form0->set_values(_gen1.generate_explosion()); });
@@ -355,7 +360,7 @@ void SoundGeneratorEx::on_start()
     _form0->GenJump->MouseDown.connect([&]() { _form0->set_values(_gen1.generate_jump()); });
     _form0->GenBlipSelect->MouseDown.connect([&]() { _form0->set_values(_gen1.generate_blip_select()); });
     _form0->GenRandom->MouseDown.connect([&]() { _form0->set_values(_gen1.generate_random()); });
-    _form0->Play->MouseDown.connect([&]() { play_wave(); });
+    _form0->Play->MouseDown.connect([&]() { create_data(); play_wave(); });
     _form0->Mutate->MouseDown.connect([&]() { _form0->set_values(_gen1.mutate_wave(_wave1)); });
     _form0->Load->MouseDown.connect([&]() {
         config::object loadFile;
@@ -382,12 +387,6 @@ void SoundGeneratorEx::on_draw_to(render_target& target)
 
 void SoundGeneratorEx::on_update(milliseconds deltaTime)
 {
-    if (_waveDirty) {
-        _form0->get_values(_wave1);
-        create_data();
-        play_wave();
-        draw_wave();
-    }
 }
 
 void SoundGeneratorEx::on_fixed_update(milliseconds deltaTime)
@@ -399,7 +398,22 @@ void SoundGeneratorEx::on_fixed_update(milliseconds deltaTime)
     stream << " best FPS:" << stats.get_best_FPS();
     stream << " worst FPS:" << stats.get_worst_FPS();
 
-    get_window().Title = "TestGame " + stream.str();
+    get_window().Title = "SoundGeneratorEx " + stream.str();
+
+    if (_waveState == wave_state::Dirty) {
+        _waveState = wave_state::Generating;
+        sound_wave newWave;
+        _form0->get_values(newWave);
+        _wave1 = newWave;
+        locate_service<task_manager>().run_async<void>([&] {
+            create_data();
+            _waveState = wave_state::Ready;
+        });
+    } else if (_waveState == wave_state::Ready) {
+        play_wave();
+        draw_wave();
+        _waveState = wave_state::Clean;
+    }
 }
 
 void SoundGeneratorEx::on_key_down(keyboard::event& ev)
@@ -424,7 +438,7 @@ void SoundGeneratorEx::create_data()
 
 void SoundGeneratorEx::play_wave()
 {
-    _sound1 = _gen1.create_sound(_wave1);
+    _sound1 = _gen1.create_sound(_audioData, _wave1);
     _sound1.play();
 }
 
@@ -458,17 +472,17 @@ void SoundGeneratorEx::draw_wave()
     auto audioData {_audioData.get_data()};
     if (!audioData.empty()) {
         f32       currentSample {0.0f};
-        f32 const sampleSize {crect.Width * 2.0f};
+        f32 const sampleSize {crect.Width};
         f32 const sampleIncrement {audioData.size() / sampleSize};
         f32 const sampleScale {crect.Height};
 
         std::vector<point_f> points;
-        points.reserve(sampleSize + 1);
+        points.reserve(sampleSize);
         points.emplace_back(crect.X, crect.Height / 2.f);
 
         for (i32 i {1}; i < sampleSize; i++) {
             f32 const sample {std::clamp<f32>(audioData[static_cast<u64>(currentSample)] * sampleScale, -crect.Height / 2.f, crect.Height / 2.f)};
-            points.emplace_back(crect.X + i / 2.0f, (crect.Y + crect.Height / 2.0f) - sample);
+            points.emplace_back(crect.X + i, (crect.Y + crect.Height / 2.0f) - sample);
             currentSample += sampleIncrement;
         }
 
@@ -482,8 +496,4 @@ void SoundGeneratorEx::draw_wave()
         }
         canvas->stroke();
     }
-
-    //  canvas->end_frame();
-
-    _waveDirty = false;
 }

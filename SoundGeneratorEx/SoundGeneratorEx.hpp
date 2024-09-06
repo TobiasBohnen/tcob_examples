@@ -107,7 +107,14 @@ private:
     sound_wave      _wave1;
     buffer          _audioData;
     sound           _sound1;
-    bool            _waveDirty {false};
+
+    enum class wave_state {
+        Dirty,
+        Generating,
+        Ready,
+        Clean
+    };
+    std::atomic<wave_state> _waveState {wave_state::Clean};
 
     std::shared_ptr<generator_form> _form0;
 };
