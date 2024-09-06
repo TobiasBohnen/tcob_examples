@@ -202,7 +202,7 @@ void MiscScene::on_start()
        */
 
     {
-        _tileMap = std::make_shared<tilemap>(tileset {{
+        _tileMap = std::make_shared<orthogonal_tilemap>(tileset {{
             {1, {"stone1"}},
             {2, {"stone2"}},
             {3, {"stone3"}},

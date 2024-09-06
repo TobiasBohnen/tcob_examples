@@ -58,8 +58,8 @@ void TileMapEx::on_start()
 
     ////////////////////////////////////////////////////////////
     {
-        _tileMapOrtho.Material = resGrp->get<material>("mat-tiles");
-        _tileMapOrtho.Grid     = {.TileSize = {12, 12}};
+        _tileMapOrtho.Material = resGrp->get<material>("ortho");
+        _tileMapOrtho.Grid     = {.TileSize = {65, 65}};
 
         tcob::gfx::tilemap_layer layer;
         layer.Tiles.insert(layer.Tiles.end(), tiles1.begin(), tiles1.end());
@@ -68,10 +68,10 @@ void TileMapEx::on_start()
     }
     ////////////////////////////////////////////////////////////
     {
-        _tileMapIso.Material = resGrp->get<material>("mat-iso-tiles");
-        _tileMapIso.Grid     = {.TileSize = {48, 48}, .Center = {0.48f, 0.39f}};
+        _tileMapIso.Material = resGrp->get<material>("iso");
+        _tileMapIso.Grid     = {.TileSize = {110, 128}, .SurfaceCenter = {0.5f, 0.25f}};
 
-        _tileMapIso.Position = {510, 30};
+        _tileMapIso.Position = {2050, 300};
 
         tcob::gfx::tilemap_layer layer;
         layer.Tiles.insert(layer.Tiles.end(), tiles1.begin(), tiles1.end());
@@ -150,7 +150,7 @@ void TileMapEx::on_key_down(keyboard::event& ev)
         break;
     }
 
-    float moveFactor {5.f};
+    float moveFactor {14.f};
 
     auto& camera {*get_window().Camera};
     if (ev.ScanCode == scan_code::A) {
@@ -164,6 +164,35 @@ void TileMapEx::on_key_down(keyboard::event& ev)
     }
 }
 
+void TileMapEx::on_mouse_button_down(mouse::button_event& ev)
+{
+    _mouseDown = false;
+    if (ev.Pressed && ev.Button == mouse::button::Left) {
+        _mouseDown = true;
+    }
+}
+
+void TileMapEx::on_mouse_button_up(mouse::button_event& ev)
+{
+    if (ev.Button == mouse::button::Left) {
+        _mouseDown = false;
+    }
+}
+
 void TileMapEx::on_mouse_motion(mouse::motion_event& ev)
 {
+    if (_mouseDown) {
+        auto& camera {*get_window().Camera};
+        auto  zoom {camera.get_zoom()};
+        camera.move_by(-(point_f {ev.RelativeMotion} / point_f {zoom.Width, zoom.Height}));
+    }
+}
+void TileMapEx::on_mouse_wheel(mouse::wheel_event& ev)
+{
+    auto& camera {*get_window().Camera};
+    auto  zoom {camera.get_zoom()};
+    zoom += size_f {ev.Scroll.Y * 0.1f, ev.Scroll.Y * 0.1f};
+    if (zoom.Width > 0.099f && zoom.Height > 0.099f) {
+        camera.set_zoom(zoom);
+    }
 }

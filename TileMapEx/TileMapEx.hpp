@@ -4,7 +4,8 @@
 // https://opensource.org/licenses/MIT
 
 #pragma once
-#include "../Common.hpp"
+
+#include "../_common/Common.hpp"
 
 class TileMapEx : public scene {
 public:
@@ -20,10 +21,15 @@ protected:
     void on_fixed_update(milliseconds deltaTime) override;
 
     void on_key_down(keyboard::event& ev) override;
+    void on_mouse_button_down(mouse::button_event& ev) override;
+    void on_mouse_button_up(mouse::button_event& ev) override;
     void on_mouse_motion(mouse::motion_event& ev) override;
+    void on_mouse_wheel(mouse::wheel_event& ev) override;
 
 private:
-    tilemap           _tileMapOrtho;
-    isometric_tilemap _tileMapIso;
-    timer             _timer;
+    orthogonal_tilemap _tileMapOrtho;
+    isometric_tilemap  _tileMapIso;
+
+    timer _timer;
+    bool  _mouseDown {false};
 };
