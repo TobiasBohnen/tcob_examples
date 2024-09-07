@@ -107,7 +107,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
 
         auto activeStyle {retValue.create<button>("button", {.Focus = true, .Active = true})};
         *activeStyle        = *style;
-        activeStyle->Margin = {10_px};
+        activeStyle->Margin = {5_px, 5_px, 10_px, 0_px};
 
         normal.apply(style);
         disabled.apply(disabledStyle);

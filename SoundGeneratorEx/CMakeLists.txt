@@ -3,6 +3,7 @@ add_executable(SoundGeneratorEx)
 target_sources(SoundGeneratorEx PRIVATE
     main.cpp
     SoundGeneratorEx.cpp
+    UI.cpp
 )
 
 set_target_properties(SoundGeneratorEx PROPERTIES
