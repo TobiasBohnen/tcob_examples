@@ -87,9 +87,10 @@ void SoundGeneratorEx::on_fixed_update(milliseconds deltaTime)
 
     if (_waveState == wave_state::Dirty) {
         _waveState = wave_state::Generating;
-        sound_wave newWave;
-        _form0->get_values(newWave);
-        _wave1 = newWave;
+
+        _form0->get_values(_wave1);
+        _wave1.sanitize();
+
         locate_service<task_manager>().run_async<void>([&] {
             create_data();
             _waveState = wave_state::Ready;

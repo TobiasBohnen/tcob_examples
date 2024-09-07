@@ -40,6 +40,8 @@ public:
     void get_values(sound_wave& wave);
 
 private:
+    void gen_styles();
+
     std::shared_ptr<drop_down_list> _valWaveType;
 
     // Wave envelope parameters
@@ -77,8 +79,6 @@ private:
     std::shared_ptr<slider> _valLowPassFilterResonance;    // 0 to 1
     std::shared_ptr<slider> _valHighPassFilterCutoff;      // 0 to 1
     std::shared_ptr<slider> _valHighPassFilterCutoffSweep; // -1 to 1
-
-    void gen_styles();
 
     assets::manual_asset_ptr<font_family> _font;
 };

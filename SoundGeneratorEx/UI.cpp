@@ -47,13 +47,11 @@ generator_form::generator_form(window* window)
         lblText->Label = name;
         auto lblValue {mainPanelLayout->create_widget<label>({bounds.X + 4, bounds.Y, bounds.Width / 2, bounds.Height}, "lbl" + name + "Val")};
         lblValue->Label = "0";
-        retValue->Value.Changed.connect([lbl = lblValue.get()](auto val) {
+        retValue->Value.Changed.connect([this, lbl = lblValue.get()](auto val) {
             std::string str {std::to_string(val / 100.f)};
             str.erase(str.find_last_not_of('0') + 1, std::string::npos);
             str.erase(str.find_last_not_of('.') + 1, std::string::npos);
             lbl->Label = str;
-        });
-        retValue->MouseUp.connect([this]() {
             NewWave();
         });
         return retValue;
@@ -66,10 +64,12 @@ generator_form::generator_form(window* window)
 
     _valStartFrequency = genSlider({10, 27, 4, 2}, "Start Frequency", 0, 100);
     _valMinFrequency   = genSlider({10, 29, 4, 2}, "Min Frequency", 0, 100);
-    _valSlide          = genSlider({10, 31, 4, 2}, "Slide", -100, 100);
-    _valDeltaSlide     = genSlider({10, 33, 4, 2}, "Delta Slide", -100, 100);
-    _valVibratoDepth   = genSlider({10, 35, 4, 2}, "Vibrato Depth", 0, 100);
-    _valVibratoSpeed   = genSlider({10, 37, 4, 2}, "Vibrato Speed", 0, 100);
+    _valMinFrequency->Value.Changed.connect([this] { _valStartFrequency->Min = _valMinFrequency->Value(); });
+
+    _valSlide        = genSlider({10, 31, 4, 2}, "Slide", -100, 100);
+    _valDeltaSlide   = genSlider({10, 33, 4, 2}, "Delta Slide", -100, 100);
+    _valVibratoDepth = genSlider({10, 35, 4, 2}, "Vibrato Depth", 0, 100);
+    _valVibratoSpeed = genSlider({10, 37, 4, 2}, "Vibrato Speed", 0, 100);
 
     _valChangeAmount = genSlider({21, 18, 4, 2}, "Change Amount", -100, 100);
     _valChangeSpeed  = genSlider({21, 20, 4, 2}, "Change Speed", 0, 100);
@@ -305,8 +305,6 @@ void generator_form::set_values(sound_wave const& wave)
     _valLowPassFilterResonance->Value    = wave.LowPassFilterResonance * 100;
     _valHighPassFilterCutoff->Value      = wave.HighPassFilterCutoff * 100;
     _valHighPassFilterCutoffSweep->Value = wave.HighPassFilterCutoffSweep * 100;
-
-    NewWave();
 }
 
 void generator_form::get_values(sound_wave& wave)
@@ -345,7 +343,7 @@ void generator_form::get_values(sound_wave& wave)
     wave.PhaserSweep  = _valPhaserSweep->Value / 100.f;
 
     wave.LowPassFilterCutoff       = _valLowPassFilterCutoff->Value / 100.f;
-    wave.LowPassFilterCutoffSweep  = _valLowPassFilterResonance->Value / 100.f;
+    wave.LowPassFilterCutoffSweep  = _valLowPassFilterCutoffSweep->Value / 100.f;
     wave.LowPassFilterResonance    = _valLowPassFilterResonance->Value / 100.f;
     wave.HighPassFilterCutoff      = _valHighPassFilterCutoff->Value / 100.f;
     wave.HighPassFilterCutoffSweep = _valHighPassFilterCutoffSweep->Value / 100.f;
