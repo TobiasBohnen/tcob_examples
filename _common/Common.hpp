@@ -64,13 +64,12 @@ public:
     void on_mouse_wheel(mouse::wheel_event& ev)
     {
         auto& camera {*locate_service<platform>().get_window().Camera};
-        auto  zoom {camera.get_zoom()};
-        zoom += size_f {ev.Scroll.Y * 0.1f, ev.Scroll.Y * 0.1f};
-        if (zoom.Width > 0.099f && zoom.Height > 0.099f) {
-            camera.set_zoom(zoom);
-        }
+        _zoomStage = std::clamp(_zoomStage - ev.Scroll.Y, 0, 6);
+        constexpr std::array<size_f, 7> zoomLevels {{{5.f, 5.f}, {3.f, 3.f}, {2.f, 2.f}, {1.f, 1.f}, {0.75f, 0.75f}, {0.5f, 0.5f}, {0.25f, 0.25f}}};
+        camera.set_zoom(zoomLevels[_zoomStage]);
     }
 
 private:
     bool _mouseDown {false};
+    i32  _zoomStage {3};
 };

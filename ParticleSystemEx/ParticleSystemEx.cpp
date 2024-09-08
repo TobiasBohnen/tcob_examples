@@ -17,58 +17,80 @@ ParticleSystemEx::~ParticleSystemEx() = default;
 
 void ParticleSystemEx::on_start()
 {
+    get_window().ClearColor = colors::LightSteelBlue;
+
     using namespace tcob::literals;
 
     auto& resMgr {get_game().get_library()};
     auto* resGrp {resMgr.get_group("res")};
 
-    // _particleSystem0 = *resGrp->get_asset_ptr<particle_system>("system1");
     _particleSystem0->Material = resGrp->get<material>("particleMat");
 
     particle_template pt {
-        .Acceleration = std::minmax(15.f, 15.f),
-        .Direction    = std::minmax(175_deg, 185_deg),
-        .Lifetime     = std::minmax(7500ms, 12500ms),
+        .Acceleration = std::minmax(15.f, 35.f),
+        .Direction    = std::minmax(-45_deg, 45_deg),
+        .Lifetime     = std::minmax(5000ms, 25000ms),
         .Scale        = std::minmax(0.75f, 1.5f),
-        .Size         = {30, 30},
+        .Size         = {10, 10},
         .Speed        = std::minmax(30.f, 150.f),
         .Spin         = std::minmax(-150_deg, 150_deg),
         .Texture      = "snowflake",
-        .Transparency = std::minmax(0.0f, 0.55f)};
+        .Color        = colors::FloralWhite,
+        .Transparency = std::minmax(0.8f, 1.0f)};
 
     auto emi0 {_particleSystem0->create_emitter()};
     emi0->Template  = pt;
-    emi0->SpawnArea = {450, 450, 600, 150};
-    emi0->Lifetime  = 1000ms;
-    emi0->IsLooping = true;
-    emi0->SpawnRate = 500;
+    emi0->SpawnArea = {450, 450, 30, 50};
+    emi0->SpawnRate = 2000;
 
-    _particleSystem0->ParticleUpdate.connect([](particle& p) {
-        if (std::any_cast<i32>(p.UserData) == 0) {
-            if (p.get_lifetime_ratio() <= 0.95f) {
-                p.Direction = p.Direction - 180_deg;
-                p.UserData  = 1;
-                p.Color     = colors::Red;
-            }
-        } else if (std::any_cast<i32>(p.UserData) == 1) {
-            if (p.get_lifetime_ratio() <= 0.75f) {
-                p.Direction = p.Direction - 45_deg;
-                p.UserData  = 2;
-                p.Color     = colors::Green;
-            }
-        } else if (std::any_cast<i32>(p.UserData) == 2) {
-            if (p.get_lifetime_ratio() <= 0.50f) {
-                p.Direction = p.Direction + 45_deg;
-                p.UserData  = 3;
-                p.Color     = colors::Blue;
-            }
+    data::config::object obj;
+    obj["emi"]                    = *emi0;
+    obj["emi"]["spawn_area"]["x"] = 1200;
+    obj["emi"]["lifetime"]        = 3000;
+    auto emi1 {std::make_shared<particle_emitter>(obj["emi"].as<particle_emitter>())};
+    _particleSystem0->add_emitter(emi1);
+
+    _particleSystem0->ParticleUpdate.connect([](particle_event const& pev) {
+        auto&      p {pev.Particle};
+        auto const phase {std::any_cast<i32>(p.UserData)};
+
+        auto const dist {p.Bounds.get_center().distance_to({460, 200})};
+        if (phase < 5 && dist < 10) {
+            auto const corr {36_deg * (10 - dist) * (pev.Time.count() / 1000)};
+            p.Direction += p.Direction > 0 ? corr : -corr;
+            p.Color    = colors::Black;
+            p.UserData = 4;
+        } else if (phase == 4 && dist > 100) {
+            p.Color     = colors::Gray;
+            p.Direction = 0;
+            p.UserData  = 5;
         }
-    });
 
-    _particleSystem0->ParticleUpdate.connect([](particle& p) {
+        switch (phase) {
+        case 0:
+            if (p.get_lifetime_ratio() <= 0.95f) {
+                p.UserData = 1;
+                p.Color    = colors::Yellow;
+            }
+            break;
+        case 1:
+            if (p.get_lifetime_ratio() <= 0.75f) {
+                p.Direction /= 2;
+                p.UserData = 2;
+                p.Color    = colors::Orange;
+            }
+            break;
+        case 2:
+            if (p.get_lifetime_ratio() <= 0.50f) {
+                p.UserData = 3;
+                p.Acceleration *= -5.5f;
+                p.Color = colors::Red;
+            }
+            break;
+        }
+
         p.Color.A = static_cast<u8>(255.f * p.get_lifetime_ratio());
     });
-    _particleSystem0->Position = {0.1f, 0.1f};
 
     _particleSystem0->start();
 }
@@ -80,6 +102,7 @@ void ParticleSystemEx::on_draw_to(render_target& target)
 
 void ParticleSystemEx::on_update(milliseconds deltaTime)
 {
+    _particleSystem0->update(deltaTime);
 }
 
 void ParticleSystemEx::on_fixed_update(milliseconds deltaTime)
@@ -90,10 +113,9 @@ void ParticleSystemEx::on_fixed_update(milliseconds deltaTime)
     stream << "avg FPS:" << stats.get_average_FPS();
     stream << " best FPS:" << stats.get_best_FPS();
     stream << " worst FPS:" << stats.get_worst_FPS();
+    stream << "| particle count:" << _particleSystem0->get_particle_count();
 
     get_window().Title = "TestGame " + stream.str();
-
-    _particleSystem0->update(deltaTime);
 }
 
 void ParticleSystemEx::on_key_down(keyboard::event& ev)
