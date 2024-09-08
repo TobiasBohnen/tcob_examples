@@ -27,6 +27,6 @@ protected:
     void on_mouse_wheel(mouse::wheel_event& ev) override;
 
 private:
-    std::shared_ptr<particle_system> _particleSystem0 {std::make_shared<particle_system>()};
-    basic_cam                        _cam;
+    particle_system _particleSystem0;
+    basic_cam       _cam;
 };

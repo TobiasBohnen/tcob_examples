@@ -10,6 +10,7 @@ using namespace std::chrono_literals;
 
 ParticleSystemEx::ParticleSystemEx(game& game)
     : scene(game)
+    , _particleSystem0 {true}
 {
 }
 
@@ -24,7 +25,7 @@ void ParticleSystemEx::on_start()
     auto& resMgr {get_game().get_library()};
     auto* resGrp {resMgr.get_group("res")};
 
-    _particleSystem0->Material = resGrp->get<material>("particleMat");
+    _particleSystem0.Material = resGrp->get<material>("particleMat");
 
     particle_template pt {
         .Acceleration = std::minmax(15.f, 35.f),
@@ -38,7 +39,7 @@ void ParticleSystemEx::on_start()
         .Color        = colors::FloralWhite,
         .Transparency = std::minmax(0.8f, 1.0f)};
 
-    auto emi0 {_particleSystem0->create_emitter()};
+    auto emi0 {_particleSystem0.create_emitter()};
     emi0->Template  = pt;
     emi0->SpawnArea = {450, 450, 30, 50};
     emi0->SpawnRate = 2000;
@@ -48,9 +49,9 @@ void ParticleSystemEx::on_start()
     obj["emi"]["spawn_area"]["x"] = 1200;
     obj["emi"]["lifetime"]        = 3000;
     auto emi1 {std::make_shared<particle_emitter>(obj["emi"].as<particle_emitter>())};
-    _particleSystem0->add_emitter(emi1);
+    _particleSystem0.add_emitter(emi1);
 
-    _particleSystem0->ParticleUpdate.connect([](particle_event const& pev) {
+    _particleSystem0.ParticleUpdate.connect([](particle_event const& pev) {
         auto&      p {pev.Particle};
         auto const phase {std::any_cast<i32>(p.UserData)};
 
@@ -92,17 +93,17 @@ void ParticleSystemEx::on_start()
         p.Color.A = static_cast<u8>(255.f * p.get_lifetime_ratio());
     });
 
-    _particleSystem0->start();
+    _particleSystem0.start();
 }
 
 void ParticleSystemEx::on_draw_to(render_target& target)
 {
-    _particleSystem0->draw_to(target);
+    _particleSystem0.draw_to(target);
 }
 
 void ParticleSystemEx::on_update(milliseconds deltaTime)
 {
-    _particleSystem0->update(deltaTime);
+    _particleSystem0.update(deltaTime);
 }
 
 void ParticleSystemEx::on_fixed_update(milliseconds deltaTime)
@@ -113,7 +114,7 @@ void ParticleSystemEx::on_fixed_update(milliseconds deltaTime)
     stream << "avg FPS:" << stats.get_average_FPS();
     stream << " best FPS:" << stats.get_best_FPS();
     stream << " worst FPS:" << stats.get_worst_FPS();
-    stream << "| particle count:" << _particleSystem0->get_particle_count();
+    stream << "| particle count:" << _particleSystem0.get_particle_count();
 
     get_window().Title = "TestGame " + stream.str();
 }
@@ -125,7 +126,7 @@ void ParticleSystemEx::on_key_down(keyboard::event& ev)
         get_game().pop_current_scene();
         break;
     case scan_code::D1:
-        _particleSystem0->restart();
+        _particleSystem0.restart();
     default:
         break;
     }
