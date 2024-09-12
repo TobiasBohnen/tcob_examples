@@ -533,7 +533,6 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<dot_matrix_display>("dot_matrix_display", {})};
-        style->Dot.Size   = 2.5_pct;
         style->Dot.Colors = {{0, colors::Black}, {1, colors::White}, {2, colors::Red}};
         style->Dot.Type   = dot_matrix_display::dot::type::Disc;
     }

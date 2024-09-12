@@ -243,9 +243,9 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form>
         terminal0->mouse_set(true);
         terminal0->echo(true);
 
-        auto button0 {panel0Layout->create_widget<button>({1150, 450, 200, 100}, "Button0")};
+        auto button0 {panel0Layout->create_widget<button>({1150, 600, 200, 100}, "Button0")};
         button0->Label = "Button0";
-        auto button1 {panel0Layout->create_widget<button>({1150, 650, 200, 100}, "Button1")};
+        auto button1 {panel0Layout->create_widget<button>({1150, 750, 200, 100}, "Button1")};
         button1->Label = "Button1";
 
         button0->Click.connect([terminal0](auto const&) {
@@ -257,6 +257,7 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form>
                 auto         _ = terminal0->restore(str);
             }
             terminal0->flash();
+            locate_service<render_system>().get_stats().reset();
         });
     }
     {
@@ -278,21 +279,27 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form>
     }
 
     {
-        auto dotMatrix {panel0Layout->create_widget<dot_matrix_display>({1150, 60, 240, 120}, "DM1")};
-        dotMatrix->Size = {40, 20};
+        auto dotMatrix {panel0Layout->create_widget<dot_matrix_display>({1150, 60, 320, 288}, "DM1")};
+        dotMatrix->Size = {160, 144};
         rng              rand;
         std::vector<u16> dots;
         dots.reserve(dotMatrix->Size->Width * dotMatrix->Size->Height);
         for (i32 i {0}; i < dots.capacity(); ++i) {
-            dots.push_back(rand(0, 2));
+            if (i % 160 == 159) {
+                dots.push_back(1);
+            } else if (i > 160 * 143) {
+                dots.push_back(0);
+            } else {
+                dots.push_back(rand(0, 2));
+            }
         }
         dotMatrix->Dots = dots;
     }
 
     {
-        auto lcdDisplay0 {panel0Layout->create_widget<seven_segment_display>({1150, 200, 350, 70}, "LCD0")};
+        auto lcdDisplay0 {panel0Layout->create_widget<seven_segment_display>({1150, 400, 350, 70}, "LCD0")};
         lcdDisplay0->Text = "0123456789 -=\"',";
-        auto lcdDisplay1 {panel0Layout->create_widget<seven_segment_display>({1150, 270, 350, 70}, "LCD1")};
+        auto lcdDisplay1 {panel0Layout->create_widget<seven_segment_display>({1150, 470, 350, 70}, "LCD1")};
         lcdDisplay1->Text = "ABCDEFGHIJLOPSUZ";
     }
 
