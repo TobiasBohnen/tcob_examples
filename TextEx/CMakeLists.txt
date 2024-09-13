@@ -14,6 +14,8 @@ if(EMSCRIPTEN)
     target_compile_options(TextEx PRIVATE -fexperimental-library -pthread)
     configure_file(textex.zip ${CMAKE_BINARY_DIR}/textex.zip COPYONLY)
     target_link_options(TextEx PRIVATE -sFULL_ES3 -sASSERTIONS -sPTHREAD_POOL_SIZE=8 -sASYNCIFY -pthread --embed-file textex.zip)
+else()
+    configure_file(textex.zip ${CMAKE_BINARY_DIR}/../../x64/textex.zip COPYONLY)
 endif()
 
 if(NOT TCOB_BUILD_SHARED)
@@ -30,5 +32,3 @@ if(TCOB_BUILD_SHARED AND NOT TCOB_IS_CI)
         COMMAND_EXPAND_LISTS
     )
 endif()
-
-configure_file(textex.zip ${CMAKE_BINARY_DIR}/../../x64/textex.zip COPYONLY)

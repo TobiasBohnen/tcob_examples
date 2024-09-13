@@ -14,6 +14,8 @@ if(EMSCRIPTEN)
     target_compile_options(TileMapEx PRIVATE -fexperimental-library -pthread)
     configure_file(tilemapex.zip ${CMAKE_BINARY_DIR}/tilemapex.zip COPYONLY)
     target_link_options(TileMapEx PRIVATE -sFULL_ES3 -sASSERTIONS -sPTHREAD_POOL_SIZE=8 -sASYNCIFY -pthread --embed-file tilemapex.zip)
+else()
+    configure_file(tilemapex.zip ${CMAKE_BINARY_DIR}/../../x64/tilemapex.zip COPYONLY)
 endif()
 
 if(NOT TCOB_BUILD_SHARED)
@@ -30,5 +32,3 @@ if(TCOB_BUILD_SHARED AND NOT TCOB_IS_CI)
         COMMAND_EXPAND_LISTS
     )
 endif()
-
-configure_file(tilemapex.zip ${CMAKE_BINARY_DIR}/../../x64/tilemapex.zip COPYONLY)

@@ -17,6 +17,8 @@ if(EMSCRIPTEN)
     target_compile_options(UIEx PRIVATE -fexperimental-library -pthread)
     configure_file(uiex.zip ${CMAKE_BINARY_DIR}/uiex.zip COPYONLY)
     target_link_options(UIEx PRIVATE -sFULL_ES3 -sASSERTIONS -sPTHREAD_POOL_SIZE=8 -sASYNCIFY -pthread --embed-file uiex.zip)
+else()
+    configure_file(uiex.zip ${CMAKE_BINARY_DIR}/../../x64/uiex.zip COPYONLY)
 endif()
 
 if(NOT TCOB_BUILD_SHARED)
@@ -33,5 +35,3 @@ if(TCOB_BUILD_SHARED AND NOT TCOB_IS_CI)
         COMMAND_EXPAND_LISTS
     )
 endif()
-
-configure_file(uiex.zip ${CMAKE_BINARY_DIR}/../../x64/uiex.zip COPYONLY)
