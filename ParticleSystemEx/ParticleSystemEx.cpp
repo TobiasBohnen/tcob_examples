@@ -29,14 +29,14 @@ void ParticleSystemEx::on_start()
 
     particle_template pt {
         .Acceleration = std::minmax(15.f, 35.f),
-        .Direction    = std::minmax(-45_deg, 45_deg),
+        .Direction    = std::minmax(-25_deg, 25_deg),
         .Lifetime     = std::minmax(5000ms, 25000ms),
         .Scale        = std::minmax(0.75f, 1.5f),
         .Size         = {10, 10},
-        .Speed        = std::minmax(30.f, 150.f),
+        .Speed        = std::minmax(30.f, 50.f),
         .Spin         = std::minmax(-150_deg, 150_deg),
         .Texture      = "snowflake",
-        .Color        = colors::FloralWhite,
+        .Color        = colors::Red,
         .Transparency = std::minmax(1.0f, 1.0f)};
 
     auto emi0 {_particleSystem0.create_emitter()};
@@ -51,7 +51,15 @@ void ParticleSystemEx::on_start()
     auto emi1 {std::make_shared<particle_emitter>(obj["emi"].as<particle_emitter>())};
     _particleSystem0.add_emitter(emi1);
 
-    _colors = color_gradient {{0.0f, colors::White}, {0.25f, colors::Yellow}, {0.5f, colors::Orange}, {0.75f, colors::Red}, {1.0f, colors::Black}}.get_colors();
+    _colors = color_gradient {{0.0f, colors::Red},
+                              {0.14f, colors::Orange},
+                              {0.28f, colors::Yellow},
+                              {0.42f, colors::Green},
+                              {0.57f, colors::Blue},
+                              {0.71f, colors::Indigo},
+                              {0.85f, colors::Violet},
+                              {1.0f, colors::Red}}
+                  .get_colors();
 
     _particleSystem0.ParticleUpdate.connect([&](particle_event const& pev) {
         auto& p {pev.Particle};
@@ -60,7 +68,6 @@ void ParticleSystemEx::on_start()
 
         f32 const parLife {p.get_lifetime_ratio()};
         if (phase < 4) { p.Color = _colors[static_cast<u8>(255.f * (1 - parLife))]; }
-        p.Color.A = static_cast<u8>(255.f * parLife);
 
         auto const dist {p.Bounds.get_center().distance_to({460, 200})};
         if (phase < 5 && dist < 10) {
@@ -76,20 +83,21 @@ void ParticleSystemEx::on_start()
 
         switch (phase) {
         case 0:
-            if (parLife <= 0.95f) {
+            if (parLife <= 0.75f) {
+                p.Direction /= 4;
                 p.UserData = 1;
             }
             break;
         case 1:
-            if (parLife <= 0.75f) {
-                p.Direction /= 2;
-                p.UserData = 2;
+            if (parLife <= 0.50f) {
+                p.UserData  = 2;
+                p.Direction = 0;
+                p.Acceleration *= -5.5f;
             }
             break;
         case 2:
-            if (parLife <= 0.50f) {
-                p.UserData = 3;
-                p.Acceleration *= -5.5f;
+            if (parLife <= 0.25f) {
+                p.Color.A = static_cast<u8>(255.f * (parLife / 0.25f));
             }
             break;
         }
