@@ -12,7 +12,7 @@ auto main(void) -> int
 {
     tcob::data::config::object config;
 
-    tcob::data::video_config video;
+    tcob::gfx::video_config video;
     video.FrameLimit           = 100;
     video.FullScreen           = false;
     video.UseDesktopResolution = false;
