@@ -2,7 +2,9 @@ if(TCOB_ENABLE_ADDON_PHYSICS_BOX2D
     AND TCOB_ENABLE_ADDON_AUDIO_TINYSOUNDFONT
     AND TCOB_ENABLE_ADDON_SCRIPTING_LUA
     AND TCOB_ENABLE_ADDON_GFX_LITEHTML)
-    add_subdirectory(_testbed)
+    if(NOT EMSCRIPTEN)
+        add_subdirectory(_testbed)
+    endif()
 
     add_subdirectory(CanvasEx)
     add_subdirectory(ControllerEx)
