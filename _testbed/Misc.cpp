@@ -68,6 +68,7 @@ void MiscScene::on_start()
 
     rng                                      rnd;
     std::vector<std::shared_ptr<gfx::shape>> sprites;
+
     for (i32 i {0}; i < 500; i++) {
         f32 x {rnd(0.0f, 1200.f)};
         f32 y {rnd(0.0f, 1200.f)};
@@ -75,24 +76,34 @@ void MiscScene::on_start()
         i32 seg {rnd(4, 9)};
         i32 rot {rnd(0, 360)};
 
-        if (i % 2 == 0) {
-            auto shape0 {std::make_shared<gfx::circle_shape>()};
-            shape0->Material = resGrp->get<material>("circleShape");
-            //  shape0->Color    = colors::Red;
-            shape0->Center   = {x, y};
-            shape0->Radius   = r;
-            shape0->Segments = seg;
-            shape0->Rotation = rot;
-            sprites.push_back(shape0);
-        } else {
-            auto shape0 {std::make_shared<gfx::rect_shape>()};
-            shape0->Material = resGrp->get<material>("circleShape");
-            //  shape0->Color    = colors::Blue;
-            shape0->Bounds   = {x, y, r, r};
-            shape0->Rotation = rot;
-            sprites.push_back(shape0);
-        }
+        auto shape0 {std::make_shared<gfx::convex_poly_shape>()};
+        shape0->Material = resGrp->get<material>("polyShape");
+        // shape0->Color    = colors::Blue;
+        shape0->Points   = {{5 + x, 5 + y}, {5 + x, 50 + y}, {50 + x, 50 + y}, {64 + x, 35 + y}, {64 + x, 15 + y}, {50 + x, 5 + y}};
+        shape0->Rotation = rot;
+        sprites.push_back(shape0);
+
+        /*
+                if (i % 2 == 0) {
+                    auto shape0 {std::make_shared<gfx::circle_shape>()};
+                    shape0->Material = resGrp->get<material>("circleShape");
+                    //  shape0->Color    = colors::Red;
+                    shape0->Center   = {x, y};
+                    shape0->Radius   = r;
+                    shape0->Segments = seg;
+                    shape0->Rotation = rot;
+                    sprites.push_back(shape0);
+                } else {
+                    auto shape0 {std::make_shared<gfx::rect_shape>()};
+                    shape0->Material = resGrp->get<material>("circleShape");
+                    //  shape0->Color    = colors::Blue;
+                    shape0->Bounds   = {x, y, r, r};
+                    shape0->Rotation = rot;
+                    sprites.push_back(shape0);
+                }
+                */
     }
+
     _layer1 = std::make_shared<static_shape_batch>(sprites);
 
     _font = resGrp->get<font>("defaultFont");

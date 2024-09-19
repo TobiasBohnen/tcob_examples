@@ -27,8 +27,8 @@ protected:
 
 private:
     struct Box2DExObject {
-        std::shared_ptr<gfx::shape>    Sprite;
-        std::shared_ptr<physics::body> Body;
+        std::variant<std::shared_ptr<gfx::rect_shape>, std::shared_ptr<gfx::circle_shape>> Sprite;
+        std::shared_ptr<physics::body>                                                     Body;
     };
 
     void create_box(point_f pos);

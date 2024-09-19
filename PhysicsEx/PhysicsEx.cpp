@@ -36,16 +36,34 @@ void PhysicsEx::on_draw_to(render_target& target)
 void PhysicsEx::on_update(milliseconds deltaTime)
 {
     for (auto it {_objects.begin()}; it < _objects.end(); ++it) {
-        if (it->Sprite->Center != it->Body->Transform().Center * 12) {
-            it->Sprite->Center   = it->Body->Transform().Center * 12;
-            it->Sprite->Rotation = it->Body->Transform().Angle;
+        std::visit(
+            overloaded {
+                [&](std::shared_ptr<gfx::rect_shape> const& rect) {
+                    auto const bounds {rect->Bounds->with_center(it->Body->Transform().Center * 12)};
+                    if (rect->Bounds != bounds) {
+                        rect->Bounds   = bounds;
+                        rect->Rotation = it->Body->Transform().Angle;
 
-            if (it->Sprite->Center->Y > 1000) {
-                _layer1.remove_shape(*it->Sprite);
-                _world.remove_body(*it->Body);
-                it = _objects.erase(it);
-            }
-        }
+                        if (rect->Bounds->get_center().Y > 1000) {
+                            _layer1.remove_shape(*rect);
+                            _world.remove_body(*it->Body);
+                            it = _objects.erase(it);
+                        }
+                    }
+                },
+                [&](std::shared_ptr<gfx::circle_shape> const& circle) {
+                    if (circle->Center != it->Body->Transform().Center * 12) {
+                        circle->Center   = it->Body->Transform().Center * 12;
+                        circle->Rotation = it->Body->Transform().Angle;
+
+                        if (circle->Center->Y > 1000) {
+                            _layer1.remove_shape(*circle);
+                            _world.remove_body(*it->Body);
+                            it = _objects.erase(it);
+                        }
+                    }
+                }},
+            it->Sprite);
     }
 
     _layer1.update(deltaTime);

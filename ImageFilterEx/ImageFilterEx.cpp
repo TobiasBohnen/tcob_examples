@@ -73,8 +73,7 @@ void ImageFilterEx::on_start()
     auto sprite0           = _layer1.create_shape<gfx::rect_shape>();
     sprite0->Material      = _mat0;
     sprite0->TextureRegion = "normal";
-    sprite0->Bounds        = {{0, 0}, {128, 128}};
-    sprite0->Center        = rect_f {0, 0, 800, 600}.get_center();
+    sprite0->Bounds        = {{400, 300}, {128, 128}};
 
     //////////
     auto sprite1           = _layer1.create_shape<gfx::rect_shape>();
