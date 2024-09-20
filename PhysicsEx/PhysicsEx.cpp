@@ -39,7 +39,7 @@ void PhysicsEx::on_update(milliseconds deltaTime)
         std::visit(
             overloaded {
                 [&](std::shared_ptr<gfx::rect_shape> const& rect) {
-                    auto const bounds {rect->Bounds->with_center(it->Body->Transform().Center * 12)};
+                    auto const bounds {rect->Bounds->as_centered_at(it->Body->Transform().Center * 12)};
                     if (rect->Bounds != bounds) {
                         rect->Bounds   = bounds;
                         rect->Rotation = it->Body->Transform().Angle;
