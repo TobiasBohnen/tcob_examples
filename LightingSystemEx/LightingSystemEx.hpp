@@ -27,11 +27,11 @@ protected:
     void on_mouse_wheel(mouse::wheel_event& ev) override;
 
 private:
-    lighting_system                    _lightingSystem0;
-    std::shared_ptr<light_source_base> _lightSource0;
-    std::shared_ptr<light_source_base> _lightSourceSec0;
-    std::shared_ptr<light_source_base> _lightSourceSec1;
-    basic_cam                          _cam;
+    lighting_system               _lightingSystem0;
+    std::shared_ptr<light_source> _lightSource0;
+    std::shared_ptr<light_source> _lightSourceSec0;
+    std::shared_ptr<light_source> _lightSourceSec1;
+    basic_cam                     _cam;
 
     assets::manual_asset_ptr<material>  _material;
     std::shared_ptr<static_shape_batch> _layer1;
