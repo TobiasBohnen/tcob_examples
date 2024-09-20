@@ -137,6 +137,7 @@ void ParticleSystemEx::on_key_down(keyboard::event& ev)
         break;
     case scan_code::D1:
         _particleSystem0.restart();
+        break;
     default:
         break;
     }
