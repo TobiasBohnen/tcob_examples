@@ -30,7 +30,7 @@ void LightingSystemEx::on_start()
     _lightSource0->Color = {255, 255, 0, 128};
 
     auto const createSC {[&](std::vector<point_f> const& points) {
-        auto shape0 {_layer1->create_shape<gfx::convex_poly_shape>()};
+        auto shape0 {_layer1->create_shape<gfx::poly_shape>()};
         shape0->Material = _material;
         shape0->Color    = colors::Blue;
         shape0->Points   = points;

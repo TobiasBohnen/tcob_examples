@@ -76,10 +76,10 @@ void MiscScene::on_start()
         i32 seg {rnd(4, 9)};
         i32 rot {rnd(0, 360)};
 
-        auto shape0 {std::make_shared<gfx::convex_poly_shape>()};
+        auto shape0 {std::make_shared<gfx::poly_shape>()};
         shape0->Material = resGrp->get<material>("polyShape");
-        // shape0->Color    = colors::Blue;
-        shape0->Points   = {{5 + x, 5 + y}, {5 + x, 50 + y}, {50 + x, 50 + y}, {64 + x, 35 + y}, {64 + x, 15 + y}, {50 + x, 5 + y}};
+        //   shape0->Color    = colors::Blue;
+        shape0->Points   = {{5 + x, 5 + y}, {25 + x, 15 + y}, {25 + x, 35 + y}, {5 + x, 50 + y}, {50 + x, 50 + y}, {64 + x, 35 + y}, {64 + x, 15 + y}, {50 + x, 5 + y}};
         shape0->Rotation = rot;
         sprites.push_back(shape0);
 
@@ -117,7 +117,7 @@ void MiscScene::on_start()
     for (f32 y = 0; y < pointSize * _numPoints.Height; y += pointSize) {
         for (f32 x = 0; x < pointSize * _numPoints.Width; x += pointSize) {
             auto& v     = _pointCloud->create_point();
-            v.Position  = {(x + pointSize / 2), (y + pointSize / 2)};
+            v.Position  = {(x + (pointSize / 2)), (y + (pointSize / 2))};
             v.Color     = {255, 255, 255, 255};
             v.TexCoords = {x / (pointSize * _numPoints.Width),
                            y / (pointSize * _numPoints.Height),
@@ -132,7 +132,7 @@ void MiscScene::on_start()
     _pointTween.Interval = 20ms;
     _pointTween.Value.Changed.connect([&](point_f value) {
         for (usize i {0}; i < _numPoints.Height; i++) {
-            usize idx     = i * _numPoints.Width + _pointIdx;
+            usize idx     = (i * _numPoints.Width) + _pointIdx;
             auto& p       = _pointCloud->get_point_at(idx);
             p.Position[1] = _points[idx][1] + value.Y;
         }
