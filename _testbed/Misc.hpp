@@ -106,6 +106,8 @@ private:
     sound _sound_flac;
     sound _sound_it;
 
+    sound _sound_speech0;
+
     assets::asset_ptr<sound_font> _soundFont0;
     std::unique_ptr<music>        _midi0;
     sound                         _midi1;

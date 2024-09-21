@@ -124,7 +124,7 @@ void SoundGeneratorEx::create_data()
 
 void SoundGeneratorEx::play_wave()
 {
-    _sound1 = _gen1.create_sound(_audioData, _wave1);
+    _sound1 = sound {_audioData};
     _sound1.play();
 }
 

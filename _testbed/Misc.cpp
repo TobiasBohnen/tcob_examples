@@ -507,6 +507,9 @@ void MiscScene::on_key_down(keyboard::event& ev)
     } else if (ev.ScanCode == scan_code::KP_6) {
         _sound_opus.play();
         std::cout << _sound_opus.get_duration().count() / 1000 << "\n";
+    } else if (ev.ScanCode == scan_code::KP_7) {
+        _sound_speech0 = speech_generator {}.create_sound("1 2 3 4 5 6 7 8 9 0");
+        _sound_speech0.play();
     } else if (ev.ScanCode == scan_code::K) {
         _music0->play();
     } else if (ev.ScanCode == scan_code::L) {
@@ -518,7 +521,7 @@ void MiscScene::on_key_down(keyboard::event& ev)
 
         if (frames.size() < 5) {
             auto img {get_window().copy_to_image()};
-            frames.push_back({img, milliseconds {frames.size() * 250}});
+            frames.push_back({.Image = img, .TimeStamp = milliseconds {frames.size() * 250}});
         }
 
         if (frames.size() == 5) {

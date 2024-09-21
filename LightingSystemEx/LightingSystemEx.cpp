@@ -28,7 +28,7 @@ void LightingSystemEx::on_start()
     _lightSource0        = _lightingSystem0.create_light_source();
     _lightSource0->Range = 100;
     _lightSource0->Color = {255, 255, 0, 128};
-    i32        id {0};
+
     auto const createSC {[&](std::vector<point_f> const& points) {
         auto shape0 {_layer1->create_shape<gfx::convex_poly_shape>()};
         shape0->Material = _material;
@@ -37,7 +37,7 @@ void LightingSystemEx::on_start()
 
         auto sc0 {_lightingSystem0.create_shadow_caster()};
         sc0->Points = points;
-        sc0->Hit.connect([=, this](auto const& ev) {
+        sc0->Hit.connect([=](auto const& ev) {
             if (ev.Source->Falloff && ev.Source->Range()) {
                 if (ev.Distance < *ev.Source->Range() / 2) {
                     shape0->Color = colors::Green;
@@ -68,7 +68,7 @@ void LightingSystemEx::on_update(milliseconds deltaTime)
     _lightingSystem0.update(deltaTime);
 }
 
-void LightingSystemEx::on_fixed_update(milliseconds deltaTime)
+void LightingSystemEx::on_fixed_update(milliseconds /* deltaTime */)
 {
     std::stringstream stream;
     stream << std::fixed << std::setprecision(2);
