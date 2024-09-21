@@ -80,6 +80,7 @@ void MiscScene::on_start()
         shape0->Material = resGrp->get<material>("polyShape");
         //   shape0->Color    = colors::Blue;
         shape0->Points   = {{5 + x, 5 + y}, {25 + x, 15 + y}, {25 + x, 35 + y}, {5 + x, 50 + y}, {50 + x, 50 + y}, {64 + x, 35 + y}, {64 + x, 15 + y}, {50 + x, 5 + y}};
+        shape0->Holes    = {{{30 + x, 30 + y}, {30 + x, 60 + y}, {60 + x, 60 + y}, {60 + x, 30 + y}}};
         shape0->Rotation = rot;
         sprites.push_back(shape0);
 
