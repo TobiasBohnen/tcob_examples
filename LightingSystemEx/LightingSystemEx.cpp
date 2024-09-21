@@ -21,36 +21,39 @@ void LightingSystemEx::on_start()
 
     using namespace tcob::literals;
 
-    std::vector<std::shared_ptr<gfx::shape>> shapes;
+    _layer1 = std::make_shared<shape_batch>();
 
     _lightingSystem0.Bounds = {point_f::Zero, size_f {get_window().Size()}};
 
     _lightSource0        = _lightingSystem0.create_light_source();
+    _lightSource0->Range = 100;
     _lightSource0->Color = {255, 255, 0, 128};
-
-    auto const createShape {[&](std::vector<point_f> const& points) {
-        auto shape0 {std::make_shared<gfx::convex_poly_shape>()};
+    i32        id {0};
+    auto const createSC {[&](std::vector<point_f> const& points) {
+        auto shape0 {_layer1->create_shape<gfx::convex_poly_shape>()};
         shape0->Material = _material;
         shape0->Color    = colors::Blue;
         shape0->Points   = points;
-        shapes.push_back(shape0);
-    }};
-    auto const createSC {[&](std::vector<point_f> const& points) {
-        createShape(points);
+
         auto sc0 {_lightingSystem0.create_shadow_caster()};
         sc0->Points = points;
+        sc0->Hit.connect([=, this](auto const& ev) {
+            if (ev.Source->Falloff && ev.Source->Range()) {
+                if (ev.Distance < *ev.Source->Range() / 2) {
+                    shape0->Color = colors::Green;
+                }
+            } else {
+                shape0->Color = colors::Red;
+            }
+        });
     }};
 
     createSC({{100.0f, 50.0f}, {100.0f, 200.0f}, {200.0f, 200.0f}, {250.0f, 150.0f}, {250.0f, 100.0f}, {200.0f, 50.0f}});
     createSC({{300.0f, 250.0f}, {300.0f, 400.0f}, {400.0f, 400.0f}, {450.0f, 350.0f}, {450.0f, 300.0f}, {400.0f, 250.0f}});
     createSC({{437.0f, 411.0f}, {409.0f, 433.0f}, {424.0f, 479.0f}, {456.0f, 488.0f}, {478.0f, 455.0f}, {467.0f, 413.0f}});
-    createSC({{100.0f, 50.0f}, {100.0f, 200.0f}, {200.0f, 200.0f}, {250.0f, 150.0f}, {250.0f, 100.0f}, {200.0f, 50.0f}});
-    createSC({{300.0f, 250.0f}, {300.0f, 400.0f}, {400.0f, 400.0f}, {450.0f, 350.0f}, {450.0f, 300.0f}, {400.0f, 250.0f}});
     createSC({{500.0f, 450.0f}, {510.0f, 600.0f}, {620.0f, 620.0f}, {670.0f, 560.0f}, {640.0f, 480.0f}, {560.0f, 450.0f}});
     createSC({{750.0f, 200.0f}, {760.0f, 320.0f}, {850.0f, 350.0f}, {880.0f, 290.0f}, {840.0f, 210.0f}, {780.0f, 190.0f}});
     createSC({{900.0f, 400.0f}, {920.0f, 550.0f}, {1020.0f, 570.0f}, {1080.0f, 490.0f}, {1040.0f, 420.0f}, {960.0f, 390.0f}});
-
-    _layer1 = std::make_shared<static_shape_batch>(shapes);
 }
 
 void LightingSystemEx::on_draw_to(render_target& target)
@@ -61,6 +64,7 @@ void LightingSystemEx::on_draw_to(render_target& target)
 
 void LightingSystemEx::on_update(milliseconds deltaTime)
 {
+    _layer1->update(deltaTime);
     _lightingSystem0.update(deltaTime);
 }
 
@@ -94,9 +98,13 @@ void LightingSystemEx::on_key_down(keyboard::event& ev)
     } break;
     case scan_code::L: {
         static rng rand;
-        auto       lightSource1 = _lightingSystem0.create_light_source();
-        lightSource1->Color     = {static_cast<u8>(rand(0, 255)), static_cast<u8>(rand(0, 255)), static_cast<u8>(rand(0, 255)), 64};
-        lightSource1->Position  = {rand(0.f, 1600.f), rand(0.f, 900.f)};
+        auto       lightSource1  = _lightingSystem0.create_light_source();
+        lightSource1->Color      = _lightSource0->Color();
+        lightSource1->Position   = _lightSource0->Position();
+        lightSource1->Range      = _lightSource0->Range();
+        lightSource1->Falloff    = _lightSource0->Falloff();
+        lightSource1->StartAngle = _lightSource0->StartAngle();
+        lightSource1->EndAngle   = _lightSource0->EndAngle();
     } break;
     case scan_code::K: {
         if (!_lightSourceSec0) {
@@ -113,9 +121,12 @@ void LightingSystemEx::on_key_down(keyboard::event& ev)
             _lightSourceSec1 = nullptr;
         }
     } break;
+    case scan_code::F: {
+        _lightSource0->Falloff = !_lightSource0->Falloff;
+    } break;
     case scan_code::R: {
         if (_lightSource0->Range()) {
-            if (*_lightSource0->Range == 1000) {
+            if (*_lightSource0->Range == 500) {
                 _lightSource0->Range = std::nullopt;
             } else {
                 _lightSource0->Range = *_lightSource0->Range() + 100;

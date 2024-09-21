@@ -33,6 +33,6 @@ private:
     std::shared_ptr<light_source> _lightSourceSec1;
     basic_cam                     _cam;
 
-    assets::manual_asset_ptr<material>  _material;
-    std::shared_ptr<static_shape_batch> _layer1;
+    assets::manual_asset_ptr<material> _material;
+    std::shared_ptr<shape_batch>       _layer1;
 };
