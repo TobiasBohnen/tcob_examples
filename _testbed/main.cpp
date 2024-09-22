@@ -9,8 +9,9 @@
 
 auto main(int argc, char* argv[]) -> int
 {
-    tcob::game game {{.Path = argv[0],
-                      .Name = "TestGame"}};
+    tcob::game game {{.Path    = argv[0],
+                      .Name    = "TestGame",
+                      .LogFile = "stdout"}};
     game.push_scene<MiscScene>();
     game.start();
     return 0;
