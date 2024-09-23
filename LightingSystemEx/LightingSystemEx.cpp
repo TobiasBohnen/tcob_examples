@@ -33,10 +33,10 @@ void LightingSystemEx::on_start()
         auto shape0 {_layer1->create_shape<gfx::poly_shape>()};
         shape0->Material = _material;
         shape0->Color    = colors::Blue;
-        shape0->Points   = points;
+        shape0->Polygon  = points;
 
         auto sc0 {_lightingSystem0.create_shadow_caster()};
-        sc0->Points = points;
+        sc0->Polygon = points;
         sc0->Hit.connect([=](auto const& ev) {
             if (ev.Source->Falloff && ev.Source->Range()) {
                 if (ev.Distance < *ev.Source->Range() / 2) {
@@ -82,7 +82,7 @@ void LightingSystemEx::on_fixed_update(milliseconds /* deltaTime */)
 
 void LightingSystemEx::on_key_down(keyboard::event& ev)
 {
-    switch (ev.ScanCode) {
+    switch (ev.ScanCode) { // NOLINT
     case scan_code::BACKSPACE:
         get_game().pop_current_scene();
         break;

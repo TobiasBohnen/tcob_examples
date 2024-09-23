@@ -79,7 +79,7 @@ void MiscScene::on_start()
         auto shape0 {std::make_shared<gfx::poly_shape>()};
         shape0->Material = resGrp->get<material>("polyShape");
         //   shape0->Color    = colors::Blue;
-        shape0->Points   = {{x, y}, {20 + x, 10 + y}, {20 + x, 30 + y}, {x, 45 + y}, {45 + x, 45 + y}, {60 + x, 30 + y}, {60 + x, 10 + y}, {45 + x, y}};
+        shape0->Polygon  = {{x, y}, {20 + x, 10 + y}, {20 + x, 30 + y}, {x, 45 + y}, {45 + x, 45 + y}, {60 + x, 30 + y}, {60 + x, 10 + y}, {45 + x, y}};
         shape0->Holes    = {{{30 + x, 10 + y}, {30 + x, 30 + y}, {50 + x, 30 + y}, {50 + x, 10 + y}}};
         shape0->Rotation = rot;
         sprites.push_back(shape0);
