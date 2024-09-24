@@ -8,8 +8,6 @@
 #include <iomanip>
 #include <iostream>
 
-using namespace std;
-
 CanvasEx::CanvasEx(game& game)
     : scene {game}
 {
@@ -79,13 +77,24 @@ void CanvasEx::paint_to_canvas()
 {
     _canvas.begin_frame(get_window().Size(), 1);
 
-    f32 pos {300};
-    f32 size {75};
+    std::vector<point_f> points;
+    f32                  pos {300};
+    f32                  size {75};
+    rect_f               rect {{pos - (size / 2), pos - (size / 2)}, {size - 10, size - 20}};
+
+    transform xform;
+    xform.rotate_at(45, rect.get_center());
 
     ray  ray0 {{0, 0}, degree_f {135}};
     auto points0 {ray0.intersect_circle({pos, pos}, size)};
+    points.insert(points.end(), points0.begin(), points0.end());
+    auto points1 {ray0.intersect_rect(rect, xform)};
+    points.insert(points.end(), points1.begin(), points1.end());
     ray  ray1 {{600, 0}, degree_f {225}};
-    auto points1 {ray1.intersect_circle({pos, pos}, size)};
+    auto points2 {ray1.intersect_circle({pos, pos}, size)};
+    points.insert(points.end(), points2.begin(), points2.end());
+    auto points3 {ray1.intersect_rect(rect, xform)};
+    points.insert(points.end(), points3.begin(), points3.end());
 
     _canvas.set_stroke_style(colors::Red);
     _canvas.set_stroke_width(5);
@@ -105,13 +114,18 @@ void CanvasEx::paint_to_canvas()
     _canvas.circle({pos, pos}, size);
     _canvas.stroke();
 
+    _canvas.set_stroke_style(colors::Blue);
+    _canvas.set_stroke_width(5);
+    _canvas.set_transform(xform);
+    _canvas.begin_path();
+    _canvas.rect(rect);
+    _canvas.stroke();
+    _canvas.reset_transform();
+
     _canvas.set_stroke_width(2);
     _canvas.set_stroke_style(colors::Yellow);
     _canvas.begin_path();
-    for (auto p : points0) {
-        _canvas.circle(p, 2);
-    }
-    for (auto p : points1) {
+    for (auto p : points) {
         _canvas.circle(p, 2);
     }
     _canvas.stroke();
