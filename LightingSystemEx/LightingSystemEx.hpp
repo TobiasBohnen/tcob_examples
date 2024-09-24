@@ -27,7 +27,7 @@ protected:
     void on_mouse_wheel(mouse::wheel_event& ev) override;
 
 private:
-    lighting_system               _lightingSystem0;
+    lighting_system               _lightingSystem0 {true};
     std::shared_ptr<light_source> _lightSource0;
     std::shared_ptr<light_source> _lightSourceSec0;
     std::shared_ptr<light_source> _lightSourceSec1;
