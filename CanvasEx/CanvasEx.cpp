@@ -77,36 +77,44 @@ void CanvasEx::prepare_canvas()
 
 void CanvasEx::paint_to_canvas()
 {
-    _canvas.begin_frame({1000, 800}, 2);
+    _canvas.begin_frame(get_window().Size(), 1);
 
-    _canvas.set_fill_style(colors::White);
+    f32 pos {300};
+    f32 size {75};
+
+    ray  ray0 {{0, 0}, degree_f {135}};
+    auto points0 {ray0.intersect_circle({pos, pos}, size)};
+    ray  ray1 {{600, 0}, degree_f {225}};
+    auto points1 {ray1.intersect_circle({pos, pos}, size)};
+
+    _canvas.set_stroke_style(colors::Red);
+    _canvas.set_stroke_width(5);
     _canvas.begin_path();
-    _canvas.rect({150, 150, 500, 500});
-    _canvas.fill();
+    _canvas.move_to(point_f {0, 0});
+    _canvas.line_to(point_f {pos * 2, pos * 2});
+    _canvas.stroke();
 
-    func::catmull_rom cm;
-    cm.ControlPoints = {{150, 300},
-                        {150, 150},
-                        {350, 300},
-                        {200, 300},
-                        {250, 15}};
-
-    std::vector<point_f> points;
-    for (f32 f {0}; f < 1.0f; f += 0.01f) {
-        points.push_back(cm(f));
-    }
-    points.push_back(points.front());
+    _canvas.begin_path();
+    _canvas.move_to(point_f {pos * 2, 0});
+    _canvas.line_to(point_f {0, pos * 2});
+    _canvas.stroke();
 
     _canvas.set_stroke_style(colors::Blue);
     _canvas.set_stroke_width(5);
-    _canvas.stroke_lines(points);
+    _canvas.begin_path();
+    _canvas.circle({pos, pos}, size);
+    _canvas.stroke();
 
-    for (auto const& pt : cm.ControlPoints) {
-        _canvas.begin_path();
-        _canvas.set_fill_style(colors::Orange);
-        _canvas.circle(pt, 10);
-        _canvas.fill();
+    _canvas.set_stroke_width(2);
+    _canvas.set_stroke_style(colors::Yellow);
+    _canvas.begin_path();
+    for (auto p : points0) {
+        _canvas.circle(p, 2);
     }
+    for (auto p : points1) {
+        _canvas.circle(p, 2);
+    }
+    _canvas.stroke();
 
     _canvas.end_frame();
 }
