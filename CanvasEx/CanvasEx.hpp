@@ -21,6 +21,7 @@ protected:
 
     void on_key_down(keyboard::event& ev) override;
     void on_mouse_motion(mouse::motion_event& ev) override;
+    void on_mouse_wheel(mouse::wheel_event& ev) override;
 
 private:
     void prepare_canvas();
@@ -33,4 +34,7 @@ private:
 
     canvas          _canvas;
     canvas_renderer _renderer {_canvas};
+
+    point_f _center;
+    i32     _rotation {45};
 };

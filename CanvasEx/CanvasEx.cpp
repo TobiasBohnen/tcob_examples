@@ -15,7 +15,7 @@ CanvasEx::CanvasEx(game& game)
 
 CanvasEx::~CanvasEx() = default;
 
-void CanvasEx::on_fixed_update(milliseconds deltaTime)
+void CanvasEx::on_fixed_update(milliseconds /* deltaTime */)
 {
     std::stringstream stream;
     stream << std::fixed << std::setprecision(2);
@@ -32,7 +32,7 @@ void CanvasEx::on_start()
     prepare_canvas();
 }
 
-void CanvasEx::on_update(milliseconds deltaTime)
+void CanvasEx::on_update(milliseconds /* deltaTime */)
 {
     paint_to_canvas();
 }
@@ -46,7 +46,7 @@ void CanvasEx::on_draw_to(render_target& target)
 
 void CanvasEx::on_key_down(keyboard::event& ev)
 {
-    switch (ev.ScanCode) {
+    switch (ev.ScanCode) { // NOLINT
     case scan_code::R: {
         auto _ = get_window().copy_to_image().save("screen01.webp");
     } break;
@@ -60,6 +60,12 @@ void CanvasEx::on_key_down(keyboard::event& ev)
 
 void CanvasEx::on_mouse_motion(mouse::motion_event& ev)
 {
+    _center = point_f {ev.Position};
+}
+
+void CanvasEx::on_mouse_wheel(mouse::wheel_event& ev)
+{
+    _rotation += (ev.Scroll.Y * 10);
 }
 
 void CanvasEx::prepare_canvas()
@@ -78,42 +84,40 @@ void CanvasEx::paint_to_canvas()
     _canvas.begin_frame(get_window().Size(), 1);
 
     std::vector<point_f> points;
-    f32                  pos {300};
     f32                  size {75};
-    rect_f               rect {{pos - (size / 2), pos - (size / 2)}, {size - 10, size - 20}};
+    rect_f               rect {{_center.X - (size / 2), _center.Y - (size / 2)}, {size - 10, size - 20}};
 
     transform xform;
-    xform.rotate_at(45, rect.get_center());
-
-    ray  ray0 {{0, 0}, degree_f {135}};
-    auto points0 {ray0.intersect_circle({pos, pos}, size)};
-    points.insert(points.end(), points0.begin(), points0.end());
-    auto points1 {ray0.intersect_rect(rect, xform)};
-    points.insert(points.end(), points1.begin(), points1.end());
-    ray  ray1 {{600, 0}, degree_f {225}};
-    auto points2 {ray1.intersect_circle({pos, pos}, size)};
-    points.insert(points.end(), points2.begin(), points2.end());
-    auto points3 {ray1.intersect_rect(rect, xform)};
-    points.insert(points.end(), points3.begin(), points3.end());
+    xform.rotate_at(_rotation, rect.get_center());
 
     _canvas.set_stroke_style(colors::Red);
     _canvas.set_stroke_width(5);
-    _canvas.begin_path();
-    _canvas.move_to(point_f {0, 0});
-    _canvas.line_to(point_f {pos * 2, pos * 2});
-    _canvas.stroke();
 
-    _canvas.begin_path();
-    _canvas.move_to(point_f {pos * 2, 0});
-    _canvas.line_to(point_f {0, pos * 2});
-    _canvas.stroke();
+    auto castRay {
+        [&](auto&& ray) {
+            auto points0 {ray.intersect_circle(_center, size)};
+            points.insert(points.end(), points0.begin(), points0.end());
+            auto points1 {ray.intersect_rect(rect, xform)};
+            points.insert(points.end(), points1.begin(), points1.end());
 
-    _canvas.set_stroke_style(colors::Blue);
+            _canvas.begin_path();
+            _canvas.move_to(ray.get_point(0));
+            _canvas.line_to(ray.get_point(1000));
+            _canvas.stroke();
+        }};
+    castRay(ray {point_f {0, 0}, degree_f {135}});
+    castRay(ray {point_f {600, 0}, degree_f {225}});
+    castRay(ray {point_f {300, 0}, degree_f {180}});
+    castRay(ray {point_f {0, 300}, degree_f {90}});
+
+    // draw circle
+    _canvas.set_stroke_style(colors::Green);
     _canvas.set_stroke_width(5);
     _canvas.begin_path();
-    _canvas.circle({pos, pos}, size);
+    _canvas.circle(_center, size);
     _canvas.stroke();
 
+    // draw rect
     _canvas.set_stroke_style(colors::Blue);
     _canvas.set_stroke_width(5);
     _canvas.set_transform(xform);
@@ -122,12 +126,11 @@ void CanvasEx::paint_to_canvas()
     _canvas.stroke();
     _canvas.reset_transform();
 
+    // draw intersections
     _canvas.set_stroke_width(2);
     _canvas.set_stroke_style(colors::Yellow);
     _canvas.begin_path();
-    for (auto p : points) {
-        _canvas.circle(p, 2);
-    }
+    for (auto p : points) { _canvas.circle(p, 2); }
     _canvas.stroke();
 
     _canvas.end_frame();
