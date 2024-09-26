@@ -83,9 +83,9 @@ void CanvasEx::paint_to_canvas()
 {
     _canvas.begin_frame(get_window().Size(), 1);
 
-    std::vector<point_f> points;
-    f32                  size {75};
-    rect_f               rect {{_center.X - (size / 2), _center.Y - (size / 2)}, {size - 10, size - 20}};
+    std::vector<ray::result> points;
+    f32                      size {75};
+    rect_f                   rect {{_center.X - (size / 2), _center.Y - (size / 2)}, {size - 10, size - 20}};
 
     transform xform;
     xform.rotate_at(_rotation, rect.get_center());
@@ -130,7 +130,7 @@ void CanvasEx::paint_to_canvas()
     _canvas.set_stroke_width(2);
     _canvas.set_stroke_style(colors::Yellow);
     _canvas.begin_path();
-    for (auto p : points) { _canvas.circle(p, 2); }
+    for (auto p : points) { _canvas.circle(p.Point, 2); }
     _canvas.stroke();
 
     _canvas.end_frame();
