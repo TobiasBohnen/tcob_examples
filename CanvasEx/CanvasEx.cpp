@@ -105,10 +105,10 @@ void CanvasEx::paint_to_canvas()
             _canvas.line_to(ray.get_point(1000));
             _canvas.stroke();
         }};
-    castRay(ray {point_f {0, 0}, degree_f {135}});
-    castRay(ray {point_f {600, 0}, degree_f {225}});
-    castRay(ray {point_f {300, 0}, degree_f {180}});
-    castRay(ray {point_f {0, 300}, degree_f {90}});
+    castRay(ray {{.Origin = point_f {0, 0}, .Direction = degree_f {135}}});
+    castRay(ray {{.Origin = point_f {600, 0}, .Direction = degree_f {225}}});
+    castRay(ray {{.Origin = point_f {300, 0}, .Direction = degree_f {180}}});
+    castRay(ray {{.Origin = point_f {0, 300}, .Direction = degree_f {90}}});
 
     // draw circle
     _canvas.set_stroke_style(colors::Green);

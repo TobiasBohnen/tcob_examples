@@ -29,10 +29,18 @@ void RayEx::on_fixed_update(milliseconds /* deltaTime */)
 
 void RayEx::on_start()
 {
+    _tween0.start(playback_mode::AlternatedLooped);
+    _tween0.Value.Changed.connect([&] { _dirty = true; });
+
+    _tween1.start(playback_mode::AlternatedLooped);
+    _tween1.Value.Changed.connect([&] { _dirty = true; });
 }
 
 void RayEx::on_update(milliseconds deltaTime)
 {
+    _tween0.update(deltaTime);
+    _tween1.update(deltaTime);
+
     if (!_dirty) { return; }
     _dirty = false;
 
@@ -43,33 +51,39 @@ void RayEx::on_update(milliseconds deltaTime)
     shape->Color    = colors::Blue;
     shape->Material = _emptyMat;
     auto const [x, y] {_center - point_f {50, 0}};
-    shape->Polygon  = {{x, y}, {40 + x, 20 + y}, {40 + x, 60 + y}, {x, 90 + y}, {90 + x, 90 + y}, {120 + x, 60 + y}, {120 + x, 20 + y}, {90 + x, y}};
-    shape->Holes    = {{{60 + x, 20 + y}, {60 + x, 60 + y}, {100 + x, 60 + y}, {100 + x, 20 + y}}};
+    shape->Polygon  = {{x, y}, {80 + x, 40 + y}, {80 + x, 120 + y}, {x, 180 + y}, {180 + x, 180 + y}, {240 + x, 120 + y}, {240 + x, 40 + y}, {180 + x, y}};
+    shape->Holes    = {{{120 + x, 40 + y}, {120 + x, 120 + y}, {200 + x, 120 + y}, {200 + x, 40 + y}}};
     shape->Rotation = _rotation;
 
     _batch.update(deltaTime);
 
     std::vector<ray::result> points;
-    auto                     castRay {[&points, batch = &_batch, mat = _emptyMat](point_f origin, degree_f deg) {
-        ray  ray {origin, deg};
+    auto const               castRay {[&points, batch = &_batch, mat = _emptyMat](point_f origin, degree_f deg) {
+        ray  ray {{.Origin = origin, .Direction = deg, .MaxDistance = 600}};
         auto points0 {batch->intersect(ray)};
-        if (points0.size() > 0) {
-            for (auto const& v : points0) { points.insert(points.end(), v.second.begin(), v.second.end()); }
-
-            auto       rayShape {batch->create_shape<gfx::rect_shape>()};
-            auto const height {static_cast<f32>(ray.get_point(0).distance_to(ray.get_point(1000)))};
-            rayShape->Bounds      = {{origin.X - 2, origin.Y}, {4, height}};
-            rayShape->Pivot       = rayShape->Bounds->top_left();
-            rayShape->Rotation    = deg - degree_f {180};
-            rayShape->Color       = colors::Red;
-            rayShape->Material    = mat;
-            rayShape->RayCastMask = 0;
+        if (!points0.empty()) {
+            for (auto const& v : points0) {
+                points.insert(points.end(), v.second.begin(), v.second.end());
+            }
         }
+
+        auto       rayShape {batch->create_shape<gfx::rect_shape>()};
+        auto const height {static_cast<f32>(ray.get_point(0).distance_to(ray.get_point(600)))};
+        rayShape->Bounds      = {{origin.X - 2, origin.Y}, {4, height}};
+        rayShape->Pivot       = rayShape->Bounds->top_left();
+        rayShape->Rotation    = deg - degree_f {180};
+        rayShape->Color       = colors::Red;
+        rayShape->Material    = mat;
+        rayShape->RayCastMask = 0;
     }};
-    castRay({0, 0}, {135});
-    castRay({600, 0}, {225});
-    castRay({300, 0}, {180});
-    castRay({0, 300}, {90});
+    castRay({_tween0.Value, 50}, {135});
+    castRay({1300 - _tween0.Value, 50}, {225});
+
+    castRay({50, 50}, {_tween1.Value});
+    castRay({50, 600}, {180 - _tween1.Value});
+
+    castRay({1300, 50}, {90 + _tween1.Value});
+    castRay({1300, 600}, {90 - _tween1.Value});
 
     // draw intersections
     for (auto p : points) {
@@ -109,6 +123,6 @@ void RayEx::on_mouse_motion(mouse::motion_event& ev)
 
 void RayEx::on_mouse_wheel(mouse::wheel_event& ev)
 {
-    _rotation += (ev.Scroll.Y * 10);
+    _rotation += static_cast<f32>(ev.Scroll.Y * 10);
     _dirty = true;
 }

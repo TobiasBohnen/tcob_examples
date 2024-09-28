@@ -26,9 +26,11 @@ protected:
 private:
     shape_batch                        _batch;
     assets::manual_asset_ptr<material> _emptyMat;
+    tweening::linear_tween<f32>        _tween0 {seconds {10}, {50, 650}};
+    tweening::linear_tween<f32>        _tween1 {seconds {10}, {90, 180}};
 
     point_f _center;
-    i32     _rotation {45};
+    f32     _rotation {45};
 
     bool _dirty {true};
 };

@@ -36,5 +36,5 @@ private:
     canvas_renderer _renderer {_canvas};
 
     point_f _center;
-    i32     _rotation {45};
+    f32     _rotation {45};
 };
