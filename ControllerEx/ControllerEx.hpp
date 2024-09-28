@@ -20,12 +20,12 @@ protected:
     void on_update(milliseconds deltaTime) override;
     void on_fixed_update(milliseconds deltaTime) override;
 
-    void on_key_down(keyboard::event& ev) override;
-    void on_mouse_motion(mouse::motion_event& ev) override;
+    void on_key_down(keyboard::event const& ev) override;
+    void on_mouse_motion(mouse::motion_event const& ev) override;
 
-    void on_controller_axis_motion(controller::axis_event& ev) override;
-    void on_controller_button_down(controller::button_event& ev) override;
-    void on_controller_button_up(controller::button_event& ev) override;
+    void on_controller_axis_motion(controller::axis_event const& ev) override;
+    void on_controller_button_down(controller::button_event const& ev) override;
+    void on_controller_button_up(controller::button_event const& ev) override;
 
 private:
     input::system& _input {locate_service<input::system>()};

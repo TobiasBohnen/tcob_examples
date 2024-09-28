@@ -61,7 +61,7 @@ void UIEx::on_fixed_update(milliseconds deltaTime)
     get_window().Title = "TestGame " + stream.str();
 }
 
-void UIEx::on_key_down(keyboard::event& ev)
+void UIEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) { // NOLINT
     case scan_code::BACKSPACE:
@@ -102,6 +102,6 @@ void UIEx::on_key_down(keyboard::event& ev)
     }
 }
 
-void UIEx::on_mouse_motion(mouse::motion_event& /* ev */)
+void UIEx::on_mouse_motion(mouse::motion_event const& /* ev */)
 {
 }

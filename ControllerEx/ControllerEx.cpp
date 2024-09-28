@@ -103,7 +103,7 @@ void ControllerEx::on_fixed_update(milliseconds deltaTime)
     get_window().Title = "TestGame " + stream.str();
 }
 
-void ControllerEx::on_key_down(keyboard::event& ev)
+void ControllerEx::on_key_down(keyboard::event const& ev)
 {
     auto& input {locate_service<input::system>()};
     switch (ev.ScanCode) {
@@ -124,10 +124,10 @@ void ControllerEx::on_key_down(keyboard::event& ev)
     }
 }
 
-void ControllerEx::on_mouse_motion(mouse::motion_event& ev)
+void ControllerEx::on_mouse_motion(mouse::motion_event const& ev)
 {
 }
-void ControllerEx::on_controller_axis_motion(controller::axis_event& ev)
+void ControllerEx::on_controller_axis_motion(controller::axis_event const& ev)
 {
     text* text = nullptr;
     switch (ev.Axis) {
@@ -150,12 +150,12 @@ void ControllerEx::on_controller_axis_motion(controller::axis_event& ev)
     text->Text = _input.get_controller(0)->get_axis_name(ev.Axis) + " Value: " + std::to_string(ev.RelativeValue);
 }
 
-void ControllerEx::on_controller_button_down(controller::button_event& ev)
+void ControllerEx::on_controller_button_down(controller::button_event const& ev)
 {
     _button->Text = "button down: " + _input.get_controller(0)->get_button_name(ev.Button);
 }
 
-void ControllerEx::on_controller_button_up(controller::button_event& ev)
+void ControllerEx::on_controller_button_up(controller::button_event const& ev)
 {
     _button->Text = "";
 }

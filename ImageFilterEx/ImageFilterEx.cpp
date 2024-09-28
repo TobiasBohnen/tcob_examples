@@ -134,7 +134,7 @@ void ImageFilterEx::on_fixed_update(milliseconds deltaTime)
     get_window().Title = "TestGame " + stream.str();
 }
 
-void ImageFilterEx::on_key_down(keyboard::event& ev)
+void ImageFilterEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) {
     case scan_code::BACKSPACE:
@@ -145,6 +145,6 @@ void ImageFilterEx::on_key_down(keyboard::event& ev)
     }
 }
 
-void ImageFilterEx::on_mouse_motion(mouse::motion_event& ev)
+void ImageFilterEx::on_mouse_motion(mouse::motion_event const& ev)
 {
 }

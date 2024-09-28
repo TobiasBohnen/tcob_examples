@@ -47,13 +47,32 @@ void RayEx::on_update(milliseconds deltaTime)
     _batch.clear();
 
     // draw shape
-    auto shape {_batch.create_shape<gfx::poly_shape>()};
-    shape->Color    = colors::Blue;
-    shape->Material = _emptyMat;
-    auto const [x, y] {_center - point_f {50, 0}};
-    shape->Polygon  = {{x, y}, {80 + x, 40 + y}, {80 + x, 120 + y}, {x, 180 + y}, {180 + x, 180 + y}, {240 + x, 120 + y}, {240 + x, 40 + y}, {180 + x, y}};
-    shape->Holes    = {{{120 + x, 40 + y}, {120 + x, 120 + y}, {200 + x, 120 + y}, {200 + x, 40 + y}}};
-    shape->Rotation = _rotation;
+    switch (_mode) {
+    case 0: {
+        auto polyShape {_batch.create_shape<gfx::poly_shape>()};
+        polyShape->Color    = colors::Blue;
+        polyShape->Material = _emptyMat;
+        auto const [x, y] {_center - point_f {150, 50}};
+        polyShape->Polygon  = {{x, y}, {80 + x, 40 + y}, {80 + x, 120 + y}, {x, 180 + y}, {180 + x, 180 + y}, {240 + x, 120 + y}, {240 + x, 40 + y}, {180 + x, y}};
+        polyShape->Holes    = {{{120 + x, 40 + y}, {120 + x, 120 + y}, {200 + x, 120 + y}, {200 + x, 40 + y}}};
+        polyShape->Rotation = _rotation;
+    } break;
+    case 1: {
+        auto circleShape {_batch.create_shape<gfx::circle_shape>()};
+        circleShape->Color    = colors::Blue;
+        circleShape->Material = _emptyMat;
+        circleShape->Center   = _center;
+        circleShape->Radius   = 100;
+    } break;
+    case 2: {
+        auto rectShape {_batch.create_shape<gfx::rect_shape>()};
+        rectShape->Color    = colors::Blue;
+        rectShape->Material = _emptyMat;
+        size_f const rectSize {250, 250};
+        rectShape->Bounds   = {_center - point_f {rectSize.Width / 2, rectSize.Height / 2}, rectSize};
+        rectShape->Rotation = _rotation;
+    } break;
+    }
 
     _batch.update(deltaTime);
 
@@ -101,7 +120,7 @@ void RayEx::on_draw_to(render_target& target)
     _batch.draw_to(target);
 }
 
-void RayEx::on_key_down(keyboard::event& ev)
+void RayEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) { // NOLINT
     case scan_code::R: {
@@ -115,13 +134,19 @@ void RayEx::on_key_down(keyboard::event& ev)
     }
 }
 
-void RayEx::on_mouse_motion(mouse::motion_event& ev)
+void RayEx::on_mouse_motion(mouse::motion_event const& ev)
 {
     _center = (*get_window().Camera).convert_screen_to_world(ev.Position);
     _dirty  = true;
 }
 
-void RayEx::on_mouse_wheel(mouse::wheel_event& ev)
+void RayEx::on_mouse_button_down(mouse::button_event const& ev)
+{
+    _mode  = (_mode + 1) % 3;
+    _dirty = true;
+}
+
+void RayEx::on_mouse_wheel(mouse::wheel_event const& ev)
 {
     _rotation += static_cast<f32>(ev.Scroll.Y * 10);
     _dirty = true;

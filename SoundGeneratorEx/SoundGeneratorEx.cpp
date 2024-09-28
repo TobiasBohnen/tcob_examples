@@ -102,7 +102,7 @@ void SoundGeneratorEx::on_fixed_update(milliseconds deltaTime)
     }
 }
 
-void SoundGeneratorEx::on_key_down(keyboard::event& ev)
+void SoundGeneratorEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) {
     case scan_code::BACKSPACE:
@@ -113,7 +113,7 @@ void SoundGeneratorEx::on_key_down(keyboard::event& ev)
     }
 }
 
-void SoundGeneratorEx::on_mouse_motion(mouse::motion_event& ev)
+void SoundGeneratorEx::on_mouse_motion(mouse::motion_event const& ev)
 {
 }
 

@@ -289,7 +289,7 @@ void MiscScene::on_fixed_update(milliseconds deltaTime)
     get_window().Title = "TestGame " + stream.str();
 }
 
-void MiscScene::on_key_down(keyboard::event& ev)
+void MiscScene::on_key_down(keyboard::event const& ev)
 {
     float moveFactor {10};
     auto& window {get_window()};
@@ -536,7 +536,7 @@ void MiscScene::on_key_down(keyboard::event& ev)
     }
 }
 
-void MiscScene::on_mouse_motion(mouse::motion_event& ev)
+void MiscScene::on_mouse_motion(mouse::motion_event const& ev)
 {
 }
 

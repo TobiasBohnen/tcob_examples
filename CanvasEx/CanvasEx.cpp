@@ -44,7 +44,7 @@ void CanvasEx::on_draw_to(render_target& target)
     _renderer.render_to_target(target);
 }
 
-void CanvasEx::on_key_down(keyboard::event& ev)
+void CanvasEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) { // NOLINT
     case scan_code::R: {
@@ -58,12 +58,12 @@ void CanvasEx::on_key_down(keyboard::event& ev)
     }
 }
 
-void CanvasEx::on_mouse_motion(mouse::motion_event& ev)
+void CanvasEx::on_mouse_motion(mouse::motion_event const& ev)
 {
     _center = point_f {ev.Position};
 }
 
-void CanvasEx::on_mouse_wheel(mouse::wheel_event& ev)
+void CanvasEx::on_mouse_wheel(mouse::wheel_event const& ev)
 {
     _rotation += (ev.Scroll.Y * 10);
 }

@@ -89,7 +89,7 @@ void PhysicsEx::on_fixed_update(milliseconds deltaTime)
     }
 }
 
-void PhysicsEx::on_key_down(keyboard::event& ev)
+void PhysicsEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) {
     case scan_code::D1:
@@ -141,7 +141,7 @@ void PhysicsEx::on_key_down(keyboard::event& ev)
     }
 }
 
-void PhysicsEx::on_mouse_button_up(mouse::button_event& ev)
+void PhysicsEx::on_mouse_button_up(mouse::button_event const& ev)
 {
     point_f pos {ev.Position};
     pos /= point_f {12.f, 12.f};

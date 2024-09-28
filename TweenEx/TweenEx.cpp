@@ -119,7 +119,7 @@ void TweenEx::on_fixed_update(milliseconds deltaTime)
     get_window().Title = "TestGame " + stream.str();
 }
 
-void TweenEx::on_key_down(keyboard::event& ev)
+void TweenEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) {
     case scan_code::D1:
@@ -160,6 +160,6 @@ void TweenEx::on_key_down(keyboard::event& ev)
     }
 }
 
-void TweenEx::on_mouse_motion(mouse::motion_event& ev)
+void TweenEx::on_mouse_motion(mouse::motion_event const& ev)
 {
 }

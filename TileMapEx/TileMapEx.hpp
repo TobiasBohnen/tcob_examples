@@ -20,11 +20,11 @@ protected:
     void on_update(milliseconds deltaTime) override;
     void on_fixed_update(milliseconds deltaTime) override;
 
-    void on_key_down(keyboard::event& ev) override;
-    void on_mouse_button_down(mouse::button_event& ev) override;
-    void on_mouse_button_up(mouse::button_event& ev) override;
-    void on_mouse_motion(mouse::motion_event& ev) override;
-    void on_mouse_wheel(mouse::wheel_event& ev) override;
+    void on_key_down(keyboard::event const& ev) override;
+    void on_mouse_button_down(mouse::button_event const& ev) override;
+    void on_mouse_button_up(mouse::button_event const& ev) override;
+    void on_mouse_motion(mouse::motion_event const& ev) override;
+    void on_mouse_wheel(mouse::wheel_event const& ev) override;
 
 private:
     orthogonal_tilemap _tileMapOrtho;

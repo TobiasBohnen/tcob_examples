@@ -22,7 +22,7 @@ using namespace tcob::input;
 
 class basic_cam {
 public:
-    void on_key_down(keyboard::event& ev) const
+    void on_key_down(keyboard::event const& ev) const
     {
         float moveFactor {14.f};
         auto& camera {*locate_service<render_system>().get_window().Camera};
@@ -37,7 +37,7 @@ public:
         }
     }
 
-    void on_mouse_button_down(mouse::button_event& ev)
+    void on_mouse_button_down(mouse::button_event const& ev)
     {
         _mouseDown = false;
         if (ev.Pressed && ev.Button == mouse::button::Left) {
@@ -45,14 +45,14 @@ public:
         }
     }
 
-    void on_mouse_button_up(mouse::button_event& ev)
+    void on_mouse_button_up(mouse::button_event const& ev)
     {
         if (ev.Button == mouse::button::Left) {
             _mouseDown = false;
         }
     }
 
-    void on_mouse_motion(mouse::motion_event& ev) const
+    void on_mouse_motion(mouse::motion_event const& ev) const
     {
         if (_mouseDown) {
             auto& camera {*locate_service<render_system>().get_window().Camera};
@@ -61,7 +61,7 @@ public:
         }
     }
 
-    void on_mouse_wheel(mouse::wheel_event& ev)
+    void on_mouse_wheel(mouse::wheel_event const& ev)
     {
         auto& camera {*locate_service<render_system>().get_window().Camera};
         _zoomStage = std::clamp(_zoomStage - ev.Scroll.Y, 0, 6);
