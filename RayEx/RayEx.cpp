@@ -53,8 +53,10 @@ void RayEx::on_update(milliseconds deltaTime)
         polyShape->Color    = colors::Blue;
         polyShape->Material = _emptyMat;
         auto const [x, y] {_center - point_f {150, 50}};
-        polyShape->Polygon  = {{x, y}, {80 + x, 40 + y}, {80 + x, 120 + y}, {x, 180 + y}, {180 + x, 180 + y}, {240 + x, 120 + y}, {240 + x, 40 + y}, {180 + x, y}};
-        polyShape->Holes    = {{{120 + x, 40 + y}, {120 + x, 120 + y}, {200 + x, 120 + y}, {200 + x, 40 + y}}};
+        polygon poly {
+            .Outline = {{x, y}, {80 + x, 40 + y}, {80 + x, 120 + y}, {x, 180 + y}, {180 + x, 180 + y}, {240 + x, 120 + y}, {240 + x, 40 + y}, {180 + x, y}},
+            .Holes   = {{{200 + x, 40 + y}, {200 + x, 120 + y}, {120 + x, 120 + y}, {120 + x, 40 + y}}}};
+        polyShape->Polygons = std::vector<polygon> {poly};
         polyShape->Rotation = _rotation;
     } break;
     case 1: {

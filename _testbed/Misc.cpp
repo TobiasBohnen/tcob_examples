@@ -69,42 +69,23 @@ void MiscScene::on_start()
     rng                                      rnd;
     std::vector<std::shared_ptr<gfx::shape>> sprites;
 
-    for (i32 i {0}; i < 500; i++) {
-        f32 x {rnd(0.0f, 1200.f)};
-        f32 y {rnd(0.0f, 1200.f)};
-        f32 r {rnd(0.0f, 20.f)};
-        i32 seg {rnd(4, 9)};
-        i32 rot {rnd(0, 360)};
+    create_shapes();
+    /*
+        for (i32 i {0}; i < 500; i++) {
+            f32 x {rnd(0.0f, 1200.f)};
+            f32 y {rnd(0.0f, 1200.f)};
+            f32 r {rnd(0.0f, 20.f)};
+            i32 seg {rnd(4, 9)};
+            i32 rot {rnd(0, 360)};
 
-        auto shape0 {std::make_shared<gfx::poly_shape>()};
-        shape0->Material = resGrp->get<material>("polyShape");
-        //   shape0->Color    = colors::Blue;
-        shape0->Polygon  = {{x, y}, {20 + x, 10 + y}, {20 + x, 30 + y}, {x, 45 + y}, {45 + x, 45 + y}, {60 + x, 30 + y}, {60 + x, 10 + y}, {45 + x, y}};
-        shape0->Holes    = {{{30 + x, 10 + y}, {30 + x, 30 + y}, {50 + x, 30 + y}, {50 + x, 10 + y}}};
-        shape0->Rotation = rot;
-        sprites.push_back(shape0);
-
-        /*
-                if (i % 2 == 0) {
-                    auto shape0 {std::make_shared<gfx::circle_shape>()};
-                    shape0->Material = resGrp->get<material>("circleShape");
-                    //  shape0->Color    = colors::Red;
-                    shape0->Center   = {x, y};
-                    shape0->Radius   = r;
-                    shape0->Segments = seg;
-                    shape0->Rotation = rot;
-                    sprites.push_back(shape0);
-                } else {
-                    auto shape0 {std::make_shared<gfx::rect_shape>()};
-                    shape0->Material = resGrp->get<material>("circleShape");
-                    //  shape0->Color    = colors::Blue;
-                    shape0->Bounds   = {x, y, r, r};
-                    shape0->Rotation = rot;
-                    sprites.push_back(shape0);
-                }
-                */
-    }
-
+            auto shape0 {std::make_shared<gfx::poly_shape>()};
+            shape0->Material = resGrp->get<material>("polyShape");
+            //   shape0->Color    = colors::Blue;
+            shape0->Polygon  = {{x, y}, {20 + x, 10 + y}, {20 + x, 30 + y}, {x, 45 + y}, {45 + x, 45 + y}, {60 + x, 30 + y}, {60 + x, 10 + y}, {45 + x, y}};
+            shape0->Holes    = {{{30 + x, 10 + y}, {30 + x, 30 + y}, {50 + x, 30 + y}, {50 + x, 10 + y}}};
+            sprites.push_back(shape0);
+}
+*/
     _layer1 = std::make_shared<static_shape_batch>(sprites);
 
     _font = resGrp->get<font>("defaultFont");
@@ -144,16 +125,18 @@ void MiscScene::on_start()
         }
     });
 
-    _aniTexSprite           = _layer0.create_shape<gfx::rect_shape>();
-    _aniTexSprite->Bounds   = {{450, 0}, {320, 240}};
-    _aniTexSprite->Material = resGrp->get<material>("aniSpriteMat");
+    /*
+        _aniTexSprite           = _layer0.create_shape<gfx::rect_shape>();
+        _aniTexSprite->Bounds   = {{450, 0}, {320, 240}};
+        _aniTexSprite->Material = resGrp->get<material>("aniSpriteMat");
 
-    auto sprite1      = _layer0.create_shape<gfx::rect_shape>();
-    sprite1->Bounds   = {point_f::Zero, {320, 240}};
-    sprite1->Material = resGrp->get<material>("uniforms-buffer-test");
-    _uniBuf.bind_base(1);
-    std::array<f32, 5> bufData {1, 0, 0, 1, 0.5f};
-    _uniBuf.update<f32>(bufData, 0);
+        auto sprite1      = _layer0.create_shape<gfx::rect_shape>();
+        sprite1->Bounds   = {point_f::Zero, {320, 240}};
+        sprite1->Material = resGrp->get<material>("uniforms-buffer-test");
+        _uniBuf.bind_base(1);
+        std::array<f32, 5> bufData {1, 0, 0, 1, 0.5f};
+        _uniBuf.update<f32>(bufData, 0);
+    */
 
     _sound_mp3  = *resGrp->get<sound>("mp3-test");
     _sound_wav  = *resGrp->get<sound>("wav-test");
@@ -242,8 +225,9 @@ void MiscScene::on_draw_to(render_target& target)
     /*
 
     _text.draw_to(target);
-    _layer0.draw_to(target);    _poly.render_to_target(target);
+   _poly.render_to_target(target);
       */
+    _layer0.draw_to(target);
     _layer1->draw_to(target);
     //   _htmlDoc->draw_to(target);
     // _pointCloud->draw_to(target);
@@ -511,6 +495,14 @@ void MiscScene::on_key_down(keyboard::event const& ev)
     } else if (ev.ScanCode == scan_code::KP_7) {
         _sound_speech0 = speech_generator {}.create_sound("1 2 3 4 5 6 7 8 9 0");
         _sound_speech0.play();
+    } else if (ev.ScanCode == scan_code::P) {
+        static i32 toggle {0};
+        create_shapes();
+        if (toggle < 4) {
+            _polyShape->clip(*_cutShape, static_cast<clip_mode>(toggle));
+            _layer0.remove_shape(*_cutShape);
+        }
+        toggle = (toggle + 1) % 5;
     } else if (ev.ScanCode == scan_code::K) {
         _music0->play();
     } else if (ev.ScanCode == scan_code::L) {
@@ -538,6 +530,28 @@ void MiscScene::on_key_down(keyboard::event const& ev)
 
 void MiscScene::on_mouse_motion(mouse::motion_event const& ev)
 {
+}
+
+void MiscScene::create_shapes()
+{
+    _layer0.clear();
+
+    auto& resMgr {get_game().get_library()};
+    auto* resGrp {resMgr.get_group("res")};
+
+    _polyShape           = _layer0.create_shape<gfx::poly_shape>();
+    _polyShape->Material = resGrp->get<material>("emptyMat");
+    _polyShape->Color    = colors::Blue;
+    _polyShape->Polygons = {
+        {.Outline = {{10, 10}, {200, 100}, {200, 300}, {10, 450}, {450, 450}, {600, 300}, {600, 100}, {450, 10}},
+         .Holes   = {{{300, 100}, {500, 100}, {500, 300}, {300, 300}}}}};
+
+    _cutShape           = _layer0.create_shape<gfx::poly_shape>();
+    _cutShape->Material = resGrp->get<material>("emptyMat");
+    _cutShape->Color    = colors::Red;
+    _cutShape->Polygons = {
+        {.Outline = {{60, 50}, {60, 320}, {650, 320}, {620, 50}},
+         .Holes   = {{{70, 60}, {610, 60}, {610, 310}, {70, 310}}}}};
 }
 
 ////////////////////////////////////////////////////////////

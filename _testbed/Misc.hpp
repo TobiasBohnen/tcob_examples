@@ -53,6 +53,8 @@ protected:
     void on_mouse_motion(mouse::motion_event const& ev) override;
 
 private:
+    void create_shapes();
+
     void draw_dice(auto&& dice)
     {
         auto               rolls {dice.roll_n(100'000)};
@@ -78,13 +80,15 @@ private:
         }
     }
 
-    shape_batch _layer0;
+    shape_batch                            _layer0;
+    std::shared_ptr<tcob::gfx::poly_shape> _polyShape;
+    std::shared_ptr<tcob::gfx::poly_shape> _cutShape;
+
+    std::shared_ptr<static_shape_batch> _layer1;
 
     assets::asset_ptr<font> _font;
 
     std::shared_ptr<text> _text;
-
-    std::shared_ptr<static_shape_batch> _layer1;
 
     std::shared_ptr<gfx::rect_shape> _aniTexSprite;
 
