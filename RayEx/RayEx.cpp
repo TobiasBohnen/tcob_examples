@@ -97,14 +97,14 @@ void RayEx::on_update(milliseconds deltaTime)
         rayShape->Material    = material::Empty();
         rayShape->RayCastMask = 0;
     }};
-    castRay({_tween0.Value, 50}, {135});
-    castRay({1300 - _tween0.Value, 50}, {225});
+    castRay({_tween0.Value(), 50}, {135});
+    castRay({1300 - _tween0.Value(), 50}, {225});
 
-    castRay({50, 50}, {_tween1.Value});
-    castRay({50, 600}, {180 - _tween1.Value});
+    castRay({50, 50}, {_tween1.Value()});
+    castRay({50, 600}, {180 - _tween1.Value()});
 
-    castRay({1300, 50}, {90 + _tween1.Value});
-    castRay({1300, 600}, {90 - _tween1.Value});
+    castRay({1300, 50}, {90 + _tween1.Value()});
+    castRay({1300, 600}, {90 - _tween1.Value()});
 
     // draw intersections
     for (auto p : points) {
