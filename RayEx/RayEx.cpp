@@ -51,7 +51,7 @@ void RayEx::on_update(milliseconds deltaTime)
     case 0: {
         auto polyShape {_batch.create_shape<gfx::poly_shape>()};
         polyShape->Color    = colors::Blue;
-        polyShape->Material = _emptyMat;
+        polyShape->Material = material::Empty();
         auto const [x, y] {_center - point_f {150, 50}};
         polygon poly {
             .Outline = {{x, y}, {80 + x, 40 + y}, {80 + x, 120 + y}, {x, 180 + y}, {180 + x, 180 + y}, {240 + x, 120 + y}, {240 + x, 40 + y}, {180 + x, y}},
@@ -62,14 +62,14 @@ void RayEx::on_update(milliseconds deltaTime)
     case 1: {
         auto circleShape {_batch.create_shape<gfx::circle_shape>()};
         circleShape->Color    = colors::Blue;
-        circleShape->Material = _emptyMat;
+        circleShape->Material = material::Empty();
         circleShape->Center   = _center;
         circleShape->Radius   = 100;
     } break;
     case 2: {
         auto rectShape {_batch.create_shape<gfx::rect_shape>()};
         rectShape->Color    = colors::Blue;
-        rectShape->Material = _emptyMat;
+        rectShape->Material = material::Empty();
         size_f const rectSize {250, 250};
         rectShape->Bounds   = {_center - point_f {rectSize.Width / 2, rectSize.Height / 2}, rectSize};
         rectShape->Rotation = _rotation;
@@ -79,7 +79,7 @@ void RayEx::on_update(milliseconds deltaTime)
     _batch.update(deltaTime);
 
     std::vector<ray::result> points;
-    auto const               castRay {[&points, batch = &_batch, mat = _emptyMat](point_f origin, degree_f deg) {
+    auto const               castRay {[&points, batch = &_batch](point_f origin, degree_f deg) {
         ray  ray {{.Origin = origin, .Direction = deg, .MaxDistance = 600}};
         auto points0 {batch->intersect(ray)};
         if (!points0.empty()) {
@@ -94,7 +94,7 @@ void RayEx::on_update(milliseconds deltaTime)
         rayShape->Pivot       = rayShape->Bounds->top_left();
         rayShape->Rotation    = deg - degree_f {180};
         rayShape->Color       = colors::Red;
-        rayShape->Material    = mat;
+        rayShape->Material    = material::Empty();
         rayShape->RayCastMask = 0;
     }};
     castRay({_tween0.Value, 50}, {135});
@@ -112,7 +112,7 @@ void RayEx::on_update(milliseconds deltaTime)
         dotShape->Center   = p.Point;
         dotShape->Radius   = 10;
         dotShape->Color    = colors::Green;
-        dotShape->Material = _emptyMat;
+        dotShape->Material = material::Empty();
     }
     _batch.update(deltaTime);
 }

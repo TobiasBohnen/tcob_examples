@@ -279,6 +279,7 @@ void MiscScene::on_key_down(keyboard::event const& ev)
     auto& window {get_window()};
     auto& camera {*window.Camera};
     auto& resMgr {get_game().get_library()};
+    auto* resGrp {resMgr.get_group("res")};
 
     if (ev.ScanCode == scan_code::D2) {
     } else if (ev.ScanCode == scan_code::D3) {
@@ -501,6 +502,15 @@ void MiscScene::on_key_down(keyboard::event const& ev)
         if (toggle < 4) {
             _polyShape->clip(*_cutShape, static_cast<clip_mode>(toggle));
             _layer0.remove_shape(*_cutShape);
+            _layer0.remove_shape(*_polyShape);
+            std::array colors {colors::Red, colors::Blue, colors::Green, colors::Yellow, colors::Brown, colors::DodgerBlue};
+            i32        i {0};
+            for (auto const& poly : _polyShape->Polygons()) {
+                auto shape      = _layer0.create_shape<gfx::poly_shape>();
+                shape->Material = material::Empty();
+                shape->Color    = colors[i++ % colors.size()];
+                shape->Polygons = {poly};
+            }
         }
         toggle = (toggle + 1) % 5;
     } else if (ev.ScanCode == scan_code::K) {
@@ -540,14 +550,14 @@ void MiscScene::create_shapes()
     auto* resGrp {resMgr.get_group("res")};
 
     _polyShape           = _layer0.create_shape<gfx::poly_shape>();
-    _polyShape->Material = resGrp->get<material>("emptyMat");
+    _polyShape->Material = material::Empty();
     _polyShape->Color    = colors::Blue;
     _polyShape->Polygons = {
         {.Outline = {{10, 10}, {200, 100}, {200, 300}, {10, 450}, {450, 450}, {600, 300}, {600, 100}, {450, 10}},
          .Holes   = {{{300, 100}, {500, 100}, {500, 300}, {300, 300}}}}};
 
     _cutShape           = _layer0.create_shape<gfx::poly_shape>();
-    _cutShape->Material = resGrp->get<material>("emptyMat");
+    _cutShape->Material = material::Empty();
     _cutShape->Color    = colors::Red;
     _cutShape->Polygons = {
         {.Outline = {{60, 50}, {60, 320}, {650, 320}, {620, 50}},
