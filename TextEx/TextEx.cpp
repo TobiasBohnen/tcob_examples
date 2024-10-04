@@ -4,7 +4,7 @@
 // https://opensource.org/licenses/MIT
 
 #include "TextEx.hpp"
-#include <algorithm>
+
 #include <iomanip>
 
 using namespace std::chrono_literals;
@@ -85,65 +85,10 @@ void TextEx::on_start()
 
     {
         // Vertex text
-        point_f              curPos;
-        std::vector<point_f> points;
 
-        std::vector<polygon> polys;
-
-        auto const addPoly {[&]() {
-            if (!points.empty()) {
-                std::ranges::reverse(points);
-                auto const winding {polygons::get_winding(points)};
-                if (winding == winding::CCW) {
-                    polys.emplace_back().Outline = points;
-                } else {
-                    polys.at(polys.size() - 1).Holes.push_back(points);
-                }
-
-                points.clear();
-            }
-        }};
-
-        decompose_callbacks cb {};
-        cb.MoveTo = [&](point_f p) {
-            curPos = p;
-            addPoly();
-        };
-        cb.LineTo = [&](point_f p) {
-            func::linear<point_f> func;
-            func.StartValue = curPos;
-            func.EndValue   = p;
-            for (f32 i {0}; i <= 1.0f; i += 0.01f) {
-                points.push_back(func(i));
-            }
-            curPos = p;
-        };
-        cb.ConicTo = [&](point_f p0, point_f p1) {
-            func::quad_bezier_curve func;
-            func.Begin        = curPos;
-            func.ControlPoint = p0;
-            func.End          = p1;
-            for (f32 i {0}; i <= 1.0f; i += 0.01f) {
-                points.push_back(func(i));
-            }
-            curPos = p1;
-        };
-        cb.CubicTo = [&](point_f p0, point_f p1, point_f p2) {
-            func::cubic_bezier_curve func;
-            func.Begin         = curPos;
-            func.ControlPoint0 = p0;
-            func.ControlPoint1 = p1;
-            func.End           = p2;
-            for (f32 i {0}; i <= 1.0f; i += 0.01f) {
-                points.push_back(func(i));
-            }
-            curPos = p2;
-        };
-
-        auto   font2 {fontFam->get_font({.IsItalic = false, .Weight = font::weight::ExtraBold}, 128)};
-        string text {"Vertex"};
-        font2->decompose_text(text, true, cb);
-        addPoly();
+        auto                 font2 {fontFam->get_font({.IsItalic = false, .Weight = font::weight::ExtraBold}, 128)};
+        string               text {"Vertex"};
+        std::vector<polygon> polys {font2->polygonize_text(text, true)};
 
         _layer0 = std::make_shared<shape_batch>();
 
