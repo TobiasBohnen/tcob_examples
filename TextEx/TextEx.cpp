@@ -4,6 +4,7 @@
 // https://opensource.org/licenses/MIT
 
 #include "TextEx.hpp"
+#include <algorithm>
 #include <iomanip>
 
 using namespace std::chrono_literals;
@@ -70,12 +71,89 @@ void TextEx::on_start()
         text0->Bounds = {{30, 206}, {500, 1000}};
 
         auto& effects {text0->Effects};
-        effects.create(1, duration, effect::typing {}, effect::shake {3.f, rng {12345}})->Interval = 100ms;
-        effects.create(2, duration, effect::blink {colors::Red, colors::Green, 5.f}, effect::wave {15.f, 10.f});
-        effects.create(3, duration, effect::size {0.0f, 1.0f, 0.0f, 1.0f, {horizontal_alignment::Left, vertical_alignment::Middle}}, effect::wave {15.f, 10.f});
-        effects.create(4, duration, effect::rotate {2.0f}, effect::wave {30.f, 10.f});
+        effects.create(1, duration, effect::typing {}, effect::shake {.Intensity = 3.f, .RNG = rng {12345}})->Interval = 100ms;
+        effects.create(2, duration,
+                       effect::blink {.Color0 = colors::Red, .Color1 = colors::Green, .Frequency = 5.f},
+                       effect::wave {.Height = 15.f, .Amplitude = 10.f});
+        effects.create(3, duration,
+                       effect::size {.WidthStart = 0.0f, .WidthEnd = 1.0f, .HeightStart = 0.0f, .HeightEnd = 1.0f, .Anchor = {.Horizontal = horizontal_alignment::Left, .Vertical = vertical_alignment::Middle}},
+                       effect::wave {.Height = 15.f, .Amplitude = 10.f});
+        effects.create(4, duration, effect::rotate {2.0f}, effect::wave {.Height = 30.f, .Amplitude = 10.f});
 
         effects.start_all(playback_mode::Looped);
+    }
+
+    {
+        // Vertex text
+        point_f              curPos;
+        std::vector<point_f> points;
+
+        std::vector<polygon> polys;
+
+        auto const addPoly {[&]() {
+            if (!points.empty()) {
+                std::ranges::reverse(points);
+                auto const winding {polygons::get_winding(points)};
+                if (winding == winding::CCW) {
+                    polys.emplace_back().Outline = points;
+                } else {
+                    polys.at(polys.size() - 1).Holes.push_back(points);
+                }
+
+                points.clear();
+            }
+        }};
+
+        decompose_callbacks cb {};
+        cb.MoveTo = [&](point_f p) {
+            curPos = p;
+            addPoly();
+        };
+        cb.LineTo = [&](point_f p) {
+            func::linear<point_f> func;
+            func.StartValue = curPos;
+            func.EndValue   = p;
+            for (f32 i {0}; i <= 1.0f; i += 0.1f) {
+                points.push_back(func(i));
+            }
+            curPos = p;
+        };
+        cb.ConicTo = [&](point_f p0, point_f p1) {
+            func::quad_bezier_curve func;
+            func.Begin        = curPos;
+            func.ControlPoint = p0;
+            func.End          = p1;
+            for (f32 i {0}; i <= 1.0f; i += 0.1f) {
+                points.push_back(func(i));
+            }
+            curPos = p1;
+        };
+        cb.CubicTo = [&](point_f p0, point_f p1, point_f p2) {
+            func::cubic_bezier_curve func;
+            func.Begin         = curPos;
+            func.ControlPoint0 = p0;
+            func.ControlPoint1 = p1;
+            func.End           = p2;
+            for (f32 i {0}; i <= 1.0f; i += 0.1f) {
+                points.push_back(func(i));
+            }
+            curPos = p2;
+        };
+
+        auto   font2 {fontFam->get_font({}, 128)};
+        string text {"Vertex"};
+        font2->decompose_text(text, true, cb);
+        addPoly();
+
+        auto shape {std::make_shared<poly_shape>()};
+        shape->Color    = colors::Green;
+        shape->Material = material::Empty();
+        shape->Polygons = polys;
+        assert(polygons::check_winding(shape->Polygons()));
+        shape->move_by({0, 500});
+
+        _layer0 = std::make_shared<shape_batch>();
+        _layer0->add_shape(shape);
     }
 }
 
@@ -86,6 +164,8 @@ void TextEx::on_draw_to(render_target& target)
     for (auto& text : _texts) {
         text->draw_to(target);
     }
+
+    _layer0->draw_to(target);
 }
 
 void TextEx::on_update(milliseconds deltaTime)
@@ -93,6 +173,8 @@ void TextEx::on_update(milliseconds deltaTime)
     for (auto& text : _texts) {
         text->update(deltaTime);
     }
+
+    _layer0->update(deltaTime);
 }
 
 void TextEx::on_fixed_update(milliseconds deltaTime)
