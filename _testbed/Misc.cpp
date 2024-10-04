@@ -437,10 +437,10 @@ void MiscScene::on_key_down(keyboard::event const& ev)
         camera.move_by({0.0f, -moveFactor});
     } else if (ev.ScanCode == scan_code::Q) {
         camera.zoom_by({1.25f, 1.25f});
-        _pointCloud->Material->PointSize = (std::ceil(camera.get_zoom().Width * pointSize));
+        _pointCloud->Material->PointSize = (std::ceil(camera.Zoom().Width * pointSize));
     } else if (ev.ScanCode == scan_code::E) {
         camera.zoom_by({0.8f, 0.8f});
-        _pointCloud->Material->PointSize = (std::ceil(camera.get_zoom().Width * pointSize));
+        _pointCloud->Material->PointSize = (std::ceil(camera.Zoom().Width * pointSize));
     } else if (ev.ScanCode == scan_code::F) {
         sound_font_commands commands;
         auto                addNote = [&commands](auto&& dur, auto&& preset, auto&& note) {

@@ -56,7 +56,7 @@ public:
     {
         if (_mouseDown) {
             auto& camera {*locate_service<render_system>().get_window().Camera};
-            auto  zoom {camera.get_zoom()};
+            auto  zoom {camera.Zoom()};
             camera.move_by(-(point_f {ev.RelativeMotion} / point_f {zoom.Width, zoom.Height}));
         }
     }
@@ -66,7 +66,7 @@ public:
         auto& camera {*locate_service<render_system>().get_window().Camera};
         _zoomStage = std::clamp(_zoomStage - ev.Scroll.Y, 0, 6);
         constexpr std::array<size_f, 7> zoomLevels {{{5.f, 5.f}, {3.f, 3.f}, {2.f, 2.f}, {1.f, 1.f}, {0.75f, 0.75f}, {0.5f, 0.5f}, {0.25f, 0.25f}}};
-        camera.set_zoom(zoomLevels[_zoomStage]);
+        camera.Zoom = zoomLevels[_zoomStage];
     }
 
 private:
