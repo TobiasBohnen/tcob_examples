@@ -113,7 +113,7 @@ void TextEx::on_start()
             func::linear<point_f> func;
             func.StartValue = curPos;
             func.EndValue   = p;
-            for (f32 i {0}; i <= 1.0f; i += 0.1f) {
+            for (f32 i {0}; i <= 1.0f; i += 0.01f) {
                 points.push_back(func(i));
             }
             curPos = p;
@@ -123,7 +123,7 @@ void TextEx::on_start()
             func.Begin        = curPos;
             func.ControlPoint = p0;
             func.End          = p1;
-            for (f32 i {0}; i <= 1.0f; i += 0.1f) {
+            for (f32 i {0}; i <= 1.0f; i += 0.01f) {
                 points.push_back(func(i));
             }
             curPos = p1;
@@ -134,26 +134,34 @@ void TextEx::on_start()
             func.ControlPoint0 = p0;
             func.ControlPoint1 = p1;
             func.End           = p2;
-            for (f32 i {0}; i <= 1.0f; i += 0.1f) {
+            for (f32 i {0}; i <= 1.0f; i += 0.01f) {
                 points.push_back(func(i));
             }
             curPos = p2;
         };
 
-        auto   font2 {fontFam->get_font({}, 128)};
+        auto   font2 {fontFam->get_font({.IsItalic = false, .Weight = font::weight::ExtraBold}, 128)};
         string text {"Vertex"};
         font2->decompose_text(text, true, cb);
         addPoly();
 
-        auto shape {std::make_shared<poly_shape>()};
-        shape->Color    = colors::Green;
-        shape->Material = material::Empty();
-        shape->Polygons = polys;
-        assert(polygons::check_winding(shape->Polygons()));
-        shape->move_by({0, 500});
-
         _layer0 = std::make_shared<shape_batch>();
-        _layer0->add_shape(shape);
+
+        auto shapeOutline {std::make_shared<poly_shape>()};
+        shapeOutline->Color    = colors::Blue;
+        shapeOutline->Material = material::Empty();
+        shapeOutline->Polygons = polys;
+        polygons::offset(*shapeOutline->Polygons, 5, offset_join::Square);
+        shapeOutline->move_by({10, 650});
+        _layer0->add_shape(shapeOutline);
+
+        auto shapeText {std::make_shared<poly_shape>()};
+        shapeText->Color    = colors::Green;
+        shapeText->Material = material::Empty();
+        shapeText->Polygons = polys;
+        assert(polygons::check_winding(shapeText->Polygons()));
+        shapeText->move_by({10, 650});
+        _layer0->add_shape(shapeText);
     }
 }
 
