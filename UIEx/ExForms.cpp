@@ -15,7 +15,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     tooltip0->Popup.connect([tooltipLabel0](auto const& event) { tooltipLabel0->Label = event.Widget->get_name(); });
 
     auto panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
-    panel0->Flex = {100_pct, 100_pct};
+    panel0->Flex = {.Width = 100_pct, .Height = 100_pct};
     auto panel0Layout {panel0->get_layout<fixed_layout>()};
     (*panel0->TabStop).Enabled = false;
     panel0->ScrollEnabled      = true;
@@ -164,8 +164,8 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     locate_service<input::system>().CurrentInputMode.Changed.connect([retValue, wnd, &resGrp](input::mode mode) {
         if (mode == input::mode::Controller) {
             retValue->find_widget_by_name("gridB0")->focus();
-            wnd->Cursor = nullptr;
-            wnd->hide_system_cursor(true);
+            wnd->Cursor              = nullptr;
+            wnd->SystemCursorEnabled = false;
         } else {
             auto defaultCursor {resGrp.get<cursor>("default")};
             wnd->Cursor               = defaultCursor;
