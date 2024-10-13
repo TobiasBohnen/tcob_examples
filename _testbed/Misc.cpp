@@ -5,12 +5,10 @@
 
 #include "Misc.hpp"
 
-#include "tcob/audio/Music.hpp"
-#include "tcob/audio/SoundFont.hpp"
-#include "tcob/core/AngleUnits.hpp"
 #include <cmath>
 
 #include <iomanip>
+#include <iostream>
 #include <memory>
 #include <string>
 
@@ -144,10 +142,7 @@ void MiscScene::on_start()
     _sound_flac = *resGrp->get<sound>("flac-test");
     _sound_it   = *resGrp->get<sound>("it-test");
 
-    _music0                = resGrp->get<music>("test");
-    _soundFont0            = resGrp->get<sound_font>("test");
-    _midi0                 = std::make_unique<music>();
-    _midi0->DecoderContext = _soundFont0;
+    _music0 = resGrp->get<music>("test");
 
     /*
         auto lambda {
@@ -170,36 +165,6 @@ void MiscScene::on_start()
     _poly.set_geometry(vs, std::vector<u32>{0, 1, 2, 1, 3, 2, 4, 2, 3, 0, 2, 4});
        */
 
-    {
-        _tileMap = std::make_shared<orthogonal_tilemap>(tileset {{
-            {1, {"stone1"}},
-            {2, {"stone2"}},
-            {3, {"stone3"}},
-            {4, {"stone4"}},
-            {5, {"dirt1"}},
-            {6, {"dirt2"}},
-            {7, {"dirt3"}},
-            {8, {"dirt4"}},
-            {9, {"grass1"}},
-            {10, {"grass2"}},
-            {11, {"grass3"}},
-            {12, {"grass4"}},
-        }});
-
-        _tileMap->Material = resGrp->get<material>("mat-tiles");
-        _tileMap->Grid     = {.TileSize = {12, 12}};
-
-        rng           rnd;
-        u32 const     tmHeight {800}, tmWidth {600};
-        tilemap_layer layer;
-        layer.Tiles.reserve(tmWidth * tmWidth);
-        for (u32 i {0}; i < tmWidth * tmHeight; i++) {
-            layer.Tiles.push_back(rnd(1, 12));
-        }
-        layer.Size = {tmWidth, tmHeight};
-        _tileMap->add_layer(layer);
-    }
-
     auto q0 {get_root_node()->create_child()};
     auto ent {std::make_shared<simple_entity>()};
     ent->Drawable = _tileMap;
@@ -210,11 +175,16 @@ void MiscScene::on_start()
     // _rq1Cam->set_offset({10, 10});
     //  renderQ1->add_drawable(_tileMap);
     // add_render_queue(201, renderQ1);
+
+    _shape0           = _layer0.create_shape<gfx::rect_shape>();
+    _shape0->Color    = colors::Blue;
+    _shape0->Material = material::Empty();
+    _shape0->Bounds   = rect_f {point_f {input::system::GetMousePosition()}, {100, 50}};
+    _shape0->Rotation = 0;
 }
 
 void MiscScene::on_finish()
 {
-    _flag = true;
     _timer.stop();
     _music0->stop();
 }
@@ -265,10 +235,6 @@ void MiscScene::on_fixed_update(milliseconds deltaTime)
         stream << "|" << _music0->get_playback_position().count() / 1000;
     }
 
-    if (_soundFont0.is_ready()) {
-        stream << " soundfont ready! ";
-    }
-
     get_window().Title = "TestGame " + stream.str();
 }
 
@@ -307,114 +273,6 @@ void MiscScene::on_key_down(keyboard::event const& ev)
             }
             */
 
-    } else if (ev.ScanCode == scan_code::D4) {
-        u64 const seed = static_cast<u64>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
-        using namespace tcob::random;
-        std::cout << "----xoroshiro_128_plus" << '\n';
-        draw_dice(dice<20, xoroshiro_128_plus> {seed});
-        std::cout << "----xoroshiro_128_plus_plus" << '\n';
-        draw_dice(dice<20, xoroshiro_128_plus_plus> {seed});
-        std::cout << "----xoroshiro_128_star_star" << '\n';
-        draw_dice(dice<20, xoroshiro_128_star_star> {seed});
-        std::cout << "----xoshiro_256_plus" << '\n';
-        draw_dice(dice<20, xoshiro_256_plus> {seed});
-        std::cout << "----xoshiro_256_plus_plus" << '\n';
-        draw_dice(dice<20, xoshiro_256_plus_plus> {seed});
-        std::cout << "----xoshiro_256_star_star" << '\n';
-        draw_dice(dice<20, xoshiro_256_star_star> {seed});
-        std::cout << "----split_mix_64" << '\n';
-        draw_dice(dice<20, split_mix_64> {seed});
-        std::cout << "----xorshift_64" << '\n';
-        draw_dice(dice<20, xorshift_64> {seed});
-        std::cout << "----xorshift_64_star" << '\n';
-        draw_dice(dice<20, xorshift_64_star> {seed});
-        std::cout << "----split_mix_32" << '\n';
-        draw_dice(dice<20, split_mix_32> {static_cast<u32>(seed)});
-        std::cout << "----game_rand" << '\n';
-        draw_dice(dice<20, game_rand> {static_cast<u32>(seed)});
-        std::cout << "----well_512_a" << '\n';
-        draw_dice(dice<20, well_512_a> {static_cast<u32>(seed)});
-
-        random_number_generator<xorshift_64, normal_distribution> rng0 {static_cast<u32>(seed), 5.f, 3.f};
-        std::cout << "----normal " << '\n';
-        draw_rng(rng0);
-
-        random_number_generator<xorshift_64, poisson_distribution> rng1 {static_cast<u32>(seed), 15.f};
-        std::cout << "----poisson " << '\n';
-        draw_rng(rng1);
-
-        random_number_generator<xorshift_64, triangular_distribution> rng2 {static_cast<u32>(seed), 0.f, 30.f, 25.f};
-        std::cout << "----triangular " << '\n';
-        draw_rng(rng2);
-
-        random_number_generator<xorshift_64, uniform_distribution<f32>> rng3a {static_cast<u32>(seed), 5.f, 7.f};
-        std::cout << "----uniform f32 " << '\n';
-        draw_rng(rng3a, 10);
-        random_number_generator<xorshift_64, uniform_distribution<f64>> rng3b {static_cast<u32>(seed), 5., 7.};
-        std::cout << "----uniform f64 " << '\n';
-        draw_rng(rng3b, 10);
-        random_number_generator<xorshift_64, uniform_distribution<i32>> rng3c {static_cast<u32>(seed), 5, 7};
-        std::cout << "----uniform i32 " << '\n';
-        draw_rng(rng3c);
-        random_number_generator<xorshift_64, uniform_distribution<i64>> rng3d {static_cast<u32>(seed), 5, 7};
-        std::cout << "----uniform i64 " << '\n';
-        draw_rng(rng3d);
-
-        random_number_generator<xorshift_64, weibull_distribution> rng4 {static_cast<u32>(seed), 1.f, 10.f};
-        std::cout << "----weibull " << '\n';
-        draw_rng(rng4);
-
-        random_number_generator<xorshift_64, pareto_distribution> rng5 {static_cast<u32>(seed), 2.f, 10.f};
-        std::cout << "----pareto " << '\n';
-        draw_rng(rng5);
-
-        random_number_generator<xorshift_64, exponential_distribution> rng6 {static_cast<u32>(seed), 0.5f};
-        std::cout << "----exp " << '\n';
-        draw_rng(rng6);
-
-        random_number_generator<xorshift_64, discrete_distribution> rng7a {static_cast<u32>(seed), std::array {1., 1., 2., 2., 1.}};
-        std::cout << "----discrete int " << '\n';
-        draw_rng(rng7a);
-        random_number_generator<xorshift_64, discrete_distribution> rng7b {static_cast<u32>(seed), std::array {0.2, 0.2, 0.1, 0.1, 0.2}};
-        std::cout << "----discrete float " << '\n';
-        draw_rng(rng7b);
-
-        random_number_generator<xorshift_64, cauchy_distribution> rng8 {static_cast<u32>(seed), -2.f, 1.f};
-        std::cout << "----cauchy " << '\n';
-        draw_rng(rng8);
-
-        random_number_generator<xorshift_64, bernoulli_distribution> rng9 {static_cast<u32>(seed), 0.75f};
-        std::cout << "----bernoulli" << '\n';
-        draw_rng(rng9);
-
-        random_number_generator<xorshift_64, bag_distribution> rng10 {static_cast<u32>(seed), 1, 20, 5};
-        std::cout << "----bag " << '\n';
-        draw_rng(rng10);
-
-        random_number_generator<xorshift_64, piecewise_constant_distribution> rng11 {static_cast<u32>(seed), std::array {0., 1., 10., 15.}, std::array {1., 0., 1.}};
-        std::cout << "----pc" << '\n';
-        draw_rng(rng11);
-
-        random_number_generator<xorshift_64, binomial_distribution> rng12 {static_cast<u32>(seed), 4, 0.5};
-        std::cout << "----binomial" << '\n';
-        draw_rng(rng12);
-
-        random_number_generator<xorshift_64, negative_binomial_distribution> rng13 {static_cast<u32>(seed), 5, 0.75};
-        std::cout << "----neg binomial" << '\n';
-        draw_rng(rng13);
-
-        random_number_generator<xorshift_64, gamma_distribution> rng14 {static_cast<u32>(seed), 1., 2.};
-        std::cout << "----gamma" << '\n';
-        draw_rng(rng14);
-
-        random_number_generator<xorshift_64, beta_distribution> rng15 {static_cast<u32>(seed), 2., 2.};
-        std::cout << "----beta" << '\n';
-        draw_rng(rng15, 10);
-
-        random_number_generator<xorshift_64, lognormal_distribution> rng16 {static_cast<u32>(seed), 1.6, 0.25};
-        std::cout << "----log normal" << '\n';
-        draw_rng(rng16);
-
     } else if (ev.ScanCode == scan_code::D5) {
         asset_ptr<animated_texture> aniTex = resMgr.get_group("res")->get<texture>("test-ani");
         aniTex->start(true);
@@ -440,38 +298,6 @@ void MiscScene::on_key_down(keyboard::event const& ev)
     } else if (ev.ScanCode == scan_code::E) {
         camera.zoom_by({0.8f, 0.8f});
         _pointCloud->Material->PointSize = (std::ceil(camera.Zoom().Width * pointSize));
-    } else if (ev.ScanCode == scan_code::F) {
-        sound_font_commands commands;
-        auto                addNote = [&commands](auto&& dur, auto&& preset, auto&& note) {
-            commands.start_new_section(dur);
-            commands.add<note_on_command>(preset, note, 1.0f);
-            commands.start_new_section(0.0s);
-            commands.add<note_off_all_command>();
-        };
-
-        seconds const full {2s};
-        seconds const half {full / 2};
-        seconds const quarter {half / 2};
-        seconds const eighth {quarter / 2};
-
-        for (i32 preset {0}; preset < std::min(4, _soundFont0->get_preset_count()); ++preset) {
-            addNote(quarter, preset, midi_note::C4);
-            addNote(quarter, preset, midi_note::E4);
-            addNote(quarter, preset, midi_note::G4);
-            addNote(quarter, preset, midi_note::A4);
-            addNote(half, preset, midi_note::G4);
-            addNote(eighth, preset, midi_note::F4);
-            addNote(eighth, preset, midi_note::E4);
-            addNote(quarter, preset, midi_note::D4);
-            addNote(half, preset, midi_note::C4);
-        }
-        _sound_wav = _soundFont0->create_sound(commands);
-        _sound_wav.play();
-
-        auto buffer {_soundFont0->create_buffer(commands)};
-        auto _ = buffer.save("midiX.opus");
-        _      = buffer.save("midiX.ogg");
-        _      = buffer.save("midiX.wav");
     } else if (ev.ScanCode == scan_code::C) {
         get_window().Cursor = nullptr;
     } else if (ev.ScanCode == scan_code::KP_1) {
@@ -497,10 +323,6 @@ void MiscScene::on_key_down(keyboard::event const& ev)
         _sound_speech0.play();
     } else if (ev.ScanCode == scan_code::K) {
         _music0->play();
-    } else if (ev.ScanCode == scan_code::L) {
-        _midi0->stop();
-        [[maybe_unused]] auto _ = _midi0->open("res/audio/42337.mid");
-        _midi0->play();
     } else if (ev.ScanCode == scan_code::M) {
         static std::vector<animated_image_encoder::frame> frames;
 
@@ -522,6 +344,12 @@ void MiscScene::on_key_down(keyboard::event const& ev)
 
 void MiscScene::on_mouse_motion(mouse::motion_event const& ev)
 {
+    _shape0->Bounds = _shape0->Bounds->as_moved_to(point_f {input::system::GetMousePosition()});
+}
+
+void MiscScene::on_mouse_wheel(mouse::wheel_event const& ev)
+{
+    _shape0->Rotation += degree_f {15.f};
 }
 
 ////////////////////////////////////////////////////////////

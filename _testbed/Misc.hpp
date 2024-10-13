@@ -16,9 +16,6 @@ using namespace tcob::audio;
 using namespace tcob::data;
 using namespace tcob::input;
 
-#include <iomanip>
-#include <iostream>
-
 ////////////////////////////////////////////////////////////
 
 class simple_entity : public entity { // TODO: rename
@@ -52,46 +49,17 @@ protected:
     void on_key_down(keyboard::event const& ev) override;
     void on_mouse_motion(mouse::motion_event const& ev) override;
 
+    void on_mouse_wheel(mouse::wheel_event const& ev) override;
+
 private:
-    void draw_dice(auto&& dice)
-    {
-        auto               rolls {dice.roll_n(100'000)};
-        std::map<i32, i32> hist;
-        for (int n = 0; n < 100'000; ++n) {
-            ++hist[rolls[n]];
-        }
-        for (auto p : hist) {
-            std::cout << std::setfill('0') << std::setw(2) << p.first << ' ' << std::string(p.second / 250, '*') << '\n';
-        }
-    }
-
-    void draw_rng(auto&& rng, f32 scale = 1.0)
-    {
-        std::map<f32, i32> hist;
-        for (int n = 0; n < 10'000; ++n) {
-            ++hist[static_cast<i32>(rng() * scale)];
-        }
-        for (auto p : hist) {
-            if (p.second / 100 > 0) {
-                std::cout << std::setfill('0') << std::setw(2) << p.first << ' ' << std::string(p.second / 100, '*') << '\n';
-            }
-        }
-    }
-
-    shape_batch _layer0;
+    shape_batch                      _layer0;
+    std::shared_ptr<gfx::rect_shape> _shape0;
 
     std::shared_ptr<static_shape_batch> _layer1;
-
-    assets::asset_ptr<font> _font;
-
-    std::shared_ptr<text> _text;
-
-    std::shared_ptr<gfx::rect_shape> _aniTexSprite;
-
-    polygon_renderer _poly {buffer_usage_hint::StaticDraw};
-
-    tweening::queue  _rvc;
-    std::atomic_bool _flag {false};
+    assets::asset_ptr<font>             _font;
+    std::shared_ptr<text>               _text;
+    std::shared_ptr<gfx::rect_shape>    _aniTexSprite;
+    tweening::queue                     _rvc;
 
     size_i                       _numPoints {320, 240};
     std::vector<vec2>            _points;
@@ -107,10 +75,6 @@ private:
     sound _sound_it;
 
     sound _sound_speech0;
-
-    assets::asset_ptr<sound_font> _soundFont0;
-    std::unique_ptr<music>        _midi0;
-    sound                         _midi1;
 
     std::shared_ptr<html::document> _htmlDoc;
 
