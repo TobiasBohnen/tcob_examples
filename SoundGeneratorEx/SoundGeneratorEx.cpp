@@ -132,7 +132,7 @@ void SoundGeneratorEx::draw_wave()
 {
     auto& canvas {_form0->Canvas};
 
-    rect_f const crect {0, 0, canvas->Bounds->Width, canvas->Bounds->Height};
+    rect_f const crect {0, 0, canvas->Bounds->width(), canvas->Bounds->height()};
 
     canvas->clear();
 
@@ -146,7 +146,7 @@ void SoundGeneratorEx::draw_wave()
     // center line
     canvas->set_stroke_width(1);
     canvas->set_stroke_style(colors::Black);
-    std::array<point_f, 2> line {{{crect.X, crect.Height / 2.f}, {crect.right(), crect.Height / 2.f}}};
+    std::array<point_f, 2> line {{{crect.left(), crect.height() / 2.f}, {crect.right(), crect.height() / 2.f}}};
     canvas->begin_path();
     canvas->move_to(line[0]);
     for (u32 i {1}; i < line.size(); ++i) {
@@ -158,17 +158,17 @@ void SoundGeneratorEx::draw_wave()
     auto audioData {_audioData.get_data()};
     if (!audioData.empty()) {
         f32       currentSample {0.0f};
-        f32 const sampleSize {crect.Width};
+        f32 const sampleSize {crect.width()};
         f32 const sampleIncrement {audioData.size() / sampleSize};
-        f32 const sampleScale {crect.Height};
+        f32 const sampleScale {crect.height()};
 
         std::vector<point_f> points;
         points.reserve(sampleSize);
-        points.emplace_back(crect.X, crect.Height / 2.f);
+        points.emplace_back(crect.left(), crect.height() / 2.f);
 
         for (i32 i {1}; i < sampleSize; i++) {
-            f32 const sample {std::clamp<f32>(audioData[static_cast<u64>(currentSample)] * sampleScale, -crect.Height / 2.f, crect.Height / 2.f)};
-            points.emplace_back(crect.X + i, (crect.Y + crect.Height / 2.0f) - sample);
+            f32 const sample {std::clamp<f32>(audioData[static_cast<u64>(currentSample)] * sampleScale, -crect.height() / 2.f, crect.height() / 2.f)};
+            points.emplace_back(crect.left() + i, (crect.top() + crect.height() / 2.0f) - sample);
             currentSample += sampleIncrement;
         }
 

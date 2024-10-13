@@ -118,8 +118,8 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     auto flexPanel0 {panel0Layout->create_widget<panel>({230, 390, 250, 160}, "SPanel4")};
     (*flexPanel0->TabStop).Enabled = false;
-    flexPanel0->FocusGained.connect([](widget_event ev) { (*ev.Sender->Bounds).Width = 510; });
-    flexPanel0->FocusLost.connect([](widget_event ev) { (*ev.Sender->Bounds).Width = 250; });
+    flexPanel0->FocusGained.connect([](widget_event ev) { (*ev.Sender->Bounds).Size.Width = 510; });
+    flexPanel0->FocusLost.connect([](widget_event ev) { (*ev.Sender->Bounds).Size.Width = 250; });
     auto flexLayout0 {flexPanel0->create_layout<flex_size_layout>()};
     for (i32 i = 0; i < 4; i++) {
         auto fb {flexLayout0->create_widget<button>({0.f, i * 32.5f}, "FButton" + std::to_string(i))};

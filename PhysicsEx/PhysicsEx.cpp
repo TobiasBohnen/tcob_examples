@@ -164,7 +164,7 @@ void PhysicsEx::create_box(point_f pos)
     physics::rect_shape::settings shape;
     shape.Friction = 0.3f;
     shape.Density  = 0.5f;
-    shape.Extents  = {point_f::Zero, rect.get_size()};
+    shape.Extents  = {point_f::Zero, rect.Size};
 
     obj.Body->create_shape<physics::rect_shape>(shape);
 
@@ -186,14 +186,14 @@ void PhysicsEx::create_circle(point_f pos)
     physics::circle_shape::settings shape;
     shape.Friction = 0.3f;
     shape.Density  = 0.75f;
-    shape.Radius   = rect.get_size().Width / 2;
+    shape.Radius   = rect.width() / 2;
 
     obj.Body->create_shape<physics::circle_shape>(shape);
 
     auto circleShape {_layer1.create_shape<gfx::circle_shape>()};
     circleShape->Segments = 18;
     circleShape->Material = _mat;
-    circleShape->Radius   = rect.Width / 2 * 12;
+    circleShape->Radius   = rect.width() / 2 * 12;
     circleShape->Color    = colors::Yellow;
     obj.Sprite            = circleShape;
 
@@ -203,7 +203,7 @@ void PhysicsEx::create_circle(point_f pos)
 void PhysicsEx::create_obstacle(rect_f const& rect)
 {
     physics::rect_shape::settings shape;
-    shape.Extents     = {rect.get_center(), rect.get_size()};
+    shape.Extents     = {rect.get_center(), rect.Size};
     shape.Restitution = 0.5f;
 
     _obstacles->create_shape<physics::rect_shape>(shape);

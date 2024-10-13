@@ -43,9 +43,9 @@ generator_form::generator_form(window* window)
         auto retValue {mainPanelLayout->create_widget<slider>(bounds, name)};
         retValue->Min = min;
         retValue->Max = max;
-        auto lblText {mainPanelLayout->create_widget<label>({bounds.X - 4, bounds.Y, bounds.Width, bounds.Height}, "lbl" + name)};
+        auto lblText {mainPanelLayout->create_widget<label>({bounds.left() - 4, bounds.top(), bounds.width(), bounds.height()}, "lbl" + name)};
         lblText->Label = name;
-        auto lblValue {mainPanelLayout->create_widget<label>({bounds.X + 4, bounds.Y, bounds.Width / 2, bounds.Height}, "lbl" + name + "Val")};
+        auto lblValue {mainPanelLayout->create_widget<label>({bounds.left() + 4, bounds.top(), bounds.width() / 2, bounds.height()}, "lbl" + name + "Val")};
         lblValue->Label = "0";
         retValue->Value.Changed.connect([this, lbl = lblValue.get()](auto val) {
             std::string str {std::to_string(val / 100.f)};
