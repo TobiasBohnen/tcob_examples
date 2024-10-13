@@ -28,16 +28,22 @@ void ParticleSystemEx::on_start()
     _particleSystem0.Material = resGrp->get<material>("particleMat");
 
     particle_template pt {
+        .Scale = std::minmax(0.75f, 1.5f),
+        .Size  = {10, 10},
+
+        .Spin     = std::minmax(-150_deg, 150_deg),
+        .Rotation = std::minmax(-15, +15),
+
         .Acceleration = std::minmax(15.f, 35.f),
-        .Direction    = std::minmax(-25_deg, 25_deg),
-        .Lifetime     = std::minmax(5000ms, 25000ms),
-        .Scale        = std::minmax(0.75f, 1.5f),
-        .Size         = {10, 10},
         .Speed        = std::minmax(30.f, 50.f),
-        .Spin         = std::minmax(-150_deg, 150_deg),
+        .Direction    = std::minmax(-25_deg, 25_deg),
+
         .Texture      = "snowflake",
         .Color        = colors::Red,
-        .Transparency = std::minmax(1.0f, 1.0f)};
+        .Transparency = std::minmax(1.0f, 1.0f),
+
+        .Lifetime = std::minmax(5000ms, 25000ms),
+    };
 
     auto emi0 {_particleSystem0.create_emitter()};
     emi0->Template  = pt;
