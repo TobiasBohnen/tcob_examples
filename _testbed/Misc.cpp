@@ -69,7 +69,6 @@ void MiscScene::on_start()
     rng                                      rnd;
     std::vector<std::shared_ptr<gfx::shape>> sprites;
 
-    create_shapes();
     /*
         for (i32 i {0}; i < 500; i++) {
             f32 x {rnd(0.0f, 1200.f)};
@@ -496,23 +495,6 @@ void MiscScene::on_key_down(keyboard::event const& ev)
     } else if (ev.ScanCode == scan_code::KP_7) {
         _sound_speech0 = speech_generator {}.create_sound("1 2 3 4 5 6 7 8 9 0");
         _sound_speech0.play();
-    } else if (ev.ScanCode == scan_code::P) {
-        static i32 toggle {0};
-        create_shapes();
-        if (toggle < 4) {
-            _polyShape->clip(*_cutShape, static_cast<clip_mode>(toggle));
-            _layer0.remove_shape(*_cutShape);
-            _layer0.remove_shape(*_polyShape);
-            std::array colors {colors::Red, colors::Blue, colors::Green, colors::Yellow, colors::Brown, colors::DodgerBlue};
-            i32        i {0};
-            for (auto const& poly : _polyShape->Polygons()) {
-                auto shape      = _layer0.create_shape<gfx::poly_shape>();
-                shape->Material = material::Empty();
-                shape->Color    = colors[i++ % colors.size()];
-                shape->Polygons = {poly};
-            }
-        }
-        toggle = (toggle + 1) % 5;
     } else if (ev.ScanCode == scan_code::K) {
         _music0->play();
     } else if (ev.ScanCode == scan_code::L) {
@@ -540,28 +522,6 @@ void MiscScene::on_key_down(keyboard::event const& ev)
 
 void MiscScene::on_mouse_motion(mouse::motion_event const& ev)
 {
-}
-
-void MiscScene::create_shapes()
-{
-    _layer0.clear();
-
-    auto& resMgr {get_game().get_library()};
-    auto* resGrp {resMgr.get_group("res")};
-
-    _polyShape           = _layer0.create_shape<gfx::poly_shape>();
-    _polyShape->Material = material::Empty();
-    _polyShape->Color    = colors::Blue;
-    _polyShape->Polygons = {
-        {.Outline = {{10, 10}, {200, 100}, {200, 300}, {10, 450}, {450, 450}, {600, 300}, {600, 100}, {450, 10}},
-         .Holes   = {{{300, 100}, {500, 100}, {500, 300}, {300, 300}}}}};
-
-    _cutShape           = _layer0.create_shape<gfx::poly_shape>();
-    _cutShape->Material = material::Empty();
-    _cutShape->Color    = colors::Red;
-    _cutShape->Polygons = {
-        {.Outline = {{60, 50}, {60, 320}, {650, 320}, {620, 50}},
-         .Holes   = {{{70, 60}, {610, 60}, {610, 310}, {70, 310}}}}};
 }
 
 ////////////////////////////////////////////////////////////
