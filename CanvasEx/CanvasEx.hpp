@@ -24,13 +24,8 @@ protected:
     void on_mouse_wheel(mouse::wheel_event const& ev) override;
 
 private:
-    void prepare_canvas();
-    void paint_to_canvas();
-
-    canvas_paint LinearGradient;
-    canvas_paint BoxGradient;
-    canvas_paint RadialGradient0;
-    canvas_paint RadialGradient1;
+    void canvas_ray_cast();
+    void canvas_gradient();
 
     canvas          _canvas;
     canvas_renderer _renderer {_canvas};

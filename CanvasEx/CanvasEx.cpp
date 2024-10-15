@@ -29,12 +29,12 @@ void CanvasEx::on_fixed_update(milliseconds /* deltaTime */)
 
 void CanvasEx::on_start()
 {
-    prepare_canvas();
 }
 
 void CanvasEx::on_update(milliseconds /* deltaTime */)
 {
-    paint_to_canvas();
+    //  canvas_ray_cast();
+    canvas_gradient();
 }
 
 void CanvasEx::on_draw_to(render_target& target)
@@ -68,18 +68,7 @@ void CanvasEx::on_mouse_wheel(mouse::wheel_event const& ev)
     _rotation += (ev.Scroll.Y * 10);
 }
 
-void CanvasEx::prepare_canvas()
-{
-    std::vector<color_stop> colorStops {{0, colors::Red}, {0.25, colors::Gold}, {0.75, colors::Green}, {1, colors::White}};
-    color_gradient          colorGradient {colorStops};
-    LinearGradient = _canvas.create_linear_gradient({0, 0}, {0, 200}, colorGradient);
-
-    BoxGradient     = _canvas.create_box_gradient({550, 80, 100, 100}, 8, 75, colorGradient);
-    RadialGradient0 = _canvas.create_radial_gradient(rect_f {450, 0, 250, 250}.get_center(), 0, 125, colorGradient);
-    RadialGradient1 = _canvas.create_radial_gradient(rect_f {550, 480, 100, 100}.get_center(), 0, 125, {0.5f, 1.f}, colorGradient);
-}
-
-void CanvasEx::paint_to_canvas()
+void CanvasEx::canvas_ray_cast()
 {
     _canvas.begin_frame(get_window().Size(), 1);
 
@@ -132,6 +121,35 @@ void CanvasEx::paint_to_canvas()
     _canvas.begin_path();
     for (auto p : points) { _canvas.circle(p.Point, 2); }
     _canvas.stroke();
+
+    _canvas.end_frame();
+}
+
+void CanvasEx::canvas_gradient()
+{
+    _canvas.begin_frame(get_window().Size(), 1);
+
+    std::vector<color_stop> static colorStops0 {{0, colors::Red}, {0.25, colors::Gold}, {0.75, colors::Green}, {1, colors::White}};
+    color_gradient static colorGradient0 {colorStops0};
+    auto LinearGradient0 = _canvas.create_linear_gradient({0, 0}, {0, 200}, colorGradient0);
+
+    std::vector<color_stop> static colorStops1 {{0, colors::Green}, {0.25, colors::Blue}, {0.75, colors::Orange}, {1, colors::SlateBlue}};
+    color_gradient static colorGradient1 {colorStops1};
+    auto LinearGradient1 = _canvas.create_linear_gradient({0, 0}, {0, 200}, colorGradient1);
+
+    auto static BoxGradient    = _canvas.create_box_gradient({550, 80, 100, 100}, 8, 75, colorGradient0);
+    auto static RadialGradient = _canvas.create_radial_gradient(rect_f {450, 0, 250, 250}.get_center(), 0, 125, colorGradient0);
+
+    _canvas.set_fill_style(LinearGradient0);
+    _canvas.begin_path();
+    _canvas.rect({{0, 0}, {200, 200}});
+    _canvas.fill();
+
+    _canvas.set_global_alpha(0.5f);
+    _canvas.set_fill_style(LinearGradient1);
+    _canvas.begin_path();
+    _canvas.rect({{250, 0}, {200, 200}});
+    _canvas.fill();
 
     _canvas.end_frame();
 }
