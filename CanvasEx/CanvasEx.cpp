@@ -129,26 +129,33 @@ void CanvasEx::canvas_gradient()
 {
     _canvas.begin_frame(get_window().Size(), 1);
 
-    std::vector<color_stop> static colorStops0 {{0, colors::Red}, {0.25, colors::Gold}, {0.75, colors::Green}, {1, colors::White}};
-    color_gradient static colorGradient0 {colorStops0};
-    auto LinearGradient0 = _canvas.create_linear_gradient({0, 0}, {0, 200}, colorGradient0);
+    auto linearGradient0 = _canvas.create_linear_gradient(
+        {0, 0}, {0, 200},
+        color_gradient {{0, colors::Red}, {0.25, colors::Gold}, {0.75, colors::Green}, {1, colors::White}});
 
-    std::vector<color_stop> static colorStops1 {{0, colors::Green}, {0.25, colors::Blue}, {0.75, colors::Orange}, {1, colors::SlateBlue}};
-    color_gradient static colorGradient1 {colorStops1};
-    auto LinearGradient1 = _canvas.create_linear_gradient({0, 0}, {0, 200}, colorGradient1);
-
-    auto static BoxGradient    = _canvas.create_box_gradient({550, 80, 100, 100}, 8, 75, colorGradient0);
-    auto static RadialGradient = _canvas.create_radial_gradient(rect_f {450, 0, 250, 250}.get_center(), 0, 125, colorGradient0);
-
-    _canvas.set_fill_style(LinearGradient0);
+    _canvas.set_fill_style(linearGradient0);
     _canvas.begin_path();
     _canvas.rect({{0, 0}, {200, 200}});
     _canvas.fill();
 
+    auto linearGradient1 = _canvas.create_linear_gradient(
+        {250, 0}, {450, 0},
+        color_gradient {{0, colors::Green}, {0.25, colors::Blue}, {0.75, colors::Orange}, {1, colors::SlateBlue}});
+
     _canvas.set_global_alpha(0.5f);
-    _canvas.set_fill_style(LinearGradient1);
+    _canvas.set_fill_style(linearGradient1);
     _canvas.begin_path();
     _canvas.rect({{250, 0}, {200, 200}});
+    _canvas.fill();
+
+    auto linearGradient2 = _canvas.create_linear_gradient(
+        {500, 0}, {0, 700},
+        color_gradient {colors::Green, colors::Green});
+
+    _canvas.set_global_alpha(1.0f);
+    _canvas.set_fill_style(linearGradient2);
+    _canvas.begin_path();
+    _canvas.rect({{500, 0}, {200, 200}});
     _canvas.fill();
 
     _canvas.end_frame();
