@@ -33,8 +33,9 @@ void CanvasEx::on_start()
 
 void CanvasEx::on_update(milliseconds /* deltaTime */)
 {
-    //  canvas_ray_cast();
-    canvas_gradient();
+    // canvas_ray_cast();
+    // canvas_gradient();
+    canvas_path2d();
 }
 
 void CanvasEx::on_draw_to(render_target& target)
@@ -156,6 +157,28 @@ void CanvasEx::canvas_gradient()
     _canvas.set_fill_style(linearGradient2);
     _canvas.begin_path();
     _canvas.rect({{500, 0}, {200, 200}});
+    _canvas.fill();
+
+    _canvas.end_frame();
+}
+
+void CanvasEx::canvas_path2d()
+{
+    _canvas.begin_frame(get_window().Size(), 1);
+    _canvas.set_fill_style(colors::Green);
+    _canvas.path_2d(*path2d::Parse("M 80 80 A 45 45, 0, 0, 0, 125 125 L 125 80 Z"));
+    _canvas.fill();
+
+    _canvas.set_fill_style(colors::Red);
+    _canvas.path_2d(*path2d::Parse("M 230 80 A 45 45, 0, 1, 0, 275 125 L 275 80 Z"));
+    _canvas.fill();
+
+    _canvas.set_fill_style(colors::Purple);
+    _canvas.path_2d(*path2d::Parse("M 80 230 A 45 45, 0, 0, 1, 125 275 L 125 230 Z"));
+    _canvas.fill();
+
+    _canvas.set_fill_style(colors::Blue);
+    _canvas.path_2d(*path2d::Parse("M 230 230 A 45 45, 0, 1, 1, 275 275 L 275 230 Z"));
     _canvas.fill();
 
     _canvas.end_frame();
