@@ -35,7 +35,8 @@ void CanvasEx::on_update(milliseconds /* deltaTime */)
 {
     // canvas_ray_cast();
     // canvas_gradient();
-    canvas_path2d();
+    // canvas_path2d();
+    canvas_fancy_lines();
 }
 
 void CanvasEx::on_draw_to(render_target& target)
@@ -180,6 +181,42 @@ void CanvasEx::canvas_path2d()
     _canvas.set_fill_style(colors::Blue);
     _canvas.path_2d(*path2d::Parse("M 230 230 A 45 45, 0, 1, 1, 275 275 L 275 230 Z"));
     _canvas.fill();
+
+    _canvas.end_frame();
+}
+
+void CanvasEx::canvas_fancy_lines()
+{
+    _canvas.begin_frame(get_window().Size(), 1);
+
+    _canvas.set_stroke_style(colors::Red);
+    _canvas.set_stroke_width(10);
+    _canvas.begin_path();
+
+    _canvas.move_to({0, 100});
+    _canvas.dotted_line_to({250, 50}, 5, 5);
+    _canvas.stroke();
+
+    _canvas.begin_path();
+    _canvas.move_to({350, 50});
+    _canvas.dashed_line_to({400, 250}, 5);
+    _canvas.stroke();
+
+    _canvas.begin_path();
+    _canvas.dashed_circle({400, 250}, 50, 20);
+    _canvas.stroke();
+
+    _canvas.begin_path();
+    _canvas.move_to({200, 550});
+    _canvas.dashed_quad_bezier_to({50, 650}, {350, 850}, 20);
+    _canvas.stroke();
+
+    _canvas.set_stroke_style(colors::Green);
+    _canvas.set_stroke_width(5);
+    _canvas.begin_path();
+    _canvas.move_to({350, 750});
+    _canvas.wavy_line_to({850, 350}, 10, 0.5f);
+    _canvas.stroke();
 
     _canvas.end_frame();
 }

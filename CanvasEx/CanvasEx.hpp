@@ -27,6 +27,7 @@ private:
     void canvas_ray_cast();
     void canvas_gradient();
     void canvas_path2d();
+    void canvas_fancy_lines();
 
     canvas          _canvas;
     canvas_renderer _renderer {_canvas};
