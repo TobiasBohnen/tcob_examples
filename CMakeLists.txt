@@ -9,6 +9,7 @@ if(TCOB_ENABLE_ADDON_PHYSICS_BOX2D
     add_subdirectory(CanvasEx)
     add_subdirectory(ClippingEx)
     add_subdirectory(ControllerEx)
+    add_subdirectory(HtmlEx)
     add_subdirectory(ImageFilterEx)
     add_subdirectory(LightingSystemEx)
     add_subdirectory(ParticleSystemEx)

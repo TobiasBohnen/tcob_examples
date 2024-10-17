@@ -53,7 +53,7 @@ protected:
 
 private:
     shape_batch                      _layer0;
-    std::shared_ptr<gfx::rect_shape> _shape0;
+    std::shared_ptr<gfx::poly_shape> _shape0;
 
     std::shared_ptr<static_shape_batch> _layer1;
     assets::asset_ptr<font>             _font;
@@ -75,8 +75,6 @@ private:
     sound _sound_it;
 
     sound _sound_speech0;
-
-    std::shared_ptr<html::document> _htmlDoc;
 
     assets::asset_ptr<music> _music0;
 

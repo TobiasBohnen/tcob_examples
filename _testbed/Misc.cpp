@@ -50,20 +50,6 @@ void MiscScene::on_start()
     get_window().Cursor       = defaultCursor;
     defaultCursor->ActiveMode = "cursor1";
 
-    _htmlDoc = std::make_shared<html::document>(
-        html::document::config {.AssetGroup      = resGrp,
-                                .Fonts           = resGrp->get<font_family>("Roboto"),
-                                .DefaultFontSize = 32,
-                                .Window          = &get_window()});
-
-    _htmlDoc->AnchorClick.connect([](auto&& ev) { std::cout << ev << "\n"; });
-
-    _htmlDoc->Bounds = {{0.f, 0.f}, {800, 1200}};
-
-    _htmlDoc->load("res/test.html");
-
-    get_root_node()->Entity = _htmlDoc;
-
     rng                                      rnd;
     std::vector<std::shared_ptr<gfx::shape>> sprites;
 
@@ -165,10 +151,10 @@ void MiscScene::on_start()
     _poly.set_geometry(vs, std::vector<u32>{0, 1, 2, 1, 3, 2, 4, 2, 3, 0, 2, 4});
        */
 
-    auto q0 {get_root_node()->create_child()};
-    auto ent {std::make_shared<simple_entity>()};
-    ent->Drawable = _tileMap;
-    q0->Entity    = ent;
+    //  auto q0 {get_root_node()->create_child()};
+    //   auto ent {std::make_shared<simple_entity>()};
+    //  ent->Drawable = _tileMap;
+    //  q0->Entity    = ent;
 
     //   auto renderQ1 {std::make_shared<render_queue>(_rq1Cam)};
     // _rq1Cam->set_size({400, 400});
@@ -176,10 +162,14 @@ void MiscScene::on_start()
     //  renderQ1->add_drawable(_tileMap);
     // add_render_queue(201, renderQ1);
 
-    _shape0           = _layer0.create_shape<gfx::rect_shape>();
+    _shape0           = _layer0.create_shape<gfx::poly_shape>();
     _shape0->Color    = colors::Blue;
     _shape0->Material = material::Empty();
-    _shape0->Bounds   = rect_f {point_f {input::system::GetMousePosition()}, {100, 50}};
+    _shape0->Polygons = {path2d::Parse(
+                             "M 150 100 l 50 50 l 0 100 l -50 50 l 300 0 l 0 -200 z" // outline
+                             "M 250 150 l 50 0 l 0 50 l -50 0 z"                     // hole
+                             )
+                             ->polygonize()};
     _shape0->Rotation = 0;
 }
 
@@ -216,7 +206,7 @@ void MiscScene::on_update(milliseconds deltaTime)
     //  _htmlDoc->update(deltaTime);
     _pointCloud->update(deltaTime);
     _pointTween.update(deltaTime);
-    _tileMap->update(deltaTime);
+    // _tileMap->update(deltaTime);
 
     asset_ptr<animated_texture> aniTex = get_game().get_library().get_group("res")->get<texture>("test-ani");
     aniTex->update(deltaTime);
@@ -344,7 +334,7 @@ void MiscScene::on_key_down(keyboard::event const& ev)
 
 void MiscScene::on_mouse_motion(mouse::motion_event const& ev)
 {
-    _shape0->Bounds = _shape0->Bounds->as_moved_to(point_f {input::system::GetMousePosition()});
+    // _shape0->Bounds = _shape0->Bounds->as_moved_to(point_f {input::system::GetMousePosition()});
 }
 
 void MiscScene::on_mouse_wheel(mouse::wheel_event const& ev)
