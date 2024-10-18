@@ -126,11 +126,16 @@ void LightingSystemEx::on_key_down(keyboard::event const& ev)
     case scan_code::K: {
         if (!_lightSourceSec0) {
             _lightSourceSec0           = _lightingSystem0.create_light_source();
-            _lightSourceSec0->Color    = {255, 255, 255, 128};
+            _lightSourceSec0->Color    = _lightSource0->Color();
+            _lightSourceSec0->Position = _lightSource0->Position() + point_f {0, 15};
+            _lightSourceSec0->Falloff  = _lightSource0->Falloff();
+            _lightSourceSec0->Range    = _lightSource0->Range();
+
             _lightSourceSec1           = _lightingSystem0.create_light_source();
-            _lightSourceSec1->Color    = {255, 255, 255, 128};
-            _lightSourceSec0->Position = _lightSource0->Position() + point_f {0, 10};
-            _lightSourceSec1->Position = _lightSource0->Position() - point_f {0, 10};
+            _lightSourceSec1->Color    = _lightSource0->Color();
+            _lightSourceSec1->Position = _lightSource0->Position() - point_f {0, 15};
+            _lightSourceSec1->Falloff  = _lightSource0->Falloff();
+            _lightSourceSec1->Range    = _lightSource0->Range();
         } else {
             _lightingSystem0.remove_light_source(*_lightSourceSec0);
             _lightSourceSec0 = nullptr;
