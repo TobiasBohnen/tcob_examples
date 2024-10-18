@@ -3,6 +3,7 @@ add_executable(RngEx)
 target_sources(RngEx PRIVATE
     main.cpp
     RngEx.cpp
+    UI.cpp
 )
 
 set_target_properties(RngEx PROPERTIES

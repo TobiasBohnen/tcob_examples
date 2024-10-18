@@ -6,7 +6,6 @@
 #pragma once
 
 #include "../_common/Common.hpp"
-using namespace tcob::gfx::ui;
 
 #include "UI.hpp"
 

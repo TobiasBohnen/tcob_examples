@@ -86,11 +86,11 @@ generator_form::generator_form(window* window)
     _valHighPassFilterCutoffSweep = genSlider({32, 26, 4, 2}, "HPF Cutoff Sweep", -100, 100);
 
     _valWaveType = mainPanelLayout->create_widget<drop_down_list>({32, 30, 4, 2}, "Wave Type");
-    _valWaveType->add_item("Square");
-    _valWaveType->add_item("Sawtooth");
-    _valWaveType->add_item("Sine");
-    _valWaveType->add_item("Triangle");
-    _valWaveType->add_item("Noise");
+    _valWaveType->add_item({"Square", sound_wave::type::Square});
+    _valWaveType->add_item({"Sawtooth", sound_wave::type::Sawtooth});
+    _valWaveType->add_item({"Sine", sound_wave::type::Sine});
+    _valWaveType->add_item({"Triangle", sound_wave::type::Triangle});
+    _valWaveType->add_item({"Noise", sound_wave::type::Noise});
     _valWaveType->SelectedItemIndex = 0;
     _valWaveType->SelectedItemIndex.Changed.connect([&]() { NewWave(); });
     auto lblText {mainPanelLayout->create_widget<label>({32 - 4, 30, 4, 2}, "lblWave Type")};
@@ -310,17 +310,7 @@ void generator_form::set_values(sound_wave const& wave)
 void generator_form::get_values(sound_wave& wave)
 {
     auto const waveType {_valWaveType->get_selected_item()};
-    if (waveType == "Square") {
-        wave.WaveType = sound_wave::type::Square;
-    } else if (waveType == "Sawtooth") {
-        wave.WaveType = sound_wave::type::Sawtooth;
-    } else if (waveType == "Sine") {
-        wave.WaveType = sound_wave::type::Sine;
-    } else if (waveType == "Noise") {
-        wave.WaveType = sound_wave::type::Noise;
-    } else if (waveType == "Triangle") {
-        wave.WaveType = sound_wave::type::Triangle;
-    }
+    wave.WaveType = std::any_cast<sound_wave::type>(waveType.UserData);
 
     wave.AttackTime   = _valAttackTime->Value / 100.f;
     wave.SustainTime  = _valSustainTime->Value / 100.f;
