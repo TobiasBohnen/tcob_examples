@@ -23,7 +23,7 @@ void LightingSystemEx::on_start()
 
     _layer1 = std::make_shared<shape_batch>();
 
-    _lightingSystem0.Bounds = {point_f::Zero, size_f {get_window().Size()}};
+    _lightingSystem0.Bounds = {point_f::Zero, size_f {1600, 900}};
 
     _lightSource0        = _lightingSystem0.create_light_source();
     _lightSource0->Range = 100;
