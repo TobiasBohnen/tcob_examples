@@ -56,7 +56,7 @@ public:
     {
         if (_mouseDown) {
             auto& camera {locate_service<render_system>().get_window().get_camera()};
-            auto  zoom {camera.Zoom()};
+            auto  zoom {camera.Zoom};
             camera.move_by(-(point_f {ev.RelativeMotion} / point_f {zoom.Width, zoom.Height}));
         }
     }

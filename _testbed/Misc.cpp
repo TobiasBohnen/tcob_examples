@@ -156,12 +156,6 @@ void MiscScene::on_start()
     //  ent->Drawable = _tileMap;
     //  q0->Entity    = ent;
 
-    //   auto renderQ1 {std::make_shared<render_queue>(_rq1Cam)};
-    // _rq1Cam->set_size({400, 400});
-    // _rq1Cam->set_offset({10, 10});
-    //  renderQ1->add_drawable(_tileMap);
-    // add_render_queue(201, renderQ1);
-
     _shape0           = _layer0.create_shape<gfx::poly_shape>();
     _shape0->Color    = colors::Blue;
     _shape0->Material = material::Empty();
@@ -284,10 +278,10 @@ void MiscScene::on_key_down(keyboard::event const& ev)
         camera.move_by({0.0f, -moveFactor});
     } else if (ev.ScanCode == scan_code::Q) {
         camera.zoom_by({1.25f, 1.25f});
-        _pointCloud->Material->PointSize = (std::ceil(camera.Zoom().Width * pointSize));
+        _pointCloud->Material->PointSize = (std::ceil(camera.Zoom.Width * pointSize));
     } else if (ev.ScanCode == scan_code::E) {
         camera.zoom_by({0.8f, 0.8f});
-        _pointCloud->Material->PointSize = (std::ceil(camera.Zoom().Width * pointSize));
+        _pointCloud->Material->PointSize = (std::ceil(camera.Zoom.Width * pointSize));
     } else if (ev.ScanCode == scan_code::C) {
         get_window().Cursor = nullptr;
     } else if (ev.ScanCode == scan_code::KP_1) {

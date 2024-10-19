@@ -84,6 +84,5 @@ private:
     uniform_buffer _uniBuf {sizeof(vec4) + sizeof(f32)};
     uniform_buffer _uniPoints {sizeof(uvec2)};
 
-    std::shared_ptr<camera>             _rq1Cam {std::make_shared<camera>()};
     std::shared_ptr<orthogonal_tilemap> _tileMap {};
 };
