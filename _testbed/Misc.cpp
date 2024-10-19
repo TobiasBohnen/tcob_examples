@@ -328,7 +328,6 @@ void MiscScene::on_key_down(keyboard::event const& ev)
 
 void MiscScene::on_mouse_motion(mouse::motion_event const& ev)
 {
-    // _shape0->Bounds = _shape0->Bounds->as_moved_to(point_f {input::system::GetMousePosition()});
 }
 
 void MiscScene::on_mouse_wheel(mouse::wheel_event const& ev)

@@ -33,7 +33,7 @@ inline void rng_form::draw_dice(auto&& dice)
     _canvas->clear();
 
     _canvas->begin_path();
-    _canvas->rect(bounds.as_moved_to(point_f::Zero));
+    _canvas->rect({point_f::Zero, bounds.Size});
     _canvas->set_fill_style(colors::LightGray);
     _canvas->fill();
 
