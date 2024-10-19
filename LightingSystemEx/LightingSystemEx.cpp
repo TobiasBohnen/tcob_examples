@@ -193,7 +193,7 @@ void LightingSystemEx::on_mouse_button_up(mouse::button_event const& ev)
 void LightingSystemEx::on_mouse_motion(mouse::motion_event const& ev)
 {
     _cam.on_mouse_motion(ev);
-    _lightSource0->Position = (*get_window().Camera).convert_screen_to_world(ev.Position);
+    _lightSource0->Position = (get_window().get_camera()).convert_screen_to_world(ev.Position);
     if (_lightSourceSec0) {
         _lightSourceSec0->Position = _lightSource0->Position() + point_f {0, 10};
         _lightSourceSec1->Position = _lightSource0->Position() - point_f {0, 10};

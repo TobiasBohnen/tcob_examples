@@ -232,7 +232,7 @@ void MiscScene::on_key_down(keyboard::event const& ev)
 {
     float moveFactor {10};
     auto& window {get_window()};
-    auto& camera {*window.Camera};
+    auto& camera {window.get_camera()};
     auto& resMgr {get_game().get_library()};
     auto* resGrp {resMgr.get_group("res")};
 
