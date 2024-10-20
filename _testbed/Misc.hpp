@@ -67,12 +67,7 @@ private:
     smoothstep_tween<point_f>    _pointTween {milliseconds {2000}, {point_f {0, -50.f}, point_f {0, 50.f}}};
     usize                        _pointIdx {0};
 
-    sound _sound_mp3;
-    sound _sound_opus;
-    sound _sound_wav;
-    sound _sound_ogg;
-    sound _sound_flac;
-    sound _sound_it;
+    audio::playlist _audioPlaylist;
 
     sound _sound_speech0;
 

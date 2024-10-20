@@ -32,10 +32,10 @@ void MiscScene::on_start()
     if (io::exists("bootstrap.lua")) {
         auto result {script.run_file<std::unordered_map<std::string, std::vector<std::string>>>("bootstrap.lua")};
         if (result.has_value()) {
-            for (auto& [groupName, sources] : result.value()) {
-                auto& group {resMgr.create_or_get_group(groupName)};
+            for (auto& [playlistName, sources] : result.value()) {
+                auto& playlist {resMgr.create_or_get_group(playlistName)};
                 for (auto& source : sources) {
-                    group.mount(source);
+                    playlist.mount(source);
                 }
             }
         }
@@ -121,12 +121,12 @@ void MiscScene::on_start()
         _uniBuf.update<f32>(bufData, 0);
     */
 
-    _sound_mp3  = *resGrp->get<sound>("mp3-test");
-    _sound_wav  = *resGrp->get<sound>("wav-test");
-    _sound_ogg  = *resGrp->get<sound>("ogg-test");
-    _sound_opus = *resGrp->get<sound>("opus-test");
-    _sound_flac = *resGrp->get<sound>("flac-test");
-    _sound_it   = *resGrp->get<sound>("it-test");
+    _audioPlaylist.add("mp3", resGrp->get<sound>("mp3-test").get_ptr());
+    _audioPlaylist.add("wav", resGrp->get<sound>("wav-test").get_ptr());
+    _audioPlaylist.add("ogg", resGrp->get<sound>("ogg-test").get_ptr());
+    _audioPlaylist.add("flac", resGrp->get<sound>("flac-test").get_ptr());
+    _audioPlaylist.add("it", resGrp->get<sound>("it-test").get_ptr());
+    _audioPlaylist.add("opus", resGrp->get<sound>("opus-test").get_ptr());
 
     _music0 = resGrp->get<music>("test");
 
@@ -285,23 +285,19 @@ void MiscScene::on_key_down(keyboard::event const& ev)
     } else if (ev.ScanCode == scan_code::C) {
         get_window().Cursor = nullptr;
     } else if (ev.ScanCode == scan_code::KP_1) {
-        _sound_mp3.play();
-        std::cout << _sound_mp3.get_duration().count() / 1000 << "\n";
+        _audioPlaylist.queue("wav");
+        _audioPlaylist.queue("mp3");
+        _audioPlaylist.queue("ogg");
+        _audioPlaylist.queue("flac");
+        _audioPlaylist.queue("it");
+        _audioPlaylist.queue("opus");
     } else if (ev.ScanCode == scan_code::KP_2) {
-        _sound_wav.play();
-        std::cout << _sound_wav.get_duration().count() / 1000 << "\n";
-    } else if (ev.ScanCode == scan_code::KP_3) {
-        _sound_ogg.play();
-        std::cout << _sound_ogg.get_duration().count() / 1000 << "\n";
-    } else if (ev.ScanCode == scan_code::KP_4) {
-        _sound_flac.play();
-        std::cout << _sound_flac.get_duration().count() / 1000 << "\n";
-    } else if (ev.ScanCode == scan_code::KP_5) {
-        _sound_it.play();
-        std::cout << _sound_it.get_duration().count() / 1000 << "\n";
-    } else if (ev.ScanCode == scan_code::KP_6) {
-        _sound_opus.play();
-        std::cout << _sound_opus.get_duration().count() / 1000 << "\n";
+        _audioPlaylist.play("wav");
+        _audioPlaylist.play("mp3");
+        _audioPlaylist.play("ogg");
+        _audioPlaylist.play("flac");
+        _audioPlaylist.play("it");
+        _audioPlaylist.play("opus");
     } else if (ev.ScanCode == scan_code::KP_7) {
         _sound_speech0 = speech_generator {}.create_sound("1 2 3 4 5 6 7 8 9 0");
         _sound_speech0.play();
