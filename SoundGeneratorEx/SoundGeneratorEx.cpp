@@ -156,30 +156,28 @@ void SoundGeneratorEx::draw_wave()
 
     // waveform
     auto audioData {_audioData.get_data()};
-    if (!audioData.empty()) {
-        f32       currentSample {0.0f};
-        f32 const sampleSize {crect.width()};
-        f32 const sampleIncrement {audioData.size() / sampleSize};
-        f32 const sampleScale {crect.height()};
+    if (audioData.empty()) { return; }
 
-        std::vector<point_f> points;
-        points.reserve(sampleSize);
-        points.emplace_back(crect.left(), crect.height() / 2.f);
+    f32       currentSample {0.0f};
+    f32 const sampleSize {crect.width()};
+    f32 const sampleIncrement {audioData.size() / sampleSize};
+    f32 const sampleScale {crect.height()};
 
-        for (i32 i {1}; i < sampleSize; i++) {
-            f32 const sample {std::clamp<f32>(audioData[static_cast<u64>(currentSample)] * sampleScale, -crect.height() / 2.f, crect.height() / 2.f)};
-            points.emplace_back(crect.left() + i, (crect.top() + crect.height() / 2.0f) - sample);
-            currentSample += sampleIncrement;
-        }
+    std::vector<point_f> points;
+    points.reserve(sampleSize);
+    points.emplace_back(crect.left(), crect.height() / 2.f);
 
-        canvas->set_stroke_width(2);
-        canvas->set_stroke_style(colors::DarkBlue);
-
-        canvas->begin_path();
-        canvas->move_to(points[0]);
-        for (u32 i {1}; i < points.size(); ++i) {
-            canvas->line_to(points[i]);
-        }
-        canvas->stroke();
+    for (i32 i {1}; i < sampleSize; i++) {
+        f32 const sample {std::clamp<f32>(audioData[static_cast<u64>(currentSample)] * sampleScale, -crect.height() / 2.f, crect.height() / 2.f)};
+        points.emplace_back(crect.left() + i, (crect.top() + crect.height() / 2.0f) - sample);
+        currentSample += sampleIncrement;
     }
+
+    canvas->set_stroke_width(1);
+    canvas->set_stroke_style(colors::DarkBlue);
+
+    canvas->begin_path();
+    canvas->move_to(points[0]);
+    for (u32 i {1}; i < points.size(); ++i) { canvas->line_to(points[i]); }
+    canvas->stroke();
 }
