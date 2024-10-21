@@ -30,6 +30,5 @@ private:
     orthogonal_tilemap _tileMapOrtho;
     isometric_tilemap  _tileMapIso;
 
-    timer     _timer;
     basic_cam _cam;
 };

@@ -78,14 +78,6 @@ void TileMapEx::on_start()
         layer.Size = {tmWidth, tmHeight};
         _tileMapIso.add_layer(layer);
     }
-
-    auto lambda {
-        [&](milliseconds deltaTime) {
-            _tileMapOrtho.update(deltaTime);
-            _tileMapIso.update(deltaTime);
-        }};
-    _timer.Tick.connect(lambda);
-    _timer.start(1ms);
 }
 
 void TileMapEx::on_draw_to(render_target& target)
@@ -96,6 +88,8 @@ void TileMapEx::on_draw_to(render_target& target)
 
 void TileMapEx::on_update(milliseconds deltaTime)
 {
+    _tileMapOrtho.update(deltaTime);
+    _tileMapIso.update(deltaTime);
 }
 
 void TileMapEx::on_fixed_update(milliseconds deltaTime)
