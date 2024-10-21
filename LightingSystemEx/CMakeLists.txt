@@ -6,7 +6,7 @@ target_sources(LightingSystemEx PRIVATE
 )
 
 set_target_properties(LightingSystemEx PROPERTIES
-    CXX_STANDARD 23
+    CXX_STANDARD 20
     CXX_STANDARD_REQUIRED TRUE
 )
 
