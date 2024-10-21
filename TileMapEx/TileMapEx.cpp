@@ -38,6 +38,34 @@ TileMapEx::TileMapEx(game& game)
           {11, {"grass3"}},
           {12, {"grass4"}},
       }}}
+    , _tileMapHexPointy {tileset {{
+          {1, {"stone1"}},
+          {2, {"stone2"}},
+          {3, {"stone3"}},
+          {4, {"stone4"}},
+          {5, {"dirt1"}},
+          {6, {"dirt2"}},
+          {7, {"dirt3"}},
+          {8, {"dirt4"}},
+          {9, {"grass1"}},
+          {10, {"grass2"}},
+          {11, {"grass3"}},
+          {12, {"grass4"}},
+      }}}
+    , _tileMapHexFlat {tileset {{
+          {1, {"stone1"}},
+          {2, {"stone2"}},
+          {3, {"stone3"}},
+          {4, {"stone4"}},
+          {5, {"dirt1"}},
+          {6, {"dirt2"}},
+          {7, {"dirt3"}},
+          {8, {"dirt4"}},
+          {9, {"grass1"}},
+          {10, {"grass2"}},
+          {11, {"grass3"}},
+          {12, {"grass4"}},
+      }}}
 {
 }
 
@@ -62,9 +90,9 @@ void TileMapEx::on_start()
         _tileMapOrtho.Grid     = {.TileSize = {65, 65}};
 
         tcob::gfx::tilemap_layer layer;
-        layer.Tiles.insert(layer.Tiles.end(), tiles1.begin(), tiles1.end());
-        layer.Size = {tmWidth, tmHeight};
-        _tileMapOrtho.add_layer(layer);
+        layer.Tiles = tiles1;
+        layer.Size  = {tmWidth, tmHeight};
+        _layerID    = _tileMapOrtho.add_layer(layer);
     }
     ////////////////////////////////////////////////////////////
     {
@@ -74,9 +102,34 @@ void TileMapEx::on_start()
         _tileMapIso.Position = {2050, 300};
 
         tcob::gfx::tilemap_layer layer;
-        layer.Tiles.insert(layer.Tiles.end(), tiles1.begin(), tiles1.end());
-        layer.Size = {tmWidth, tmHeight};
+        layer.Tiles = tiles1;
+        layer.Size  = {tmWidth, tmHeight};
         _tileMapIso.add_layer(layer);
+    }
+    ////////////////////////////////////////////////////////////
+    {
+        _tileMapHexPointy.Material = resGrp->get<material>("hex");
+        _tileMapHexPointy.Grid     = {.TileSize = {128, 128}, .FlatTop = false};
+
+        _tileMapHexPointy.Position = {3500, 300};
+
+        tcob::gfx::tilemap_layer layer;
+        layer.Tiles = tiles1;
+        layer.Size  = {tmWidth, tmHeight};
+        _tileMapHexPointy.add_layer(layer);
+    }
+
+    ////////////////////////////////////////////////////////////
+    {
+        _tileMapHexFlat.Material = resGrp->get<material>("hexflat");
+        _tileMapHexFlat.Grid     = {.TileSize = {128, 128}, .FlatTop = true};
+
+        _tileMapHexFlat.Position = {4500, 300};
+
+        tcob::gfx::tilemap_layer layer;
+        layer.Tiles = tiles1;
+        layer.Size  = {tmWidth, tmHeight};
+        _tileMapHexFlat.add_layer(layer);
     }
 }
 
@@ -84,12 +137,16 @@ void TileMapEx::on_draw_to(render_target& target)
 {
     _tileMapOrtho.draw_to(target);
     _tileMapIso.draw_to(target);
+    _tileMapHexPointy.draw_to(target);
+    _tileMapHexFlat.draw_to(target);
 }
 
 void TileMapEx::on_update(milliseconds deltaTime)
 {
     _tileMapOrtho.update(deltaTime);
     _tileMapIso.update(deltaTime);
+    _tileMapHexPointy.update(deltaTime);
+    _tileMapHexFlat.update(deltaTime);
 }
 
 void TileMapEx::on_fixed_update(milliseconds deltaTime)
@@ -112,7 +169,7 @@ void TileMapEx::on_key_down(keyboard::event const& ev)
         break;
     case scan_code::D1:
         for (i32 i = 0; i < tmHeight; i++) {
-            _tileMapOrtho.change_tile(0, {0, i}, 2);
+            _tileMapOrtho.set_tile(_layerID, {0, i}, 2);
         }
         break;
     case scan_code::D2:
@@ -122,20 +179,25 @@ void TileMapEx::on_key_down(keyboard::event const& ev)
 
         break;
     case scan_code::D3: {
-        tcob::gfx::tilemap_layer layer;
+        std::array<tile_index_t, 10> tiles {};
         for (int i = 0; i < 10; i++) {
-            layer.Tiles.push_back(1);
+            tiles[i] = 1;
         }
-        layer.Size = {2, 5};
+        tcob::gfx::tilemap_layer layer;
+        layer.Tiles = tiles;
+        layer.Size  = {2, 5};
         _tileMapOrtho.add_layer(layer);
     } break;
     case scan_code::D4: {
-        tcob::gfx::tilemap_layer layer;
+        std::array<tile_index_t, 10> tiles {};
         for (int i = 0; i < 10; i++) {
-            layer.Tiles.push_back(2);
+            tiles[i] = 2;
         }
-        layer.Size = {2, 5};
-        _tileMapOrtho.add_layer(layer, {4, 0});
+        tcob::gfx::tilemap_layer layer;
+        layer.Tiles  = tiles;
+        layer.Size   = {2, 5};
+        layer.Offset = {4, 0};
+        _tileMapOrtho.add_layer(layer);
     } break;
     case scan_code::R:
         _tileMapOrtho.clear();

@@ -29,6 +29,10 @@ protected:
 private:
     orthogonal_tilemap _tileMapOrtho;
     isometric_tilemap  _tileMapIso;
+    hexagonal_tilemap  _tileMapHexPointy;
+    hexagonal_tilemap  _tileMapHexFlat;
+
+    id_t _layerID {INVALID_ID};
 
     basic_cam _cam;
 };
