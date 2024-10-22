@@ -6,9 +6,6 @@
 #pragma once
 #include "../_common/Common.hpp"
 
-#include <iomanip>
-#include <iostream>
-
 #include "UI.hpp"
 
 class RngEx : public scene {

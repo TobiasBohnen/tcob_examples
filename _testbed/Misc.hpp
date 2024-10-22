@@ -61,12 +61,6 @@ private:
     std::shared_ptr<gfx::rect_shape>    _aniTexSprite;
     tweening::queue                     _rvc;
 
-    size_i                       _numPoints {320, 240};
-    std::vector<vec2>            _points;
-    std::shared_ptr<point_cloud> _pointCloud {std::make_shared<point_cloud>(_numPoints.Width * _numPoints.Height)};
-    smoothstep_tween<point_f>    _pointTween {milliseconds {2000}, {point_f {0, -50.f}, point_f {0, 50.f}}};
-    usize                        _pointIdx {0};
-
     audio::playlist _audioPlaylist;
 
     sound _sound_speech0;

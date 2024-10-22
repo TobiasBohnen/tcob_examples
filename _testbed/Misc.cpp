@@ -22,8 +22,6 @@ MiscScene::MiscScene(game& game)
 
 MiscScene::~MiscScene() = default;
 
-f32 pointSize {1.0f};
-
 void MiscScene::on_start()
 {
     auto& resMgr {get_game().get_library()};
@@ -62,35 +60,6 @@ void MiscScene::on_start()
     // text.text("ö±\nad to");
     _text->Bounds = {{800, 600}, {400, 60}};
     _text->Style  = {.Color = colors::White, .Alignment = {horizontal_alignment::Left, vertical_alignment::Top}, .KerningEnabled = true};
-
-    for (f32 y = 0; y < pointSize * _numPoints.Height; y += pointSize) {
-        for (f32 x = 0; x < pointSize * _numPoints.Width; x += pointSize) {
-            auto& v     = _pointCloud->create_point();
-            v.Position  = {(x + (pointSize / 2)), (y + (pointSize / 2))};
-            v.Color     = {255, 255, 255, 255};
-            v.TexCoords = {x / (pointSize * _numPoints.Width),
-                           y / (pointSize * _numPoints.Height),
-                           0};
-            _points.push_back(v.Position);
-        }
-    }
-
-    _pointCloud->Material = resGrp->get<material>("pointMat2");
-    _uniPoints.bind_base(_pointCloud->Material->Shader->get_uniform_block_binding("Point"));
-    _uniPoints.update(_numPoints, 0);
-    _pointTween.Interval = 20ms;
-    _pointTween.Value.Changed.connect([&](point_f value) {
-        for (usize i {0}; i < _numPoints.Height; i++) {
-            usize idx     = (i * _numPoints.Width) + _pointIdx;
-            auto& p       = _pointCloud->get_point_at(idx);
-            p.Position[1] = _points[idx][1] + value.Y;
-        }
-
-        _pointIdx++;
-        if (_pointIdx >= _numPoints.Width) {
-            _pointIdx = 0;
-        }
-    });
 
     /*
         _aniTexSprite           = _layer0.create_shape<gfx::rect_shape>();
@@ -140,8 +109,6 @@ void MiscScene::on_draw_to(render_target& target)
       */
     _layer0.draw_to(target);
     _layer1->draw_to(target);
-    //   _htmlDoc->draw_to(target);
-    // _pointCloud->draw_to(target);
     //
 }
 
@@ -154,11 +121,6 @@ void MiscScene::on_update(milliseconds deltaTime)
     */
     _layer0.update(deltaTime);
     _layer1->update(deltaTime);
-
-    //  _htmlDoc->update(deltaTime);
-    _pointCloud->update(deltaTime);
-    _pointTween.update(deltaTime);
-    // _tileMap->update(deltaTime);
 
     asset_ptr<animated_texture> aniTex = get_game().get_library().get_group("res")->get<texture>("test-ani");
     aniTex->update(deltaTime);
@@ -218,7 +180,6 @@ void MiscScene::on_key_down(keyboard::event const& ev)
     } else if (ev.ScanCode == scan_code::D5) {
         asset_ptr<animated_texture> aniTex = resMgr.get_group("res")->get<texture>("test-ani");
         aniTex->start(true);
-        _pointTween.start(playback_mode::AlternatedLooped);
     } else if (ev.ScanCode == scan_code::D6) {
         std::array<f32, 5> bufData {0, 1, 0, 1, 1};
         _uniBuf.update<f32>(bufData, 0);
@@ -236,10 +197,8 @@ void MiscScene::on_key_down(keyboard::event const& ev)
         camera.move_by({0.0f, -moveFactor});
     } else if (ev.ScanCode == scan_code::Q) {
         camera.zoom_by({1.25f, 1.25f});
-        _pointCloud->Material->PointSize = (std::ceil(camera.Zoom.Width * pointSize));
     } else if (ev.ScanCode == scan_code::E) {
         camera.zoom_by({0.8f, 0.8f});
-        _pointCloud->Material->PointSize = (std::ceil(camera.Zoom.Width * pointSize));
     } else if (ev.ScanCode == scan_code::C) {
         get_window().Cursor = nullptr;
     } else if (ev.ScanCode == scan_code::KP_1) {
