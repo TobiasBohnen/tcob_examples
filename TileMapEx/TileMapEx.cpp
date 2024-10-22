@@ -10,21 +10,7 @@ using namespace std::chrono_literals;
 
 TileMapEx::TileMapEx(game& game)
     : scene(game)
-    , _tileMapOrtho(tileset {{
-          {1, {"stone1"}},
-          {2, {"stone2"}},
-          {3, {"stone3"}},
-          {4, {"stone4"}},
-          {5, {"dirt1"}},
-          {6, {"dirt2"}},
-          {7, {"dirt3"}},
-          {8, {"dirt4"}},
-          {9, {"grass1"}},
-          {10, {"grass2"}},
-          {11, {"grass3"}},
-          {12, {"grass4"}},
-      }})
-    , _tileMapIso {tileset {{
+    , _tileMapOrtho {{{
           {1, {"stone1"}},
           {2, {"stone2"}},
           {3, {"stone3"}},
@@ -38,7 +24,21 @@ TileMapEx::TileMapEx(game& game)
           {11, {"grass3"}},
           {12, {"grass4"}},
       }}}
-    , _tileMapHexPointy {tileset {{
+    , _tileMapIso {{{
+          {1, {.TextureRegion = "stone1", .Center = {0.5f, 0.25f}, .Height = 0.0f}},
+          {2, {.TextureRegion = "stone2", .Center = {0.5f, 0.25f}, .Height = 0.10f}},
+          {3, {.TextureRegion = "stone3", .Center = {0.5f, 0.25f}, .Height = 0.0f}},
+          {4, {.TextureRegion = "stone4", .Center = {0.5f, 0.25f}, .Height = 0.0f}},
+          {5, {.TextureRegion = "dirt1", .Center = {0.5f, 0.25f}, .Height = 0.0f}},
+          {6, {.TextureRegion = "dirt2", .Center = {0.5f, 0.25f}, .Height = 0.0f}},
+          {7, {.TextureRegion = "dirt3", .Center = {0.5f, 0.25f}, .Height = 0.0f}},
+          {8, {.TextureRegion = "dirt4", .Center = {0.5f, 0.25f}, .Height = 0.0f}},
+          {9, {.TextureRegion = "grass1", .Center = {0.5f, 0.25f}, .Height = 0.0f}},
+          {10, {.TextureRegion = "grass2", .Center = {0.5f, 0.25f}, .Height = 0.0f}},
+          {11, {.TextureRegion = "grass3", .Center = {0.5f, 0.25f}, .Height = 0.0f}},
+          {12, {.TextureRegion = "grass4", .Center = {0.5f, 0.25f}, .Height = 0.0f}},
+      }}}
+    , _tileMapHexPointy {{{
           {1, {"stone1"}},
           {2, {"stone2"}},
           {3, {"stone3"}},
@@ -52,7 +52,7 @@ TileMapEx::TileMapEx(game& game)
           {11, {"grass3"}},
           {12, {"grass4"}},
       }}}
-    , _tileMapHexFlat {tileset {{
+    , _tileMapHexFlat {{{
           {1, {"stone1"}},
           {2, {"stone2"}},
           {3, {"stone3"}},
@@ -87,7 +87,7 @@ void TileMapEx::on_start()
     ////////////////////////////////////////////////////////////
     {
         _tileMapOrtho.Material = resGrp->get<material>("ortho");
-        _tileMapOrtho.Grid     = {.TileSize = {65, 65}};
+        _tileMapOrtho.Grid     = {.TileSize = {64, 64}};
 
         tcob::gfx::tilemap_layer layer;
         layer.Tiles = tiles1;
@@ -97,9 +97,9 @@ void TileMapEx::on_start()
     ////////////////////////////////////////////////////////////
     {
         _tileMapIso.Material = resGrp->get<material>("iso");
-        _tileMapIso.Grid     = {.TileSize = {110, 128}, .SurfaceCenter = {0.5f, 0.25f}};
+        _tileMapIso.Grid     = {.TileSize = {55, 64}};
 
-        _tileMapIso.Position = {2050, 300};
+        _tileMapIso.Position = {2500, 300};
 
         tcob::gfx::tilemap_layer layer;
         layer.Tiles = tiles1;
@@ -109,9 +109,9 @@ void TileMapEx::on_start()
     ////////////////////////////////////////////////////////////
     {
         _tileMapHexPointy.Material = resGrp->get<material>("hex");
-        _tileMapHexPointy.Grid     = {.TileSize = {128, 128}, .FlatTop = false};
+        _tileMapHexPointy.Grid     = {.TileSize = {64, 64}, .Top = hex_top::Pointy};
 
-        _tileMapHexPointy.Position = {3500, 300};
+        _tileMapHexPointy.Position = {0, 2800};
 
         tcob::gfx::tilemap_layer layer;
         layer.Tiles = tiles1;
@@ -122,15 +122,23 @@ void TileMapEx::on_start()
     ////////////////////////////////////////////////////////////
     {
         _tileMapHexFlat.Material = resGrp->get<material>("hexflat");
-        _tileMapHexFlat.Grid     = {.TileSize = {128, 128}, .FlatTop = true};
+        _tileMapHexFlat.Grid     = {.TileSize = {64, 64}, .Top = hex_top::Flat};
 
-        _tileMapHexFlat.Position = {4500, 300};
+        _tileMapHexFlat.Position = {2000, 2800};
 
         tcob::gfx::tilemap_layer layer;
         layer.Tiles = tiles1;
         layer.Size  = {tmWidth, tmHeight};
         _tileMapHexFlat.add_layer(layer);
     }
+
+    ////////////////////////////////////////////////////////////
+    frame_animation ani {};
+    ani.Frames = {{"stone1", 1s}, {"dirt1", 1s}, {"grass1", 1s}, {"stone3", 1s}, {"grass4", 1s}};
+    _tween     = std::make_shared<frame_animation_tween>(ani.get_duration(), ani);
+
+    _tween->Value.Changed.connect([this](auto const& str) { _tileMapOrtho.set_tile(_layerID, {0, 0}, _tileMapOrtho.get_tile_index(str)); });
+    _tween->start(playback_mode::Looped);
 }
 
 void TileMapEx::on_draw_to(render_target& target)
@@ -143,6 +151,8 @@ void TileMapEx::on_draw_to(render_target& target)
 
 void TileMapEx::on_update(milliseconds deltaTime)
 {
+    _tween->update(deltaTime);
+
     _tileMapOrtho.update(deltaTime);
     _tileMapIso.update(deltaTime);
     _tileMapHexPointy.update(deltaTime);

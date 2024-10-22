@@ -27,12 +27,14 @@ protected:
     void on_mouse_wheel(mouse::wheel_event const& ev) override;
 
 private:
-    orthogonal_tilemap _tileMapOrtho;
-    isometric_tilemap  _tileMapIso;
-    hexagonal_tilemap  _tileMapHexPointy;
-    hexagonal_tilemap  _tileMapHexFlat;
+    ortho_tilemap _tileMapOrtho;
+    iso_tilemap   _tileMapIso;
+    hex_tilemap   _tileMapHexPointy;
+    hex_tilemap   _tileMapHexFlat;
 
     uid _layerID {INVALID_ID};
 
     basic_cam _cam;
+
+    std::shared_ptr<frame_animation_tween> _tween;
 };

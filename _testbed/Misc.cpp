@@ -53,22 +53,6 @@ void MiscScene::on_start()
     rng                                      rnd;
     std::vector<std::shared_ptr<gfx::shape>> sprites;
 
-    /*
-        for (i32 i {0}; i < 500; i++) {
-            f32 x {rnd(0.0f, 1200.f)};
-            f32 y {rnd(0.0f, 1200.f)};
-            f32 r {rnd(0.0f, 20.f)};
-            i32 seg {rnd(4, 9)};
-            i32 rot {rnd(0, 360)};
-
-            auto shape0 {std::make_shared<gfx::poly_shape>()};
-            shape0->Material = resGrp->get<material>("polyShape");
-            //   shape0->Color    = colors::Blue;
-            shape0->Polygon  = {{x, y}, {20 + x, 10 + y}, {20 + x, 30 + y}, {x, 45 + y}, {45 + x, 45 + y}, {60 + x, 30 + y}, {60 + x, 10 + y}, {45 + x, y}};
-            shape0->Holes    = {{{30 + x, 10 + y}, {30 + x, 30 + y}, {50 + x, 30 + y}, {50 + x, 10 + y}}};
-            sprites.push_back(shape0);
-}
-*/
     _layer1 = std::make_shared<static_shape_batch>(sprites);
 
     _font = resGrp->get<font>("defaultFont");
@@ -129,32 +113,6 @@ void MiscScene::on_start()
     _audioPlaylist.add("opus", resGrp->get<sound>("opus-test").get_ptr());
 
     _music0 = resGrp->get<music>("test");
-
-    /*
-        auto lambda {
-            [&](milliseconds deltaTime) {
-                if (!_flag) {
-                }
-            }
-        };
-        _timer.Tick.connect(lambda);
-        _timer.start(1ms, true);
-
-
-    _poly.set_material(resGrp->get<material>("emptyMat"));
-    std::vector<vertex> vs{
-        {.Position = {0, 0}, .Color = colors::Red.as_array()},
-        {.Position = {100, 0}, .Color = colors::Red.as_array()},
-        {.Position = {50, 50}, .Color = colors::Red.as_array()},
-        {.Position = {100, 100}, .Color = colors::Green.as_array()},
-        {.Position = {0, 100}, .Color = colors::Green.as_array()}};
-    _poly.set_geometry(vs, std::vector<u32>{0, 1, 2, 1, 3, 2, 4, 2, 3, 0, 2, 4});
-       */
-
-    //  auto q0 {get_root_node()->create_child()};
-    //   auto ent {std::make_shared<simple_entity>()};
-    //  ent->Drawable = _tileMap;
-    //  q0->Entity    = ent;
 
     _shape0           = _layer0.create_shape<gfx::poly_shape>();
     _shape0->Color    = colors::Blue;
