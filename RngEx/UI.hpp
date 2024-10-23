@@ -17,15 +17,17 @@ public:
 private:
     void gen_styles();
 
-    void draw_dice(auto&& dice);
+    void draw_dice();
+    void draw_noise();
 
     std::shared_ptr<canvas_widget>        _canvas;
     assets::manual_asset_ptr<font_family> _font;
+    assets::manual_asset_ptr<texture>     _tex;
 };
 
 ////////////////////////////////////////////////////////////
 
-inline void rng_form::draw_dice(auto&& dice)
+inline void rng_form::draw_dice()
 {
     auto* font {_font->get_font({}, 24).get_ptr()};
 
@@ -40,7 +42,8 @@ inline void rng_form::draw_dice(auto&& dice)
     u64 const seed      = static_cast<u64>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
     i32       rollCount = 100'000;
 
-    auto               rolls {dice(rollCount, seed)};
+    auto               dice {random::dice<6, random::split_mix_64> {seed}};
+    auto               rolls {dice.roll_n(rollCount)};
     std::map<i32, i32> hist;
     for (int n = 0; n < rollCount; ++n) { ++hist[rolls[n]]; }
     i32 max {0};
@@ -70,4 +73,25 @@ inline void rng_form::draw_dice(auto&& dice)
 
         pos += point_f {xoff, 0};
     }
+}
+
+inline void rng_form::draw_noise()
+{
+    auto const bounds {_canvas->get_content_bounds()};
+    _canvas->clear();
+
+    u64 const seed = static_cast<u64>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+
+    auto rng {random::rng_split_mix_64 {seed}};
+
+    _tex->create({256, 256}, 1, texture::format::RGBA8);
+    std::array<color, 256 * 256> data;
+    for (auto& c : data) {
+        c.R = c.G = c.B = rng(0, 255);
+        c.A             = 255;
+    }
+    _tex->update_data(data.data(), 0, 256, 1);
+    _tex->add_region("default", {{0, 0, 1, 1}, 0});
+
+    _canvas->draw_image(_tex.get_ptr(), "default", bounds);
 }

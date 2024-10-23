@@ -19,7 +19,6 @@ void PointCloudEx::on_start()
 {
     _cloud0 = std::make_shared<point_cloud>(numPoints.Width * numPoints.Height);
 
-    std::vector<vec2> points;
     for (f32 y = 0; y < pointSize * numPoints.Height; y += pointSize) {
         for (f32 x = 0; x < pointSize * numPoints.Width; x += pointSize) {
             auto& v     = _cloud0->create_point();
@@ -28,7 +27,6 @@ void PointCloudEx::on_start()
             v.TexCoords = {x / (pointSize * numPoints.Width),
                            y / (pointSize * numPoints.Height),
                            0};
-            points.push_back(v.Position);
         }
     }
 
@@ -54,8 +52,8 @@ void PointCloudEx::on_fixed_update(milliseconds deltaTime)
     get_window().Title = "TestGame " + stream.str();
 
     auto& p {_cloud0->get_point_at(_rand(0, numPoints.Width * numPoints.Height - 1))};
-    p.Position[0] += _rand(0, 10);
-    p.Position[1] += _rand(0, 10);
+    p.Position.X += _rand(0, 10);
+    p.Position.Y += _rand(0, 10);
 }
 
 void PointCloudEx::on_update(milliseconds deltaTime)

@@ -17,8 +17,6 @@ rng_form::rng_form(window* window)
     : form {"generator", window}
     , _font {"trim", "trim"}
 {
-    u32 rollCount = 100'000;
-
     font_family::SingleFont(*_font.get_ptr(), trim_ttf);
     gen_styles();
 
@@ -27,27 +25,16 @@ rng_form::rng_form(window* window)
 
     _canvas = {mainPanelLayout->create_widget<canvas_widget>({8, 1, 30, 38}, "uxCanvas")};
 
-    using func = std::function<std::vector<i32>(i32, u64)>;
-    auto rngEngine {mainPanelLayout->create_widget<list_box>({1, 6, 4, 25}, "uxRngEngine")};
-    rngEngine->add_item({"SplitMix32", func {[](i32 rolls, u64 seed) { return dice<6, split_mix_32> {static_cast<u32>(seed)}.roll_n(rolls); }}});
-    rngEngine->add_item({"SplitMix64", func {[](i32 rolls, u64 seed) { return dice<6, split_mix_64> {seed}.roll_n(rolls); }}});
-    rngEngine->add_item({"GameRand", func {[](i32 rolls, u64 seed) { return dice<6, game_rand> {static_cast<u32>(seed)}.roll_n(rolls); }}});
-    rngEngine->add_item({"Xorshift64", func {[](i32 rolls, u64 seed) { return dice<6, xorshift_64> {seed}.roll_n(rolls); }}});
-    rngEngine->add_item({"Xorshift64*", func {[](i32 rolls, u64 seed) { return dice<6, xorshift_64_star> {seed}.roll_n(rolls); }}});
-    rngEngine->add_item({"Xoroshiro128+", func {[](i32 rolls, u64 seed) { return dice<6, xoroshiro_128_plus> {seed}.roll_n(rolls); }}});
-    rngEngine->add_item({"Xoroshiro128++", func {[](i32 rolls, u64 seed) { return dice<6, xoroshiro_128_plus_plus> {seed}.roll_n(rolls); }}});
-    rngEngine->add_item({"Xoroshiro128**", func {[](i32 rolls, u64 seed) { return dice<6, xoroshiro_128_star_star> {seed}.roll_n(rolls); }}});
-    rngEngine->add_item({"Xoshiro256+", func {[](i32 rolls, u64 seed) { return dice<6, xoshiro_256_plus> {seed}.roll_n(rolls); }}});
-    rngEngine->add_item({"Xoshiro256++", func {[](i32 rolls, u64 seed) { return dice<6, xoshiro_256_plus_plus> {seed}.roll_n(rolls); }}});
-    rngEngine->add_item({"Xoshiro256**", func {[](i32 rolls, u64 seed) { return dice<6, xoshiro_256_star_star> {seed}.roll_n(rolls); }}});
-    rngEngine->add_item({"Well512a", func {[](i32 rolls, u64 seed) { return dice<6, well_512_a> {static_cast<u32>(seed)}.roll_n(rolls); }}});
-    rngEngine->SelectedItemIndex = 0;
-
     auto rollDice {mainPanelLayout->create_widget<button>({1, 1, 4, 2}, "uxRollDice")};
     rollDice->Label = "Roll Dice";
-    rollDice->Click.connect([this, rollCount, lsb = rngEngine.get()]() {
-        auto const rng {lsb->get_selected_item()};
-        draw_dice(std::any_cast<func>(rng.UserData));
+    rollDice->Click.connect([this]() {
+        draw_dice();
+    });
+
+    auto drawNoise {mainPanelLayout->create_widget<button>({1, 4, 4, 2}, "uxDrawNoise")};
+    drawNoise->Label = "Draw Noise";
+    drawNoise->Click.connect([this]() {
+        draw_noise();
     });
 }
 
