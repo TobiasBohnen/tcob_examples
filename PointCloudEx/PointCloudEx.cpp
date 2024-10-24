@@ -12,6 +12,60 @@ PointCloudEx::PointCloudEx(game& game)
     : scene {game}
     , _quadtree {{{-100, -100}, {320 * 5.f + 500, 240 * 5.f + 500}}}
 {
+    _canvas.begin_frame({256, 256}, 1);
+
+    // Background rectangle
+    _canvas.begin_path();
+    _canvas.rect({0, 0, 256, 256});
+    _canvas.set_fill_style(colors::GoldenRod);
+    _canvas.fill();
+
+    // Outer circle with stroke
+    _canvas.begin_path();
+    _canvas.circle({40, 40}, 50);
+    _canvas.set_stroke_style(colors::Black);
+    _canvas.set_stroke_width(4);
+    _canvas.stroke();
+
+    // Inner circle with fill
+    _canvas.begin_path();
+    _canvas.circle({40, 40}, 30);
+    _canvas.set_fill_style(colors::White);
+    _canvas.fill();
+
+    // Triangle
+    _canvas.begin_path();
+    _canvas.triangle({150, 50}, {200, 150}, {100, 150});
+    _canvas.set_fill_style(colors::DarkRed);
+    _canvas.fill();
+    _canvas.set_stroke_style(colors::Black);
+    _canvas.stroke();
+
+    // Additional rectangle
+    _canvas.begin_path();
+    _canvas.rect({180, 180, 50, 50});
+    _canvas.set_fill_style(colors::ForestGreen);
+    _canvas.fill();
+    _canvas.set_stroke_style(colors::Black);
+    _canvas.stroke();
+
+    // Line
+    _canvas.begin_path();
+    _canvas.move_to({0, 256});
+    _canvas.line_to({256, 0});
+    _canvas.set_stroke_style(colors::DarkSlateGray);
+    _canvas.set_stroke_width(2);
+    _canvas.stroke();
+
+    // Small circle
+    _canvas.begin_path();
+    _canvas.circle({128, 128}, 20);
+    _canvas.set_fill_style(colors::Blue);
+    _canvas.fill();
+    _canvas.set_stroke_style(colors::Black);
+    _canvas.stroke();
+
+    _canvas.end_frame();
 }
 
 PointCloudEx::~PointCloudEx() = default;
@@ -23,7 +77,7 @@ void PointCloudEx::on_start()
     for (f32 y = 0; y < pointSize * numPoints.Height; y += pointSize) {
         for (f32 x = 0; x < pointSize * numPoints.Width; x += pointSize) {
             auto& v     = _cloud0->create_point();
-            v.Position  = {(x + (pointSize / 2)) + _rand(0, 150), (y + (pointSize / 2)) + _rand(0, 150)};
+            v.Position  = {(x + (pointSize / 2)) + _rand(0, 10), (y + (pointSize / 2)) + _rand(0, 10)};
             v.Color     = {255, 255, 255, 255};
             v.TexCoords = {x / (pointSize * numPoints.Width),
                            y / (pointSize * numPoints.Height),
@@ -32,8 +86,8 @@ void PointCloudEx::on_start()
         }
     }
 
-    _cloud0->Material            = material::Empty();
-    _cloud0->Material->Color     = colors::Blue;
+    _cloud0->Material            = _mat;
+    _cloud0->Material->Texture   = _canvas.get_texture(0);
     _cloud0->Material->PointSize = pointSize;
 }
 

@@ -29,6 +29,8 @@ private:
     rng _rand;
 
     std::shared_ptr<point_cloud> _cloud0;
+    manual_asset_ptr<material>   _mat;
+    canvas                       _canvas;
 
     struct point_node {
         i32     ID {0};
