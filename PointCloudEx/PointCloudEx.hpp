@@ -29,5 +29,22 @@ private:
     rng _rand;
 
     std::shared_ptr<point_cloud> _cloud0;
-    basic_cam                    _cam;
+
+    struct point_node {
+        i32     ID {0};
+        vertex* Vertex {};
+
+        auto get_rect() const -> rect_f
+        {
+            return {Vertex->Position, size_f::One};
+        }
+
+        auto operator==(point_node const& other) const -> bool
+        {
+            return ID == other.ID;
+        }
+    };
+    quadtree<point_node> _quadtree;
+
+    basic_cam _cam;
 };

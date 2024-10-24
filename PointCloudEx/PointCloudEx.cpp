@@ -5,20 +5,21 @@
 
 #include "PointCloudEx.hpp"
 
+size_i numPoints {320, 240};
+f32    pointSize {5.0f};
+
 PointCloudEx::PointCloudEx(game& game)
     : scene {game}
+    , _quadtree {{{-100, -100}, {320 * 5.f + 500, 240 * 5.f + 500}}}
 {
 }
 
 PointCloudEx::~PointCloudEx() = default;
 
-size_i numPoints {320, 240};
-f32    pointSize {5.0f};
-
 void PointCloudEx::on_start()
 {
     _cloud0 = std::make_shared<point_cloud>(numPoints.Width * numPoints.Height);
-
+    i32 i {0};
     for (f32 y = 0; y < pointSize * numPoints.Height; y += pointSize) {
         for (f32 x = 0; x < pointSize * numPoints.Width; x += pointSize) {
             auto& v     = _cloud0->create_point();
@@ -27,6 +28,9 @@ void PointCloudEx::on_start()
             v.TexCoords = {x / (pointSize * numPoints.Width),
                            y / (pointSize * numPoints.Height),
                            0};
+            if (_quadtree.get_bounds().contains(v.Position)) {
+                _quadtree.add({i++, &v});
+            }
         }
     }
 
@@ -50,10 +54,6 @@ void PointCloudEx::on_fixed_update(milliseconds deltaTime)
     stream << " worst FPS:" << stats.get_worst_FPS();
 
     get_window().Title = "TestGame " + stream.str();
-
-    auto& p {_cloud0->get_point_at(_rand(0, numPoints.Width * numPoints.Height - 1))};
-    p.Position.X += _rand(0, 10);
-    p.Position.Y += _rand(0, 10);
 }
 
 void PointCloudEx::on_update(milliseconds deltaTime)
@@ -88,6 +88,17 @@ void PointCloudEx::on_mouse_button_up(mouse::button_event const& ev)
 void PointCloudEx::on_mouse_motion(mouse::motion_event const& ev)
 {
     _cam.on_mouse_motion(ev);
+    rect_f const queryRect {_cam.screen_to_world(ev.Position) - point_f {25.f, 25.f}, {50.f, 50.f}};
+
+    auto points {_quadtree.query(queryRect.as_intersection_with(_quadtree.get_bounds()))};
+    for (auto& p : points) {
+        auto const newPos {p.Vertex->Position + point_f {static_cast<f32>(ev.RelativeMotion.X) * 10, static_cast<f32>(ev.RelativeMotion.Y) * 10}};
+        if (_quadtree.get_bounds().contains(rect_f {newPos, size_f::One})) {
+            auto oldVertex {*p.Vertex};
+            p.Vertex->Position = newPos;
+            _quadtree.replace({p.ID, &oldVertex}, p);
+        }
+    }
 }
 
 void PointCloudEx::on_mouse_wheel(mouse::wheel_event const& ev)

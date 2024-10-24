@@ -69,6 +69,12 @@ public:
         camera.Zoom = zoomLevels[_zoomStage];
     }
 
+    auto screen_to_world(point_i pos) const -> point_f
+    {
+        auto& camera {locate_service<render_system>().get_window().get_camera()};
+        return camera.convert_screen_to_world(pos);
+    };
+
 private:
     bool _mouseDown {false};
     i32  _zoomStage {3};
