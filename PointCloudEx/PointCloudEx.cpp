@@ -28,9 +28,7 @@ void PointCloudEx::on_start()
             v.TexCoords = {x / (pointSize * numPoints.Width),
                            y / (pointSize * numPoints.Height),
                            0};
-            if (_quadtree.get_bounds().contains(v.Position)) {
-                _quadtree.add({i++, &v});
-            }
+            _quadtree.add({i++, &v});
         }
     }
 
@@ -92,8 +90,10 @@ void PointCloudEx::on_mouse_motion(mouse::motion_event const& ev)
 
     auto points {_quadtree.query(queryRect.as_intersection_with(_quadtree.get_bounds()))};
     for (auto& p : points) {
+        if (p.Vertex->Position.distance_to(queryRect.get_center()) > 25) { continue; }
+
         auto const newPos {p.Vertex->Position + point_f {static_cast<f32>(ev.RelativeMotion.X) * 10, static_cast<f32>(ev.RelativeMotion.Y) * 10}};
-        if (_quadtree.get_bounds().contains(rect_f {newPos, size_f::One})) {
+        if (_quadtree.contains(rect_f {newPos, size_f::One})) {
             auto oldVertex {*p.Vertex};
             p.Vertex->Position = newPos;
             _quadtree.replace({p.ID, &oldVertex}, p);
