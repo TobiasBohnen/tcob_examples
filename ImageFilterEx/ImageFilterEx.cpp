@@ -5,7 +5,7 @@
 
 #include "ImageFilterEx.hpp"
 
-#include "ex_image.hpp"
+#include "../_common/Image.hpp"
 
 #include <iomanip>
 #include <memory>

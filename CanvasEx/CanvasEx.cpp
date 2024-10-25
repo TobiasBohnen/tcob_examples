@@ -33,10 +33,10 @@ void CanvasEx::on_start()
 
 void CanvasEx::on_update(milliseconds /* deltaTime */)
 {
-    // canvas_ray_cast();
+    canvas_ray_cast();
     // canvas_gradient();
     // canvas_path2d();
-    canvas_fancy_lines();
+    // canvas_fancy_lines();
 }
 
 void CanvasEx::on_draw_to(render_target& target)

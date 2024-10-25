@@ -6,6 +6,7 @@ if(TCOB_ENABLE_ADDON_PHYSICS_BOX2D
         add_subdirectory(_testbed)
     endif()
 
+    add_subdirectory(AniTexEx)
     add_subdirectory(CanvasEx)
     add_subdirectory(ClippingEx)
     add_subdirectory(ControllerEx)

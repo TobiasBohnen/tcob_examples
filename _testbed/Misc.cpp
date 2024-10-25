@@ -5,8 +5,6 @@
 
 #include "Misc.hpp"
 
-#include <cmath>
-
 #include <iomanip>
 #include <iostream>
 #include <memory>
