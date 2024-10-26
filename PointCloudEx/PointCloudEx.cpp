@@ -5,12 +5,12 @@
 
 #include "PointCloudEx.hpp"
 
-size_i numPoints {320, 240};
+size_i numPoints {500, 500};
 f32    pointSize {5.0f};
 
 PointCloudEx::PointCloudEx(game& game)
     : scene {game}
-    , _quadtree {{{-100, -100}, {320 * 5.f + 500, 240 * 5.f + 500}}}
+    , _quadtree {{{-100, -100}, {numPoints.Width * pointSize * 1.25f, numPoints.Height * pointSize * 1.25f}}}
 {
     _canvas.begin_frame({256, 256}, 1);
 
@@ -77,7 +77,7 @@ void PointCloudEx::on_start()
     for (f32 y = 0; y < pointSize * numPoints.Height; y += pointSize) {
         for (f32 x = 0; x < pointSize * numPoints.Width; x += pointSize) {
             auto& v     = _cloud0->create_point();
-            v.Position  = {(x + (pointSize / 2)) + _rand(0, 10), (y + (pointSize / 2)) + _rand(0, 10)};
+            v.Position  = {(x + (pointSize / 2)), (y + (pointSize / 2))};
             v.Color     = {255, 255, 255, 255};
             v.TexCoords = {x / (pointSize * numPoints.Width),
                            y / (pointSize * numPoints.Height),
@@ -115,6 +115,7 @@ void PointCloudEx::on_update(milliseconds deltaTime)
 
 void PointCloudEx::on_key_down(keyboard::event const& ev)
 {
+    _cam.on_key_down(ev);
     switch (ev.ScanCode) { // NOLINT
     case scan_code::R: {
         auto _ = get_window().copy_to_image().save("screen01.webp");
@@ -140,13 +141,15 @@ void PointCloudEx::on_mouse_button_up(mouse::button_event const& ev)
 void PointCloudEx::on_mouse_motion(mouse::motion_event const& ev)
 {
     _cam.on_mouse_motion(ev);
+    if (input::system::IsMouseButtonDown(mouse::button::Right)) { return; }
+
     rect_f const queryRect {_cam.screen_to_world(ev.Position) - point_f {25.f, 25.f}, {50.f, 50.f}};
-
-    auto points {_quadtree.query(queryRect.as_intersection_with(_quadtree.get_bounds()))};
+    auto         points {_quadtree.query(queryRect.as_intersection_with(_quadtree.get_bounds()))};
     for (auto& p : points) {
-        if (p.Vertex->Position.distance_to(queryRect.get_center()) > 25) { continue; }
+        auto const dist {p.Vertex->Position.distance_to(queryRect.get_center())};
+        if (dist > 25) { continue; }
 
-        auto const newPos {p.Vertex->Position + point_f {static_cast<f32>(ev.RelativeMotion.X) * 10, static_cast<f32>(ev.RelativeMotion.Y) * 10}};
+        auto const newPos {p.Vertex->Position + point_f {static_cast<f32>(ev.RelativeMotion.X * (25 - dist + 1)), static_cast<f32>(ev.RelativeMotion.Y * (25 - dist + 1))}};
         if (_quadtree.contains(rect_f {newPos, size_f::One})) {
             auto oldVertex {*p.Vertex};
             p.Vertex->Position = newPos;
