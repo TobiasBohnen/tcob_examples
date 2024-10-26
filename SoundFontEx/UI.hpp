@@ -27,6 +27,8 @@ public:
     std::shared_ptr<button> ASharp;
     std::shared_ptr<button> B;
 
+    std::shared_ptr<slider> Octave;
+
 private:
     void gen_styles();
 

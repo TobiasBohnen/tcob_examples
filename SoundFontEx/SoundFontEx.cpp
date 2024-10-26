@@ -23,21 +23,27 @@ void SoundFontEx::on_start()
     auto& resMgr {get_game().get_library()};
     auto* resGrp {resMgr.get_group("res")};
 
-    _soundFont0             = resGrp->get<sound_font>("font0");
+    _soundFont              = resGrp->get<sound_font>("font0");
     get_root_node()->Entity = _form0;
 
-    _form0->C->Click.connect([&]() { play_note(quarter, 0, midi_note::C4); });
-    _form0->CSharp->Click.connect([&]() { play_note(quarter, 0, midi_note::CSharp4); });
-    _form0->D->Click.connect([&]() { play_note(quarter, 0, midi_note::D4); });
-    _form0->DSharp->Click.connect([&]() { play_note(quarter, 0, midi_note::DSharp4); });
-    _form0->E->Click.connect([&]() { play_note(quarter, 0, midi_note::E4); });
-    _form0->F->Click.connect([&]() { play_note(quarter, 0, midi_note::F4); });
-    _form0->FSharp->Click.connect([&]() { play_note(quarter, 0, midi_note::FSharp4); });
-    _form0->G->Click.connect([&]() { play_note(quarter, 0, midi_note::G4); });
-    _form0->GSharp->Click.connect([&]() { play_note(quarter, 0, midi_note::GSharp4); });
-    _form0->A->Click.connect([&]() { play_note(quarter, 0, midi_note::A4); });
-    _form0->ASharp->Click.connect([&]() { play_note(quarter, 0, midi_note::ASharp4); });
-    _form0->B->Click.connect([&]() { play_note(quarter, 0, midi_note::B4); });
+    auto mouseDown {[&](auto&& btn, midi_note baseNote) {
+        btn->MouseDown.connect([&, baseNote]() {
+            auto const note {static_cast<midi_note>(static_cast<u8>(baseNote) + (_form0->Octave->Value() + 1) * 12)};
+            play_note(quarter, 0, note);
+        });
+    }};
+    mouseDown(_form0->C, midi_note::CNeg1);
+    mouseDown(_form0->CSharp, midi_note::CSharpNeg1);
+    mouseDown(_form0->D, midi_note::DNeg1);
+    mouseDown(_form0->DSharp, midi_note::DSharpNeg1);
+    mouseDown(_form0->E, midi_note::ENeg1);
+    mouseDown(_form0->F, midi_note::FNeg1);
+    mouseDown(_form0->FSharp, midi_note::FSharpNeg1);
+    mouseDown(_form0->G, midi_note::GNeg1);
+    mouseDown(_form0->GSharp, midi_note::GSharpNeg1);
+    mouseDown(_form0->A, midi_note::ANeg1);
+    mouseDown(_form0->ASharp, midi_note::ASharpNeg1);
+    mouseDown(_form0->B, midi_note::BNeg1);
 }
 
 void SoundFontEx::on_draw_to(render_target& target)
@@ -68,9 +74,9 @@ void SoundFontEx::play_note(milliseconds dur, i32 preset, midi_note note)
     sound_font_commands commands;
     commands.start_new_section(dur);
     commands.add<note_on_command>(preset, note, 1.0f);
-    commands.start_new_section(0.0s);
+    commands.start_new_section(half);
     commands.add<note_off_all_command>();
 
-    _sound = _soundFont0->create_sound(commands);
+    _sound = _soundFont->create_sound(commands);
     _sound.play();
 }

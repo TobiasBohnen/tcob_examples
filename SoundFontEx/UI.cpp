@@ -23,14 +23,14 @@ piano_form::piano_form(window* window)
     gen_styles();
 
     auto mainPanel {create_container<glass>(dock_style::Fill, "main")};
-    auto mainPanelLayout {mainPanel->create_layout<grid_layout>(size_i {21, 4})};
+    auto mainPanelLayout {mainPanel->create_layout<grid_layout>(size_i {24, 6})};
 
     // White keys
     std::vector<std::tuple<std::shared_ptr<button>&, i32, std::string>> const whiteKeys {
         {C, 0, "C"}, {D, 3, "D"}, {E, 6, "E"}, {F, 9, "F"}, {G, 12, "G"}, {A, 15, "A"}, {B, 18, "B"}};
 
     for (auto const& [btn, posX, label] : whiteKeys) {
-        btn        = mainPanelLayout->create_widget<button>({posX, 0, 3, 4}, label);
+        btn        = mainPanelLayout->create_widget<button>({posX, 0, 3, 6}, label);
         btn->Class = "white-keys";
         btn->Label = label;
     }
@@ -40,10 +40,22 @@ piano_form::piano_form(window* window)
         {CSharp, 2, "C#"}, {DSharp, 5, "D#"}, {FSharp, 11, "F#"}, {GSharp, 14, "G#"}, {ASharp, 17, "A#"}};
 
     for (auto const& [btn, posX, label] : blackKeys) {
-        btn        = mainPanelLayout->create_widget<button>({posX, 0, 2, 2}, label);
+        btn        = mainPanelLayout->create_widget<button>({posX, 0, 2, 3}, label);
         btn->Class = "black-keys";
         btn->Label = label;
     }
+
+    // Octave
+    Octave      = mainPanelLayout->create_widget<slider>({22, 1, 2, 5}, "Octave");
+    Octave->Min = 0;
+    Octave->Max = 8;
+
+    auto lbl {mainPanelLayout->create_widget<label>({22, 0, 2, 1}, "lblOctave")};
+    Octave->Value.Changed.connect([ptr = lbl.get()](auto val) {
+        ptr->Label = std::to_string(val);
+    });
+
+    Octave->Value = 4;
 }
 
 void piano_form::gen_styles()
@@ -56,7 +68,7 @@ void piano_form::gen_styles()
         style->Border.Radius  = 5_px;
         style->Text.Style     = {false, font::weight::Normal};
         style->Text.Font      = _font;
-        style->Text.Size      = 30_pct;
+        style->Text.Size      = 25_pct;
         style->Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Bottom};
         style->Text.AutoSize  = element::text::auto_size_mode::OnlyShrink;
         style->Margin         = {2_px};
@@ -128,44 +140,42 @@ void piano_form::gen_styles()
         style->Text.Color        = colors::Black;
     }
     {
-        auto style {styles.create<list_box>("list_box", {})};
-        style->Border.Size   = 3_px;
-        style->Border.Radius = 5_px;
-        style->Margin        = {2_px};
-        style->Padding       = {5_px};
-        style->ItemHeight    = 8_pct;
-        style->ItemClass     = "list_items";
+        auto style {styles.create<slider>("slider", {})};
+        style->Margin            = {5_px};
+        style->Padding           = {2_px};
+        style->ThumbClass        = "slider_thumb";
+        style->Bar.Type          = element::bar::type::Continuous;
+        style->Bar.Size          = 95_pct;
+        style->Bar.Delay         = 0ms;
+        style->Bar.Border.Size   = 3_px;
+        style->Bar.Border.Radius = 5_px;
 
-        style->Background        = colors::LightGray;
-        style->Border.Background = colors::Black;
+        style->Bar.HigherBackground  = colors::LightGray;
+        style->Bar.LowerBackground   = colors::LightGray;
+        style->Bar.Border.Background = colors::Black;
     }
     {
-        auto style {styles.create<item_style>("list_items", {}, {})};
-        style->Item.Padding        = {2_px};
-        style->Item.Text.Style     = {false, font::weight::Normal};
-        style->Item.Text.Font      = _font;
-        style->Item.Text.Size      = 50_pct;
-        style->Item.Text.Alignment = {horizontal_alignment::Left, vertical_alignment::Middle};
-        style->Item.Text.AutoSize  = element::text::auto_size_mode::OnlyShrink;
-        style->Item.Border.Size    = 3_px;
+        auto style {styles.create<thumb_style>("slider_thumb", {}, {})};
+        style->Thumb.Type          = element::thumb::type::Rect;
+        style->Thumb.LongSide      = 25_pct;
+        style->Thumb.ShortSide     = 80_pct;
+        style->Thumb.Border.Size   = 3_px;
+        style->Thumb.Border.Radius = 5_px;
 
-        style->Item.Background        = colors::LightGray;
-        style->Item.Border.Background = colors::Black;
-        style->Item.Text.Color        = colors::Black;
+        style->Thumb.Background        = colors::LightGray;
+        style->Thumb.Border.Background = colors::Black;
 
-        auto hoverStyle {styles.create<item_style>("list_items", {.Hover = true})};
-        hoverStyle->Item = style->Item;
+        auto activeStyle {styles.create<thumb_style>("slider_thumb", {.Active = true})};
+        *activeStyle = *style;
 
-        hoverStyle->Item.Background        = colors::Black;
-        hoverStyle->Item.Border.Background = colors::Black;
-        hoverStyle->Item.Text.Color        = colors::White;
+        activeStyle->Thumb.Background        = colors::Black;
+        activeStyle->Thumb.Border.Background = colors::Black;
 
-        auto activeStyle {styles.create<item_style>("list_items", {.Active = true})};
-        activeStyle->Item = style->Item;
+        auto hoverStyle {styles.create<thumb_style>("slider_thumb", {.Hover = true})};
+        *hoverStyle = *style;
 
-        activeStyle->Item.Background        = colors::LightBlue;
-        activeStyle->Item.Border.Background = colors::Black;
-        activeStyle->Item.Text.Color        = colors::Black;
+        hoverStyle->Thumb.Background        = colors::LightBlue;
+        hoverStyle->Thumb.Border.Background = colors::Black;
     }
 
     Styles = styles;
