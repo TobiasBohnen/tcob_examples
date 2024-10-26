@@ -3,6 +3,7 @@ add_executable(SoundFontEx)
 target_sources(SoundFontEx PRIVATE
     main.cpp
     SoundFontEx.cpp
+    UI.cpp
 )
 
 set_target_properties(SoundFontEx PROPERTIES

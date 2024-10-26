@@ -6,7 +6,11 @@
 #pragma once
 #include "../_common/Common.hpp"
 
-// TODO: add ui
+#include "UI.hpp"
+
+using namespace std::chrono_literals;
+using namespace tcob::literals;
+
 class SoundFontEx : public scene {
 public:
     SoundFontEx(game& game);
@@ -22,6 +26,10 @@ protected:
     void on_key_down(keyboard::event const& ev) override;
 
 private:
+    void play_note(milliseconds dur, i32 preset, midi_note note);
+
     assets::asset_ptr<sound_font> _soundFont0;
     sound                         _sound;
+
+    std::shared_ptr<piano_form> _form0;
 };
