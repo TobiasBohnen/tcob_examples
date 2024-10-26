@@ -20,10 +20,7 @@ ControllerEx::~ControllerEx() = default;
 
 void ControllerEx::on_start()
 {
-    if (_input.get_controller_count() == 0) {
-        get_game().pop_current_scene();
-        return;
-    }
+    if (_input.get_controller_count() == 0) { std::terminate(); }
 
     io::isstream          fontStream {trim_ttf};
     [[maybe_unused]] auto _ = _font->load(fontStream, 36);
