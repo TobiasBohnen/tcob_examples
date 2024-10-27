@@ -29,6 +29,7 @@ protected:
 private:
     ortho_tilemap _tileMapOrtho;
     iso_tilemap   _tileMapIso;
+    iso_tilemap   _tileMapIsoStaggered;
     hex_tilemap   _tileMapHexPointy;
     hex_tilemap   _tileMapHexFlat;
 
