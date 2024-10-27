@@ -83,8 +83,8 @@ void ParticleSystemEx::on_start()
             p.UserData = 4;
         } else if (phase == 4 && dist > 100) {
             p.Color     = colors::Gray;
-            p.Direction = 0;
-            p.UserData  = 5;
+            p.Direction = degree_f {0};
+            p.UserData  = degree_f {5};
         }
 
         switch (phase) {
@@ -97,7 +97,7 @@ void ParticleSystemEx::on_start()
         case 1:
             if (parLife <= 0.50f) {
                 p.UserData  = 2;
-                p.Direction = 0;
+                p.Direction = degree_f {0};
                 p.Acceleration *= -5.5f;
             }
             break;

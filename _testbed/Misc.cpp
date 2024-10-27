@@ -89,7 +89,7 @@ void MiscScene::on_start()
                              "M 250 150 l 50 0 l 0 50 l -50 0 z"                     // hole
                              )
                              ->polygonize()};
-    _shape0->Rotation = 0;
+    _shape0->Rotation = degree_f {0};
 }
 
 void MiscScene::on_finish()
@@ -181,7 +181,7 @@ void MiscScene::on_key_down(keyboard::event const& ev)
     } else if (ev.ScanCode == scan_code::D6) {
         std::array<f32, 5> bufData {0, 1, 0, 1, 1};
         _uniBuf.update<f32>(bufData, 0);
-        _aniTexSprite->rotate_by(45);
+        _aniTexSprite->rotate_by(degree_f {45});
     } else if (ev.ScanCode == scan_code::D7) {
         asset_ptr<animated_texture> aniTex = resMgr.get_group("res")->get<texture>("test-ani");
         aniTex->toggle_pause();

@@ -168,8 +168,8 @@ void LightingSystemEx::on_key_down(keyboard::event const& ev)
                 _lightSource0->EndAngle   = *_lightSource0->EndAngle() - degree_f(10);
             }
         } else {
-            _lightSource0->StartAngle = 10;
-            _lightSource0->EndAngle   = 170;
+            _lightSource0->StartAngle = degree_f {10};
+            _lightSource0->EndAngle   = degree_f {170};
         }
 
     } break;

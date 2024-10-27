@@ -57,7 +57,7 @@ void RayEx::on_update(milliseconds deltaTime)
             .Outline = {{x, y}, {80 + x, 40 + y}, {80 + x, 120 + y}, {x, 180 + y}, {180 + x, 180 + y}, {240 + x, 120 + y}, {240 + x, 40 + y}, {180 + x, y}},
             .Holes   = {{{200 + x, 40 + y}, {200 + x, 120 + y}, {120 + x, 120 + y}, {120 + x, 40 + y}}}};
         polyShape->Polygons = {poly};
-        polyShape->Rotation = _rotation;
+        polyShape->Rotation = degree_f {_rotation};
     } break;
     case 1: {
         auto circleShape {_batch.create_shape<gfx::circle_shape>()};
@@ -72,7 +72,7 @@ void RayEx::on_update(milliseconds deltaTime)
         rectShape->Material = material::Empty();
         size_f const rectSize {250, 250};
         rectShape->Bounds   = {_center - point_f {rectSize.Width / 2, rectSize.Height / 2}, rectSize};
-        rectShape->Rotation = _rotation;
+        rectShape->Rotation = degree_f {_rotation};
     } break;
     }
 
@@ -97,14 +97,14 @@ void RayEx::on_update(milliseconds deltaTime)
         rayShape->Material    = material::Empty();
         rayShape->RayCastMask = 0;
     }};
-    castRay({_tween0.Value(), 50}, {135});
-    castRay({1300 - _tween0.Value(), 50}, {225});
+    castRay({_tween0.Value(), 50}, degree_f {135});
+    castRay({1300 - _tween0.Value(), 50}, degree_f {225});
 
-    castRay({50, 50}, {_tween1.Value()});
-    castRay({50, 600}, {180 - _tween1.Value()});
+    castRay({50, 50}, degree_f {_tween1.Value()});
+    castRay({50, 600}, degree_f {180 - _tween1.Value()});
 
-    castRay({1300, 50}, {90 + _tween1.Value()});
-    castRay({1300, 600}, {90 - _tween1.Value()});
+    castRay({1300, 50}, degree_f {90 + _tween1.Value()});
+    castRay({1300, 600}, degree_f {90 - _tween1.Value()});
 
     // draw intersections
     for (auto p : points) {

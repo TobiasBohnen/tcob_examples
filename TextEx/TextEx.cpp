@@ -109,10 +109,10 @@ void TextEx::on_start()
         _layer0->add_shape(shapeText);
 
         transform xform0;
-        xform0.rotate_at(45, shapeText->Polygons->at(1).get_info().Centroid);
+        xform0.rotate_at(degree_f {45}, shapeText->Polygons->at(1).get_info().Centroid);
         (*shapeText->Polygons).at(1).apply_transform(xform0);
         transform xform1;
-        xform1.rotate_at(45, shapeText->Polygons->at(4).get_info().Centroid);
+        xform1.rotate_at(degree_f {45}, shapeText->Polygons->at(4).get_info().Centroid);
         (*shapeText->Polygons).at(4).apply_transform(xform1);
     }
 }
