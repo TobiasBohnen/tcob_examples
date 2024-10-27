@@ -27,6 +27,8 @@ protected:
     void on_mouse_wheel(mouse::wheel_event const& ev) override;
 
 private:
+    rng _rand;
+
     ortho_tilemap _tileMapOrtho;
     iso_tilemap   _tileMapIso;
     iso_tilemap   _tileMapIsoStaggered;
