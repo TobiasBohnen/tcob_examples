@@ -22,18 +22,19 @@ using namespace tcob::input;
 
 class basic_cam {
 public:
+    std::optional<rect_f> LimitBounds;
+
     void on_key_down(keyboard::event const& ev) const
     {
-        float moveFactor {14.f};
-        auto& camera {locate_service<render_system>().get_window().get_camera()};
+        f32 moveFactor {14.f};
         if (ev.ScanCode == scan_code::A) {
-            camera.move_by({-moveFactor, 0});
+            move_by({-moveFactor, 0});
         } else if (ev.ScanCode == scan_code::D) {
-            camera.move_by({moveFactor, 0});
+            move_by({moveFactor, 0});
         } else if (ev.ScanCode == scan_code::S) {
-            camera.move_by({0.0f, moveFactor});
+            move_by({0.0f, moveFactor});
         } else if (ev.ScanCode == scan_code::W) {
-            camera.move_by({0.0f, -moveFactor});
+            move_by({0.0f, -moveFactor});
         }
     }
 
@@ -55,27 +56,37 @@ public:
     void on_mouse_motion(mouse::motion_event const& ev) const
     {
         if (_mouseDown) {
-            auto& camera {locate_service<render_system>().get_window().get_camera()};
-            auto  zoom {camera.Zoom};
-            camera.move_by(-(point_f {ev.RelativeMotion} / point_f {zoom.Width, zoom.Height}));
+            auto const zoom {camera().Zoom};
+            move_by(-(point_f {ev.RelativeMotion} / point_f {zoom.Width, zoom.Height}));
         }
     }
 
     void on_mouse_wheel(mouse::wheel_event const& ev)
     {
-        auto& camera {locate_service<render_system>().get_window().get_camera()};
         _zoomStage = std::clamp(_zoomStage - ev.Scroll.Y, 0, 6);
         constexpr std::array<size_f, 7> zoomLevels {{{5.f, 5.f}, {3.f, 3.f}, {2.f, 2.f}, {1.f, 1.f}, {0.75f, 0.75f}, {0.5f, 0.5f}, {0.25f, 0.25f}}};
-        camera.Zoom = zoomLevels[_zoomStage];
+        camera().Zoom = zoomLevels[_zoomStage];
     }
 
     auto screen_to_world(point_i pos) const -> point_f
     {
-        auto& camera {locate_service<render_system>().get_window().get_camera()};
-        return camera.convert_screen_to_world(pos);
+        return camera().convert_screen_to_world(pos);
     };
 
 private:
+    auto camera() const -> camera&
+    {
+        return locate_service<render_system>().get_window().get_camera();
+    }
+
+    void move_by(point_f off) const
+    {
+        auto& cam {camera()};
+        if (!LimitBounds || LimitBounds->contains(cam.Position + off)) {
+            cam.move_by(off);
+        }
+    }
+
     bool _mouseDown {false};
     i32  _zoomStage {3};
 };
