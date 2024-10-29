@@ -20,17 +20,14 @@ void BackgroundEx::on_start()
     auto& resMgr {get_game().get_library()};
     auto& resGrp {resMgr.create_or_get_group("res")};
 
-    auto shape0      = _layer0.create_shape<gfx::rect_shape>();
-    shape0->Bounds   = {60, 60, 200, 60};
-    shape0->Material = _material;
     _material->Color = colors::Gray;
 
     _back0               = std::make_shared<parallax_background>();
     _back0->Material     = resGrp.get<material>("parallax");
-    _back0->TextureScale = {2, 2};
-    _back0->add_layer({"para2", 0.10f});
-    _back0->add_layer({"para1", 0.50f});
-    _back0->add_layer({"para0", 1});
+    _back0->TextureScale = {6, 6};
+    _back0->add_layer({"back", 0.50f});
+    _back0->add_layer({"middle", 1.00f});
+    _back0->add_layer({"front", 4.00f});
 
     _cam.LimitBounds = {point_f::Zero, size_f {_back0->Material->Texture->get_size().Width * _back0->TextureScale.Width * 10, 1}};
 }
