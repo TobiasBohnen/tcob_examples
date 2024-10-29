@@ -34,5 +34,5 @@ private:
     basic_cam                     _cam;
 
     assets::manual_asset_ptr<material> _material;
-    std::shared_ptr<shape_batch>       _layer1;
+    shape_batch                        _layer0;
 };

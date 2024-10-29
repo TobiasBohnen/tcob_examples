@@ -26,5 +26,5 @@ protected:
 private:
     std::vector<std::unique_ptr<text>> _texts;
 
-    std::shared_ptr<shape_batch> _layer0;
+    shape_batch _layer0;
 };

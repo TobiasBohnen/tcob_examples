@@ -21,8 +21,6 @@ void LightingSystemEx::on_start()
 
     using namespace tcob::literals;
 
-    _layer1 = std::make_shared<shape_batch>();
-
     _lightingSystem0.Bounds = {point_f::Zero, size_f {1600, 900}};
 
     _lightSource0        = _lightingSystem0.create_light_source();
@@ -30,7 +28,7 @@ void LightingSystemEx::on_start()
     _lightSource0->Color = {255, 255, 0, 128};
 
     auto const createSC {[&](std::vector<point_f> const& points) {
-        auto shape0 {_layer1->create_shape<gfx::poly_shape>()};
+        auto shape0 {_layer0.create_shape<gfx::poly_shape>()};
         shape0->Material = _material;
         shape0->Color    = colors::Blue;
         shape0->Polygons = {{.Outline = points}};
@@ -75,14 +73,14 @@ void LightingSystemEx::on_start()
 
 void LightingSystemEx::on_draw_to(render_target& target)
 {
-    _layer1->draw_to(target);
+    _layer0.draw_to(target);
     _lightingSystem0.draw_to(target);
 }
 
 void LightingSystemEx::on_update(milliseconds deltaTime)
 {
     _lightingSystem0.update(deltaTime);
-    _layer1->update(deltaTime);
+    _layer0.update(deltaTime);
 }
 
 void LightingSystemEx::on_fixed_update(milliseconds /* deltaTime */)

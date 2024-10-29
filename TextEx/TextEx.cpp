@@ -90,15 +90,13 @@ void TextEx::on_start()
         string               text {"Vertex"};
         std::vector<polygon> polys {font2->polygonize_text(text, true)};
 
-        _layer0 = std::make_shared<shape_batch>();
-
         auto shapeOutline {std::make_shared<poly_shape>()};
         shapeOutline->Color    = colors::Blue;
         shapeOutline->Material = material::Empty();
         shapeOutline->Polygons = polys;
         polygons::offset(*shapeOutline->Polygons, 5, offset_join::Square);
         shapeOutline->move_by({10, 650});
-        _layer0->add_shape(shapeOutline);
+        _layer0.add_shape(shapeOutline);
 
         auto shapeText {std::make_shared<poly_shape>()};
         shapeText->Color    = colors::Green;
@@ -106,7 +104,7 @@ void TextEx::on_start()
         shapeText->Polygons = polys;
         assert(polygons::check_winding(shapeText->Polygons()));
         shapeText->move_by({10, 650});
-        _layer0->add_shape(shapeText);
+        _layer0.add_shape(shapeText);
 
         transform xform0;
         xform0.rotate_at(degree_f {45}, shapeText->Polygons->at(1).get_info().Centroid);
@@ -125,7 +123,7 @@ void TextEx::on_draw_to(render_target& target)
         text->draw_to(target);
     }
 
-    _layer0->draw_to(target);
+    _layer0.draw_to(target);
 }
 
 void TextEx::on_update(milliseconds deltaTime)
@@ -134,7 +132,7 @@ void TextEx::on_update(milliseconds deltaTime)
         text->update(deltaTime);
     }
 
-    _layer0->update(deltaTime);
+    _layer0.update(deltaTime);
 }
 
 void TextEx::on_fixed_update(milliseconds deltaTime)
