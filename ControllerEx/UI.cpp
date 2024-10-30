@@ -42,40 +42,38 @@ crtl_form::crtl_form(window* window)
     btnRumble2->Label = "Both";
 
     // axes
-    auto createSlider {[&](std::shared_ptr<slider>& ptr, rect_i const& bounds, i16 min, controller::axis axis) {
+    auto createSlider {[&](std::shared_ptr<slider>& ptr, rect_i const& bounds, rect_i const& lblBounds, i16 min, i16 max, controller::axis axis) {
         string const name {_input.get_controller(0)->get_axis_name(axis)};
         ptr      = mainPanelLayout->create_widget<slider>(bounds, name);
         ptr->Min = min;
-        ptr->Max = std::numeric_limits<i16>::max();
+        ptr->Max = max;
         ptr->disable();
 
-        auto lbl {mainPanelLayout->create_widget<label>({bounds.Position - point_i {0, 2}, bounds.Size - size_i {0, 2}}, "lbl" + name)};
+        auto lbl {mainPanelLayout->create_widget<label>(lblBounds, "lbl" + name)};
         lbl->Label = name;
     }};
 
-    createSlider(_laxisx, {15, 7, 8, 4}, -32768, controller::axis::LeftX);
-    createSlider(_laxisy, {15, 14, 8, 4}, -32768, controller::axis::LeftY);
-    createSlider(_raxisx, {25, 7, 8, 4}, -32768, controller::axis::RightX);
-    createSlider(_raxisy, {25, 14, 8, 4}, -32768, controller::axis::RightY);
-    createSlider(_laxis, {15, 21, 8, 4}, 0, controller::axis::TriggerLeft);
-    createSlider(_raxis, {25, 21, 8, 4}, 0, controller::axis::TriggerRight);
+    createSlider(_laxisx, {15, 7, 8, 4}, {15, 5, 8, 2}, -32768, 32767, controller::axis::LeftX);
+    createSlider(_laxisy, {18, 14, 2, 8}, {15, 12, 8, 2}, -32768, 32767, controller::axis::LeftY);
+
+    createSlider(_raxisx, {25, 7, 8, 4}, {25, 5, 8, 2}, -32768, 32767, controller::axis::RightX);
+    createSlider(_raxisy, {28, 14, 2, 8}, {25, 12, 8, 2}, -32768, 32767, controller::axis::RightY);
+
+    createSlider(_laxis, {15, 25, 8, 4}, {15, 23, 8, 2}, 0, 32767, controller::axis::TriggerLeft);
+    createSlider(_raxis, {25, 25, 8, 4}, {25, 23, 8, 2}, 0, 32767, controller::axis::TriggerRight);
 }
 
 void crtl_form::on_controller_axis_motion(input::controller::axis_event const& ev)
 {
-    slider* text {nullptr};
-
     switch (ev.Axis) {
-    case controller::axis::LeftX: text = _laxisx.get(); break;
-    case controller::axis::LeftY: text = _laxisy.get(); break;
-    case controller::axis::RightX: text = _raxisx.get(); break;
-    case controller::axis::RightY: text = _raxisy.get(); break;
-    case controller::axis::TriggerLeft: text = _laxis.get(); break;
-    case controller::axis::TriggerRight: text = _raxis.get(); break;
+    case controller::axis::LeftX: _laxisx->Value = ev.Value; break;
+    case controller::axis::LeftY: _laxisy->Value = -ev.Value; break;
+    case controller::axis::RightX: _raxisx->Value = ev.Value; break;
+    case controller::axis::RightY: _raxisy->Value = -ev.Value; break;
+    case controller::axis::TriggerLeft: _laxis->Value = ev.Value; break;
+    case controller::axis::TriggerRight: _raxis->Value = ev.Value; break;
     case controller::axis::Invalid: break;
     }
-
-    text->Value = ev.Value;
 }
 
 void crtl_form::on_controller_button_down(input::controller::button_event const& ev)
