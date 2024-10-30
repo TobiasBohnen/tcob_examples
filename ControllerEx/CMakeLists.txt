@@ -3,6 +3,7 @@ add_executable(ControllerEx)
 target_sources(ControllerEx PRIVATE
     main.cpp
     ControllerEx.cpp
+    UI.cpp
 )
 
 set_target_properties(ControllerEx PROPERTIES
