@@ -25,9 +25,9 @@ void BackgroundEx::on_start()
     _back0               = std::make_shared<parallax_background>();
     _back0->Material     = resGrp.get<material>("parallax");
     _back0->TextureScale = {6, 6};
-    _back0->add_layer({"back", 0.50f});
-    _back0->add_layer({"middle", 1.00f});
-    _back0->add_layer({"front", 4.00f});
+    _back0->add_layer({"back", {0.50f, 0.0f}});
+    _back0->add_layer({"middle", {1.00f, 0.0f}});
+    _back0->add_layer({"front", {4.00f, 0.0f}, {0.25f, 0.f}});
 
     _cam.LimitBounds = {point_f::Zero, size_f {_back0->Material->Texture->get_size().Width * _back0->TextureScale.Width * 10, 1}};
 }
