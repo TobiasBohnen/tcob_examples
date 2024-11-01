@@ -43,7 +43,7 @@ void PhysicsEx::on_update(milliseconds deltaTime)
                         rect->Bounds   = bounds;
                         rect->Rotation = it->Body->Transform().Angle;
 
-                        if (rect->Bounds->get_center().Y > 1000) {
+                        if (rect->Bounds->center().Y > 1000) {
                             _layer1.remove_shape(*rect);
                             _world.remove_body(*it->Body);
                             it = _objects.erase(it);
@@ -158,7 +158,7 @@ void PhysicsEx::create_box(point_f pos)
 {
     Box2DExObject obj {};
     rect_f        rect {pos, {3, 3}};
-    obj.Body = _world.create_body({.Center = rect.get_center()}, {.Type = body_type::Dynamic});
+    obj.Body = _world.create_body({.Center = rect.center()}, {.Type = body_type::Dynamic});
 
     physics::rect_shape::settings shape;
     shape.Friction = 0.3f;
@@ -180,7 +180,7 @@ void PhysicsEx::create_circle(point_f pos)
 {
     Box2DExObject obj {};
     rect_f        rect {pos, {3, 3}};
-    obj.Body = _world.create_body({.Center = rect.get_center()}, {.Type = body_type::Dynamic});
+    obj.Body = _world.create_body({.Center = rect.center()}, {.Type = body_type::Dynamic});
 
     physics::circle_shape::settings shape;
     shape.Friction = 0.3f;
@@ -202,7 +202,7 @@ void PhysicsEx::create_circle(point_f pos)
 void PhysicsEx::create_obstacle(rect_f const& rect)
 {
     physics::rect_shape::settings shape;
-    shape.Extents     = {rect.get_center(), rect.Size};
+    shape.Extents     = {rect.center(), rect.Size};
     shape.Restitution = 0.5f;
 
     _obstacles->create_shape<physics::rect_shape>(shape);

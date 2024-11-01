@@ -75,7 +75,7 @@ void ParticleSystemEx::on_start()
         f32 const parLife {p.get_lifetime_ratio()};
         if (phase < 4) { p.Color = _colors[static_cast<u8>(255.f * (1 - parLife))]; }
 
-        auto const dist {p.Bounds.get_center().distance_to({460, 200})};
+        auto const dist {p.Bounds.center().distance_to({460, 200})};
         if (phase < 5 && dist < 10) {
             auto const corr {36_deg * (10 - dist) * (pev.Time.count() / 1000)};
             p.Direction += p.Direction > 0 ? corr : -corr;

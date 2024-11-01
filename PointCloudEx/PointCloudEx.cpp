@@ -146,7 +146,7 @@ void PointCloudEx::on_mouse_motion(mouse::motion_event const& ev)
     rect_f const queryRect {_cam.screen_to_world(ev.Position) - point_f {25.f, 25.f}, {50.f, 50.f}};
     auto         points {_quadtree.query(queryRect.as_intersection_with(_quadtree.get_bounds()))};
     for (auto& p : points) {
-        auto const dist {p.Vertex->Position.distance_to(queryRect.get_center())};
+        auto const dist {p.Vertex->Position.distance_to(queryRect.center())};
         if (dist > 25) { continue; }
 
         auto const newPos {p.Vertex->Position + point_f {static_cast<f32>(ev.RelativeMotion.X * (25 - dist + 1)), static_cast<f32>(ev.RelativeMotion.Y * (25 - dist + 1))}};

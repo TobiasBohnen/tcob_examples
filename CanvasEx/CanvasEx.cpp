@@ -79,7 +79,7 @@ void CanvasEx::canvas_ray_cast()
     rect_f                   rect {{_center.X - (size / 2), _center.Y - (size / 2)}, {size - 10, size - 20}};
 
     transform xform;
-    xform.rotate_at(degree_f {_rotation}, rect.get_center());
+    xform.rotate_at(degree_f {_rotation}, rect.center());
 
     _canvas.set_stroke_style(colors::Red);
     _canvas.set_stroke_width(5);
