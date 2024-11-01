@@ -95,7 +95,7 @@ void TileMapEx::on_start()
     grid<tile_index_t> tiles {size_i {tmWidth, tmHeight}};
     for (i32 x {0}; x < tiles.get_column_count(); x++) {
         for (i32 y {0}; y < tiles.get_row_count(); y++) {
-            tiles.at({x, y}) = _rand(1, 12);
+            tiles[{x, y}] = _rand(1, 12);
         }
     }
 
