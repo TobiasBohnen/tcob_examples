@@ -9,6 +9,7 @@
 
 #include <tcob/tcob.hpp>
 using namespace tcob;
+using namespace tcob::ai;
 using namespace tcob::gfx;
 using namespace tcob::assets;
 using namespace tcob::tweening;

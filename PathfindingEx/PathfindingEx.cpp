@@ -23,21 +23,24 @@ PathfindingEx::~PathfindingEx() = default;
 
 void PathfindingEx::on_start()
 {
-    grid<tile_index_t> tiles {size_i {10, 10}, 1};
-    tiles[{2, 3}] = 2;
-    tiles[{4, 8}] = 2;
-    tiles[{7, 7}] = ai::astar_pathfinding::IMPASSABLE_COST;
-    tiles[{1, 1}] = ai::astar_pathfinding::IMPASSABLE_COST;
+    rng _rand;
+    for (i32 i {0}; i < 50; ++i) {
+        i32 const x0 {_rand(0, GRID_SIZE.Width - 1)};
+        i32 const y0 {_rand(0, GRID_SIZE.Height - 1)};
+        _tiles[{x0, y0}] = 2;
 
-    f32 const size {get_window().Size().Height / 10.f};
+        i32 const x1 {_rand(0, GRID_SIZE.Width - 1)};
+        i32 const y1 {_rand(0, GRID_SIZE.Height - 1)};
+        _tiles[{x1, y1}] = ai::astar_pathfinding::IMPASSABLE_COST;
+    }
+
+    f32 const size {get_window().Size().Height / static_cast<f32>(GRID_SIZE.Height)};
     _tileSize          = {size, size};
     _tileMapOrtho.Grid = {.TileSize = _tileSize};
 
-    tcob::gfx::tilemap_layer layer {tiles};
+    tcob::gfx::tilemap_layer layer {_tiles};
     _tileMapOrtho.add_layer(layer);
     _tileMapOrtho.Material = material::Empty();
-
-    _pathfinder = std::make_unique<ai::astar_pathfinding>(tiles);
 }
 
 void PathfindingEx::on_draw_to(render_target& target)
@@ -46,24 +49,24 @@ void PathfindingEx::on_draw_to(render_target& target)
 
     auto const size {target.Size()};
 
+    _canvas.begin_frame(size, 1);
+    // path
+    _canvas.begin_path();
+    _canvas.set_fill_style(colors::Gray);
+    for (auto const& point : _path) {
+        _canvas.rect({point_f {point * point_f {_tileSize.Width, _tileSize.Height}}, _tileSize});
+    }
+    _canvas.fill();
+
+    // start/end
     auto drawRect {[&](point_i pos, color col) {
         _canvas.begin_path();
         _canvas.set_fill_style(col);
         _canvas.rect({point_f {pos * point_f {_tileSize.Width, _tileSize.Height}}, _tileSize});
         _canvas.fill();
     }};
-
-    _canvas.begin_frame(size, 1);
-
-    for (auto const& point : _path) {
-        drawRect(point, colors::Gray);
-    }
-    if (_start != INVALID) {
-        drawRect(_start, colors::Green);
-    }
-    if (_end != INVALID) {
-        drawRect(_end, colors::Red);
-    }
+    if (_start != INVALID) { drawRect(_start, colors::Green); }
+    if (_end != INVALID) { drawRect(_end, colors::Red); }
 
     _canvas.end_frame();
 
@@ -104,18 +107,18 @@ void PathfindingEx::on_mouse_button_down(mouse::button_event const& ev)
 {
     if (ev.Button == mouse::button::Left) {
         _start = point_i {static_cast<i32>(ev.Position.X / _tileSize.Width), static_cast<i32>(ev.Position.Y / _tileSize.Height)};
-        if (_start.X >= 10 || _start.Y >= 10) {
+        if (_start.X >= GRID_SIZE.Width || _start.Y >= GRID_SIZE.Height) {
             _start = INVALID;
         }
     } else if (ev.Button == mouse::button::Right) {
         _end = point_i {static_cast<i32>(ev.Position.X / _tileSize.Width), static_cast<i32>(ev.Position.Y / _tileSize.Height)};
-        if (_end.X >= 10 || _end.Y >= 10) {
+        if (_end.X >= GRID_SIZE.Width || _end.Y >= GRID_SIZE.Height) {
             _end = INVALID;
         }
     }
 
     if (_start != INVALID && _end != INVALID) {
-        _path = _pathfinder->find_path(_start, _end);
+        _path = _pathfinder->find_path(_tiles, _start, _end);
     } else {
         _path.clear();
     }

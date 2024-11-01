@@ -8,7 +8,8 @@
 #include "../_common/Common.hpp"
 
 class PathfindingEx : public scene {
-    static constexpr point_i INVALID = point_i {-1, -1};
+    static constexpr point_i INVALID {-1, -1};
+    static constexpr size_i  GRID_SIZE {50, 50};
 
 public:
     PathfindingEx(game& game);
@@ -37,4 +38,5 @@ private:
     std::vector<point_i> _path;
 
     std::unique_ptr<ai::astar_pathfinding> _pathfinder;
+    grid<tile_index_t>                     _tiles {GRID_SIZE, 1};
 };
