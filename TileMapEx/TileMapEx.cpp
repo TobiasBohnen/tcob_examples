@@ -10,7 +10,7 @@ using namespace std::chrono_literals;
 
 TileMapEx::TileMapEx(game& game)
     : scene(game)
-    , _tileMapOrtho {{{
+    , _tileMapOrtho {{
           {1, {"stone1"}},
           {2, {"stone2"}},
           {3, {"stone3"}},
@@ -23,8 +23,8 @@ TileMapEx::TileMapEx(game& game)
           {10, {"grass2"}},
           {11, {"grass3"}},
           {12, {"grass4"}},
-      }}}
-    , _tileMapIso {{{
+      }}
+    , _tileMapIso {{
           {1, {"stone1"}},
           {2, {"stone2"}},
           {3, {"stone3"}},
@@ -37,8 +37,8 @@ TileMapEx::TileMapEx(game& game)
           {10, {"grass2"}},
           {11, {"grass3"}},
           {12, {"grass4"}},
-      }}}
-    , _tileMapIsoStaggered {{{
+      }}
+    , _tileMapIsoStaggered {{
           {1, {"stone1"}},
           {2, {"stone2"}},
           {3, {"stone3"}},
@@ -51,8 +51,8 @@ TileMapEx::TileMapEx(game& game)
           {10, {"grass2"}},
           {11, {"grass3"}},
           {12, {"grass4"}},
-      }}}
-    , _tileMapHexPointy {{{
+      }}
+    , _tileMapHexPointy {{
           {1, {"stone1"}},
           {2, {"stone2"}},
           {3, {"stone3"}},
@@ -65,8 +65,8 @@ TileMapEx::TileMapEx(game& game)
           {10, {"grass2"}},
           {11, {"grass3"}},
           {12, {"grass4"}},
-      }}}
-    , _tileMapHexFlat {{{
+      }}
+    , _tileMapHexFlat {{
           {1, {"stone1"}},
           {2, {"stone2"}},
           {3, {"stone3"}},
@@ -79,7 +79,7 @@ TileMapEx::TileMapEx(game& game)
           {10, {"grass2"}},
           {11, {"grass3"}},
           {12, {"grass4"}},
-      }}}
+      }}
 {
     get_window().ClearColor = colors::Cornsilk;
 }

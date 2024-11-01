@@ -15,6 +15,7 @@ if(TCOB_ENABLE_ADDON_PHYSICS_BOX2D
     add_subdirectory(ImageFilterEx)
     add_subdirectory(LightingSystemEx)
     add_subdirectory(ParticleSystemEx)
+    add_subdirectory(PathfindingEx)
     add_subdirectory(PointCloudEx)
     add_subdirectory(PhysicsEx)
     add_subdirectory(RayEx)
