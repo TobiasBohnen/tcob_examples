@@ -93,8 +93,8 @@ void TileMapEx::on_start()
     auto* resGrp {get_game().get_library().get_group("res")};
 
     grid<tile_index_t> tiles {size_i {tmWidth, tmHeight}};
-    for (i32 x {0}; x < tiles.column_count(); x++) {
-        for (i32 y {0}; y < tiles.row_count(); y++) {
+    for (i32 x {0}; x < tiles.get_column_count(); x++) {
+        for (i32 y {0}; y < tiles.get_row_count(); y++) {
             tiles.at({x, y}) = _rand(1, 12);
         }
     }
