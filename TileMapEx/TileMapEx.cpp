@@ -92,9 +92,11 @@ void TileMapEx::on_start()
 {
     auto* resGrp {get_game().get_library().get_group("res")};
 
-    std::array<u64, tmWidth * tmHeight> tiles1 {};
-    for (u32 i {0}; i < tmWidth * tmHeight; i++) {
-        tiles1[i] = _rand(1, 12);
+    grid<tile_index_t> tiles {size_i {tmWidth, tmHeight}};
+    for (i32 x {0}; x < tiles.column_count(); x++) {
+        for (i32 y {0}; y < tiles.row_count(); y++) {
+            tiles.at({x, y}) = _rand(1, 12);
+        }
     }
 
     ////////////////////////////////////////////////////////////
@@ -102,10 +104,8 @@ void TileMapEx::on_start()
         _tileMapOrtho.Material = resGrp->get<material>("ortho");
         _tileMapOrtho.Grid     = {.TileSize = {64, 64}};
 
-        tcob::gfx::tilemap_layer layer;
-        layer.Tiles = tiles1;
-        layer.Size  = {tmWidth, tmHeight};
-        _layerID    = _tileMapOrtho.add_layer(layer);
+        tcob::gfx::tilemap_layer layer {tiles};
+        _layerID = _tileMapOrtho.add_layer(layer);
     }
     ////////////////////////////////////////////////////////////
     {
@@ -114,9 +114,7 @@ void TileMapEx::on_start()
 
         _tileMapIso.Position = {6800, 30};
 
-        tcob::gfx::tilemap_layer layer;
-        layer.Tiles = tiles1;
-        layer.Size  = {tmWidth, tmHeight};
+        tcob::gfx::tilemap_layer layer {tiles};
         _tileMapIso.add_layer(layer);
     }
     ////////////////////////////////////////////////////////////
@@ -126,9 +124,7 @@ void TileMapEx::on_start()
 
         _tileMapIsoStaggered.Position = {1500, 0};
 
-        tcob::gfx::tilemap_layer layer;
-        layer.Tiles = tiles1;
-        layer.Size  = {tmWidth, tmHeight};
+        tcob::gfx::tilemap_layer layer {tiles};
         _tileMapIsoStaggered.add_layer(layer);
     }
     ////////////////////////////////////////////////////////////
@@ -138,9 +134,7 @@ void TileMapEx::on_start()
 
         _tileMapHexPointy.Position = {0, 2800};
 
-        tcob::gfx::tilemap_layer layer;
-        layer.Tiles = tiles1;
-        layer.Size  = {tmWidth, tmHeight};
+        tcob::gfx::tilemap_layer layer {tiles};
         _tileMapHexPointy.add_layer(layer);
     }
 
@@ -151,9 +145,7 @@ void TileMapEx::on_start()
 
         _tileMapHexFlat.Position = {2000, 2800};
 
-        tcob::gfx::tilemap_layer layer;
-        layer.Tiles = tiles1;
-        layer.Size  = {tmWidth, tmHeight};
+        tcob::gfx::tilemap_layer layer {tiles};
         _tileMapHexFlat.add_layer(layer);
     }
 
@@ -202,32 +194,20 @@ void TileMapEx::on_key_down(keyboard::event const& ev)
         get_game().pop_current_scene();
         break;
     case scan_code::D1:
-        for (i32 i = 0; i < tmHeight; i++) {
-            _tileMapOrtho.set_tile_index(_layerID, {0, i}, 2);
-        }
+        for (i32 i = 0; i < tmHeight; i++) { _tileMapOrtho.set_tile_index(_layerID, {0, i}, 2); }
         break;
     case scan_code::D2:
-        for (i32 i = 1; i <= 12; i++) {
-            _tileMapOrtho.change_tileset(i, {"stone1"});
-        }
-
+        for (i32 i = 1; i <= 12; i++) { _tileMapOrtho.change_tileset(i, {"stone1"}); }
         break;
     case scan_code::D3: {
-        std::array<tile_index_t, 10> tiles {};
-        for (i32 i = 0; i < 10; i++) { tiles[i] = 1; }
-        tcob::gfx::tilemap_layer layer;
-        layer.Tiles = tiles;
-        layer.Size  = {2, 5};
+        grid<tile_index_t>       tiles {size_i {2, 5}, 1};
+        tcob::gfx::tilemap_layer layer {tiles};
         _tileMapOrtho.add_layer(layer);
     } break;
     case scan_code::D4: {
-        std::array<tile_index_t, 10> tiles {};
-        for (i32 i = 0; i < 10; i++) { tiles[i] = 2; }
-        tcob::gfx::tilemap_layer layer;
-        layer.Tiles  = tiles;
-        layer.Size   = {2, 5};
-        layer.Offset = {4, 0};
-        auto id {_tileMapOrtho.add_layer(layer)};
+        grid<tile_index_t>       tiles {size_i {2, 5}, 2};
+        tcob::gfx::tilemap_layer layer {.Tiles = tiles, .Offset = {4, 0}};
+        auto                     id {_tileMapOrtho.add_layer(layer)};
         _tileMapOrtho.set_tile_index(id, {0, 20}, 5);
     } break;
     case scan_code::D5: {
@@ -246,11 +226,8 @@ void TileMapEx::on_key_down(keyboard::event const& ev)
         _tween->start(playback_mode::Looped);
     } break;
 
-    case scan_code::R:
-        _tileMapOrtho.clear();
-        break;
-    default:
-        break;
+    case scan_code::R: _tileMapOrtho.clear(); break;
+    default: break;
     }
 
     _cam.on_key_down(ev);
