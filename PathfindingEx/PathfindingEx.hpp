@@ -9,7 +9,7 @@
 
 class PathfindingEx : public scene {
     static constexpr point_i INVALID {-1, -1};
-    static constexpr size_i  GRID_SIZE {50, 50};
+    static constexpr size_i  GRID_SIZE {256, 256};
 
 public:
     PathfindingEx(game& game);
@@ -39,4 +39,5 @@ private:
 
     std::unique_ptr<ai::astar_pathfinding> _pathfinder;
     grid<tile_index_t>                     _tiles {GRID_SIZE, 1};
+    grid<tile_index_t>                     _costTiles {GRID_SIZE, 1};
 };

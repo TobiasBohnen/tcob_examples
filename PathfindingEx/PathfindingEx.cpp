@@ -8,13 +8,26 @@
 
 using namespace std::chrono_literals;
 
+auto static create_tileset() -> std::unordered_map<tile_index_t, ortho_tile>
+{
+    std::unordered_map<tile_index_t, ortho_tile> retValue;
+
+    auto const gradLow {color_gradient {{0.0f, colors::White}, {0.10f, colors::LightGreen}, {1.0f, colors::Green}}.get_colors()};
+    auto const gradHigh {color_gradient {{0.0f, colors::White}, {0.10f, colors::LightSalmon}, {1.0f, colors::Red}}.get_colors()};
+    for (i32 i {0}; i < 256; ++i) {
+        if (i > 127) {
+            retValue[i + 1] = {.Color = gradHigh[(i - 128) * 2]};
+        } else {
+            retValue[i + 1] = {.Color = gradLow[(127 - i) * 2]};
+        }
+    }
+
+    return retValue;
+}
+
 PathfindingEx::PathfindingEx(game& game)
     : scene(game)
-    , _tileMapOrtho {{
-          {1, {.Color = colors::White}},
-          {2, {.Color = colors::LightGray}},
-          {ai::astar_pathfinding::IMPASSABLE_COST, {.Color = colors::Black}},
-      }}
+    , _tileMapOrtho {create_tileset()}
 {
     get_window().ClearColor = colors::DarkRed;
 }
@@ -23,15 +36,24 @@ PathfindingEx::~PathfindingEx() = default;
 
 void PathfindingEx::on_start()
 {
-    rng _rand;
-    for (i32 i {0}; i < 50; ++i) {
-        i32 const x0 {_rand(0, GRID_SIZE.Width - 1)};
-        i32 const y0 {_rand(0, GRID_SIZE.Height - 1)};
-        _tiles[{x0, y0}] = 2;
+    f32              min {2000}, max {0};
+    perlin_noise     noise {20};
+    std::vector<f32> values;
+    for (i32 x {0}; x < GRID_SIZE.Width; ++x) {
+        for (i32 y {0}; y < GRID_SIZE.Height; ++y) {
+            point_f pos {static_cast<f32>(x), static_cast<f32>(y)};
+            pos /= GRID_SIZE.Width;
+            f32 const f {1 - noise(pos)};
+            if (min > f) { min = f; }
+            if (max < f) { max = f; }
+            values.push_back(f);
+        }
+    }
+    for (u32 i {0}; i < values.size(); ++i) {
+        tile_index_t const val {static_cast<tile_index_t>(std::clamp((values[i] - min) / (max - min) * 256 + 1, 1.0f, 256.0f))};
 
-        i32 const x1 {_rand(0, GRID_SIZE.Width - 1)};
-        i32 const y1 {_rand(0, GRID_SIZE.Height - 1)};
-        _tiles[{x1, y1}] = ai::astar_pathfinding::IMPASSABLE_COST;
+        _tiles[i]     = val;
+        _costTiles[i] = std::pow(val, 3);
     }
 
     f32 const size {get_window().Size().Height / static_cast<f32>(GRID_SIZE.Height)};
@@ -50,9 +72,12 @@ void PathfindingEx::on_draw_to(render_target& target)
     auto const size {target.Size()};
 
     _canvas.begin_frame(size, 1);
+
+    _canvas.set_edge_antialias(false);
+
     // path
     _canvas.begin_path();
-    _canvas.set_fill_style(colors::Gray);
+    _canvas.set_fill_style(colors::Blue);
     for (auto const& point : _path) {
         _canvas.rect({point_f {point * point_f {_tileSize.Width, _tileSize.Height}}, _tileSize});
     }
@@ -118,7 +143,7 @@ void PathfindingEx::on_mouse_button_down(mouse::button_event const& ev)
     }
 
     if (_start != INVALID && _end != INVALID) {
-        _path = _pathfinder->find_path(_tiles, _start, _end);
+        _path = _pathfinder->find_path(_costTiles, _start, _end);
     } else {
         _path.clear();
     }
