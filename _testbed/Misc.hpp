@@ -9,7 +9,6 @@
 using namespace tcob;
 using namespace tcob::gfx;
 using namespace tcob::assets;
-using namespace tcob::tweening;
 using namespace tcob::scripting;
 using namespace tcob::physics;
 using namespace tcob::audio;
@@ -59,7 +58,7 @@ private:
     assets::asset_ptr<font>             _font;
     std::shared_ptr<text>               _text;
     std::shared_ptr<gfx::rect_shape>    _aniTexSprite;
-    tweening::queue                     _rvc;
+    tween_queue                         _rvc;
 
     audio::playlist _audioPlaylist;
 

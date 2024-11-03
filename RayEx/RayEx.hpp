@@ -25,9 +25,9 @@ protected:
     void on_mouse_wheel(mouse::wheel_event const& ev) override;
 
 private:
-    shape_batch                 _batch;
-    tweening::linear_tween<f32> _tween0 {seconds {10}, {50, 650}};
-    tweening::linear_tween<f32> _tween1 {seconds {10}, {90, 180}};
+    shape_batch       _batch;
+    linear_tween<f32> _tween0 {seconds {10}, {50, 650}};
+    linear_tween<f32> _tween1 {seconds {10}, {90, 180}};
 
     point_f _center;
     f32     _rotation {45};
