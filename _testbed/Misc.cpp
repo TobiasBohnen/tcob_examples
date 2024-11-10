@@ -72,12 +72,12 @@ void MiscScene::on_start()
         _uniBuf.update<f32>(bufData, 0);
     */
 
-    _audioPlaylist.add("mp3", resGrp->get<sound>("mp3-test").get_ptr());
-    _audioPlaylist.add("wav", resGrp->get<sound>("wav-test").get_ptr());
-    _audioPlaylist.add("ogg", resGrp->get<sound>("ogg-test").get_ptr());
-    _audioPlaylist.add("flac", resGrp->get<sound>("flac-test").get_ptr());
-    _audioPlaylist.add("it", resGrp->get<sound>("it-test").get_ptr());
-    _audioPlaylist.add("opus", resGrp->get<sound>("opus-test").get_ptr());
+    _audioPlaylist.add("mp3", resGrp->get<sound>("mp3-test").ptr());
+    _audioPlaylist.add("wav", resGrp->get<sound>("wav-test").ptr());
+    _audioPlaylist.add("ogg", resGrp->get<sound>("ogg-test").ptr());
+    _audioPlaylist.add("flac", resGrp->get<sound>("flac-test").ptr());
+    _audioPlaylist.add("it", resGrp->get<sound>("it-test").ptr());
+    _audioPlaylist.add("opus", resGrp->get<sound>("opus-test").ptr());
 
     _music0 = resGrp->get<music>("test");
 
@@ -129,9 +129,9 @@ void MiscScene::on_fixed_update(milliseconds deltaTime)
     std::stringstream stream;
     stream << std::fixed << std::setprecision(2);
     auto const& stats {locate_service<gfx::render_system>().get_stats()};
-    stream << "avg FPS:" << stats.get_average_FPS();
-    stream << " best FPS:" << stats.get_best_FPS();
-    stream << " worst FPS:" << stats.get_worst_FPS();
+    stream << "avg FPS:" << stats.average_FPS();
+    stream << " best FPS:" << stats.best_FPS();
+    stream << " worst FPS:" << stats.worst_FPS();
     if (_music0.is_ready()) {
         stream << "|" << _music0->get_duration().count() / 1000;
         stream << "|" << _music0->get_playback_position().count() / 1000;

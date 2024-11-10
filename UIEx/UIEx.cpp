@@ -53,9 +53,9 @@ void UIEx::on_fixed_update(milliseconds deltaTime)
     std::stringstream stream;
     stream << std::fixed << std::setprecision(0) << std::setfill('0');
     auto const& stats {locate_service<gfx::render_system>().get_stats()};
-    stream << "avg FPS:" << stats.get_average_FPS();
-    stream << " best FPS:" << stats.get_best_FPS();
-    stream << " worst FPS:" << stats.get_worst_FPS();
+    stream << "avg FPS:" << stats.average_FPS();
+    stream << " best FPS:" << stats.best_FPS();
+    stream << " worst FPS:" << stats.worst_FPS();
 
     stream << " | " << input::system::GetMousePosition();
     get_window().Title = "TestGame " + stream.str();

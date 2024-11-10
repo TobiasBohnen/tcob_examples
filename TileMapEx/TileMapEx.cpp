@@ -93,8 +93,8 @@ void TileMapEx::on_start()
     auto* resGrp {get_game().get_library().get_group("res")};
 
     grid<tile_index_t> tiles {size_i {tmWidth, tmHeight}};
-    for (i32 x {0}; x < tiles.get_column_count(); x++) {
-        for (i32 y {0}; y < tiles.get_row_count(); y++) {
+    for (i32 x {0}; x < tiles.width(); x++) {
+        for (i32 y {0}; y < tiles.height(); y++) {
             tiles[{x, y}] = _rand(1, 12);
         }
     }
@@ -179,9 +179,9 @@ void TileMapEx::on_fixed_update(milliseconds deltaTime)
     std::stringstream stream;
     stream << std::fixed << std::setprecision(2);
     auto const& stats {locate_service<gfx::render_system>().get_stats()};
-    stream << "avg FPS:" << stats.get_average_FPS();
-    stream << " best FPS:" << stats.get_best_FPS();
-    stream << " worst FPS:" << stats.get_worst_FPS();
+    stream << "avg FPS:" << stats.average_FPS();
+    stream << " best FPS:" << stats.best_FPS();
+    stream << " worst FPS:" << stats.worst_FPS();
 
     stream << " | " << get_window().get_camera().convert_screen_to_world(input::system::GetMousePosition());
     get_window().Title = "TestGame " + stream.str();

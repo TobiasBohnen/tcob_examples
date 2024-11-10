@@ -12,7 +12,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     auto tooltipLayout {tooltip0->get_layout<fixed_layout>()};
     tooltip0->Bounds = {0, 0, 170, 50};
     auto tooltipLabel0 {tooltipLayout->create_widget<label>({5, 5, 160, 40}, "TTLabel0")};
-    tooltip0->Popup.connect([tooltipLabel0](auto const& event) { tooltipLabel0->Label = event.Widget->get_name(); });
+    tooltip0->Popup.connect([tooltipLabel0](auto const& event) { tooltipLabel0->Label = event.Widget->name(); });
 
     auto panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
     panel0->Flex = {.Width = 100_pct, .Height = 100_pct};
@@ -105,7 +105,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     auto boxHLayout1 {boxHPanel1->create_layout<hbox_layout>()};
     for (i32 i = 0; i < 4; i++) {
         auto chk {boxHLayout1->create_widget<checkbox>("Check" + std::to_string(i))};
-        chk->Checked.Changed.connect([label0, chk](bool value) { label0->Label = (value ? "checked: " : "unchecked: ") + chk->get_name(); });
+        chk->Checked.Changed.connect([label0, chk](bool value) { label0->Label = (value ? "checked: " : "unchecked: ") + chk->name(); });
     }
 
     auto boxHPanel2 {panel0Layout->create_widget<panel>({490, 280, 250, 100}, "SPanel3")};
@@ -113,7 +113,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     auto boxHLayout2 {boxHPanel2->create_layout<hbox_layout>()};
     for (i32 i = 0; i < 4; i++) {
         auto rb {boxHLayout2->create_widget<radio_button>("Radio" + std::to_string(i))};
-        rb->Checked.Changed.connect([label0, rb](bool value) { label0->Label = (value ? "checked: " : "unchecked: ") + rb->get_name(); });
+        rb->Checked.Changed.connect([label0, rb](bool value) { label0->Label = (value ? "checked: " : "unchecked: ") + rb->name(); });
     }
 
     auto flexPanel0 {panel0Layout->create_widget<panel>({230, 390, 250, 160}, "SPanel4")};

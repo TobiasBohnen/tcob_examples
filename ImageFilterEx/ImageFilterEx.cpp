@@ -18,28 +18,28 @@ ImageFilterEx::ImageFilterEx(game& game)
     auto  imgSize {img0.get_info().Size};
     _tex0->create(imgSize, 7, texture::format::RGBA8);
 
-    _tex0->update_data(img0.get_data(), 0);
+    _tex0->update_data(img0.buffer(), 0);
     _tex0->add_region("normal", {{0, 0, 1, 1}, 0});
 
     {
         edge_detect_filter filter;
         filter.IncludeAlpha = true;
         image filterImg {filter(img0)};
-        _tex0->update_data(filterImg.get_data(), 1);
+        _tex0->update_data(filterImg.buffer(), 1);
         _tex0->add_region("edgedetect", {{0, 0, 1, 1}, 1});
     }
 
     {
         blur_filter filter;
         image       filterImg {filter(img0)};
-        _tex0->update_data(filterImg.get_data(), 2);
+        _tex0->update_data(filterImg.buffer(), 2);
         _tex0->add_region("blur", {{0, 0, 1, 1}, 2});
     }
 
     {
         emboss_filter filter;
         image         filterImg {filter(img0)};
-        _tex0->update_data(filterImg.get_data(), 3);
+        _tex0->update_data(filterImg.buffer(), 3);
         _tex0->add_region("emboss", {{0, 0, 1, 1}, 3});
     }
 
@@ -47,21 +47,21 @@ ImageFilterEx::ImageFilterEx(game& game)
         edge_enhance_filter filter;
         filter.IncludeAlpha = true;
         image filterImg {filter(img0)};
-        _tex0->update_data(filterImg.get_data(), 4);
+        _tex0->update_data(filterImg.buffer(), 4);
         _tex0->add_region("edgeenhance", {{0, 0, 1, 1}, 4});
     }
 
     {
         motion_blur_filter filter;
         image              filterImg {filter(img0)};
-        _tex0->update_data(filterImg.get_data(), 5);
+        _tex0->update_data(filterImg.buffer(), 5);
         _tex0->add_region("motionblur", {{0, 0, 1, 1}, 5});
     }
 
     {
         sharpen_filter filter;
         image          filterImg {filter(img0)};
-        _tex0->update_data(filterImg.get_data(), 6);
+        _tex0->update_data(filterImg.buffer(), 6);
         _tex0->add_region("sharpen", {{0, 0, 1, 1}, 6});
     }
 }
@@ -127,9 +127,9 @@ void ImageFilterEx::on_fixed_update(milliseconds deltaTime)
     std::stringstream stream;
     stream << std::fixed << std::setprecision(2);
     auto const& stats {locate_service<gfx::render_system>().get_stats()};
-    stream << "avg FPS:" << stats.get_average_FPS();
-    stream << " best FPS:" << stats.get_best_FPS();
-    stream << " worst FPS:" << stats.get_worst_FPS();
+    stream << "avg FPS:" << stats.average_FPS();
+    stream << " best FPS:" << stats.best_FPS();
+    stream << " worst FPS:" << stats.worst_FPS();
 
     get_window().Title = "TestGame " + stream.str();
 }

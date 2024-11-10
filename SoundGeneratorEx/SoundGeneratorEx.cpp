@@ -79,9 +79,9 @@ void SoundGeneratorEx::on_fixed_update(milliseconds deltaTime)
     std::stringstream stream;
     stream << std::fixed << std::setprecision(2);
     auto const& stats {locate_service<gfx::render_system>().get_stats()};
-    stream << "avg FPS:" << stats.get_average_FPS();
-    stream << " best FPS:" << stats.get_best_FPS();
-    stream << " worst FPS:" << stats.get_worst_FPS();
+    stream << "avg FPS:" << stats.average_FPS();
+    stream << " best FPS:" << stats.best_FPS();
+    stream << " worst FPS:" << stats.worst_FPS();
 
     get_window().Title = "SoundGeneratorEx " + stream.str();
 
@@ -155,7 +155,7 @@ void SoundGeneratorEx::draw_wave()
     canvas->stroke();
 
     // waveform
-    auto audioData {_audioData.get_data()};
+    auto audioData {_audioData.data()};
     if (audioData.empty()) { return; }
 
     f32       currentSample {0.0f};

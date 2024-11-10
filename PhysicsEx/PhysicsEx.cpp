@@ -73,9 +73,9 @@ void PhysicsEx::on_fixed_update(milliseconds deltaTime)
     std::stringstream stream;
     stream << std::fixed << std::setprecision(2);
     auto const& stats {locate_service<gfx::render_system>().get_stats()};
-    stream << "avg FPS:" << stats.get_average_FPS();
-    stream << " best FPS:" << stats.get_best_FPS();
-    stream << " worst FPS:" << stats.get_worst_FPS();
+    stream << "avg FPS:" << stats.average_FPS();
+    stream << " best FPS:" << stats.best_FPS();
+    stream << " worst FPS:" << stats.worst_FPS();
 
     get_window().Title = "TestGame " + stream.str();
 
@@ -125,9 +125,9 @@ void PhysicsEx::on_key_down(keyboard::event const& ev)
             distance_joint::settings def;
             def.BodyA        = _objects[_objects.size() - 2].Body.get();
             def.BodyB        = _objects[_objects.size() - 1].Body.get();
-            def.LocalAnchorA = def.BodyA->get_local_center();
-            def.LocalAnchorB = def.BodyB->get_local_center();
-            def.Length       = def.BodyA->get_center().distance_to(def.BodyB->get_center());
+            def.LocalAnchorA = def.BodyA->local_center();
+            def.LocalAnchorB = def.BodyB->local_center();
+            def.Length       = def.BodyA->center().distance_to(def.BodyB->center());
 
             _world.create_joint<distance_joint>(def);
         }

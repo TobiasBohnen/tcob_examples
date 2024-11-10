@@ -29,7 +29,7 @@ private:
 
 inline void rng_form::draw_dice()
 {
-    auto* font {_font->get_font({}, 24).get_ptr()};
+    auto* font {_font->get_font({}, 24).ptr()};
 
     auto const bounds {_canvas->get_content_bounds()};
     _canvas->clear();
@@ -93,5 +93,5 @@ inline void rng_form::draw_noise()
     _tex->update_data(data.data(), 0, 256, 1);
     _tex->add_region("default", {{0, 0, 1, 1}, 0});
 
-    _canvas->draw_image(_tex.get_ptr(), "default", bounds);
+    _canvas->draw_image(_tex.ptr(), "default", bounds);
 }
