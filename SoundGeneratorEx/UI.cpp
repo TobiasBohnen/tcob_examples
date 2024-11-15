@@ -309,7 +309,7 @@ void generator_form::set_values(sound_wave const& wave)
 
 void generator_form::get_values(sound_wave& wave)
 {
-    auto const waveType {_valWaveType->get_selected_item()};
+    auto const waveType {_valWaveType->selected_item()};
     wave.WaveType = std::any_cast<sound_wave::type>(waveType.UserData);
 
     wave.AttackTime   = _valAttackTime->Value / 100.f;

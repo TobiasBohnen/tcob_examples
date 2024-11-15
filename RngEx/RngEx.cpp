@@ -15,7 +15,7 @@ RngEx::~RngEx() = default;
 
 void RngEx::on_start()
 {
-    get_root_node()->Entity = _form0;
+    root_node()->Entity = _form0;
 }
 
 void RngEx::on_draw_to(render_target& target)

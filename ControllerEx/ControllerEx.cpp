@@ -23,7 +23,7 @@ void ControllerEx::on_start()
 {
     if (locate_service<input::system>().get_controller_count() == 0) { std::terminate(); }
     _form0->Controller->Label = locate_service<input::system>().get_controller(0)->name();
-    get_root_node()->Entity   = _form0;
+    root_node()->Entity       = _form0;
 }
 
 void ControllerEx::on_draw_to(render_target& target)
