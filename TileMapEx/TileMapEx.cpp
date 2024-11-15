@@ -213,7 +213,7 @@ void TileMapEx::on_key_down(keyboard::event const& ev)
     case scan_code::D5: {
         frame_animation ani {};
         ani.Frames = {{"stone1", 250ms}, {"dirt1", 250ms}, {"grass1", 250ms}, {"stone3", 250ms}, {"grass4", 250ms}};
-        _tween     = std::make_shared<frame_animation_tween>(ani.get_duration(), ani);
+        _tween     = std::make_shared<frame_animation_tween>(ani.duration(), ani);
         _tween->Value.Changed.connect([this](auto const& str) {
             std::unordered_map<string, tile_index_t> static map {{"stone1", 1}, {"stone2", 2}, {"stone3", 3}, {"stone4", 4}, {"dirt1", 5}, {"dirt2", 6}, {"dirt3", 7}, {"dirt4", 8}, {"grass1", 9}, {"grass2", 10}, {"grass3", 11}, {"grass4", 12}};
 

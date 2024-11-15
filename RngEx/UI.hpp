@@ -31,7 +31,7 @@ inline void rng_form::draw_dice()
 {
     auto* font {_font->get_font({}, 24).ptr()};
 
-    auto const bounds {_canvas->get_content_bounds()};
+    auto const bounds {_canvas->content_bounds()};
     _canvas->clear();
 
     _canvas->begin_path();
@@ -77,7 +77,7 @@ inline void rng_form::draw_dice()
 
 inline void rng_form::draw_noise()
 {
-    auto const bounds {_canvas->get_content_bounds()};
+    auto const bounds {_canvas->content_bounds()};
     _canvas->clear();
 
     u64 const seed = static_cast<u64>(std::chrono::high_resolution_clock::now().time_since_epoch().count());

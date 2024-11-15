@@ -133,8 +133,8 @@ void MiscScene::on_fixed_update(milliseconds deltaTime)
     stream << " best FPS:" << stats.best_FPS();
     stream << " worst FPS:" << stats.worst_FPS();
     if (_music0.is_ready()) {
-        stream << "|" << _music0->get_duration().count() / 1000;
-        stream << "|" << _music0->get_playback_position().count() / 1000;
+        stream << "|" << _music0->duration().count() / 1000;
+        stream << "|" << _music0->playback_position().count() / 1000;
     }
 
     get_window().Title = "TestGame " + stream.str();
