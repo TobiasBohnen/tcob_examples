@@ -114,7 +114,7 @@ void PathfindingEx::on_fixed_update(milliseconds deltaTime)
     stream << " best FPS:" << stats.best_FPS();
     stream << " worst FPS:" << stats.worst_FPS();
 
-    stream << " | " << get_window().get_camera().convert_screen_to_world(input::system::GetMousePosition());
+    stream << " | " << get_window().get_camera().convert_screen_to_world(locate_service<input::system>().get_mouse().get_position());
     get_window().Title = "TestGame " + stream.str();
 }
 

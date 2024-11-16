@@ -21,7 +21,7 @@ ControllerEx::~ControllerEx() = default;
 
 void ControllerEx::on_start()
 {
-    if (locate_service<input::system>().get_controller_count() == 0) { std::terminate(); }
+    if (locate_service<input::system>().controller_count() == 0) { std::terminate(); }
     _form0->Controller->Label = locate_service<input::system>().get_controller(0)->name();
     root_node()->Entity       = _form0;
 }
