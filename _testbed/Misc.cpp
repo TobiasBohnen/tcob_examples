@@ -118,7 +118,6 @@ void MiscScene::on_update(milliseconds deltaTime)
 
     */
     _layer0.update(deltaTime);
-    _layer1->update(deltaTime);
 
     asset_ptr<animated_texture> aniTex = get_game().get_library().get_group("res")->get<texture>("test-ani");
     aniTex->update(deltaTime);
@@ -244,25 +243,4 @@ void MiscScene::on_mouse_motion(mouse::motion_event const& ev)
 void MiscScene::on_mouse_wheel(mouse::wheel_event const& ev)
 {
     _shape0->Rotation += degree_f {15.f};
-}
-
-////////////////////////////////////////////////////////////
-
-void simple_entity::on_update(milliseconds deltaTime)
-{
-    Drawable->update(deltaTime);
-}
-
-void simple_entity::on_fixed_update(milliseconds)
-{
-}
-
-auto simple_entity::can_draw() const -> bool
-{
-    return Drawable != nullptr;
-}
-
-void simple_entity::on_draw_to(render_target& target)
-{
-    Drawable->draw_to(target);
 }

@@ -17,20 +17,6 @@ using namespace tcob::input;
 
 ////////////////////////////////////////////////////////////
 
-class simple_entity : public entity { // TODO: rename
-public:
-    std::shared_ptr<drawable> Drawable;
-
-protected:
-    void on_update(milliseconds deltaTime) override;
-    void on_fixed_update(milliseconds deltaTime) override;
-
-    auto can_draw() const -> bool override;
-    void on_draw_to(render_target& target) override;
-};
-
-////////////////////////////////////////////////////////////
-
 class MiscScene : public scene {
 public:
     MiscScene(game& game);

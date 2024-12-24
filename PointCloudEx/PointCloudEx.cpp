@@ -110,7 +110,6 @@ void PointCloudEx::on_fixed_update(milliseconds deltaTime)
 
 void PointCloudEx::on_update(milliseconds deltaTime)
 {
-    _cloud0->update(deltaTime);
 }
 
 void PointCloudEx::on_key_down(keyboard::event const& ev)
