@@ -78,7 +78,7 @@ void SoundGeneratorEx::on_fixed_update(milliseconds deltaTime)
 {
     std::stringstream stream;
     stream << std::fixed << std::setprecision(2);
-    auto const& stats {locate_service<gfx::render_system>().get_stats()};
+    auto const& stats {locate_service<gfx::render_system>().stats()};
     stream << "avg FPS:" << stats.average_FPS();
     stream << " best FPS:" << stats.best_FPS();
     stream << " worst FPS:" << stats.worst_FPS();

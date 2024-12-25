@@ -257,7 +257,7 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form>
                 auto         _ = terminal0->restore(str);
             }
             terminal0->flash();
-            locate_service<render_system>().get_stats().reset();
+            locate_service<render_system>().stats().reset();
         });
     }
     {
