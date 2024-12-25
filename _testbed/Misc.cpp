@@ -157,22 +157,6 @@ void MiscScene::on_key_down(keyboard::event const& ev)
 
         get_window().Cursor->ActiveMode = "cursor1";
         _text->force_reshape();
-        /* static std::map<asset_status, std::string> statusMap{{asset_status::Loaded, "Loaded"}, {asset_status::Loading, "Loading"}, {asset_status::Unloaded, "Unloaded"}, {asset_status::Created, "Created"}, {asset_status::Error, "Error"}};
-
-            auto& resMgr = get_game().AssetLibrary();
-            auto  map{resMgr.get_asset_stats("res")};
-            for (auto& [assetTypeName, bucketStats] : map.Buckets) {
-                std::cout << assetTypeName << ":" << "\n";
-                for (auto& [stat, statCount] : bucketStats.Statuses) {
-                    std::cout << "\t" << statusMap[stat] << ": " << statCount << "\n";
-                    for (auto& [assetName, assetStat] : bucketStats.Assets) {
-                        if (assetStat.Status == stat) {
-                            std::cout << "\t" << assetName << "| use count: " << assetStat.UseCount << "\n";
-                        }
-                    }
-                }
-            }
-            */
 
     } else if (ev.ScanCode == scan_code::D5) {
         asset_ptr<animated_texture> aniTex = resMgr.get_group("res")->get<texture>("test-ani");
