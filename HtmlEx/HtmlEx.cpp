@@ -36,7 +36,7 @@ HtmlEx::~HtmlEx() = default;
 
 void HtmlEx::on_start()
 {
-    auto& resMgr {get_game().get_library()};
+    auto& resMgr {get_game().library()};
     auto* resGrp {resMgr.get_group("res")};
 
     auto const winSize {get_window().Size()};

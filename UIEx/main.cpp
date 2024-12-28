@@ -33,7 +33,7 @@ auto main(int /* argc */, char* argv[]) -> int
                       .LogFile = "stdout"}};
 #endif
 
-    auto& resMgr {game.get_library()};
+    auto& resMgr {game.library()};
     auto& resGrp {resMgr.create_or_get_group("ui")};
     resGrp.mount("./uiex.zip");
     resMgr.load_all_groups();

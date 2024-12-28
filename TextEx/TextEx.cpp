@@ -18,7 +18,7 @@ TextEx::~TextEx() = default;
 
 void TextEx::on_start()
 {
-    auto* resGrp {get_game().get_library().get_group("text")};
+    auto* resGrp {get_game().library().get_group("text")};
     auto  fontFam {resGrp->get<font_family>("Poppins")};
     auto  font {fontFam->get_font({}, 32)};
 

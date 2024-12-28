@@ -34,7 +34,7 @@ auto main(int /* argc */, char* argv[]) -> int
                       .LogFile = "stdout"}};
 #endif
 
-    auto& resMgr {game.get_library()};
+    auto& resMgr {game.library()};
     auto& resGrp {resMgr.create_or_get_group("text")};
     resGrp.mount("./textex.zip");
     resMgr.load_all_groups();

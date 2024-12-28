@@ -22,7 +22,7 @@ void ParticleSystemEx::on_start()
 
     using namespace tcob::literals;
 
-    auto& resMgr {get_game().get_library()};
+    auto& resMgr {get_game().library()};
     auto* resGrp {resMgr.get_group("res")};
 
     _particleSystem0.Material = resGrp->get<material>("particleMat");
@@ -130,7 +130,7 @@ void ParticleSystemEx::on_fixed_update(milliseconds deltaTime)
     stream << "avg FPS:" << stats.average_FPS();
     stream << " best FPS:" << stats.best_FPS();
     stream << " worst FPS:" << stats.worst_FPS();
-    stream << "| particle count:" << _particleSystem0.get_particle_count();
+    stream << "| particle count:" << _particleSystem0.particle_count();
 
     get_window().Title = "TestGame " + stream.str();
 }

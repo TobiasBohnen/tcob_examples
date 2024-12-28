@@ -22,7 +22,7 @@ MiscScene::~MiscScene() = default;
 
 void MiscScene::on_start()
 {
-    auto& resMgr {get_game().get_library()};
+    auto& resMgr {get_game().library()};
 
     lua::script script;
     if (io::exists("bootstrap.lua")) {
@@ -119,7 +119,7 @@ void MiscScene::on_update(milliseconds deltaTime)
     */
     _layer0.update(deltaTime);
 
-    asset_ptr<animated_texture> aniTex = get_game().get_library().get_group("res")->get<texture>("test-ani");
+    asset_ptr<animated_texture> aniTex = get_game().library().get_group("res")->get<texture>("test-ani");
     aniTex->update(deltaTime);
 }
 
@@ -144,7 +144,7 @@ void MiscScene::on_key_down(keyboard::event const& ev)
     float moveFactor {10};
     auto& window {get_window()};
     auto& camera {window.get_camera()};
-    auto& resMgr {get_game().get_library()};
+    auto& resMgr {get_game().library()};
     auto* resGrp {resMgr.get_group("res")};
 
     if (ev.ScanCode == scan_code::D2) {

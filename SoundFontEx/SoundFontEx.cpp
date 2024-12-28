@@ -20,7 +20,7 @@ seconds const eighth {quarter / 2};
 
 void SoundFontEx::on_start()
 {
-    auto& resMgr {get_game().get_library()};
+    auto& resMgr {get_game().library()};
     auto* resGrp {resMgr.get_group("res")};
 
     _soundFont          = resGrp->get<sound_font>("font0");
