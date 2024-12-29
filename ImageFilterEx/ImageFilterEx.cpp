@@ -15,7 +15,7 @@ ImageFilterEx::ImageFilterEx(game& game)
 {
     _mat0->Texture = _tex0;
     image img0 {image::Create({64, 64}, image::format::RGBA, smile)};
-    auto  imgSize {img0.get_info().Size};
+    auto  imgSize {img0.info().Size};
     _tex0->create(imgSize, 7, texture::format::RGBA8);
 
     _tex0->update_data(img0.buffer(), 0);

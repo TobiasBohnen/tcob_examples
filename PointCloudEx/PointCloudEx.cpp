@@ -140,7 +140,7 @@ void PointCloudEx::on_mouse_button_up(mouse::button_event const& ev)
 void PointCloudEx::on_mouse_motion(mouse::motion_event const& ev)
 {
     _cam.on_mouse_motion(ev);
-    if (locate_service<input::system>().get_mouse().is_button_down(mouse::button::Right)) { return; }
+    if (locate_service<input::system>().mouse().is_button_down(mouse::button::Right)) { return; }
 
     rect_f const queryRect {_cam.screen_to_world(ev.Position) - point_f {25.f, 25.f}, {50.f, 50.f}};
     auto         points {_quadtree.query(queryRect.as_intersection_with(_quadtree.bounds()))};

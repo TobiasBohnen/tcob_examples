@@ -12,8 +12,8 @@ auto static create_tileset() -> std::unordered_map<tile_index_t, ortho_tile>
 {
     std::unordered_map<tile_index_t, ortho_tile> retValue;
 
-    auto const gradLow {color_gradient {{0.0f, colors::White}, {0.10f, colors::LightGreen}, {1.0f, colors::Green}}.get_colors()};
-    auto const gradHigh {color_gradient {{0.0f, colors::White}, {0.10f, colors::LightSalmon}, {1.0f, colors::Red}}.get_colors()};
+    auto const gradLow {color_gradient {{0.0f, colors::White}, {0.10f, colors::LightGreen}, {1.0f, colors::Green}}.colors()};
+    auto const gradHigh {color_gradient {{0.0f, colors::White}, {0.10f, colors::LightSalmon}, {1.0f, colors::Red}}.colors()};
     for (i32 i {0}; i < 256; ++i) {
         if (i > 127) {
             retValue[i + 1] = {.Color = gradHigh[(i - 128) * 2]};
@@ -114,7 +114,7 @@ void PathfindingEx::on_fixed_update(milliseconds deltaTime)
     stream << " best FPS:" << stats.best_FPS();
     stream << " worst FPS:" << stats.worst_FPS();
 
-    stream << " | " << window().get_camera().convert_screen_to_world(locate_service<input::system>().get_mouse().get_position());
+    stream << " | " << window().get_camera().convert_screen_to_world(locate_service<input::system>().mouse().get_position());
     window().Title = "TestGame " + stream.str();
 }
 

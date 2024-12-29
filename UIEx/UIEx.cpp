@@ -57,7 +57,7 @@ void UIEx::on_fixed_update(milliseconds deltaTime)
     stream << " best FPS:" << stats.best_FPS();
     stream << " worst FPS:" << stats.worst_FPS();
 
-    stream << " | " << locate_service<input::system>().get_mouse().get_position();
+    stream << " | " << locate_service<input::system>().mouse().get_position();
     window().Title = "TestGame " + stream.str();
 }
 

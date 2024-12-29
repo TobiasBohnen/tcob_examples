@@ -161,7 +161,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
         gridView0->add_row({"XXX", "XX", std::to_string(progressBar0->Value * 10), "XXXXX"});
     });
 
-    locate_service<input::system>().CurrentInputMode.Changed.connect([retValue, wnd, &resGrp](input::mode mode) {
+    locate_service<input::system>().InputMode.Changed.connect([retValue, wnd, &resGrp](input::mode mode) {
         if (mode == input::mode::Controller) {
             retValue->find_widget_by_name("gridB0")->focus();
             wnd->Cursor              = nullptr;

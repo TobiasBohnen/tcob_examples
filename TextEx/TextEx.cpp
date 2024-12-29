@@ -56,7 +56,7 @@ void TextEx::on_start()
         effects.create(6, duration, effect::wave {30.f, 4.f});
         effects.create(7, duration, effect::size {1.0f, 0.0f, 1.0f, 0.0f, {horizontal_alignment::Centered, vertical_alignment::Middle}});
         effects.create(8, duration, effect::rotate {1.0f});
-        effects.create(9, duration, effect::gradient {color_gradient {colors::Orange, colors::LightBlue}.get_colors()});
+        effects.create(9, duration, effect::gradient {color_gradient {colors::Orange, colors::LightBlue}.colors()});
 
         effects.start_all(playback_mode::Looped);
     }
@@ -107,10 +107,10 @@ void TextEx::on_start()
         _layer0.add_shape(shapeText);
 
         transform xform0;
-        xform0.rotate_at(degree_f {45}, shapeText->Polygons->at(1).get_info().Centroid);
+        xform0.rotate_at(degree_f {45}, shapeText->Polygons->at(1).info().Centroid);
         (*shapeText->Polygons).at(1).apply_transform(xform0);
         transform xform1;
-        xform1.rotate_at(degree_f {45}, shapeText->Polygons->at(4).get_info().Centroid);
+        xform1.rotate_at(degree_f {45}, shapeText->Polygons->at(4).info().Centroid);
         (*shapeText->Polygons).at(4).apply_transform(xform1);
     }
 }

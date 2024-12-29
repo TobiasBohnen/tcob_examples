@@ -65,7 +65,7 @@ void ParticleSystemEx::on_start()
                               {0.71f, colors::Indigo},
                               {0.85f, colors::Violet},
                               {1.0f, colors::Red}}
-                  .get_colors();
+                  .colors();
 
     _particleSystem0.ParticleUpdate.connect([&](particle_event const& pev) {
         auto& p {pev.Particle};
