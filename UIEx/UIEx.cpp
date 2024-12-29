@@ -24,14 +24,14 @@ UIEx::~UIEx() = default;
 
 void UIEx::on_start()
 {
-    auto* resGrp {get_game().library().get_group("ui")};
+    auto* resGrp {parent().library().get_group("ui")};
     auto  defaultCursor {resGrp->get<cursor>("default")};
-    get_window().Cursor       = defaultCursor;
+    window().Cursor           = defaultCursor;
     defaultCursor->ActiveMode = "default";
 
-    _form0         = create_form0(&get_window(), *resGrp);
+    _form0         = create_form0(&window(), *resGrp);
     _form0->Styles = create_color_styles(*resGrp);
-    // _form0->Bounds = rect_f {{300, 450}, size_f {get_window().Size() * 2}};
+    // _form0->Bounds = rect_f {{300, 450}, size_f {window().Size() * 2}};
     //_form0->Scale  = {0.5f, 0.5f};
 
     _switch             = false;
@@ -58,14 +58,14 @@ void UIEx::on_fixed_update(milliseconds deltaTime)
     stream << " worst FPS:" << stats.worst_FPS();
 
     stream << " | " << locate_service<input::system>().get_mouse().get_position();
-    get_window().Title = "TestGame " + stream.str();
+    window().Title = "TestGame " + stream.str();
 }
 
 void UIEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) { // NOLINT
     case scan_code::BACKSPACE:
-        get_game().pop_current_scene();
+        parent().pop_current_scene();
         break;
     case scan_code::D: {
         if (_form0->find_widget_by_name("Panel0")->is_enabled()) {
@@ -80,21 +80,21 @@ void UIEx::on_key_down(keyboard::event const& ev)
         obj.save("form0.ini");
     } break;
     case scan_code::S: {
-        auto img {get_window().copy_to_image()};
+        auto img {window().copy_to_image()};
         auto _ = img.save("screen0.png");
     } break;
     case scan_code::R: {
         locate_service<gfx::render_system>().stats().reset();
     } break;
     case scan_code::V: {
-        get_window().VSync = !get_window().VSync;
+        window().VSync = !window().VSync;
     } break;
     case scan_code::T: {
         _switch = !_switch;
         if (_switch) {
-            _form0->Styles = create_skinned_styles(*get_game().library().get_group("ui"));
+            _form0->Styles = create_skinned_styles(*parent().library().get_group("ui"));
         } else {
-            _form0->Styles = create_color_styles(*get_game().library().get_group("ui"));
+            _form0->Styles = create_color_styles(*parent().library().get_group("ui"));
         }
     } break;
     default:

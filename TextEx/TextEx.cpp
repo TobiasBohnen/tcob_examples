@@ -18,7 +18,7 @@ TextEx::~TextEx() = default;
 
 void TextEx::on_start()
 {
-    auto* resGrp {get_game().library().get_group("text")};
+    auto* resGrp {parent().library().get_group("text")};
     auto  fontFam {resGrp->get<font_family>("Poppins")};
     auto  font {fontFam->get_font({}, 32)};
 
@@ -144,14 +144,14 @@ void TextEx::on_fixed_update(milliseconds deltaTime)
     stream << " best FPS:" << stats.best_FPS();
     stream << " worst FPS:" << stats.worst_FPS();
 
-    get_window().Title = "TestGame " + stream.str();
+    window().Title = "TestGame " + stream.str();
 }
 
 void TextEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) {
     case scan_code::BACKSPACE:
-        get_game().pop_current_scene();
+        parent().pop_current_scene();
         break;
     default:
         break;

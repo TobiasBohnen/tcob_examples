@@ -29,7 +29,7 @@ PathfindingEx::PathfindingEx(game& game)
     : scene(game)
     , _tileMapOrtho {create_tileset()}
 {
-    get_window().ClearColor = colors::DarkRed;
+    window().ClearColor = colors::DarkRed;
 }
 
 PathfindingEx::~PathfindingEx() = default;
@@ -56,7 +56,7 @@ void PathfindingEx::on_start()
         _costTiles[i] = std::pow(val, 3);
     }
 
-    f32 const size {get_window().Size().Height / static_cast<f32>(GRID_SIZE.Height)};
+    f32 const size {window().Size().Height / static_cast<f32>(GRID_SIZE.Height)};
     _tileSize          = {size, size};
     _tileMapOrtho.Grid = {.TileSize = _tileSize};
 
@@ -96,7 +96,7 @@ void PathfindingEx::on_draw_to(render_target& target)
     _canvas.end_frame();
 
     _renderer.set_layer(0);
-    _renderer.set_bounds({point_f::Zero, size_f {get_window().Size()}});
+    _renderer.set_bounds({point_f::Zero, size_f {window().Size()}});
     _renderer.render_to_target(target);
 }
 
@@ -114,15 +114,15 @@ void PathfindingEx::on_fixed_update(milliseconds deltaTime)
     stream << " best FPS:" << stats.best_FPS();
     stream << " worst FPS:" << stats.worst_FPS();
 
-    stream << " | " << get_window().get_camera().convert_screen_to_world(locate_service<input::system>().get_mouse().get_position());
-    get_window().Title = "TestGame " + stream.str();
+    stream << " | " << window().get_camera().convert_screen_to_world(locate_service<input::system>().get_mouse().get_position());
+    window().Title = "TestGame " + stream.str();
 }
 
 void PathfindingEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) {
     case scan_code::BACKSPACE:
-        get_game().pop_current_scene();
+        parent().pop_current_scene();
         break;
     default: break;
     }

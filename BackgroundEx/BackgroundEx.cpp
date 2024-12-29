@@ -17,7 +17,7 @@ BackgroundEx::~BackgroundEx() = default;
 
 void BackgroundEx::on_start()
 {
-    auto& resMgr {get_game().library()};
+    auto& resMgr {parent().library()};
     auto& resGrp {resMgr.create_or_get_group("res")};
 
     _material->Color = colors::Gray;
@@ -52,14 +52,14 @@ void BackgroundEx::on_fixed_update(milliseconds /* deltaTime */)
     stream << " best FPS:" << stats.best_FPS();
     stream << " worst FPS:" << stats.worst_FPS();
 
-    get_window().Title = "TestGame " + stream.str();
+    window().Title = "TestGame " + stream.str();
 }
 
 void BackgroundEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) { // NOLINT
     case scan_code::BACKSPACE:
-        get_game().pop_current_scene();
+        parent().pop_current_scene();
         break;
     default:
         break;

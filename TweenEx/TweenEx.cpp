@@ -116,7 +116,7 @@ void TweenEx::on_fixed_update(milliseconds deltaTime)
     stream << " best FPS:" << stats.best_FPS();
     stream << " worst FPS:" << stats.worst_FPS();
 
-    get_window().Title = "TestGame " + stream.str();
+    window().Title = "TestGame " + stream.str();
 }
 
 void TweenEx::on_key_down(keyboard::event const& ev)
@@ -153,7 +153,7 @@ void TweenEx::on_key_down(keyboard::event const& ev)
         }
         break;
     case scan_code::BACKSPACE:
-        get_game().pop_current_scene();
+        parent().pop_current_scene();
         break;
     default:
         break;

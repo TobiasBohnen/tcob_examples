@@ -13,7 +13,7 @@ using namespace std::chrono_literals;
 
 ControllerEx::ControllerEx(game& game)
     : scene(game)
-    , _form0 {std::make_shared<crtl_form>(&get_window())}
+    , _form0 {std::make_shared<crtl_form>(&window())}
 {
 }
 
@@ -44,14 +44,14 @@ void ControllerEx::on_fixed_update(milliseconds deltaTime)
     stream << " worst FPS:" << stats.worst_FPS();
     stream << " input mode:" << static_cast<i32>(locate_service<input::system>().CurrentInputMode());
 
-    get_window().Title = "ControllerEx " + stream.str();
+    window().Title = "ControllerEx " + stream.str();
 }
 
 void ControllerEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) {
     case scan_code::BACKSPACE:
-        get_game().pop_current_scene();
+        parent().pop_current_scene();
         break;
     default:
         break;

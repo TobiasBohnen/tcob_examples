@@ -36,16 +36,16 @@ HtmlEx::~HtmlEx() = default;
 
 void HtmlEx::on_start()
 {
-    auto& resMgr {get_game().library()};
+    auto& resMgr {parent().library()};
     auto* resGrp {resMgr.get_group("res")};
 
-    auto const winSize {get_window().Size()};
+    auto const winSize {window().Size()};
 
     _navHtml = std::make_shared<html::document>(
         html::document::config {.AssetGroup      = resGrp,
                                 .Fonts           = resGrp->get<font_family>("Poppins"),
                                 .DefaultFontSize = 24,
-                                .Window          = &get_window()});
+                                .Window          = &window()});
 
     _navHtml->AnchorClick.connect([&](auto&& ev) {
         if (ev == "#home") {
@@ -65,7 +65,7 @@ void HtmlEx::on_start()
         html::document::config {.AssetGroup      = resGrp,
                                 .Fonts           = resGrp->get<font_family>("Poppins"),
                                 .DefaultFontSize = 24,
-                                .Window          = &get_window()});
+                                .Window          = &window()});
     _contentHtml->Bounds = {{0, winSize.Height / 5.f}, {winSize.Width * 1.f, winSize.Height / 5.f * 4.f}};
     _contentHtml->from_string(home_html, style_css);
 
@@ -90,14 +90,14 @@ void HtmlEx::on_fixed_update(milliseconds deltaTime)
     stream << " best FPS:" << stats.best_FPS();
     stream << " worst FPS:" << stats.worst_FPS();
 
-    get_window().Title = "TestGame " + stream.str();
+    window().Title = "TestGame " + stream.str();
 }
 
 void HtmlEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) {
     case scan_code::BACKSPACE:
-        get_game().pop_current_scene();
+        parent().pop_current_scene();
         break;
     case scan_code::D1:
         break;

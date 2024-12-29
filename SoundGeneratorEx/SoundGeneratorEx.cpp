@@ -14,7 +14,7 @@ using namespace std::chrono_literals;
 
 SoundGeneratorEx::SoundGeneratorEx(game& game)
     : scene(game)
-    , _form0 {std::make_shared<generator_form>(&get_window())}
+    , _form0 {std::make_shared<generator_form>(&window())}
 {
 }
 
@@ -60,7 +60,7 @@ void SoundGeneratorEx::on_start()
         auto _ = _audioData.save(name);
     });
     _form0->Exit->MouseDown.connect([&]() {
-        get_game().pop_current_scene();
+        parent().pop_current_scene();
     });
     _form0->fixed_update(0ms);
     draw_wave();
@@ -83,7 +83,7 @@ void SoundGeneratorEx::on_fixed_update(milliseconds deltaTime)
     stream << " best FPS:" << stats.best_FPS();
     stream << " worst FPS:" << stats.worst_FPS();
 
-    get_window().Title = "SoundGeneratorEx " + stream.str();
+    window().Title = "SoundGeneratorEx " + stream.str();
 
     if (_waveState == wave_state::Dirty) {
         _waveState = wave_state::Generating;
@@ -106,7 +106,7 @@ void SoundGeneratorEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) {
     case scan_code::BACKSPACE:
-        get_game().pop_current_scene();
+        parent().pop_current_scene();
         break;
     default:
         break;

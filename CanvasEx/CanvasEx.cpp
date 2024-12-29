@@ -24,7 +24,7 @@ void CanvasEx::on_fixed_update(milliseconds /* deltaTime */)
     stream << " best FPS:" << stats.best_FPS();
     stream << " worst FPS:" << stats.worst_FPS();
 
-    get_window().Title = "TestGame " + stream.str();
+    window().Title = "TestGame " + stream.str();
 }
 
 void CanvasEx::on_start()
@@ -42,7 +42,7 @@ void CanvasEx::on_update(milliseconds /* deltaTime */)
 void CanvasEx::on_draw_to(render_target& target)
 {
     _renderer.set_layer(0);
-    _renderer.set_bounds({point_f::Zero, size_f {get_window().Size()}});
+    _renderer.set_bounds({point_f::Zero, size_f {window().Size()}});
     _renderer.render_to_target(target);
 }
 
@@ -50,10 +50,10 @@ void CanvasEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) { // NOLINT
     case scan_code::R: {
-        auto _ = get_window().copy_to_image().save("screen01.webp");
+        auto _ = window().copy_to_image().save("screen01.webp");
     } break;
     case scan_code::BACKSPACE:
-        get_game().pop_current_scene();
+        parent().pop_current_scene();
         break;
     default:
         break;
@@ -72,7 +72,7 @@ void CanvasEx::on_mouse_wheel(mouse::wheel_event const& ev)
 
 void CanvasEx::canvas_ray_cast()
 {
-    _canvas.begin_frame(get_window().Size(), 1);
+    _canvas.begin_frame(window().Size(), 1);
 
     std::vector<ray::result> points;
     f32                      size {75};
@@ -129,7 +129,7 @@ void CanvasEx::canvas_ray_cast()
 
 void CanvasEx::canvas_gradient()
 {
-    _canvas.begin_frame(get_window().Size(), 1);
+    _canvas.begin_frame(window().Size(), 1);
 
     auto linearGradient0 = _canvas.create_linear_gradient(
         {0, 0}, {0, 200},
@@ -165,7 +165,7 @@ void CanvasEx::canvas_gradient()
 
 void CanvasEx::canvas_path2d()
 {
-    _canvas.begin_frame(get_window().Size(), 1);
+    _canvas.begin_frame(window().Size(), 1);
     _canvas.set_fill_style(colors::Green);
     _canvas.path_2d(*path2d::Parse("M 80 80 A 45 45, 0, 0, 0, 125 125 L 125 80 Z"));
     _canvas.fill();
@@ -187,7 +187,7 @@ void CanvasEx::canvas_path2d()
 
 void CanvasEx::canvas_fancy_lines()
 {
-    _canvas.begin_frame(get_window().Size(), 1);
+    _canvas.begin_frame(window().Size(), 1);
 
     _canvas.set_stroke_style(colors::Red);
     _canvas.set_stroke_width(10);

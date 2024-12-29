@@ -18,11 +18,11 @@ ParticleSystemEx::~ParticleSystemEx() = default;
 
 void ParticleSystemEx::on_start()
 {
-    get_window().ClearColor = colors::LightSteelBlue;
+    window().ClearColor = colors::LightSteelBlue;
 
     using namespace tcob::literals;
 
-    auto& resMgr {get_game().library()};
+    auto& resMgr {parent().library()};
     auto* resGrp {resMgr.get_group("res")};
 
     _particleSystem0.Material = resGrp->get<material>("particleMat");
@@ -132,14 +132,14 @@ void ParticleSystemEx::on_fixed_update(milliseconds deltaTime)
     stream << " worst FPS:" << stats.worst_FPS();
     stream << "| particle count:" << _particleSystem0.particle_count();
 
-    get_window().Title = "TestGame " + stream.str();
+    window().Title = "TestGame " + stream.str();
 }
 
 void ParticleSystemEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) {
     case scan_code::BACKSPACE:
-        get_game().pop_current_scene();
+        parent().pop_current_scene();
         break;
     case scan_code::D1:
         _particleSystem0.restart();

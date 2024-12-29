@@ -17,7 +17,7 @@ LightingSystemEx::~LightingSystemEx() = default;
 
 void LightingSystemEx::on_start()
 {
-    get_window().ClearColor = colors::Black;
+    window().ClearColor = colors::Black;
 
     using namespace tcob::literals;
 
@@ -92,14 +92,14 @@ void LightingSystemEx::on_fixed_update(milliseconds /* deltaTime */)
     stream << " best FPS:" << stats.best_FPS();
     stream << " worst FPS:" << stats.worst_FPS();
 
-    get_window().Title = "TestGame " + stream.str();
+    window().Title = "TestGame " + stream.str();
 }
 
 void LightingSystemEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) { // NOLINT
     case scan_code::BACKSPACE:
-        get_game().pop_current_scene();
+        parent().pop_current_scene();
         break;
     case scan_code::D1: {
         blend_funcs funcs;
@@ -191,7 +191,7 @@ void LightingSystemEx::on_mouse_button_up(mouse::button_event const& ev)
 void LightingSystemEx::on_mouse_motion(mouse::motion_event const& ev)
 {
     _cam.on_mouse_motion(ev);
-    _lightSource0->Position = (get_window().get_camera()).convert_screen_to_world(ev.Position);
+    _lightSource0->Position = (window().get_camera()).convert_screen_to_world(ev.Position);
     if (_lightSourceSec0) {
         _lightSourceSec0->Position = _lightSource0->Position() + point_f {0, 10};
         _lightSourceSec1->Position = _lightSource0->Position() - point_f {0, 10};

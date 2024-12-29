@@ -7,7 +7,7 @@
 
 RngEx::RngEx(game& game)
     : scene {game}
-    , _form0 {std::make_shared<rng_form>(&get_window())}
+    , _form0 {std::make_shared<rng_form>(&window())}
 {
 }
 
@@ -30,10 +30,10 @@ void RngEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) { // NOLINT
     case scan_code::R: {
-        auto _ = get_window().copy_to_image().save("screen01.webp");
+        auto _ = window().copy_to_image().save("screen01.webp");
     } break;
     case scan_code::BACKSPACE:
-        get_game().pop_current_scene();
+        parent().pop_current_scene();
         break;
     default:
         break;

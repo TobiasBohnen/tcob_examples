@@ -22,7 +22,7 @@ MiscScene::~MiscScene() = default;
 
 void MiscScene::on_start()
 {
-    auto& resMgr {get_game().library()};
+    auto& resMgr {parent().library()};
 
     lua::script script;
     if (io::exists("bootstrap.lua")) {
@@ -38,12 +38,12 @@ void MiscScene::on_start()
     }
 
     resMgr.load_all_groups();
-    get_window().load_icon("res/tex/testing.webp");
+    window().load_icon("res/tex/testing.webp");
 
     auto* resGrp {resMgr.get_group("res")};
 
     auto defaultCursor {resGrp->get<cursor>("default")};
-    get_window().Cursor       = defaultCursor;
+    window().Cursor           = defaultCursor;
     defaultCursor->ActiveMode = "cursor1";
 
     rng                                      rnd;
@@ -119,7 +119,7 @@ void MiscScene::on_update(milliseconds deltaTime)
     */
     _layer0.update(deltaTime);
 
-    asset_ptr<animated_texture> aniTex = get_game().library().get_group("res")->get<texture>("test-ani");
+    asset_ptr<animated_texture> aniTex = parent().library().get_group("res")->get<texture>("test-ani");
     aniTex->update(deltaTime);
 }
 
@@ -136,15 +136,14 @@ void MiscScene::on_fixed_update(milliseconds deltaTime)
         stream << "|" << _music0->playback_position().count() / 1000;
     }
 
-    get_window().Title = "TestGame " + stream.str();
+    window().Title = "TestGame " + stream.str();
 }
 
 void MiscScene::on_key_down(keyboard::event const& ev)
 {
     float moveFactor {10};
-    auto& window {get_window()};
-    auto& camera {window.get_camera()};
-    auto& resMgr {get_game().library()};
+    auto& camera {window().get_camera()};
+    auto& resMgr {parent().library()};
     auto* resGrp {resMgr.get_group("res")};
 
     if (ev.ScanCode == scan_code::D2) {
@@ -155,7 +154,7 @@ void MiscScene::on_key_down(keyboard::event const& ev)
         resMgr.unload_all_groups();
         resMgr.load_all_groups();
 
-        get_window().Cursor->ActiveMode = "cursor1";
+        window().Cursor->ActiveMode = "cursor1";
         _text->force_reshape();
 
     } else if (ev.ScanCode == scan_code::D5) {
@@ -181,7 +180,7 @@ void MiscScene::on_key_down(keyboard::event const& ev)
     } else if (ev.ScanCode == scan_code::E) {
         camera.zoom_by({0.8f, 0.8f});
     } else if (ev.ScanCode == scan_code::C) {
-        get_window().Cursor = nullptr;
+        window().Cursor = nullptr;
     } else if (ev.ScanCode == scan_code::KP_1) {
         _audioPlaylist.queue("wav");
         _audioPlaylist.queue("mp3");
@@ -205,7 +204,7 @@ void MiscScene::on_key_down(keyboard::event const& ev)
         static std::vector<animated_image_encoder::frame> frames;
 
         if (frames.size() < 5) {
-            auto img {get_window().copy_to_image()};
+            auto img {window().copy_to_image()};
             frames.push_back({.Image = img, .TimeStamp = milliseconds {frames.size() * 250}});
         }
 
@@ -214,9 +213,9 @@ void MiscScene::on_key_down(keyboard::event const& ev)
             locate_service<animated_image_encoder::factory>().create(".webp")->encode(frames, of);
             frames.clear();
         }
-        // get_window().copy_to_image().save("screen1abc.png");
+        // window().copy_to_image().save("screen1abc.png");
     } else if (ev.ScanCode == scan_code::BACKSPACE) {
-        get_game().pop_current_scene();
+        parent().pop_current_scene();
     }
 }
 

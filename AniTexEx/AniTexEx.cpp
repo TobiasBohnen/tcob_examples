@@ -26,7 +26,7 @@ void AniTexEx::on_fixed_update(milliseconds /* deltaTime */)
     stream << " best FPS:" << stats.best_FPS();
     stream << " worst FPS:" << stats.worst_FPS();
 
-    get_window().Title = "TestGame " + stream.str();
+    window().Title = "TestGame " + stream.str();
 }
 
 void AniTexEx::on_start()
@@ -62,10 +62,10 @@ void AniTexEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) { // NOLINT
     case scan_code::R: {
-        auto _ = get_window().copy_to_image().save("screen01.webp");
+        auto _ = window().copy_to_image().save("screen01.webp");
     } break;
     case scan_code::BACKSPACE:
-        get_game().pop_current_scene();
+        parent().pop_current_scene();
         break;
     default:
         break;

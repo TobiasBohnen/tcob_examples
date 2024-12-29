@@ -81,7 +81,7 @@ TileMapEx::TileMapEx(game& game)
           {12, {"grass4"}},
       }}
 {
-    get_window().ClearColor = colors::Cornsilk;
+    window().ClearColor = colors::Cornsilk;
 }
 
 TileMapEx::~TileMapEx() = default;
@@ -90,7 +90,7 @@ i32 const tmHeight {40}, tmWidth {20};
 
 void TileMapEx::on_start()
 {
-    auto* resGrp {get_game().library().get_group("res")};
+    auto* resGrp {parent().library().get_group("res")};
 
     grid<tile_index_t> tiles {size_i {tmWidth, tmHeight}};
     for (i32 x {0}; x < tiles.width(); x++) {
@@ -183,15 +183,15 @@ void TileMapEx::on_fixed_update(milliseconds deltaTime)
     stream << " best FPS:" << stats.best_FPS();
     stream << " worst FPS:" << stats.worst_FPS();
 
-    stream << " | " << get_window().get_camera().convert_screen_to_world(locate_service<input::system>().get_mouse().get_position());
-    get_window().Title = "TestGame " + stream.str();
+    stream << " | " << window().get_camera().convert_screen_to_world(locate_service<input::system>().get_mouse().get_position());
+    window().Title = "TestGame " + stream.str();
 }
 
 void TileMapEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) {
     case scan_code::BACKSPACE:
-        get_game().pop_current_scene();
+        parent().pop_current_scene();
         break;
     case scan_code::D1:
         for (i32 i = 0; i < tmHeight; i++) { _tileMapOrtho.set_tile_index(_layerID, {0, i}, 2); }

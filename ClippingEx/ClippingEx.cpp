@@ -24,7 +24,7 @@ void ClippingEx::on_fixed_update(milliseconds /* deltaTime */)
     stream << " best FPS:" << stats.best_FPS();
     stream << " worst FPS:" << stats.worst_FPS();
 
-    get_window().Title = "TestGame " + stream.str();
+    window().Title = "TestGame " + stream.str();
 }
 
 void ClippingEx::on_start()
@@ -46,10 +46,10 @@ void ClippingEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) { // NOLINT
     case scan_code::R: {
-        auto _ = get_window().copy_to_image().save("screen01.webp");
+        auto _ = window().copy_to_image().save("screen01.webp");
     } break;
     case scan_code::BACKSPACE:
-        get_game().pop_current_scene();
+        parent().pop_current_scene();
         break;
     default:
         break;
@@ -88,7 +88,7 @@ void ClippingEx::create_shapes()
 {
     _layer0.clear();
 
-    auto& resMgr {get_game().library()};
+    auto& resMgr {parent().library()};
     auto* resGrp {resMgr.get_group("res")};
 
     _polyShape           = _layer0.create_shape<gfx::poly_shape>();

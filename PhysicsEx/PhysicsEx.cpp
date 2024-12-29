@@ -77,7 +77,7 @@ void PhysicsEx::on_fixed_update(milliseconds deltaTime)
     stream << " best FPS:" << stats.best_FPS();
     stream << " worst FPS:" << stats.worst_FPS();
 
-    get_window().Title = "TestGame " + stream.str();
+    window().Title = "TestGame " + stream.str();
 
     _world.update(deltaTime);
 
@@ -133,7 +133,7 @@ void PhysicsEx::on_key_down(keyboard::event const& ev)
         }
     } break;
     case scan_code::BACKSPACE:
-        get_game().pop_current_scene();
+        parent().pop_current_scene();
         break;
     default:
         break;

@@ -7,7 +7,7 @@
 
 SoundFontEx::SoundFontEx(game& game)
     : scene {game}
-    , _form0 {std::make_shared<piano_form>(&get_window())}
+    , _form0 {std::make_shared<piano_form>(&window())}
 {
 }
 
@@ -20,7 +20,7 @@ seconds const eighth {quarter / 2};
 
 void SoundFontEx::on_start()
 {
-    auto& resMgr {get_game().library()};
+    auto& resMgr {parent().library()};
     auto* resGrp {resMgr.get_group("res")};
 
     _soundFont          = resGrp->get<sound_font>("font0");
@@ -58,10 +58,10 @@ void SoundFontEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) { // NOLINT
     case scan_code::R: {
-        auto _ = get_window().copy_to_image().save("screen01.webp");
+        auto _ = window().copy_to_image().save("screen01.webp");
     } break;
     case scan_code::BACKSPACE:
-        get_game().pop_current_scene();
+        parent().pop_current_scene();
         break;
 
     default:
