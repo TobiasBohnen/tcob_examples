@@ -183,7 +183,7 @@ void TileMapEx::on_fixed_update(milliseconds deltaTime)
     stream << " best FPS:" << stats.best_FPS();
     stream << " worst FPS:" << stats.worst_FPS();
 
-    stream << " | " << window().get_camera().convert_screen_to_world(locate_service<input::system>().mouse().get_position());
+    stream << " | " << window().camera().convert_screen_to_world(locate_service<input::system>().mouse().get_position());
     window().Title = "TestGame " + stream.str();
 }
 

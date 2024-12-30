@@ -76,7 +76,7 @@ public:
 private:
     auto camera() const -> camera&
     {
-        return locate_service<render_system>().window().get_camera();
+        return locate_service<render_system>().window().camera();
     }
 
     void move_by(point_f off) const

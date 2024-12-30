@@ -138,7 +138,7 @@ void RayEx::on_key_down(keyboard::event const& ev)
 
 void RayEx::on_mouse_motion(mouse::motion_event const& ev)
 {
-    _center = window().get_camera().convert_screen_to_world(ev.Position);
+    _center = window().camera().convert_screen_to_world(ev.Position);
     _dirty  = true;
 }
 

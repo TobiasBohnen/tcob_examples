@@ -142,7 +142,7 @@ void MiscScene::on_fixed_update(milliseconds deltaTime)
 void MiscScene::on_key_down(keyboard::event const& ev)
 {
     float moveFactor {10};
-    auto& camera {window().get_camera()};
+    auto& camera {window().camera()};
     auto& resMgr {parent().library()};
     auto* resGrp {resMgr.get_group("res")};
 
