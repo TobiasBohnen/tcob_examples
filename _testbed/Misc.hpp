@@ -48,7 +48,7 @@ private:
 
     audio::playlist _audioPlaylist;
 
-    sound _sound_speech0;
+    std::shared_ptr<sound> _sound_speech0;
 
     assets::asset_ptr<music> _music0;
 

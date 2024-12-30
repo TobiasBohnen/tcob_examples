@@ -32,10 +32,10 @@ private:
     void play_wave();
     void draw_wave();
 
-    sound_generator _gen1;
-    sound_wave      _wave1;
-    buffer          _audioData;
-    sound           _sound1;
+    sound_generator        _gen1;
+    sound_wave             _wave1;
+    buffer                 _audioData;
+    std::shared_ptr<sound> _sound1;
 
     enum class wave_state {
         Dirty,

@@ -197,7 +197,7 @@ void MiscScene::on_key_down(keyboard::event const& ev)
         _audioPlaylist.play("opus");
     } else if (ev.ScanCode == scan_code::KP_7) {
         _sound_speech0 = speech_generator {}.create_sound("1 2 3 4 5 6 7 8 9 0");
-        _sound_speech0.play();
+        _sound_speech0->play();
     } else if (ev.ScanCode == scan_code::K) {
         _music0->play();
     } else if (ev.ScanCode == scan_code::M) {

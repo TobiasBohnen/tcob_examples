@@ -124,8 +124,8 @@ void SoundGeneratorEx::create_data()
 
 void SoundGeneratorEx::play_wave()
 {
-    _sound1 = sound {_audioData};
-    _sound1.play();
+    _sound1 = std::make_shared<sound>(_audioData);
+    _sound1->play();
 }
 
 void SoundGeneratorEx::draw_wave()

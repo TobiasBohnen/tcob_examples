@@ -78,5 +78,5 @@ void SoundFontEx::play_note(milliseconds dur, i32 preset, midi_note note)
     commands.add<note_off_all_command>();
 
     _sound = _soundFont->create_sound(commands);
-    _sound.play();
+    _sound->play();
 }

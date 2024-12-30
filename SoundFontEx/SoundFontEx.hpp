@@ -30,7 +30,7 @@ private:
 
     assets::asset_ptr<sound_font> _soundFont;
 
-    sound _sound;
+    std::shared_ptr<sound> _sound;
 
     std::shared_ptr<piano_form> _form0;
 };
