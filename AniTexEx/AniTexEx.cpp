@@ -32,11 +32,11 @@ void AniTexEx::on_fixed_update(milliseconds /* deltaTime */)
 void AniTexEx::on_start()
 {
     auto createShape {[&](auto&& tex, auto&& mat, auto&& img, auto&& ext, auto&& bounds) {
-        auto _       = tex->load(std::make_shared<io::isstream>(img), ext);
+        std::ignore  = tex->load(std::make_shared<io::isstream>(img), ext);
         mat->Texture = tex;
         tex->start(true);
 
-        auto shape0      = _layer0.create_shape<gfx::rect_shape>();
+        auto shape0 {_layer0.create_shape<gfx::rect_shape>()};
         shape0->Bounds   = bounds;
         shape0->Material = mat;
     }};
