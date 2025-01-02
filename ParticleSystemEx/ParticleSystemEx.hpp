@@ -27,8 +27,12 @@ protected:
     void on_mouse_wheel(mouse::wheel_event const& ev) override;
 
 private:
-    particle_system _particleSystem0;
-    basic_cam       _cam;
+    void load_emitter(quad_particle_emitter& emi);
+
+    quad_particle_system  _particleSystem0;
+    point_particle_system _particleSystem1;
+
+    basic_cam _cam;
 
     std::array<color, 256> _colors;
 };
