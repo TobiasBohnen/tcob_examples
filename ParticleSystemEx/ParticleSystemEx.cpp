@@ -38,7 +38,7 @@ void ParticleSystemEx::on_start()
     {
         _particleSystem0.Material = resGrp->get<material>("QuadParticleMat");
         auto emi0 {_particleSystem0.create_emitter()};
-        emi0->Template = {
+        emi0->Settings.Template = {
             .Scale = std::minmax(0.75f, 1.5f),
             .Size  = {10, 10},
 
@@ -55,8 +55,8 @@ void ParticleSystemEx::on_start()
 
             .Lifetime = std::minmax(5000ms, 25000ms),
         };
-        emi0->SpawnArea = {450, 450, 30, 50};
-        emi0->SpawnRate = 2000;
+        emi0->Settings.SpawnArea = {450, 450, 30, 50};
+        emi0->Settings.SpawnRate = 2000;
 
         _particleSystem0.ParticleUpdate.connect([&](auto const& pev) {
             auto& p {pev.Particle};
@@ -107,7 +107,7 @@ void ParticleSystemEx::on_start()
         _particleSystem1.Material->PointSize = 10;
 
         auto emi0 {_particleSystem1.create_emitter()};
-        emi0->Template = {
+        emi0->Settings.Template = {
             .Acceleration = std::minmax(15.f, 35.f),
             .Speed        = std::minmax(30.f, 50.f),
             .Direction    = std::minmax(-25_deg, 25_deg),
@@ -118,8 +118,8 @@ void ParticleSystemEx::on_start()
 
             .Lifetime = std::minmax(5000ms, 25000ms),
         };
-        emi0->SpawnArea = {1200, 450, 30, 50};
-        emi0->SpawnRate = 2000;
+        emi0->Settings.SpawnArea = {1200, 450, 30, 50};
+        emi0->Settings.SpawnRate = 2000;
 
         _particleSystem1.ParticleUpdate.connect([&](auto const& pev) {
             auto& p {pev.Particle};
@@ -246,9 +246,10 @@ void ParticleSystemEx::on_mouse_wheel(mouse::wheel_event const& ev)
 void ParticleSystemEx::load_emitter(quad_particle_emitter& emi)
 {
     data::config::object obj;
-    obj["emi"]                    = emi;
+    obj["emi"]                    = emi.Settings;
     obj["emi"]["spawn_area"]["x"] = 1200;
     obj["emi"]["lifetime"]        = 3000;
-    auto emi1 {std::make_shared<quad_particle_emitter>(obj["emi"].as<quad_particle_emitter>())};
+    auto emi1 {std::make_shared<quad_particle_emitter>()};
+    emi1->Settings = obj["emi"].as<quad_particle_emitter::settings>();
     _particleSystem0.add_emitter(emi1);
 }
