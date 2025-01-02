@@ -63,7 +63,7 @@ void ParticleSystemEx::on_start()
             if (!p.UserData.has_value()) { p.UserData = 0; }
             auto const phase {std::any_cast<i32>(p.UserData)};
 
-            f32 const parLife {p.lifetime_ratio()};
+            f32 const parLife {static_cast<f32>(p.RemainingLife / p.StartingLife)};
             if (phase < 4) { p.Color = _colors[static_cast<u8>(255.f * (1 - parLife))]; }
 
             auto const dist {p.Bounds.center().distance_to({460, 200})};
@@ -126,7 +126,7 @@ void ParticleSystemEx::on_start()
             if (!p.UserData.has_value()) { p.UserData = 0; }
             auto const phase {std::any_cast<i32>(p.UserData)};
 
-            f32 const parLife {p.lifetime_ratio()};
+            f32 const parLife {static_cast<f32>(p.RemainingLife / p.StartingLife)};
             if (phase < 4) { p.Color = _colors[static_cast<u8>(255.f * (1 - parLife))]; }
 
             auto const dist {p.Position.distance_to({1210, 200})};
