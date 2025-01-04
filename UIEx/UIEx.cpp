@@ -24,7 +24,7 @@ UIEx::~UIEx() = default;
 
 void UIEx::on_start()
 {
-    auto* resGrp {parent().library().get_group("ui")};
+    auto* resGrp {library().get_group("ui")};
     auto  defaultCursor {resGrp->get<cursor>("default")};
     window().Cursor           = defaultCursor;
     defaultCursor->ActiveMode = "default";
@@ -92,9 +92,9 @@ void UIEx::on_key_down(keyboard::event const& ev)
     case scan_code::T: {
         _switch = !_switch;
         if (_switch) {
-            _form0->Styles = create_skinned_styles(*parent().library().get_group("ui"));
+            _form0->Styles = create_skinned_styles(*library().get_group("ui"));
         } else {
-            _form0->Styles = create_color_styles(*parent().library().get_group("ui"));
+            _form0->Styles = create_color_styles(*library().get_group("ui"));
         }
     } break;
     default:

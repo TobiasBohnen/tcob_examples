@@ -90,7 +90,7 @@ i32 const tmHeight {40}, tmWidth {20};
 
 void TileMapEx::on_start()
 {
-    auto* resGrp {parent().library().get_group("res")};
+    auto* resGrp {library().get_group("res")};
 
     grid<tile_index_t> tiles {size_i {tmWidth, tmHeight}};
     for (i32 x {0}; x < tiles.width(); x++) {

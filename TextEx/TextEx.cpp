@@ -18,7 +18,7 @@ TextEx::~TextEx() = default;
 
 void TextEx::on_start()
 {
-    auto* resGrp {parent().library().get_group("text")};
+    auto* resGrp {library().get_group("text")};
     auto  fontFam {resGrp->get<font_family>("Poppins")};
     auto  font {fontFam->get_font({}, 32)};
 

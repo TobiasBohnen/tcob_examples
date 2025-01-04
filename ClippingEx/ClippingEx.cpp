@@ -88,7 +88,7 @@ void ClippingEx::create_shapes()
 {
     _layer0.clear();
 
-    auto& resMgr {parent().library()};
+    auto& resMgr {library()};
     auto* resGrp {resMgr.get_group("res")};
 
     _polyShape           = _layer0.create_shape<gfx::poly_shape>();

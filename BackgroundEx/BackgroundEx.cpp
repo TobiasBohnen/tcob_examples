@@ -17,7 +17,7 @@ BackgroundEx::~BackgroundEx() = default;
 
 void BackgroundEx::on_start()
 {
-    auto& resMgr {parent().library()};
+    auto& resMgr {library()};
     auto& resGrp {resMgr.create_or_get_group("res")};
 
     _material->Color = colors::Gray;
