@@ -13,7 +13,7 @@ set_target_properties(ParticleSystemEx PROPERTIES
 if(EMSCRIPTEN)
     target_compile_options(ParticleSystemEx PRIVATE -fexperimental-library -pthread)
     configure_file(particlesystemex.zip ${CMAKE_BINARY_DIR}/particlesystemex.zip COPYONLY)
-    target_link_options(ParticleSystemEx PRIVATE -sFULL_ES3 -sASSERTIONS -sPTHREAD_POOL_SIZE=8 -sASYNCIFY -pthread --embed-file particlesystemex.zip)
+    target_link_options(ParticleSystemEx PRIVATE -sFULL_ES3 -sASSERTIONS -sPTHREAD_POOL_SIZE=8 -sASYNCIFY -sALLOW_MEMORY_GROWTH -pthread --embed-file particlesystemex.zip)
 else()
     configure_file(particlesystemex.zip ${CMAKE_BINARY_DIR}/../../x64/particlesystemex.zip COPYONLY)
 endif()
