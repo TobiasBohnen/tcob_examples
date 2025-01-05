@@ -10,18 +10,19 @@ using namespace std::chrono_literals;
 
 ParticleSystemEx::ParticleSystemEx(game& game)
     : scene(game)
-    , _particleSystem0 {true}
-    , _particleSystem1 {true}
+    , _particleSystem0 {true, 50000}
+    , _particleSystem1 {true, 50000}
 {
-    _colors = color_gradient {{0.0f, colors::Red},
-                              {0.14f, colors::Orange},
-                              {0.28f, colors::Yellow},
-                              {0.42f, colors::Green},
-                              {0.57f, colors::Blue},
-                              {0.71f, colors::Indigo},
-                              {0.85f, colors::Violet},
-                              {1.0f, colors::Red}}
-                  .colors();
+    auto const colors {color_gradient {{0.0f, colors::Red},
+                                       {0.14f, colors::Orange},
+                                       {0.28f, colors::Yellow},
+                                       {0.42f, colors::Green},
+                                       {0.57f, colors::Blue},
+                                       {0.71f, colors::Indigo},
+                                       {0.85f, colors::Violet},
+                                       {1.0f, colors::Red}}
+                           .colors()};
+    _colors = {colors.begin(), colors.end()};
 }
 
 ParticleSystemEx::~ParticleSystemEx() = default;
@@ -39,66 +40,30 @@ void ParticleSystemEx::on_start()
         _particleSystem0.Material = resGrp->get<material>("QuadParticleMat");
         auto emi0 {_particleSystem0.create_emitter()};
         emi0->Settings.Template = {
+            .Speed     = std::minmax(30.f, 50.f),
+            .Direction = std::minmax(0_deg, 180_deg),
+
+            // .LinearDamping          = std::minmax(0.1f, 0.5f),
+            .LinearAcceleration     = std::minmax(1.f, 3.f),
+            .TangentialAcceleration = std::minmax(-40.f, 40.f),
+
+            .Gravity = {{0, 10.f}, {0, 10.f}},
+
+            .Texture      = "snowflake",
+            .Colors       = {colors::Black},
+            .Transparency = std::minmax(0.0f, 0.5f),
+
+            .Lifetime = std::minmax(5000ms, 25000ms),
+
             .Scale = std::minmax(0.75f, 1.5f),
             .Size  = {10, 10},
 
             .Spin     = std::minmax(-150_deg, 150_deg),
-            .Rotation = std::minmax(-15, +15),
-
-            .Acceleration = std::minmax(15.f, 35.f),
-            .Speed        = std::minmax(30.f, 50.f),
-            .Direction    = std::minmax(-25_deg, 25_deg),
-
-            .Texture      = "snowflake",
-            .Color        = colors::Red,
-            .Transparency = std::minmax(1.0f, 1.0f),
-
-            .Lifetime = std::minmax(5000ms, 25000ms),
+            .Rotation = std::minmax(-15_deg, 15_deg),
         };
-        emi0->Settings.SpawnArea = {450, 450, 30, 50};
-        emi0->Settings.SpawnRate = 2000;
-
-        _particleSystem0.ParticleUpdate.connect([&](auto const& pev) {
-            auto& p {pev.Particle};
-            if (!p.UserData.has_value()) { p.UserData = 0; }
-            auto const phase {std::any_cast<i32>(p.UserData)};
-
-            f32 const parLife {static_cast<f32>(p.RemainingLife / p.StartingLife)};
-            if (phase < 4) { p.Color = _colors[static_cast<u8>(255.f * (1 - parLife))]; }
-
-            auto const dist {p.Bounds.center().distance_to({460, 200})};
-            if (phase < 5 && dist < 10) {
-                auto const corr {36_deg * (10 - dist) * (pev.DeltaTime.count() / 1000)};
-                p.Direction += p.Direction > 0 ? corr : -corr;
-                p.Color    = colors::Black;
-                p.UserData = 4;
-            } else if (phase == 4 && dist > 100) {
-                p.Color     = colors::Gray;
-                p.Direction = degree_f {0};
-                p.UserData  = 5;
-            }
-
-            switch (phase) {
-            case 0:
-                if (parLife <= 0.75f) {
-                    p.Direction /= 4;
-                    p.UserData = 1;
-                }
-                break;
-            case 1:
-                if (parLife <= 0.50f) {
-                    p.UserData  = 2;
-                    p.Direction = degree_f {0};
-                    p.Acceleration *= -5.5f;
-                }
-                break;
-            case 2:
-                if (parLife <= 0.25f) {
-                    p.Color.A = static_cast<u8>(255.f * (parLife / 0.25f));
-                }
-                break;
-            }
-        });
+        emi0->Settings.SpawnArea = {450, 450, 5, 5};
+        emi0->Settings.SpawnRate = 1000;
+        emi0->Settings.Explosion = true;
 
         _particleSystem0.start();
     }
@@ -108,60 +73,19 @@ void ParticleSystemEx::on_start()
 
         auto emi0 {_particleSystem1.create_emitter()};
         emi0->Settings.Template = {
-            .Acceleration = std::minmax(15.f, 35.f),
-            .Speed        = std::minmax(30.f, 50.f),
-            .Direction    = std::minmax(-25_deg, 25_deg),
+            .Speed     = std::minmax(3.f, 5.f),
+            .Direction = std::minmax(0_deg, 180_deg),
+
+            .LinearAcceleration = std::minmax(5.f, 10.f),
 
             .Texture      = "snowflake",
-            .Color        = colors::Red,
-            .Transparency = std::minmax(1.0f, 1.0f),
+            .Colors       = _colors,
+            .Transparency = std::minmax(0.0f, 0.0f),
 
             .Lifetime = std::minmax(5000ms, 25000ms),
         };
-        emi0->Settings.SpawnArea = {1200, 450, 30, 50};
-        emi0->Settings.SpawnRate = 2000;
-
-        _particleSystem1.ParticleUpdate.connect([&](auto const& pev) {
-            auto& p {pev.Particle};
-            if (!p.UserData.has_value()) { p.UserData = 0; }
-            auto const phase {std::any_cast<i32>(p.UserData)};
-
-            f32 const parLife {static_cast<f32>(p.RemainingLife / p.StartingLife)};
-            if (phase < 4) { p.Color = _colors[static_cast<u8>(255.f * (1 - parLife))]; }
-
-            auto const dist {p.Position.distance_to({1210, 200})};
-            if (phase < 5 && dist < 10) {
-                auto const corr {36_deg * (10 - dist) * (pev.DeltaTime.count() / 1000)};
-                p.Direction += p.Direction > 0 ? corr : -corr;
-                p.Color    = colors::Black;
-                p.UserData = 4;
-            } else if (phase == 4 && dist > 100) {
-                p.Color     = colors::Gray;
-                p.Direction = degree_f {0};
-                p.UserData  = 5;
-            }
-
-            switch (phase) {
-            case 0:
-                if (parLife <= 0.75f) {
-                    p.Direction /= 4;
-                    p.UserData = 1;
-                }
-                break;
-            case 1:
-                if (parLife <= 0.50f) {
-                    p.UserData  = 2;
-                    p.Direction = degree_f {0};
-                    p.Acceleration *= -5.5f;
-                }
-                break;
-            case 2:
-                if (parLife <= 0.25f) {
-                    p.Color.A = static_cast<u8>(255.f * (parLife / 0.25f));
-                }
-                break;
-            }
-        });
+        emi0->Settings.SpawnArea = {1200, 450, 120, 75};
+        emi0->Settings.SpawnRate = 100;
 
         _particleSystem1.start();
     }

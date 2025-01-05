@@ -34,5 +34,5 @@ private:
 
     basic_cam _cam;
 
-    std::array<color, 256> _colors;
+    std::vector<color> _colors;
 };
