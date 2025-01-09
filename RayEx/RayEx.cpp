@@ -80,7 +80,7 @@ void RayEx::on_update(milliseconds deltaTime)
 
     std::vector<ray::result> points;
     auto const               castRay {[&points, batch = &_batch](point_f origin, degree_f deg) {
-        ray  ray {{.Origin = origin, .Direction = deg, .MaxDistance = 600}};
+        ray  ray {origin, deg, 600};
         auto points0 {batch->intersect(ray)};
         if (!points0.empty()) {
             for (auto const& v : points0) {
