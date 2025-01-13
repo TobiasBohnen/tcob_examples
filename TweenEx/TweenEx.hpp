@@ -26,5 +26,5 @@ protected:
 private:
     shape_batch                              _layer1;
     std::vector<std::shared_ptr<tween_base>> _tweens;
-    manual_asset_ptr<material>               _material;
+    owning_asset_ptr<material>               _material;
 };

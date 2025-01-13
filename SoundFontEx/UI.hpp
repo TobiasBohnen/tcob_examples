@@ -32,6 +32,6 @@ public:
 private:
     void gen_styles();
 
-    assets::manual_asset_ptr<font_family> _font;
-    assets::manual_asset_ptr<texture>     _tex;
+    assets::owning_asset_ptr<font_family> _font;
+    assets::owning_asset_ptr<texture>     _tex;
 };

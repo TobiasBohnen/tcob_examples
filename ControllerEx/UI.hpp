@@ -23,7 +23,7 @@ private:
     void on_controller_button_down(input::controller::button_event const& ev) override;
     void on_controller_button_up(input::controller::button_event const& ev) override;
 
-    assets::manual_asset_ptr<font_family> _font;
+    assets::owning_asset_ptr<font_family> _font;
 
     std::shared_ptr<slider> _laxisx;
     std::shared_ptr<slider> _laxisy;

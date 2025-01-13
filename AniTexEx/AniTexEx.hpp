@@ -28,11 +28,11 @@ protected:
 private:
     shape_batch _layer0;
 
-    manual_asset_ptr<animated_texture> _texGif;
-    manual_asset_ptr<material>         _matGif;
+    owning_asset_ptr<animated_texture> _texGif;
+    owning_asset_ptr<material>         _matGif;
 
-    manual_asset_ptr<animated_texture> _texWebp;
-    manual_asset_ptr<material>         _matWebp;
+    owning_asset_ptr<animated_texture> _texWebp;
+    owning_asset_ptr<material>         _matWebp;
 
     ;
 

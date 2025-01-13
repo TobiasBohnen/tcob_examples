@@ -30,7 +30,7 @@ private:
     basic_cam _cam;
 
     shape_batch                        _layer0;
-    assets::manual_asset_ptr<material> _material;
+    assets::owning_asset_ptr<material> _material;
 
     std::shared_ptr<parallax_background> _back0;
 };

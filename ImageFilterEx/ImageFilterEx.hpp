@@ -25,6 +25,6 @@ protected:
 
 private:
     shape_batch                _layer1;
-    manual_asset_ptr<material> _mat0 {};
-    manual_asset_ptr<texture>  _tex0 {};
+    owning_asset_ptr<material> _mat0 {};
+    owning_asset_ptr<texture>  _tex0 {};
 };

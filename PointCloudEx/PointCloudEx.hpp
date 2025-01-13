@@ -29,7 +29,7 @@ private:
     rng _rand;
 
     std::shared_ptr<point_cloud> _cloud0;
-    manual_asset_ptr<material>   _mat;
+    owning_asset_ptr<material>   _mat;
     canvas                       _canvas;
 
     struct point_node {
