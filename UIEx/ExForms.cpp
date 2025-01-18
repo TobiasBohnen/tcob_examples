@@ -20,7 +20,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     (*panel0->TabStop).Enabled = false;
     panel0->ScrollEnabled      = true;
 
-    auto label0 {panel0Layout->create_widget<label>({0, 520, 450, 40}, "Label0")};
+    auto label0 {panel0Layout->create_widget<label>({0, 520, 200, 40}, "Label0")};
     auto button0 {panel0Layout->create_widget<button>({0, 0, 200, 100}, "Button0")};
     button0->Label = "Button0";
     label0->For    = button0;
@@ -342,7 +342,7 @@ auto create_form_tabcontainer(window* wnd) -> std::shared_ptr<form>
 
         auto createGridWidget {
             [&](rect_i loc, std::string const& name) {
-                auto b {gridLayout->create_widget<button>(loc, "gridB" + name)};
+                auto b {gridLayout->create_widget<button>(loc, "gridB" + name, true)};
                 b->Label = name;
             }};
         createGridWidget({0, 0, 2, 1}, "0");
@@ -439,7 +439,8 @@ auto create_form_accordion(window* wnd) -> std::shared_ptr<form>
 
     {
         auto accordion0 {retValue->create_container<accordion>(dock_style::Left, "Accordion0")};
-        accordion0->Flex = {30_pct, 100_pct};
+        accordion0->Flex                  = {30_pct, 100_pct};
+        accordion0->MaximizeActiveSection = true;
 
         auto accordion1 {accordion0->create_section<accordion>("Accordion1")};
         createSections(accordion1);

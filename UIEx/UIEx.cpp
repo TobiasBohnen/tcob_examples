@@ -29,8 +29,10 @@ void UIEx::on_start()
     window().Cursor           = defaultCursor;
     defaultCursor->ActiveMode = "default";
 
-    _form0         = create_form_accordion(&window());
-    //_form0         = create_form0(&window(), *resGrp);
+    _form0 = create_form0(&window(), *resGrp);
+    //_form0         = create_form_tabcontainer(&window());
+    //_form0         = create_form_accordion(&window());
+
     _form0->Styles = create_color_styles(*resGrp);
     // _form0->Bounds = rect_f {{300, 450}, size_f {window().Size() * 2}};
     //_form0->Scale  = {0.5f, 0.5f};
