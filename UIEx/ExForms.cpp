@@ -388,7 +388,7 @@ auto create_form_accordion(window* wnd) -> std::shared_ptr<form>
 {
     auto retValue {std::make_shared<form>("form4", wnd)};
 
-    auto createSections = [](std::shared_ptr<accordion> const& accordion0) {
+    auto const createSections {[](std::shared_ptr<accordion> const& accordion0) {
         auto boxVPanel0 {accordion0->create_section<panel>("SPanel0")};
         (*boxVPanel0->TabStop).Enabled = false;
         auto boxVLayout0 {boxVPanel0->create_layout<vbox_layout>()};
@@ -401,11 +401,10 @@ auto create_form_accordion(window* wnd) -> std::shared_ptr<form>
         (*gridPanel->TabStop).Enabled = false;
         auto gridLayout {gridPanel->create_layout<grid_layout>()};
 
-        auto createGridWidget {
-            [&](rect_i loc, std::string const& name) {
-                auto b {gridLayout->create_widget<button>(loc, "gridB" + name)};
-                b->Label = name;
-            }};
+        auto const createGridWidget {[&](rect_i loc, std::string const& name) {
+            auto b {gridLayout->create_widget<button>(loc, "gridB" + name, true)};
+            b->Label = name;
+        }};
         createGridWidget({0, 0, 2, 1}, "0");
         createGridWidget({2, 0, 2, 1}, "1");
         createGridWidget({0, 1, 4, 1}, "2");
@@ -420,7 +419,7 @@ auto create_form_accordion(window* wnd) -> std::shared_ptr<form>
         for (i32 i = 0; i < 4; i++) {
             boxHLayout1->create_widget<checkbox>("Check" + std::to_string(i));
         }
-    };
+    }};
 
     {
         auto accordion0 {retValue->create_container<accordion>(dock_style::Left, "Accordion0")};
