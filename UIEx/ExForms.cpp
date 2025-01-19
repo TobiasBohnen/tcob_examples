@@ -241,14 +241,15 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form>
 
         terminal0->curs_set(true);
         terminal0->mouse_set(true);
-        terminal0->echo(true);
+        terminal0->echo(false);
 
         auto button0 {panel0Layout->create_widget<button>({1150, 600, 200, 100}, "Button0")};
         button0->Label = "Button0";
         auto button1 {panel0Layout->create_widget<button>({1150, 750, 200, 100}, "Button1")};
         button1->Label = "Button1";
+        auto label0 {panel0Layout->create_widget<label>({1150, 500, 400, 100}, "Label0")};
 
-        button0->Click.connect([terminal0](auto const&) {
+        button0->Click.connect([terminal0, label0](auto&& ex) {
             terminal0->rectangle({terminal0->get_xy(), {10, 5}});
         });
         button1->Click.connect([terminal0](auto const&) {
@@ -258,6 +259,10 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form>
             }
             terminal0->flash();
             locate_service<render_system>().stats().reset();
+        });
+        terminal0->Submit.connect([label0, ptr = terminal0.get()]() {
+            label0->Label = ptr->get_str({ptr->get_xy().X, ptr->get_xy().Y - 1});
+            ptr->move({0, ptr->get_xy().Y + 1});
         });
     }
     {
@@ -277,32 +282,32 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form>
         canvas->rect({150, 150, 100, 100});
         canvas->fill();
     }
-
-    {
-        auto dotMatrix {panel0Layout->create_widget<dot_matrix_display>({1150, 60, 320, 288}, "DM1")};
-        dotMatrix->Size = {160, 144};
-        rng              rand;
-        std::vector<u16> dots;
-        dots.reserve(dotMatrix->Size->Width * dotMatrix->Size->Height);
-        for (i32 i {0}; i < dots.capacity(); ++i) {
-            if (i % 160 == 159) {
-                dots.push_back(1);
-            } else if (i > 160 * 143) {
-                dots.push_back(0);
-            } else {
-                dots.push_back(rand(0, 2));
+    /*
+        {
+            auto dotMatrix {panel0Layout->create_widget<dot_matrix_display>({1150, 60, 320, 288}, "DM1")};
+            dotMatrix->Size = {160, 144};
+            rng              rand;
+            std::vector<u16> dots;
+            dots.reserve(dotMatrix->Size->Width * dotMatrix->Size->Height);
+            for (i32 i {0}; i < dots.capacity(); ++i) {
+                if (i % 160 == 159) {
+                    dots.push_back(1);
+                } else if (i > 160 * 143) {
+                    dots.push_back(0);
+                } else {
+                    dots.push_back(rand(0, 2));
+                }
             }
+            dotMatrix->Dots = dots;
         }
-        dotMatrix->Dots = dots;
-    }
 
-    {
-        auto lcdDisplay0 {panel0Layout->create_widget<seven_segment_display>({1150, 400, 350, 70}, "LCD0")};
-        lcdDisplay0->Text = "0123456789 -=\"',";
-        auto lcdDisplay1 {panel0Layout->create_widget<seven_segment_display>({1150, 470, 350, 70}, "LCD1")};
-        lcdDisplay1->Text = "ABCDEFGHIJLOPSUZ";
-    }
-
+        {
+            auto lcdDisplay0 {panel0Layout->create_widget<seven_segment_display>({1150, 400, 350, 70}, "LCD0")};
+            lcdDisplay0->Text = "0123456789 -=\"',";
+            auto lcdDisplay1 {panel0Layout->create_widget<seven_segment_display>({1150, 470, 350, 70}, "LCD1")};
+            lcdDisplay1->Text = "ABCDEFGHIJLOPSUZ";
+        }
+    */
     // styles
     return retValue;
 }
