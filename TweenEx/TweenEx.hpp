@@ -24,7 +24,7 @@ protected:
     void on_mouse_motion(mouse::motion_event const& ev) override;
 
 private:
-    shape_batch                              _layer1;
-    std::vector<std::shared_ptr<tween_base>> _tweens;
-    owning_asset_ptr<material>               _material;
+    shape_batch                                           _layer1;
+    std::vector<std::shared_ptr<gfx::detail::tween_base>> _tweens;
+    owning_asset_ptr<material>                            _material;
 };
