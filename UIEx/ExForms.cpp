@@ -6,6 +6,8 @@ using namespace tcob::literals;
 
 auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form>
 {
+    // TODO: remove shared_ptr self capture
+    //
     auto retValue {std::make_shared<form>("form0", wnd)};
 
     auto tooltip0 {retValue->create_tooltip<tooltip>("tooltip")};
@@ -152,6 +154,9 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     gridView0->add_row({"Davis", "Sarah", "40", "Houston"});
     gridView0->add_row({"Patel", "Raj", "32", "San Francisco"});
     gridView0->HeaderSelectable = false;
+    gridView0->SelectedCellIndex.Changed.connect([label0, gridView0]() {
+        label0->Label = std::format("grid: {}", gridView0->get_cell(gridView0->SelectedCellIndex));
+    });
 
     button0->Click.connect([=]() {
         progressBar0->Value = progressBar0->Value == 100
