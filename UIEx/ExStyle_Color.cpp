@@ -447,6 +447,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->VScrollBar.Bar.Size        = 5_pct;
         style->VScrollBar.Bar.Border.Size = 3_px;
         style->VScrollBar.Bar.Delay       = 250ms;
+        style->SelectMode                 = grid_view::select_mode::Row;
 
         auto hoverStyle {retValue.create<grid_view>("grid_view", {.Hover = true})};
         *hoverStyle = *style;
@@ -663,8 +664,8 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Item.Padding        = {5_px};
         style->Item.Text.Style     = {false, font::weight::Bold};
         style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
-        style->Item.Text.AutoSize  = element::text::auto_size_mode::Always;
-        style->Item.Text.Size      = 25_pct;
+        style->Item.Text.AutoSize  = element::text::auto_size_mode::OnlyShrink;
+        style->Item.Text.Size      = 15_px;
         style->Item.Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Middle};
         style->Item.Border.Size    = 5_px;
 
@@ -675,8 +676,13 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         activeStyle->Item = style->Item;
 
         normal.apply(style);
+        style->Item.Background = colors::LightGreen;
+
         hover.apply(hoverStyle);
+        hoverStyle->Item.Background = colors::Orange;
+
         active.apply(activeStyle);
+        activeStyle->Item.Background = colors::BlanchedAlmond;
     }
     // GRID ROW ITEMS
     {
@@ -684,8 +690,8 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Item.Padding        = {5_px};
         style->Item.Text.Style     = {false, font::weight::Normal};
         style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
-        style->Item.Text.AutoSize  = element::text::auto_size_mode::Always;
-        style->Item.Text.Size      = 25_pct;
+        style->Item.Text.AutoSize  = element::text::auto_size_mode::OnlyShrink;
+        style->Item.Text.Size      = 20_px;
         style->Item.Text.Color     = normal.Text;
         style->Item.Text.Alignment = {horizontal_alignment::Left, vertical_alignment::Middle};
         style->Item.Border.Size    = 3_px;
@@ -697,8 +703,13 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         activeStyle->Item = style->Item;
 
         normal.apply(style);
+        style->Item.Background = colors::BlanchedAlmond;
+
         hover.apply(hoverStyle);
+        hoverStyle->Item.Background = colors::LightGreen;
+
         active.apply(activeStyle);
+        activeStyle->Item.Background = colors::Orange;
     }
 
     return retValue;

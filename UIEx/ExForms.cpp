@@ -151,6 +151,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     gridView0->add_row({"Brown", "Michael", "22", "Chicago"});
     gridView0->add_row({"Davis", "Sarah", "40", "Houston"});
     gridView0->add_row({"Patel", "Raj", "32", "San Francisco"});
+    gridView0->HeaderSelectable = false;
 
     button0->Click.connect([=]() {
         progressBar0->Value = progressBar0->Value == 100
