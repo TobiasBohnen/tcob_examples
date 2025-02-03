@@ -24,8 +24,10 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     auto label0 {panel0Layout->create_widget<label>({0, 520, 200, 40}, "Label0")};
     auto button0 {panel0Layout->create_widget<button>({0, 0, 200, 100}, "Button0")};
-    button0->Label = "Button0";
-    label0->For    = button0;
+    button0->Label = "b1";
+    button0->Icon  = resGrp.get<texture>("blue_boxCheckmark");
+
+    label0->For = button0;
 
     auto spinner0 {panel0Layout->create_widget<spinner>({0, 150, 120, 100}, "Spinner0")};
     spinner0->Min   = 0;
@@ -128,7 +130,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
         fb->Flex = {100_pct, 20_pct};
     }
 
-    auto dropDownList0 {panel0Layout->create_widget<drop_down_list>({1200, 10, 150, 50}, "DropDownList0")};
+    auto dropDownList0 {panel0Layout->create_widget<drop_down_list>({1000, 50, 150, 50}, "DropDownList0")};
     for (i32 i {0}; i < 4; ++i) {
         dropDownList0->add_item("item " + std::to_string(i));
     }
@@ -148,7 +150,13 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     auto gridView0 {panel0Layout->create_widget<grid_view>({1080, 400, 450, 400}, "GridView0")};
     gridView0->set_columns({"Last", "First", "Age", "City"});
-    gridView0->add_row({"Smith", "John", "28", "New York"});
+    std::array<list_item, 4> items;
+    items[0].Text = "Smith";
+    items[0].Icon = resGrp.get<texture>("blue_boxCross");
+    items[1].Text = "John";
+    items[2].Text = "28";
+    items[3].Text = "New York";
+    gridView0->add_row(items);
     gridView0->add_row({"Johnson", "Emily", "35", "Los Angeles"});
     gridView0->add_row({"Brown", "Michael", "22", "Chicago"});
     gridView0->add_row({"Davis", "Sarah", "40", "Houston"});
@@ -158,11 +166,11 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
         label0->Label = std::format("grid: {}", gridView0->get_cell(gridView0->SelectedCellIndex));
     });
 
-    button0->Click.connect([=]() {
+    button0->Click.connect([=, &resGrp]() {
         progressBar0->Value = progressBar0->Value == 100
             ? 0
             : progressBar0->Value + 10;
-        listbox0->add_item(std::to_string(progressBar0->Value));
+        listbox0->add_item({.Text = std::to_string(progressBar0->Value), .Icon = resGrp.get<texture>("blue_boxCheckmark"), .UserData = {}});
         dropDownList0->add_item(std::to_string(progressBar0->Value));
         gridView0->add_row({"XXX", "XX", std::to_string(progressBar0->Value * 10), "XXXXX"});
     });

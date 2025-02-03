@@ -86,11 +86,11 @@ generator_form::generator_form(window* window)
     _valHighPassFilterCutoffSweep = genSlider({32, 26, 4, 2}, "HPF Cutoff Sweep", -100, 100);
 
     _valWaveType = mainPanelLayout->create_widget<drop_down_list>({32, 30, 4, 2}, "Wave Type");
-    _valWaveType->add_item({"Square", sound_wave::type::Square});
-    _valWaveType->add_item({"Sawtooth", sound_wave::type::Sawtooth});
-    _valWaveType->add_item({"Sine", sound_wave::type::Sine});
-    _valWaveType->add_item({"Triangle", sound_wave::type::Triangle});
-    _valWaveType->add_item({"Noise", sound_wave::type::Noise});
+    _valWaveType->add_item({"Square", {}, sound_wave::type::Square});
+    _valWaveType->add_item({"Sawtooth", {}, sound_wave::type::Sawtooth});
+    _valWaveType->add_item({"Sine", {}, sound_wave::type::Sine});
+    _valWaveType->add_item({"Triangle", {}, sound_wave::type::Triangle});
+    _valWaveType->add_item({"Noise", {}, sound_wave::type::Noise});
     _valWaveType->SelectedItemIndex = 0;
     _valWaveType->SelectedItemIndex.Changed.connect([&]() { NewWave(); });
     auto lblText {mainPanelLayout->create_widget<label>({32 - 4, 30, 4, 2}, "lblWave Type")};

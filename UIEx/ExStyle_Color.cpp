@@ -422,7 +422,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->VScrollBar.Bar.Size        = 20_pct;
         style->VScrollBar.Bar.Border.Size = 3_px;
         style->VScrollBar.Bar.Delay       = 250ms;
-
+        style->VisibleItemCount           = 3;
         auto hoverStyle {retValue.create<drop_down_list>("drop_down_list", {.Hover = true})};
         *hoverStyle = *style;
 
