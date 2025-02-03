@@ -295,8 +295,8 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->Padding                         = {5_px};
         style->DropShadow.Color                = color {0, 0, 0, 128};
         style->RowHeight                       = 20_pct;
-        style->HeaderClass                     = "header_items";
-        style->RowClass                        = "row_items";
+        style->HeaderItemClass                 = "header_items";
+        style->RowItemClass                    = "row_items";
         style->VScrollBar.ThumbClass           = "v_scrollbar_thumb";
         style->VScrollBar.Bar.Type             = element::bar::type::Continuous;
         style->VScrollBar.Bar.Size             = 30_px;
