@@ -94,14 +94,16 @@ void ClippingEx::create_shapes()
     _polyShape           = _layer0.create_shape<gfx::poly_shape>();
     _polyShape->Material = material::Empty();
     _polyShape->Color    = colors::Blue;
-    _polyShape->Polygons = {
-        {.Outline = {{10, 10}, {200, 100}, {200, 300}, {10, 450}, {450, 450}, {600, 300}, {600, 100}, {450, 10}},
-         .Holes   = {{{300, 100}, {500, 100}, {500, 300}, {300, 300}}}}};
+    _polyShape->Polygons = {{
+        .Outline = {{10, 10}, {200, 100}, {200, 300}, {10, 450}, {450, 450}, {600, 300}, {600, 100}, {450, 10}},
+        .Holes   = {{{300, 100}, {500, 100}, {500, 300}, {300, 300}}},
+    }};
 
     _cutShape           = _layer0.create_shape<gfx::poly_shape>();
     _cutShape->Material = material::Empty();
     _cutShape->Color    = colors::Red;
-    _cutShape->Polygons = {
-        {.Outline = {{60, 50}, {60, 320}, {650, 320}, {620, 50}},
-         .Holes   = {{{70, 60}, {610, 60}, {610, 310}, {70, 310}}}}};
+    _cutShape->Polygons = {{
+        .Outline = {{60, 50}, {60, 320}, {650, 320}, {620, 50}},
+        .Holes   = {{{70, 60}, {610, 60}, {610, 310}, {70, 310}}},
+    }};
 }
