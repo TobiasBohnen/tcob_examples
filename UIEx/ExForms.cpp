@@ -25,7 +25,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     auto label0 {panel0Layout->create_widget<label>({0, 520, 200, 40}, "Label0")};
     auto button0 {panel0Layout->create_widget<button>({0, 0, 200, 100}, "Button0")};
     button0->Label = "b1";
-    button0->Icon  = resGrp.get<texture>("blue_boxCheckmark");
+    button0->Icon  = {.Texture = resGrp.get<texture>("blue_boxCheckmark")};
 
     label0->For = button0;
 
@@ -146,13 +146,13 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     listbox0->HoveredItemIndex.Changed.connect([label0, listbox0](isize value) { label0->Label = "hovered: " + std::to_string(value); });
 
     auto imgBox0 {panel0Layout->create_widget<image_box>({750, 20, 150, 200}, "ImageBox0")};
-    imgBox0->Image = resGrp.get<texture>("blue_boxCross");
+    imgBox0->Image = {.Texture = resGrp.get<texture>("blue_boxCross")};
 
     auto gridView0 {panel0Layout->create_widget<grid_view>({1080, 400, 450, 400}, "GridView0")};
     gridView0->set_columns({"Last", "First", "Age", "City"});
     std::array<list_item, 4> items;
     items[0].Text = "Smith";
-    items[0].Icon = resGrp.get<texture>("blue_boxCross");
+    items[0].Icon = {.Texture = resGrp.get<texture>("blue_boxCross")};
     items[1].Text = "John";
     items[2].Text = "28";
     items[3].Text = "New York";
@@ -170,7 +170,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
         progressBar0->Value = progressBar0->Value == 100
             ? 0
             : progressBar0->Value + 10;
-        listbox0->add_item({.Text = std::to_string(progressBar0->Value), .Icon = resGrp.get<texture>("blue_boxCheckmark"), .UserData = {}});
+        listbox0->add_item({.Text = std::to_string(progressBar0->Value), .Icon = {resGrp.get<texture>("blue_boxCheckmark")}, .UserData = {}});
         dropDownList0->add_item(std::to_string(progressBar0->Value));
         gridView0->add_row({"XXX", "XX", std::to_string(progressBar0->Value * 10), "XXXXX"});
     });
