@@ -33,7 +33,8 @@ void CanvasEx::on_start()
 
 void CanvasEx::on_update(milliseconds /* deltaTime */)
 {
-    canvas_ray_cast();
+    canvas_ring();
+    //  canvas_ray_cast();
     // canvas_gradient();
     // canvas_path2d();
     // canvas_fancy_lines();
@@ -68,6 +69,41 @@ void CanvasEx::on_mouse_motion(mouse::motion_event const& ev)
 void CanvasEx::on_mouse_wheel(mouse::wheel_event const& ev)
 {
     _rotation += (ev.Scroll.Y * 10);
+}
+
+void CanvasEx::canvas_ring()
+{
+    _canvas.begin_frame(window().Size(), 1);
+
+    f32 outerRadius {200};
+    f32 innerRadius {_rotation};
+    i32 segments {10};
+    f32 gapSize {5};
+
+    f32 const ogap {static_cast<f32>(2 * std::asin(gapSize / (2 * outerRadius)))};
+    f32 const igap {static_cast<f32>(2 * std::asin(gapSize / (2 * innerRadius)))};
+
+    for (isize i {0}; i < segments; i++) {
+        radian_f const startAngle {radian_f {(i * TAU_F) / segments}};
+        radian_f const outerEndAngle {static_cast<f32>(((i + 1) * TAU_F) / segments - ogap)};
+        radian_f const innerEndAngle {static_cast<f32>(((i + 1) * TAU_F) / segments - igap)};
+
+        _canvas.begin_path();
+        _canvas.arc(_center, outerRadius, startAngle, outerEndAngle, winding::CW);
+        _canvas.arc(_center, innerRadius, innerEndAngle, startAngle, winding::CCW); // NOLINT(readability-suspicious-call-argument)
+        _canvas.close_path();
+
+        // Fill the segment
+        _canvas.set_fill_style(color::FromHSLA({.Hue = degree_f {i * 360.f / segments}, .Saturation = 0.8f, .X = 0.5f}));
+        _canvas.fill();
+
+        // Draw outline
+        _canvas.set_stroke_style(colors::Black);
+        _canvas.set_stroke_width(2);
+        _canvas.stroke();
+    }
+
+    _canvas.end_frame();
 }
 
 void CanvasEx::canvas_ray_cast()

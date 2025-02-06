@@ -24,6 +24,7 @@ protected:
     void on_mouse_wheel(mouse::wheel_event const& ev) override;
 
 private:
+    void canvas_ring();
     void canvas_ray_cast();
     void canvas_gradient();
     void canvas_path2d();

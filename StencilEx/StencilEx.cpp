@@ -29,8 +29,8 @@ void StencilEx::on_fixed_update(milliseconds /* deltaTime */)
 
 void StencilEx::on_start()
 {
-    _tween.Function.MinValue = -250;
-    _tween.Function.MaxValue = 250;
+    _tween.Function.Min = -250;
+    _tween.Function.Max = 250;
     _tween.start(playback_mode::AlternatedLooped);
     create_shapes();
 }
