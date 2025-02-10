@@ -422,7 +422,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->VScrollBar.Bar.Size        = 20_pct;
         style->VScrollBar.Bar.Border.Size = 3_px;
         style->VScrollBar.Bar.Delay       = 250ms;
-        style->VisibleItemCount           = 3;
+
         auto hoverStyle {retValue.create<drop_down_list>("drop_down_list", {.Hover = true})};
         *hoverStyle = *style;
 
@@ -447,7 +447,6 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->VScrollBar.Bar.Size        = 5_pct;
         style->VScrollBar.Bar.Border.Size = 3_px;
         style->VScrollBar.Bar.Delay       = 250ms;
-        style->SelectMode                 = grid_view::select_mode::Row;
 
         auto hoverStyle {retValue.create<grid_view>("grid_view", {.Hover = true})};
         *hoverStyle = *style;
@@ -468,7 +467,6 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->TabBarHeight     = 10_pct;
         style->TabItemClass     = "tab_items";
         style->TabBarPosition   = tab_container::position::Bottom;
-        style->MaxTabsPerRow    = 5;
 
         auto hoverStyle {retValue.create<tab_container>("tab_container", {.Hover = true})};
         *hoverStyle = *style;
