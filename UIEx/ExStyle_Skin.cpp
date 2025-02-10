@@ -210,7 +210,6 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->Margin           = {5_px};
         style->Padding          = {5_px};
         style->DropShadow.Color = color {0, 0, 0, 128};
-        style->Fit              = image_box::fit_mode::Contain;
         style->Alignment        = alignments {horizontal_alignment::Centered, vertical_alignment::Middle};
 
         auto disabledStyle {retValue.create<image_box>("image_box", {.Disabled = true})};
