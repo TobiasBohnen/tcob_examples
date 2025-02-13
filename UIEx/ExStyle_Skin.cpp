@@ -239,8 +239,6 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         auto style {retValue.create<tooltip>("tooltip", {})};
         style->Background  = yellow.Panel;
         style->Border.Size = 5_px;
-        style->Delay       = 1000ms;
-        style->FadeIn      = 250ms;
     }
     {
         auto style {retValue.create<list_box>("list_box", {})};

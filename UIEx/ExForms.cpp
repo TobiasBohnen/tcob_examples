@@ -1,6 +1,7 @@
 #include "ExForms.hpp"
 
 using namespace tcob::literals;
+using namespace std::chrono_literals;
 
 ////////////////////////////////////////////////////////////
 
@@ -139,7 +140,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     dropDownList0->ZOrder = 1;
 
     auto listbox0 {panel0Layout->create_widget<list_box>({1200, 80, 150, 300}, "Listbox0")};
-    for (i32 i {0}; i < 4; ++i) {
+    for (i32 i {0}; i < 40; ++i) {
         listbox0->add_item("item " + std::to_string(i));
     }
     listbox0->SelectedItemIndex.Changed.connect([label0, listbox0](isize value) { label0->Label = "selected: " + std::to_string(value); });
@@ -201,6 +202,9 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     navMap["Check2"] = {.Left = "Check1", .Right = "Check3"};
     navMap["Check3"] = {.Left = "Check2"};
 
+    for (auto* c : retValue->all_widgets()) {
+        c->TransitionDuration = 500ms;
+    }
     return retValue;
 }
 

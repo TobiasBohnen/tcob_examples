@@ -19,7 +19,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     normal.TextShadow     = colors::White;
     normal.TextDecoration = colors::Red;
     normal.Thumb          = colors::LightGreen;
-    normal.Tick           = colors::Red;
+    normal.Tick           = colors::Black;
     normal.Container      = colors::LightGray;
 
     color_theme hover {normal};
@@ -29,6 +29,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     hover.Thumb       = colors::DarkKhaki;
     hover.NavArrowInc = colors::Red;
     hover.NavArrowDec = colors::Green;
+    hover.Tick        = colors::White;
 
     color_theme hoverCheck {hover};
     hoverCheck.Tick = colors::Green;
@@ -139,25 +140,9 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         auto hoverStyle {retValue.create<checkbox>("checkbox", {.Hover = true})};
         *hoverStyle = *style;
 
-        auto focusStyle {retValue.create<checkbox>("checkbox", {.Focus = true})};
-        *focusStyle = *style;
-
-        auto focusHoverStyle {retValue.create<checkbox>("checkbox", {.Focus = true, .Hover = true})};
-        *focusHoverStyle = *focusStyle;
-
-        auto focusCheckedStyle {retValue.create<checkbox>("checkbox", {.Focus = true, .Checked = true})};
-        *focusCheckedStyle = *focusStyle;
-
-        auto activeStyle {retValue.create<checkbox>("checkbox", {.Focus = true, .Active = true})};
-        *activeStyle = *style;
-
         normal.apply(style);
         disabled.apply(disabledStyle);
         hover.apply(hoverStyle);
-        focus.apply(focusStyle);
-        focusHover.apply(focusHoverStyle);
-        focusCheck.apply(focusCheckedStyle);
-        active.apply(activeStyle);
     }
     {
         auto style {retValue.create<radio_button>("radio_button", {})};
@@ -372,8 +357,6 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         auto style {retValue.create<tooltip>("tooltip", {})};
         style->Border.Size   = 3_px;
         style->Border.Radius = 5_px;
-        style->Delay         = 1000ms;
-        style->FadeIn        = 250ms;
 
         normal.apply(style);
     }
