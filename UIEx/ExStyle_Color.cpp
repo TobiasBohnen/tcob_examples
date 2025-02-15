@@ -242,7 +242,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->ThumbClass        = "slider_thumb";
         style->Bar.Type          = element::bar::type::Continuous;
         style->Bar.Size          = 50_pct;
-        style->Bar.Delay         = 200ms;
+        style->Bar.Delay         = 250ms;
         style->Bar.Border.Size   = 3_px;
         style->Bar.Border.Radius = 5_px;
 
@@ -458,6 +458,16 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         normal.apply(style);
         disabled.apply(disabledStyle);
         hover.apply(hoverStyle);
+
+        auto hoverStyleX {retValue.create<tab_container>("tab_container", {.Hover = true}, {{"hover", "SPanel0"}})};
+        *hoverStyleX            = *hoverStyle;
+        hoverStyleX->Background = colors::Orange;
+        auto hoverStyleY {retValue.create<tab_container>("tab_container", {.Hover = true}, {{"hover", "SPanel1"}})};
+        *hoverStyleY            = *hoverStyle;
+        hoverStyleY->Background = colors::Red;
+        auto hoverStyleZ {retValue.create<tab_container>("tab_container", {.Hover = true}, {{"hover", "SPanel2"}})};
+        *hoverStyleZ            = *hoverStyle;
+        hoverStyleZ->Background = colors::LavenderBlush;
     }
     {
         auto style {retValue.create<accordion>("accordion", {})};
@@ -477,6 +487,16 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         normal.apply(style);
         disabled.apply(disabledStyle);
         hover.apply(hoverStyle);
+
+        auto hoverStyleX {retValue.create<accordion>("accordion", {.Hover = true}, {{"active", "SPanel0"}})};
+        *hoverStyleX            = *hoverStyle;
+        hoverStyleX->Background = colors::Orange;
+        auto hoverStyleY {retValue.create<accordion>("accordion", {.Hover = true}, {{"active", "SPanel1"}})};
+        *hoverStyleY            = *hoverStyle;
+        hoverStyleY->Background = colors::Red;
+        auto hoverStyleZ {retValue.create<accordion>("accordion", {.Hover = true}, {{"active", "SPanel2"}})};
+        *hoverStyleZ            = *hoverStyle;
+        hoverStyleZ->Background = colors::LavenderBlush;
     }
     {
         auto style {retValue.create<text_box>("text_box", {})};
@@ -514,8 +534,11 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<dot_matrix_display>("dot_matrix_display", {})};
-        style->Dot.Colors = {{0, colors::Black}, {1, colors::White}, {2, colors::Red}};
-        style->Dot.Type   = dot_matrix_display::dot::type::Disc;
+        rng  r;
+        for (isize i {0}; i < 256; ++i) {
+            style->Dot.Colors[i] = color::FromHSLA({.Hue = degree_f {360.f * (i / 255.f)}, .Saturation = 0.8f, .X = 0.5f});
+        }
+        style->Dot.Type = dot_matrix_display::dot::type::Disc;
     }
     {
         auto style {retValue.create<seven_segment_display>("seven_segment_display", {})};
@@ -601,11 +624,11 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     // SECTION ITEMS
     {
         auto style {retValue.create<item_style>("section_items", {}, {})};
-        style->Item.Padding        = {5_px};
+        style->Item.Padding        = {1_px};
         style->Item.Text.Style     = {false, font::weight::Normal};
         style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
         style->Item.Text.Size      = 50_pct;
-        style->Item.Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Middle};
+        style->Item.Text.Alignment = {horizontal_alignment::Left, vertical_alignment::Middle};
         style->Item.Border.Size    = 3_px;
 
         auto hoverStyle {retValue.create<item_style>("section_items", {.Hover = true})};
@@ -667,7 +690,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     // GRID ROW ITEMS
     {
         auto style {retValue.create<item_style>("row_items", {}, {})};
-        style->Item.Padding        = {5_px};
+        style->Item.Padding        = {2_px};
         style->Item.Text.Style     = {false, font::weight::Normal};
         style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
         style->Item.Text.AutoSize  = element::text::auto_size_mode::OnlyShrink;

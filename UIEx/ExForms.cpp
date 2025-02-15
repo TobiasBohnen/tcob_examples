@@ -140,6 +140,8 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     dropDownList0->ZOrder = 1;
 
     auto listbox0 {panel0Layout->create_widget<list_box>({1200, 80, 150, 300}, "Listbox0")};
+    listbox0->add_item({.Text = "x0", .Icon = {resGrp.get<texture>("blue_boxCheckmark")}, .UserData = {}});
+    listbox0->add_item({.Text = "", .Icon = {resGrp.get<texture>("blue_boxCheckmark")}, .UserData = {}});
     for (i32 i {0}; i < 40; ++i) {
         listbox0->add_item("item " + std::to_string(i));
     }
@@ -300,32 +302,26 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form>
         canvas->rect({150, 150, 100, 100});
         canvas->fill();
     }
-    /*
-        {
-            auto dotMatrix {panel0Layout->create_widget<dot_matrix_display>({1150, 60, 320, 288}, "DM1")};
-            dotMatrix->Size = {160, 144};
-            rng              rand;
-            std::vector<u16> dots;
-            dots.reserve(dotMatrix->Size->Width * dotMatrix->Size->Height);
-            for (i32 i {0}; i < dots.capacity(); ++i) {
-                if (i % 160 == 159) {
-                    dots.push_back(1);
-                } else if (i > 160 * 143) {
-                    dots.push_back(0);
-                } else {
-                    dots.push_back(rand(0, 2));
-                }
-            }
-            dotMatrix->Dots = dots;
-        }
 
-        {
-            auto lcdDisplay0 {panel0Layout->create_widget<seven_segment_display>({1150, 400, 350, 70}, "LCD0")};
-            lcdDisplay0->Text = "0123456789 -=\"',";
-            auto lcdDisplay1 {panel0Layout->create_widget<seven_segment_display>({1150, 470, 350, 70}, "LCD1")};
-            lcdDisplay1->Text = "ABCDEFGHIJLOPSUZ";
+    {
+        auto dotMatrix {panel0Layout->create_widget<dot_matrix_display>({1150, 60, 320, 288}, "DM1")};
+        dotMatrix->Size = {80, 72};
+        rng             rand;
+        std::vector<u8> dots;
+        dots.reserve(dotMatrix->Size->Width * dotMatrix->Size->Height);
+        for (i32 i {0}; i < dots.capacity(); ++i) {
+            dots.push_back(rand(0, 255));
         }
-    */
+        dotMatrix->Dots = dots;
+    }
+
+    {
+        auto lcdDisplay0 {panel0Layout->create_widget<seven_segment_display>({1150, 400, 350, 70}, "LCD0")};
+        lcdDisplay0->Text = "0123456789 -=\"',";
+        auto lcdDisplay1 {panel0Layout->create_widget<seven_segment_display>({1150, 470, 350, 70}, "LCD1")};
+        lcdDisplay1->Text = "ABCDEFGHIJLOPSUZ";
+    }
+
     // styles
     return retValue;
 }
@@ -346,7 +342,7 @@ auto create_form_colorpicker(window* wnd) -> std::shared_ptr<form>
     return retValue;
 }
 
-auto create_form_tabcontainer(window* wnd) -> std::shared_ptr<form>
+auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form>
 {
     auto retValue {std::make_shared<form>("form3", wnd)};
 
@@ -394,7 +390,7 @@ auto create_form_tabcontainer(window* wnd) -> std::shared_ptr<form>
         auto tabContainer0 {retValue->create_container<tab_container>(dock_style::Left, "TabContainer0")};
         tabContainer0->Flex = {50_pct, 100_pct};
 
-        auto tabContainer1 {tabContainer0->create_tab<tab_container>("TabContainer1")};
+        auto tabContainer1 {tabContainer0->create_tab<tab_container>("TabContainer1", {.Text = "TC1", .Icon = {resGrp.get<texture>("blue_boxCheckmark")}, .UserData = {}})};
         createTabs(tabContainer1);
 
         auto tabContainer2 {tabContainer0->create_tab<tab_container>("TabContainer2")};
@@ -407,7 +403,7 @@ auto create_form_tabcontainer(window* wnd) -> std::shared_ptr<form>
     return retValue;
 }
 
-auto create_form_accordion(window* wnd) -> std::shared_ptr<form>
+auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form>
 {
     auto retValue {std::make_shared<form>("form4", wnd)};
 
@@ -465,7 +461,7 @@ auto create_form_accordion(window* wnd) -> std::shared_ptr<form>
         accordion0->Flex                  = {30_pct, 100_pct};
         accordion0->MaximizeActiveSection = true;
 
-        auto accordion1 {accordion0->create_section<accordion>("Accordion1")};
+        auto accordion1 {accordion0->create_section<accordion>("Accordion1", {.Text = "Acc1", .Icon = {resGrp.get<texture>("blue_boxCheckmark")}, .UserData = {}})};
         createSections(accordion1);
 
         auto accordion2 {accordion0->create_section<accordion>("Accordion2")};
