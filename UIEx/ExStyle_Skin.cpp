@@ -101,7 +101,6 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->Background = blue.Circle;
         style->Margin     = {5_px};
         style->Padding    = {5_px};
-        style->Cursor     = "cursor2";
         style->Tick.Type  = element::tick::type::None;
 
         auto disabledStyle {retValue.create<radio_button>("radio_button", {.Disabled = true})};

@@ -151,7 +151,6 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Border.Radius = 5_px;
         style->Margin        = {5_px};
         style->Padding       = {5_px};
-        style->Cursor        = "cursor2";
         style->Tick.Type     = element::tick::type::Disc;
         style->Tick.Size     = 100_pct;
 

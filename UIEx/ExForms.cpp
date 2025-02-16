@@ -119,6 +119,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     for (i32 i = 0; i < 4; i++) {
         auto rb {boxHLayout2->create_widget<radio_button>("Radio" + std::to_string(i))};
         rb->Checked.Changed.connect([label0, rb](bool value) { label0->Label = (value ? "checked: " : "unchecked: ") + rb->name(); });
+        rb->Cursor = "cursor2";
     }
 
     auto flexPanel0 {panel0Layout->create_widget<panel>({230, 390, 250, 160}, "SPanel4")};
