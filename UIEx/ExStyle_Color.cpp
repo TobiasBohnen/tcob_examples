@@ -57,7 +57,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     active.Tick        = colors::White;
     active.Item        = colors::FireBrick;
     active.Thumb       = colors::Black;
-    active.NavArrowInc = colors::Red;
+    active.NavArrowInc = colors::Green;
     active.NavArrowDec = colors::Red;
 
     color_theme activeCheck {active};

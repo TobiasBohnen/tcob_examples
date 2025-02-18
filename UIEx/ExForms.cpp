@@ -165,7 +165,8 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     gridView0->add_row({"Brown", "Michael", "22", "Chicago"});
     gridView0->add_row({"Davis", "Sarah", "40", "Houston"});
     gridView0->add_row({"Patel", "Raj", "32", "San Francisco"});
-    gridView0->HeaderSelectable = false;
+    gridView0->HeaderSelectable = true;
+    gridView0->SelectMode       = grid_view::select_mode::Row;
     gridView0->SelectedCellIndex.Changed.connect([label0, gridView0]() {
         label0->Label = std::format("grid: {}", gridView0->get_cell(gridView0->SelectedCellIndex));
     });
@@ -401,6 +402,9 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
         createTabs(tabContainer3);
     }
 
+    for (auto* c : retValue->all_widgets()) {
+        c->TransitionDuration = 500ms;
+    }
     return retValue;
 }
 
@@ -472,5 +476,8 @@ auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::sha
         createSections(accordion3);
     }
 
+    for (auto* c : retValue->all_widgets()) {
+        c->TransitionDuration = 500ms;
+    }
     return retValue;
 }
