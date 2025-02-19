@@ -80,7 +80,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     style_collection retValue;
     {
         auto style {retValue.create<button>("button", {})};
-        style->Border.Type          = element::border::type::Solid;
+        style->Border.Type          = element::border::type::Double;
         style->Border.Size          = 3_px;
         style->Border.Radius        = 5_px;
         style->Text.Style           = {false, font::weight::Normal};
@@ -128,6 +128,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<checkbox>("checkbox", {})};
+        style->Border.Type   = element::border::type::Dashed;
         style->Border.Size   = 3_px;
         style->Border.Radius = 5_px;
         style->Margin        = {5_px};
@@ -146,7 +147,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<radio_button>("radio_button", {})};
-        style->Border.Type   = element::border::type::Solid;
+        style->Border.Type   = element::border::type::Dotted;
         style->Border.Size   = 3_px;
         style->Border.Radius = 5_px;
         style->Margin        = {5_px};
@@ -689,14 +690,14 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     // GRID ROW ITEMS
     {
         auto style {retValue.create<item_style>("row_items", {}, {})};
-        style->Item.Padding        = {2_px};
+        style->Item.Padding        = {10_px};
         style->Item.Text.Style     = {false, font::weight::Normal};
         style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
         style->Item.Text.AutoSize  = element::text::auto_size_mode::OnlyShrink;
         style->Item.Text.Size      = 20_px;
         style->Item.Text.Color     = normal.Text;
         style->Item.Text.Alignment = {horizontal_alignment::Left, vertical_alignment::Middle};
-        style->Item.Border.Size    = 3_px;
+        style->Item.Border.Size    = 2_px;
 
         auto hoverStyle {retValue.create<item_style>("row_items", {.Hover = true})};
         hoverStyle->Item = style->Item;
@@ -705,13 +706,15 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         activeStyle->Item = style->Item;
 
         normal.apply(style);
-        style->Item.Background = colors::BlanchedAlmond;
+        style->Item.Background = colors::DarkGreen;
 
         hover.apply(hoverStyle);
         hoverStyle->Item.Background = colors::LightGreen;
 
         active.apply(activeStyle);
-        activeStyle->Item.Background = colors::Orange;
+        activeStyle->Item.Border.Background = colors::SeaGreen;
+        activeStyle->Item.Background        = colors::SeaGreen;
+        activeStyle->Item.Padding           = {10_px, 10_px, 20_px, 0_px};
     }
 
     return retValue;
@@ -883,7 +886,7 @@ void color_theme::apply(std::shared_ptr<item_style> const& style) const
 void color_theme::apply(std::shared_ptr<nav_arrows_style> const& style) const
 {
     style->NavArrow.Foreground        = NavArrow;
-    style->NavArrow.IncBackground     = NavArrowInc;
-    style->NavArrow.DecBackground     = NavArrowDec;
+    style->NavArrow.UpBackground      = NavArrowInc;
+    style->NavArrow.DownBackground    = NavArrowDec;
     style->NavArrow.Border.Background = Border;
 }

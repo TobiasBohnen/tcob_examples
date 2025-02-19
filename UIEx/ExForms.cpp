@@ -207,7 +207,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     navMap["Check3"] = {.Left = "Check2"};
 
     for (auto* c : retValue->all_widgets()) {
-        c->TransitionDuration = 500ms;
+        c->TransitionDuration = 250ms;
     }
     return retValue;
 }

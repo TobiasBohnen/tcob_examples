@@ -33,11 +33,11 @@ void CanvasEx::on_start()
 
 void CanvasEx::on_update(milliseconds /* deltaTime */)
 {
-    canvas_ring();
-    //  canvas_ray_cast();
+    // canvas_ring();
+    // canvas_ray_cast();
     // canvas_gradient();
     // canvas_path2d();
-    // canvas_fancy_lines();
+    canvas_fancy_lines();
 }
 
 void CanvasEx::on_draw_to(render_target& target)
@@ -224,27 +224,41 @@ void CanvasEx::canvas_path2d()
 void CanvasEx::canvas_fancy_lines()
 {
     _canvas.begin_frame(window().Size(), 1);
-
-    _canvas.set_stroke_style(colors::Red);
-    _canvas.set_stroke_width(10);
+    _canvas.set_fill_style(colors::Green);
     _canvas.begin_path();
+    _canvas.rounded_rect({20, 20, 300, 100}, 20);
+    _canvas.fill();
 
-    _canvas.move_to({0, 100});
-    _canvas.dotted_line_to({250, 50}, 5, 5);
+    _canvas.begin_path();
+    _canvas.ellipse({400, 250}, 50, 85);
+    _canvas.fill();
+
+    _canvas.set_stroke_style(colors::Black);
+    _canvas.set_stroke_width(15);
+
+    _canvas.set_line_dash(std::array {0.025f, 0.025f});
+
+    _canvas.begin_path();
+    _canvas.rounded_rect({20, 20, 300, 100}, 20);
     _canvas.stroke();
 
     _canvas.begin_path();
     _canvas.move_to({350, 50});
-    _canvas.dashed_line_to({400, 250}, 5);
+    _canvas.line_to({400, 250});
     _canvas.stroke();
 
     _canvas.begin_path();
-    _canvas.dashed_circle({400, 250}, 50, 20);
+    _canvas.ellipse({400, 250}, 50, 85);
     _canvas.stroke();
 
     _canvas.begin_path();
     _canvas.move_to({200, 550});
-    _canvas.dashed_quad_bezier_to({50, 650}, {350, 850}, 20);
+    _canvas.quad_bezier_to({50, 650}, {350, 850});
+    _canvas.stroke();
+
+    _canvas.begin_path();
+    _canvas.move_to({500, 350});
+    _canvas.cubic_bezier_to({350, 450}, {750, 450}, {650, 650});
     _canvas.stroke();
 
     _canvas.set_stroke_style(colors::Green);
