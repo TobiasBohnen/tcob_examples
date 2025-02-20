@@ -226,7 +226,11 @@ void CanvasEx::canvas_fancy_lines()
     _canvas.begin_frame(window().Size(), 1);
     _canvas.set_fill_style(colors::Green);
     _canvas.begin_path();
-    _canvas.rounded_rect({20, 30, 300, 100}, 20);
+    _canvas.rounded_rect({20, 30, 300, 100}, 50);
+    _canvas.fill();
+
+    _canvas.begin_path();
+    _canvas.rect({20, 150, 300, 100});
     _canvas.fill();
 
     _canvas.begin_path();
@@ -251,13 +255,17 @@ void CanvasEx::canvas_fancy_lines()
     _canvas.fill();
 
     _canvas.set_stroke_style(colors::Black);
-    _canvas.set_stroke_width(15);
+    _canvas.set_stroke_width(14);
 
-    _canvas.set_line_dash(std::vector {0.075f, 0.0125f});
-    //_canvas.set_line_dash(std::vector {8, 5});
+    //_canvas.set_line_dash(std::vector {0.075f, 0.005f});
+    _canvas.set_line_dash(std::vector {static_cast<i32>(_rotation), static_cast<i32>(_rotation / 4)});
 
     _canvas.begin_path();
-    _canvas.rounded_rect({20, 30, 300, 100}, 10);
+    _canvas.rounded_rect({20, 30, 300, 100}, 50);
+    _canvas.stroke();
+
+    _canvas.begin_path();
+    _canvas.rect({20, 150, 300, 100});
     _canvas.stroke();
 
     _canvas.begin_path();
