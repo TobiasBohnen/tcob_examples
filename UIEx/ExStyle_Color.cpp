@@ -129,6 +129,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     {
         auto style {retValue.create<checkbox>("checkbox", {})};
         style->Border.Type   = element::border::type::Dashed;
+        style->Border.Dash   = std::vector {0.1f, 0.05f, 0.05f, 0.01f};
         style->Border.Size   = 3_px;
         style->Border.Radius = 5_px;
         style->Margin        = {5_px};
@@ -144,6 +145,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         normal.apply(style);
         disabled.apply(disabledStyle);
         hover.apply(hoverStyle);
+        hoverStyle->Border.Dash = std::vector {0.05f, 0.05f};
     }
     {
         auto style {retValue.create<radio_button>("radio_button", {})};
