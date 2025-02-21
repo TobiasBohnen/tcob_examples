@@ -68,7 +68,7 @@ void CanvasEx::on_mouse_motion(mouse::motion_event const& ev)
 
 void CanvasEx::on_mouse_wheel(mouse::wheel_event const& ev)
 {
-    _rotation += (ev.Scroll.Y * 10);
+    _rotation += (ev.Scroll.Y * 5);
 }
 
 void CanvasEx::canvas_ring()
@@ -224,6 +224,7 @@ void CanvasEx::canvas_path2d()
 void CanvasEx::canvas_fancy_lines()
 {
     _canvas.begin_frame(window().Size(), 1);
+
     _canvas.set_fill_style(colors::Green);
     _canvas.begin_path();
     _canvas.rounded_rect({20, 30, 300, 100}, 50);
@@ -238,7 +239,7 @@ void CanvasEx::canvas_fancy_lines()
     _canvas.fill();
 
     _canvas.begin_path();
-    _canvas.ellipse({400, 250}, 50, 85);
+    _canvas.ellipse({700, 250}, 50, 85);
     _canvas.fill();
 
     _canvas.begin_path();
@@ -254,12 +255,30 @@ void CanvasEx::canvas_fancy_lines()
     _canvas.arc_to({950, 350}, {1050, 300}, 150);
     _canvas.fill();
 
+    _canvas.set_stroke_style(colors::Green);
+    _canvas.set_stroke_width(14);
+
+    _canvas.begin_path();
+    _canvas.move_to({350, 50});
+    _canvas.line_to({400, 250});
+    _canvas.stroke();
+
+    _canvas.begin_path();
+    _canvas.move_to({200, 550});
+    _canvas.quad_bezier_to({50, 650}, {350, 850});
+    _canvas.stroke();
+
+    _canvas.begin_path();
+    _canvas.move_to({500, 350});
+    _canvas.cubic_bezier_to({350, 450}, {750, 450}, {650, 650});
+    _canvas.stroke();
+
+    ///
     _canvas.set_stroke_style(colors::Black);
     _canvas.set_stroke_width(14);
 
-    //_canvas.set_line_dash(std::vector {0.075f, 0.005f});
-    _canvas.set_line_dash(std::vector {static_cast<i32>(_rotation), static_cast<i32>(_rotation / 4)});
-
+    //_canvas.set_line_dash(std::vector {static_cast<i32>(_rotation), static_cast<i32>(_rotation / 8)});
+    _canvas.set_line_dash(std::vector {45.f, 5.f});
     _canvas.begin_path();
     _canvas.rounded_rect({20, 30, 300, 100}, 50);
     _canvas.stroke();
@@ -278,7 +297,7 @@ void CanvasEx::canvas_fancy_lines()
     _canvas.stroke();
 
     _canvas.begin_path();
-    _canvas.ellipse({400, 250}, 50, 85);
+    _canvas.ellipse({700, 250}, 50, 85);
     _canvas.stroke();
 
     _canvas.begin_path();
