@@ -40,8 +40,8 @@ void CanvasEx::on_update(milliseconds /* deltaTime */)
     // canvas_ray_cast();
     // canvas_gradient();
     // canvas_path2d();
-    // canvas_fancy_lines();
-    canvas_text();
+    canvas_fancy_lines();
+    // canvas_text();
 }
 
 void CanvasEx::on_draw_to(render_target& target)
@@ -230,103 +230,67 @@ void CanvasEx::canvas_fancy_lines()
     _canvas.begin_frame(window().Size(), 1);
 
     _canvas.set_fill_style(colors::Green);
-    _canvas.begin_path();
-    _canvas.rounded_rect({20, 30, 300, 100}, 50);
-    _canvas.fill();
-
-    _canvas.begin_path();
-    _canvas.rect({20, 150, 300, 100});
-    _canvas.fill();
-
-    _canvas.begin_path();
-    _canvas.circle({600, 250}, 85);
-    _canvas.fill();
-
-    _canvas.begin_path();
-    _canvas.ellipse({700, 250}, 50, 85);
-    _canvas.fill();
-
-    _canvas.begin_path();
-    _canvas.triangle({800, 20}, {650, 120}, {850, 110});
-    _canvas.fill();
-
-    _canvas.begin_path();
-    _canvas.arc({800, 600}, 150, degree_f {25}, degree_f {215}, winding::CW);
-    _canvas.fill();
-
-    _canvas.begin_path();
-    _canvas.move_to({950, 150});
-    _canvas.arc_to({950, 350}, {1050, 300}, 150);
-    _canvas.fill();
-
-    _canvas.set_stroke_style(colors::Green);
-    _canvas.set_stroke_width(14);
-
-    _canvas.begin_path();
-    _canvas.move_to({350, 50});
-    _canvas.line_to({400, 250});
-    _canvas.stroke();
-
-    _canvas.begin_path();
-    _canvas.move_to({200, 550});
-    _canvas.quad_bezier_to({50, 650}, {350, 850});
-    _canvas.stroke();
-
-    _canvas.begin_path();
-    _canvas.move_to({500, 350});
-    _canvas.cubic_bezier_to({350, 450}, {750, 450}, {650, 650});
-    _canvas.stroke();
-
-    ///
     _canvas.set_stroke_style(colors::Black);
-    _canvas.set_stroke_width(14);
-
+    _canvas.set_stroke_width(8);
     _canvas.set_line_dash(std::array {_rotation, _rotation / 2});
-    //  _canvas.set_line_dash(std::vector {45.f, 5.f});
-    _canvas.begin_path();
-    _canvas.rounded_rect({20, 30, 300, 100}, 50);
-    _canvas.stroke();
-
-    _canvas.begin_path();
-    _canvas.rect({20, 150, 300, 100});
-    _canvas.stroke();
 
     _canvas.begin_path();
     _canvas.move_to({350, 50});
     _canvas.line_to({400, 250});
+    _canvas.fill();
+    _canvas.stroke();
+
+    _canvas.begin_path();
+    _canvas.rounded_rect({20, 30, 300, 100}, 50);
+    _canvas.fill();
+    _canvas.stroke();
+
+    _canvas.begin_path();
+    _canvas.rect({20, 150, 300, 100});
+    _canvas.fill();
     _canvas.stroke();
 
     _canvas.begin_path();
     _canvas.circle({600, 250}, 85);
+    _canvas.fill();
     _canvas.stroke();
 
     _canvas.begin_path();
     _canvas.ellipse({700, 250}, 50, 85);
+    _canvas.fill();
     _canvas.stroke();
 
     _canvas.begin_path();
     _canvas.triangle({800, 20}, {650, 120}, {850, 110});
+    _canvas.fill();
     _canvas.stroke();
 
     _canvas.begin_path();
-    _canvas.arc({800, 600}, 150, degree_f {25}, degree_f {215}, winding::CW);
+    _canvas.arc({800, 600}, 150, degree_f {25}, degree_f {280}, winding::CW);
+    _canvas.fill();
     _canvas.stroke();
 
+    /*
     _canvas.begin_path();
-    _canvas.move_to({950, 150});
-    _canvas.arc_to({950, 350}, {1050, 300}, 150);
+    _canvas.move_to({1080, 190});
+    _canvas.arc_to({1080, 430}, {810, 430}, 230);
+    _canvas.line_to({1010, 230});
+    _canvas.fill();
     _canvas.stroke();
-
+*/
     _canvas.begin_path();
     _canvas.move_to({200, 550});
     _canvas.quad_bezier_to({50, 650}, {350, 850});
+    _canvas.fill();
     _canvas.stroke();
 
     _canvas.begin_path();
-    _canvas.move_to({500, 350});
-    _canvas.cubic_bezier_to({350, 450}, {750, 450}, {650, 650});
+    _canvas.move_to({350, 450});
+    _canvas.cubic_bezier_to({600, 500}, {600, 550}, {500, 750});
+    _canvas.fill();
     _canvas.stroke();
 
+    /*
     _canvas.set_stroke_style(colors::Green);
     _canvas.set_stroke_width(15);
     _canvas.begin_path();
@@ -340,6 +304,7 @@ void CanvasEx::canvas_fancy_lines()
     _canvas.line_to(_center);
     //_canvas.line_to({850, 350});
     _canvas.stroke();
+*/
 
     _canvas.end_frame();
 }
@@ -348,15 +313,14 @@ void CanvasEx::canvas_text()
 {
     _canvas.begin_frame(window().Size(), 1);
 
-    _canvas.set_edge_antialias(false);
     _canvas.set_fill_style(colors::White);
     _canvas.set_stroke_style(colors::Black);
-    _canvas.set_stroke_width(5);
-    _canvas.set_font(_font.get_font({}, 128).ptr());
+    _canvas.set_stroke_width(2);
+    _canvas.set_font(_font.get_font({}, 72).ptr());
 
     _canvas.begin_path();
-    _canvas.fill_text("Lorem ipsum dolor sit amet", {200, 300});
-    _canvas.stroke_text("Lorem ipsum dolor sit amet", {200, 300});
+    _canvas.fill_text("Lorem ipsum dolor sit amet", {10, 300});
+    _canvas.stroke();
 
     _canvas.end_frame();
 }
