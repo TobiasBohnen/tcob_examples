@@ -277,8 +277,8 @@ void CanvasEx::canvas_fancy_lines()
     _canvas.set_stroke_style(colors::Black);
     _canvas.set_stroke_width(14);
 
-    //_canvas.set_line_dash(std::vector {static_cast<i32>(_rotation), static_cast<i32>(_rotation / 8)});
-    _canvas.set_line_dash(std::vector {45.f, 5.f});
+    _canvas.set_line_dash(std::array {_rotation, _rotation / 2});
+    //  _canvas.set_line_dash(std::vector {45.f, 5.f});
     _canvas.begin_path();
     _canvas.rounded_rect({20, 30, 300, 100}, 50);
     _canvas.stroke();
@@ -323,7 +323,6 @@ void CanvasEx::canvas_fancy_lines()
     _canvas.cubic_bezier_to({350, 450}, {750, 450}, {650, 650});
     _canvas.stroke();
 
-    /*
     _canvas.set_stroke_style(colors::Green);
     _canvas.set_stroke_width(15);
     _canvas.begin_path();
@@ -337,7 +336,6 @@ void CanvasEx::canvas_fancy_lines()
     _canvas.line_to(_center);
     //_canvas.line_to({850, 350});
     _canvas.stroke();
-*/
 
     _canvas.end_frame();
 }
