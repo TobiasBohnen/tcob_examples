@@ -29,10 +29,13 @@ private:
     void canvas_gradient();
     void canvas_path2d();
     void canvas_fancy_lines();
+    void canvas_text();
 
     canvas          _canvas;
     canvas_renderer _renderer {_canvas};
 
     point_f _center;
     f32     _rotation {45};
+
+    font_family _font {""};
 };

@@ -59,8 +59,8 @@ inline void rng_form::draw_dice()
     for (auto p : hist) {
         _canvas->set_fill_style(colors::Black);
         _canvas->set_font(font);
-        _canvas->fill_text({pos + point_f {xoff / 2, 0}, size_f {50, 50}}, std::to_string(p.first));
-        _canvas->fill_text({pos + point_f {xoff / 4, font->info().LineHeight}, size_f {100, 100}}, std::to_string(p.second));
+        _canvas->draw_text({pos + point_f {xoff / 2, 0}, size_f {50, 50}}, std::to_string(p.first));
+        _canvas->draw_text({pos + point_f {xoff / 4, font->info().LineHeight}, size_f {100, 100}}, std::to_string(p.second));
 
         i32 const count {static_cast<i32>(std::round(static_cast<f32>(p.second) / max * blockCount))};
         f32 const totalBarHeight {barHeight * count * barOffset};

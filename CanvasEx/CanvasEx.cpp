@@ -8,9 +8,12 @@
 #include <iomanip>
 #include <iostream>
 
+#include "../_common/Trim.hpp"
+
 CanvasEx::CanvasEx(game& game)
     : scene {game}
 {
+    font_family::SingleFont(_font, trim_ttf);
 }
 
 CanvasEx::~CanvasEx() = default;
@@ -37,7 +40,8 @@ void CanvasEx::on_update(milliseconds /* deltaTime */)
     // canvas_ray_cast();
     // canvas_gradient();
     // canvas_path2d();
-    canvas_fancy_lines();
+    // canvas_fancy_lines();
+    canvas_text();
 }
 
 void CanvasEx::on_draw_to(render_target& target)
@@ -336,6 +340,23 @@ void CanvasEx::canvas_fancy_lines()
     _canvas.line_to(_center);
     //_canvas.line_to({850, 350});
     _canvas.stroke();
+
+    _canvas.end_frame();
+}
+
+void CanvasEx::canvas_text()
+{
+    _canvas.begin_frame(window().Size(), 1);
+
+    _canvas.set_edge_antialias(false);
+    _canvas.set_fill_style(colors::White);
+    _canvas.set_stroke_style(colors::Black);
+    _canvas.set_stroke_width(5);
+    _canvas.set_font(_font.get_font({}, 128).ptr());
+
+    _canvas.begin_path();
+    _canvas.fill_text("Lorem ipsum dolor sit amet", {200, 300});
+    _canvas.stroke_text("Lorem ipsum dolor sit amet", {200, 300});
 
     _canvas.end_frame();
 }
