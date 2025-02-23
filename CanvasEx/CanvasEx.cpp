@@ -232,7 +232,10 @@ void CanvasEx::canvas_fancy_lines()
     _canvas.set_fill_style(colors::Green);
     _canvas.set_stroke_style(colors::Black);
     _canvas.set_stroke_width(8);
-    _canvas.set_line_dash(std::array {_rotation, _rotation / 2});
+    // _canvas.set_line_dash(std::array {_rotation, _rotation / 2});
+    _canvas.set_line_dash(std::array {2.f, 16.f});
+    _canvas.set_line_cap(line_cap::Round);
+    //_canvas.set_dash_offset(_rotation);
 
     _canvas.begin_path();
     _canvas.move_to({350, 50});
@@ -270,14 +273,6 @@ void CanvasEx::canvas_fancy_lines()
     _canvas.fill();
     _canvas.stroke();
 
-    /*
-    _canvas.begin_path();
-    _canvas.move_to({1080, 190});
-    _canvas.arc_to({1080, 430}, {810, 430}, 230);
-    _canvas.line_to({1010, 230});
-    _canvas.fill();
-    _canvas.stroke();
-*/
     _canvas.begin_path();
     _canvas.move_to({200, 550});
     _canvas.quad_bezier_to({50, 650}, {350, 850});
@@ -289,6 +284,30 @@ void CanvasEx::canvas_fancy_lines()
     _canvas.cubic_bezier_to({600, 500}, {600, 550}, {500, 750});
     _canvas.fill();
     _canvas.stroke();
+
+    _canvas.begin_path();
+    _canvas.move_to({1280, 190});
+    _canvas.arc_to({1280, 430}, {1010, 430}, 430);
+    _canvas.line_to({1210, 430});
+    _canvas.fill();
+    _canvas.stroke();
+
+    _canvas.begin_path();
+    _canvas.set_fill_style(colors::Red);
+    _canvas.circle({1280, 190}, 25);
+    _canvas.fill();
+    _canvas.begin_path();
+    _canvas.set_fill_style(colors::Blue);
+    _canvas.circle({1280, 430}, 25);
+    _canvas.fill();
+    _canvas.begin_path();
+    _canvas.set_fill_style(colors::Orange);
+    _canvas.circle({1010, 430}, 25);
+    _canvas.fill();
+    _canvas.begin_path();
+    _canvas.set_fill_style(colors::Black);
+    _canvas.circle({1210, 430}, 25);
+    _canvas.fill();
 
     /*
     _canvas.set_stroke_style(colors::Green);
