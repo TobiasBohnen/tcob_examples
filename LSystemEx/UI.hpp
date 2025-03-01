@@ -25,6 +25,8 @@ public:
 
 private:
     void gen_styles();
+    void create_rule(grid_layout& layout);
+    void create_settings(grid_layout& layout);
 
     std::shared_ptr<text_box>  _txbAxiom;
     std::shared_ptr<spinner>   _spnIterations;

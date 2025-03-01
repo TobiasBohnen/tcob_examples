@@ -96,7 +96,7 @@ void LSystemEx::step()
     _canvas.begin_frame(window().Size(), 1, 0, false);
 
     _canvas.set_edge_antialias(false);
-    _canvas.set_stroke_style(colors::White);
+    _canvas.set_stroke_style(colors::Black);
     _canvas.set_fill_style(colors::Red);
     _canvas.set_stroke_width(_currentState.StrokeWidth);
 
@@ -107,12 +107,17 @@ void LSystemEx::step()
     switch (_lstring[_lstringpos++]) {
     case 'F': {
         // Move forward while drawing.
+        i32 count {1};
+        while (_lstring[_lstringpos] == 'F') {
+            ++count;
+            ++_lstringpos;
+        }
         _canvas.begin_path();
         _canvas.move_to(_currentState.Position);
-        _currentState.Position += point_f::FromDirection(_currentState.Angle) * _currentState.LineLength;
+        _currentState.Position += point_f::FromDirection(_currentState.Angle) * _currentState.LineLength * count;
         _canvas.line_to(_currentState.Position);
         _canvas.stroke();
-        _countdown = 125ms;
+        _countdown = 50ms;
         break;
     }
     case 'f': {

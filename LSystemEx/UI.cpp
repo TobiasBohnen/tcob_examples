@@ -23,81 +23,104 @@ lsystem_form::lsystem_form(window* window, rect_f const& bounds)
     auto mainPanel {create_container<glass>(dock_style::Fill, "main")};
     auto mainPanelLayout {mainPanel->create_layout<grid_layout>(size_i {40, 40})};
 
-    auto txbVariable {mainPanelLayout->create_widget<text_box>({1, 1, 4, 2}, "txbVariable")};
-    txbVariable->MaxLength = 1;
-    auto txbRule {mainPanelLayout->create_widget<text_box>({7, 1, 20, 2}, "txbRule")};
+    create_rule(*mainPanelLayout);
+    create_settings(*mainPanelLayout);
 
-    _grdRules = mainPanelLayout->create_widget<grid_view>({1, 4, 38, 20}, "grdRules");
-    _grdRules->set_columns({"Variable", "Rule"});
+    auto btnStart {mainPanelLayout->create_widget<button>({1, 35, 12, 2}, "btnStart")};
+    btnStart->Label = "Start";
+    btnStart->Click.connect([this]() { Start(); });
+}
+
+void lsystem_form::create_rule(grid_layout& layout)
+{
+    auto txbVariable {layout.create_widget<text_box>({1, 1, 4, 3}, "txbVariable")};
+    txbVariable->MaxLength = 1;
+
+    auto txbRule {layout.create_widget<text_box>({5, 1, 21, 3}, "txbRule")};
+
+    auto spnProp {layout.create_widget<spinner>({26, 1, 6, 3}, "spnProp")};
+    spnProp->Min   = 0;
+    spnProp->Max   = 100;
+    spnProp->Value = 100;
+
+    auto btnAdd {layout.create_widget<button>({34, 1, 4, 3}, "btnAdd")};
+    btnAdd->Label = "+";
+
+    _grdRules = layout.create_widget<grid_view>({1, 4, 38, 20}, "grdRules");
+    _grdRules->set_columns({"Variable", "Rule", "Probability"});
     _grdRules->HeaderSelectable = false;
     _grdRules->SelectMode       = grid_view::select_mode::Row;
-    _grdRules->SelectedCellIndex.Changed.connect([uxRules = _grdRules.get(), uxVar = txbVariable.get(), uxRule = txbRule.get()] {
+    _grdRules->SelectedCellIndex.Changed.connect([uxRules = _grdRules.get(), uxVar = txbVariable.get(), uxRule = txbRule.get(), uxProp = spnProp.get()] {
         if (uxRules->SelectedCellIndex->Y < 1) { return; }
-        uxVar->Text  = uxRules->get_cell({0, uxRules->SelectedCellIndex->Y});
-        uxRule->Text = uxRules->get_cell({1, uxRules->SelectedCellIndex->Y});
+        uxVar->Text   = uxRules->get_cell({0, uxRules->SelectedCellIndex->Y});
+        uxRule->Text  = uxRules->get_cell({1, uxRules->SelectedCellIndex->Y});
+        uxProp->Value = *helper::to_number<i32>(uxRules->get_cell({2, uxRules->SelectedCellIndex->Y}));
     });
 
-    _grdRules->add_row({"F", "FF"});
-    _grdRules->add_row({"X", "F[+X]F[-X]+X"});
-
-    auto btnAdd {mainPanelLayout->create_widget<button>({34, 1, 4, 2}, "btnAdd")};
-    btnAdd->Label = "+";
-    btnAdd->Click.connect([uxRules = _grdRules.get(), uxVar = txbVariable.get(), uxRule = txbRule.get()](widget_event const& ev) {
-        if (uxRules->row_count() < 5 && !uxVar->Text->empty() && !uxRule->Text->empty()) {
-            uxRules->add_row({uxVar->Text, uxRule->Text});
-        }
-        if (uxRules->row_count() == 5) {
-            ev.Sender->disable();
+    _grdRules->add_row({"F", "FF", "100"});
+    _grdRules->add_row({"X", "F[+X]F[-X]+X", "100"});
+    _grdRules->KeyDown.connect([uxRules = _grdRules.get(), uxAdd = btnAdd.get()](keyboard_event const& ev) {
+        if (ev.Event.KeyCode == key_code::DEL) {
+            if (uxRules->SelectedCellIndex->Y < 1) { return; }
+            uxRules->remove_row(uxRules->SelectedCellIndex->Y - 1);
+            uxAdd->enable();
         }
     });
-    auto btnRemove {mainPanelLayout->create_widget<button>({34, 24, 4, 2}, "btnRemove")};
-    btnRemove->Label = "-";
-    btnRemove->Click.connect([uxRules = _grdRules.get(), uxAdd = btnAdd.get()]() {
-        if (uxRules->SelectedCellIndex->Y < 1) { return; }
-        uxRules->remove_row(uxRules->SelectedCellIndex->Y - 1);
 
-        uxAdd->enable();
+    btnAdd->Click.connect([uxRules = _grdRules.get(), uxVar = txbVariable.get(), uxRule = txbRule.get(), uxProp = spnProp.get()](widget_event const& ev) {
+        if (uxRules->row_count() >= 5 || uxVar->Text->empty() || uxRule->Text->empty()) { return; }
+
+        // remove duplicate row
+        for (i32 i {0}; i < uxRules->row_count(); ++i) {
+            auto const& row {uxRules->get_row(i)};
+            if (row[0].Text == uxVar->Text && row[2].Text == std::to_string(uxProp->Value)) {
+                uxRules->remove_row(i);
+                break;
+            }
+        }
+
+        uxRules->add_row({uxVar->Text, uxRule->Text, std::to_string(uxProp->Value)});
+        if (uxRules->row_count() == 5) { ev.Sender->disable(); }
     });
+}
 
-    auto lblAxiom {mainPanelLayout->create_widget<label>({1, 26, 8, 2}, "lblAxiom")};
+void lsystem_form::create_settings(grid_layout& layout)
+{
+    auto lblAxiom {layout.create_widget<label>({1, 26, 8, 2}, "lblAxiom")};
     lblAxiom->Label = "Axiom:";
-    _txbAxiom       = mainPanelLayout->create_widget<text_box>({9, 26, 8, 2}, "txbAxiom");
+    _txbAxiom       = layout.create_widget<text_box>({9, 26, 8, 2}, "txbAxiom");
     _txbAxiom->Text = "X";
 
-    auto lblIterations {mainPanelLayout->create_widget<label>({1, 28, 8, 2}, "lblIterations")};
+    auto lblIterations {layout.create_widget<label>({1, 28, 8, 2}, "lblIterations")};
     lblIterations->Label  = "Iterations:";
-    _spnIterations        = mainPanelLayout->create_widget<spinner>({9, 28, 8, 2}, "spnIterations");
+    _spnIterations        = layout.create_widget<spinner>({9, 28, 8, 2}, "spnIterations");
     _spnIterations->Step  = 1;
     _spnIterations->Min   = 1;
     _spnIterations->Value = 5;
 
-    auto lblAngle {mainPanelLayout->create_widget<label>({21, 28, 8, 2}, "lblAngle")};
+    auto lblAngle {layout.create_widget<label>({21, 28, 8, 2}, "lblAngle")};
     lblAngle->Label  = "Angle:";
-    _spnAngle        = mainPanelLayout->create_widget<spinner>({29, 28, 8, 2}, "spnAngle");
+    _spnAngle        = layout.create_widget<spinner>({29, 28, 8, 2}, "spnAngle");
     _spnAngle->Step  = 1;
     _spnAngle->Min   = 0;
     _spnAngle->Max   = 359;
     _spnAngle->Value = 20;
 
-    auto lblLine {mainPanelLayout->create_widget<label>({1, 30, 8, 2}, "lblLine")};
+    auto lblLine {layout.create_widget<label>({1, 30, 8, 2}, "lblLine")};
     lblLine->Label  = "Line:";
-    _spnLine        = mainPanelLayout->create_widget<spinner>({9, 30, 8, 2}, "spnLine");
+    _spnLine        = layout.create_widget<spinner>({9, 30, 8, 2}, "spnLine");
     _spnLine->Step  = 1;
     _spnLine->Min   = 5;
     _spnLine->Max   = 20;
     _spnLine->Value = 12;
 
-    auto lblStroke {mainPanelLayout->create_widget<label>({21, 30, 8, 2}, "lblStroke")};
+    auto lblStroke {layout.create_widget<label>({21, 30, 8, 2}, "lblStroke")};
     lblStroke->Label  = "Stroke:";
-    _spnStroke        = mainPanelLayout->create_widget<spinner>({29, 30, 8, 2}, "spnStroke");
+    _spnStroke        = layout.create_widget<spinner>({29, 30, 8, 2}, "spnStroke");
     _spnStroke->Step  = 1;
     _spnStroke->Min   = 1;
     _spnStroke->Max   = 10;
     _spnStroke->Value = 5;
-
-    auto btnStart {mainPanelLayout->create_widget<button>({1, 35, 12, 2}, "btnStart")};
-    btnStart->Label = "Start";
-    btnStart->Click.connect([this]() { Start(); });
 }
 
 auto lsystem_form::get_settings() const -> settings
@@ -105,7 +128,10 @@ auto lsystem_form::get_settings() const -> settings
     settings retValue;
     l_system system {};
     for (i32 i {0}; i < _grdRules->row_count(); ++i) {
-        system.add_rule(_grdRules->get_cell({0, i + 1})[0], {.Replacement = _grdRules->get_cell({1, i + 1})});
+        system.add_rule(
+            _grdRules->get_cell({0, i + 1})[0],
+            {.Replacement = _grdRules->get_cell({1, i + 1}),
+             .Probability = *helper::to_number<f32>(_grdRules->get_cell({2, i + 1})) / 100.f});
     }
     retValue.String = system.generate(_txbAxiom->Text, _spnIterations->Value);
 
@@ -119,7 +145,6 @@ auto lsystem_form::get_settings() const -> settings
 
 void lsystem_form::gen_styles()
 {
-
     style_collection styles;
 
     {
