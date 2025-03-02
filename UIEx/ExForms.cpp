@@ -48,6 +48,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     auto sliderPanel {panel0Layout->create_widget<panel>({490, 390, 350, 350}, "SliderPanel")};
     auto sliderPanelLayout {sliderPanel->get_layout<fixed_layout>()};
+    sliderPanel->ZOrder = 5;
 
     auto slider0 {sliderPanelLayout->create_widget<slider>({0, 0, 250, 100}, "Slider0")};
     slider0->Min               = 0;
@@ -99,38 +100,38 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     auto boxVPanel0 {panel0Layout->create_widget<panel>({490, 20, 250, 250}, "SPanel1")};
     (*boxVPanel0->TabStop).Enabled = false;
-    auto boxVLayout0 {boxVPanel0->create_layout<vbox_layout>()};
-    for (i32 i = 0; i < 4; i++) {
+    auto boxVLayout0 {boxVPanel0->create_layout<vertical_layout>()};
+    for (i32 i {0}; i < 4; i++) {
         auto bb {boxVLayout0->create_widget<button>("Button" + std::to_string(i))};
         bb->Label = std::to_string(i);
     }
 
     auto boxHPanel1 {panel0Layout->create_widget<panel>({230, 280, 250, 100}, "SPanel2")};
     (*boxHPanel1->TabStop).Enabled = false;
-    auto boxHLayout1 {boxHPanel1->create_layout<hbox_layout>()};
-    for (i32 i = 0; i < 4; i++) {
+    auto boxHLayout1 {boxHPanel1->create_layout<horizontal_layout>()};
+    for (i32 i {0}; i < 4; i++) {
         auto chk {boxHLayout1->create_widget<checkbox>("Check" + std::to_string(i))};
         chk->Checked.Changed.connect([label0, chk](bool value) { label0->Label = (value ? "checked: " : "unchecked: ") + chk->name(); });
     }
 
     auto boxHPanel2 {panel0Layout->create_widget<panel>({490, 280, 250, 100}, "SPanel3")};
     (*boxHPanel2->TabStop).Enabled = false;
-    auto boxHLayout2 {boxHPanel2->create_layout<hbox_layout>()};
-    for (i32 i = 0; i < 4; i++) {
+    auto boxHLayout2 {boxHPanel2->create_layout<horizontal_layout>()};
+    for (i32 i {0}; i < 4; i++) {
         auto rb {boxHLayout2->create_widget<radio_button>("Radio" + std::to_string(i))};
         rb->Checked.Changed.connect([label0, rb](bool value) { label0->Label = (value ? "checked: " : "unchecked: ") + rb->name(); });
         rb->Cursor = "cursor2";
     }
-
-    auto flexPanel0 {panel0Layout->create_widget<panel>({230, 390, 250, 160}, "SPanel4")};
-    (*flexPanel0->TabStop).Enabled = false;
-    flexPanel0->FocusGained.connect([](widget_event ev) { (*ev.Sender->Bounds).Size.Width = 510; });
-    flexPanel0->FocusLost.connect([](widget_event ev) { (*ev.Sender->Bounds).Size.Width = 250; });
-    auto flexLayout0 {flexPanel0->create_layout<flex_size_layout>()};
-    for (i32 i = 0; i < 4; i++) {
-        auto fb {flexLayout0->create_widget<button>({0.f, i * 32.5f}, "FButton" + std::to_string(i))};
-        fb->Flex = {100_pct, 20_pct};
+    auto flowPanel0 {panel0Layout->create_widget<panel>({230, 390, 250, 160}, "SPanel4")};
+    (*flowPanel0->TabStop).Enabled = false;
+    flowPanel0->FocusGained.connect([](widget_event ev) { (*ev.Sender->Bounds).Size.Width = 510; });
+    flowPanel0->FocusLost.connect([](widget_event ev) { (*ev.Sender->Bounds).Size.Width = 250; });
+    auto flowLayout0 {flowPanel0->create_layout<flow_layout>()};
+    for (i32 i {0}; i < 16; i++) {
+        auto fb {flowLayout0->create_widget<button>("FButton" + std::to_string(i))};
+        fb->Flex = {i % 2 == 0 ? 20_pct : 15_pct, i % 2 == 0 ? 15_pct : 20_pct};
     }
+    flowPanel0->ZOrder = 10;
 
     auto dropDownList0 {panel0Layout->create_widget<drop_down_list>({1000, 50, 150, 50}, "DropDownList0")};
     for (i32 i {0}; i < 4; ++i) {
@@ -351,8 +352,8 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
     auto createTabs = [](std::shared_ptr<tab_container> const& tabContainer0) {
         auto boxVPanel0 {tabContainer0->create_tab<panel>("SPanel0")};
         (*boxVPanel0->TabStop).Enabled = false;
-        auto boxVLayout0 {boxVPanel0->create_layout<vbox_layout>()};
-        for (i32 i = 0; i < 4; i++) {
+        auto boxVLayout0 {boxVPanel0->create_layout<vertical_layout>()};
+        for (i32 i {0}; i < 4; i++) {
             auto bb {boxVLayout0->create_widget<button>("Button" + std::to_string(i))};
             bb->Label = std::to_string(i);
         }
@@ -376,8 +377,8 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
 
         auto boxHPanel1 {tabContainer0->create_tab<panel>("SPanel2")};
         (*boxHPanel1->TabStop).Enabled = false;
-        auto boxHLayout1 {boxHPanel1->create_layout<hbox_layout>()};
-        for (i32 i = 0; i < 4; i++) {
+        auto boxHLayout1 {boxHPanel1->create_layout<horizontal_layout>()};
+        for (i32 i {0}; i < 4; i++) {
             boxHLayout1->create_widget<checkbox>("Check" + std::to_string(i));
         }
     };
@@ -415,8 +416,8 @@ auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::sha
     auto const createSections {[](std::shared_ptr<accordion> const& accordion0) {
         auto boxVPanel0 {accordion0->create_section<panel>("SPanel0")};
         (*boxVPanel0->TabStop).Enabled = false;
-        auto boxVLayout0 {boxVPanel0->create_layout<vbox_layout>()};
-        for (i32 i = 0; i < 4; i++) {
+        auto boxVLayout0 {boxVPanel0->create_layout<vertical_layout>()};
+        for (i32 i {0}; i < 4; i++) {
             auto bb {boxVLayout0->create_widget<button>("Button" + std::to_string(i))};
             bb->Label = std::to_string(i);
         }
@@ -439,8 +440,8 @@ auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::sha
 
         auto boxHPanel1 {accordion0->create_section<panel>("SPanel2")};
         (*boxHPanel1->TabStop).Enabled = false;
-        auto boxHLayout1 {boxHPanel1->create_layout<hbox_layout>()};
-        for (i32 i = 0; i < 4; i++) {
+        auto boxHLayout1 {boxHPanel1->create_layout<horizontal_layout>()};
+        for (i32 i {0}; i < 4; i++) {
             boxHLayout1->create_widget<checkbox>("Check" + std::to_string(i));
         }
     }};
