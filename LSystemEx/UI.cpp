@@ -34,9 +34,11 @@ lsystem_form::lsystem_form(window* window, rect_f const& bounds)
 void lsystem_form::create_rule(grid_layout& layout)
 {
     auto txbVariable {layout.create_widget<text_box>({1, 1, 4, 3}, "txbVariable")};
-    txbVariable->MaxLength = 1;
+    txbVariable->MaxLength  = 1;
+    txbVariable->Selectable = true;
 
     auto txbRule {layout.create_widget<text_box>({5, 1, 21, 3}, "txbRule")};
+    txbRule->Selectable = true;
 
     auto spnProp {layout.create_widget<spinner>({26, 1, 6, 3}, "spnProp")};
     spnProp->Min   = 0;
