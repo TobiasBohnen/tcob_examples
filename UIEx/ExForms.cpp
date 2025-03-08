@@ -83,7 +83,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     auto gridPanel {panel0Layout->create_widget<panel>({230, 20, 250, 250}, "SPanel0")};
     (*gridPanel->TabStop).Enabled = false;
-    auto gridLayout {gridPanel->create_layout<grid_layout>()};
+    auto gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 4})};
     auto createGridWidget {
         [&](rect_i loc, std::string const& name) {
             auto b {gridLayout->create_widget<button>(loc, "gridB" + name, true)};
@@ -122,16 +122,24 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
         rb->Checked.Changed.connect([label0, rb](bool value) { label0->Label = (value ? "checked: " : "unchecked: ") + rb->name(); });
         rb->Cursor = "cursor2";
     }
-    auto flowPanel0 {panel0Layout->create_widget<panel>({230, 390, 250, 160}, "SPanel4")};
-    (*flowPanel0->TabStop).Enabled = false;
-    flowPanel0->FocusGained.connect([](widget_event ev) { (*ev.Sender->Bounds).Size.Width = 510; });
-    flowPanel0->FocusLost.connect([](widget_event ev) { (*ev.Sender->Bounds).Size.Width = 250; });
-    auto flowLayout0 {flowPanel0->create_layout<flow_layout>()};
+    auto masonryPanel0 {panel0Layout->create_widget<panel>({230, 390, 250, 550}, "SPanel4")};
+    (*masonryPanel0->TabStop).Enabled = false;
+    masonryPanel0->FocusGained.connect([](widget_event ev) { (*ev.Sender->Bounds).Size.Width = 800; });
+    masonryPanel0->FocusLost.connect([](widget_event ev) { (*ev.Sender->Bounds).Size.Width = 250; });
+    auto masonryLayout0 {masonryPanel0->create_layout<masonry_layout>(6)};
     for (i32 i {0}; i < 16; i++) {
-        auto fb {flowLayout0->create_widget<button>("FButton" + std::to_string(i))};
-        fb->Flex = {i % 2 == 0 ? 20_pct : 15_pct, i % 2 == 0 ? 15_pct : 20_pct};
+        auto fb {masonryLayout0->create_widget<button>("FButton" + std::to_string(i))};
+        if (i % 3 == 0) {
+            fb->Flex = {100_pct, 40_pct};
+        } else if (i % 2 == 0) {
+            fb->Flex = {100_pct, 30_pct};
+        } else {
+            fb->Flex = {100_pct, 20_pct};
+        }
+
+        fb->Label = std::to_string(i);
     }
-    flowPanel0->ZOrder = 10;
+    masonryPanel0->ZOrder = 10;
 
     auto dropDownList0 {panel0Layout->create_widget<drop_down_list>({1000, 50, 150, 50}, "DropDownList0")};
     for (i32 i {0}; i < 4; ++i) {
@@ -360,7 +368,7 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
 
         auto gridPanel {tabContainer0->create_tab<panel>("SPanel1")};
         (*gridPanel->TabStop).Enabled = false;
-        auto gridLayout {gridPanel->create_layout<grid_layout>()};
+        auto gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 4})};
 
         auto createGridWidget {
             [&](rect_i loc, std::string const& name) {
@@ -424,7 +432,7 @@ auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::sha
 
         auto gridPanel {accordion0->create_section<panel>("SPanel1")};
         (*gridPanel->TabStop).Enabled = false;
-        auto gridLayout {gridPanel->create_layout<grid_layout>()};
+        auto gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 4})};
 
         auto const createGridWidget {[&](rect_i loc, std::string const& name) {
             auto b {gridLayout->create_widget<button>(loc, "gridB" + name, true)};

@@ -23,13 +23,14 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     normal.Container      = colors::LightGray;
 
     color_theme hover {normal};
-    hover.Background  = colors::LightGray;
-    hover.Border      = colors::Gray;
-    hover.Item        = colors::LightGreen;
-    hover.Thumb       = colors::DarkKhaki;
-    hover.NavArrowInc = colors::Red;
-    hover.NavArrowDec = colors::Green;
-    hover.Tick        = colors::White;
+    hover.Background     = colors::LightGray;
+    hover.Border         = colors::Gray;
+    hover.Item           = colors::LightGreen;
+    hover.Thumb          = colors::DarkKhaki;
+    hover.NavArrowInc    = colors::Red;
+    hover.NavArrowDec    = colors::Green;
+    hover.Tick           = colors::White;
+    hover.TextDecoration = colors::Blue;
 
     color_theme hoverCheck {hover};
     hoverCheck.Tick = colors::Green;
@@ -80,25 +81,29 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     style_collection retValue;
     {
         auto style {retValue.create<button>("button", {})};
-        style->Border.Type          = element::border::type::Double;
-        style->Border.Size          = 3_px;
-        style->Border.Radius        = 5_px;
-        style->Text.Style           = {false, font::weight::Normal};
-        style->Text.Font            = resGrp.get<font_family>("Poppins");
-        style->Text.Size            = 50_pct;
-        style->Text.Shadow.OffsetX  = 0_px;
-        style->Text.Shadow.OffsetY  = 1_px;
-        style->Text.Alignment       = {horizontal_alignment::Centered, vertical_alignment::Middle};
-        style->Text.Decoration.Size = {3_px};
-        style->Margin               = {5_px};
-        style->Padding              = {2_px};
+        style->Border.Type         = element::border::type::Double;
+        style->Border.Size         = 3_px;
+        style->Border.Radius       = 5_px;
+        style->Text.Style          = {false, font::weight::Normal};
+        style->Text.Font           = resGrp.get<font_family>("Poppins");
+        style->Text.Size           = 50_pct;
+        style->Text.Shadow.OffsetX = 0_px;
+        style->Text.Shadow.OffsetY = 1_px;
+        style->Text.Alignment      = {horizontal_alignment::Centered, vertical_alignment::Middle};
+
+        style->Text.Decoration.Line.LineThrough = true;
+        style->Text.Decoration.Style            = text_decoration::style::Solid;
+        style->Text.Decoration.Size             = {3_px};
+
+        style->Margin  = {5_px};
+        style->Padding = {2_px};
 
         auto disabledStyle {retValue.create<button>("button", {.Disabled = true})};
 
         auto hoverStyle {retValue.create<button>("button", {.Hover = true})};
-        *hoverStyle                       = *style;
-        hoverStyle->Text.Transform        = element::text::transform::Lowercase;
-        hoverStyle->Text.Decoration.Style = text_decoration::style::Solid;
+        *hoverStyle                      = *style;
+        hoverStyle->Text.Transform       = element::text::transform::Lowercase;
+        hoverStyle->Text.Decoration.Size = {10_px};
 
         auto focusStyle {retValue.create<button>("button", {.Focus = true})};
         *focusStyle = *style;
