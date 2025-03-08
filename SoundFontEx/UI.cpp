@@ -30,9 +30,10 @@ piano_form::piano_form(window* window)
         {C, 0, "C"}, {D, 3, "D"}, {E, 6, "E"}, {F, 9, "F"}, {G, 12, "G"}, {A, 15, "A"}, {B, 18, "B"}};
 
     for (auto const& [btn, posX, label] : whiteKeys) {
-        btn        = mainPanelLayout->create_widget<button>({posX, 0, 3, 6}, label);
-        btn->Class = "white-keys";
-        btn->Label = label;
+        btn         = mainPanelLayout->create_widget<button>({posX, 0, 3, 6}, label);
+        btn->Class  = "white-keys";
+        btn->Label  = label;
+        btn->ZOrder = 1;
     }
 
     // Black keys
@@ -40,9 +41,10 @@ piano_form::piano_form(window* window)
         {CSharp, 2, "C#"}, {DSharp, 5, "D#"}, {FSharp, 11, "F#"}, {GSharp, 14, "G#"}, {ASharp, 17, "A#"}};
 
     for (auto const& [btn, posX, label] : blackKeys) {
-        btn        = mainPanelLayout->create_widget<button>({posX, 0, 2, 3}, label);
-        btn->Class = "black-keys";
-        btn->Label = label;
+        btn         = mainPanelLayout->create_widget<button>({posX, 0, 2, 3}, label);
+        btn->Class  = "black-keys";
+        btn->Label  = label;
+        btn->ZOrder = 2;
     }
 
     // Octave
