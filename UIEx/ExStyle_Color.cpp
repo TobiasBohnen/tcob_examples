@@ -1,6 +1,8 @@
 #include "ExStyle_Color.hpp"
 
 using namespace std::chrono_literals;
+using namespace tcob::gfx::ui::element;
+using text_element = tcob::gfx::ui::element::text;
 
 auto create_color_styles(assets::group const& resGrp) -> style_collection
 {
@@ -81,7 +83,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     style_collection retValue;
     {
         auto style {retValue.create<button>("button", {})};
-        style->Border.Type         = element::border::type::Double;
+        style->Border.Type         = border::type::Double;
         style->Border.Size         = 3_px;
         style->Border.Radius       = 5_px;
         style->Text.Style          = {false, font::weight::Normal};
@@ -92,7 +94,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Text.Alignment      = {horizontal_alignment::Centered, vertical_alignment::Middle};
 
         style->Text.Decoration.Line.LineThrough = true;
-        style->Text.Decoration.Style            = text_decoration::style::Solid;
+        style->Text.Decoration.Style            = deco::style::Solid;
         style->Text.Decoration.Size             = {3_px};
 
         style->Margin  = {5_px};
@@ -102,7 +104,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
 
         auto hoverStyle {retValue.create<button>("button", {.Hover = true})};
         *hoverStyle                      = *style;
-        hoverStyle->Text.Transform       = element::text::transform::Lowercase;
+        hoverStyle->Text.Transform       = text_element::transform::Lowercase;
         hoverStyle->Text.Decoration.Size = {10_px};
 
         auto focusStyle {retValue.create<button>("button", {.Focus = true})};
@@ -133,14 +135,14 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<checkbox>("checkbox", {})};
-        style->Border.Type       = element::border::type::Dashed;
+        style->Border.Type       = border::type::Dashed;
         style->Border.Dash       = std::vector {20_pct, 10_pct, 10_pct, 5_pct};
         style->Border.DashOffset = 100;
         style->Border.Size       = 3_px;
         style->Border.Radius     = 5_px;
         style->Margin            = {5_px};
         style->Padding           = {2_px};
-        style->Tick.Type         = element::tick::type::Disc;
+        style->Tick.Type         = tick::type::Disc;
         style->Tick.Size         = 100_pct;
 
         auto disabledStyle {retValue.create<checkbox>("checkbox", {.Disabled = true})};
@@ -156,26 +158,26 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<radio_button>("radio_button", {})};
-        style->Border.Type   = element::border::type::Dotted;
+        style->Border.Type   = border::type::Dotted;
         style->Border.Size   = 3_px;
         style->Border.Radius = 5_px;
         style->Margin        = {5_px};
         style->Padding       = {5_px};
-        style->Tick.Type     = element::tick::type::Disc;
+        style->Tick.Type     = tick::type::Disc;
         style->Tick.Size     = 100_pct;
 
         auto disabledStyle {retValue.create<radio_button>("radio_button", {.Disabled = true})};
 
         auto hoverStyle {retValue.create<radio_button>("radio_button", {.Hover = true})};
         *hoverStyle           = *style;
-        hoverStyle->Tick.Type = element::tick::type::Circle;
+        hoverStyle->Tick.Type = tick::type::Circle;
 
         auto focusStyle {retValue.create<radio_button>("radio_button", {.Focus = true})};
         *focusStyle = *style;
 
         auto focusHoverStyle {retValue.create<radio_button>("radio_button", {.Focus = true, .Hover = true})};
         *focusHoverStyle           = *focusStyle;
-        focusHoverStyle->Tick.Type = element::tick::type::Circle;
+        focusHoverStyle->Tick.Type = tick::type::Circle;
 
         auto activeStyle {retValue.create<radio_button>("radio_button", {.Focus = true, .Active = true})};
         *activeStyle = *style;
@@ -194,12 +196,12 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Margin        = {5_px};
         style->Padding       = {2_px};
         style->Delay         = 500ms;
-        style->Tick.Type     = element::tick::type::Square;
+        style->Tick.Type     = tick::type::Square;
         style->Tick.Size     = 100_pct;
 
         auto checkedStyle {retValue.create<toggle>("toggle", {.Checked = true})};
         *checkedStyle           = *style;
-        checkedStyle->Tick.Type = element::tick::type::Disc;
+        checkedStyle->Tick.Type = tick::type::Disc;
         checkedStyle->Tick.Size = 100_pct;
 
         auto disabledStyle {retValue.create<toggle>("toggle", {.Disabled = true})};
@@ -249,7 +251,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Margin            = {5_px};
         style->Padding           = {2_px, 15_px};
         style->ThumbClass        = "slider_thumb";
-        style->Bar.Type          = element::bar::type::Continuous;
+        style->Bar.Type          = bar::type::Continuous;
         style->Bar.Size          = 50_pct;
         style->Bar.Delay         = 250ms;
         style->Bar.Border.Size   = 3_px;
@@ -267,7 +269,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Border.Radius = 5_px;
         style->Margin        = {5_px};
         style->Padding       = {5_px, 5_px};
-        style->Bar.Type      = element::bar::type::Continuous;
+        style->Bar.Type      = bar::type::Continuous;
         style->Bar.Border    = style->Border;
         style->Bar.Delay     = 250ms;
 
@@ -347,7 +349,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Padding                    = {5_px};
         style->DropShadow.Color           = color {0, 0, 0, 128};
         style->VScrollBar.ThumbClass      = "scrollbar_thumb";
-        style->VScrollBar.Bar.Type        = element::bar::type::Continuous;
+        style->VScrollBar.Bar.Type        = bar::type::Continuous;
         style->VScrollBar.Bar.Size        = 30_px;
         style->VScrollBar.Bar.Border.Size = 3_px;
         style->VScrollBar.Bar.Delay       = 250ms;
@@ -379,7 +381,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->ItemHeight                 = 20_pct;
         style->ItemClass                  = "list_items";
         style->VScrollBar.ThumbClass      = "scrollbar_thumb";
-        style->VScrollBar.Bar.Type        = element::bar::type::Continuous;
+        style->VScrollBar.Bar.Type        = bar::type::Continuous;
         style->VScrollBar.Bar.Size        = 20_pct;
         style->VScrollBar.Bar.Border.Size = 3_px;
         style->VScrollBar.Bar.Delay       = 250ms;
@@ -409,7 +411,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->ItemHeight                 = 150_pct;
         style->ItemClass                  = "list_items";
         style->VScrollBar.ThumbClass      = "scrollbar_thumb";
-        style->VScrollBar.Bar.Type        = element::bar::type::Continuous;
+        style->VScrollBar.Bar.Type        = bar::type::Continuous;
         style->VScrollBar.Bar.Size        = 20_pct;
         style->VScrollBar.Bar.Border.Size = 3_px;
         style->VScrollBar.Bar.Delay       = 250ms;
@@ -434,7 +436,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->HeaderItemClass            = "header_items";
         style->RowItemClass               = "row_items";
         style->VScrollBar.ThumbClass      = "scrollbar_thumb";
-        style->VScrollBar.Bar.Type        = element::bar::type::Continuous;
+        style->VScrollBar.Bar.Type        = bar::type::Continuous;
         style->VScrollBar.Bar.Size        = 5_pct;
         style->VScrollBar.Bar.Border.Size = 3_px;
         style->VScrollBar.Bar.Delay       = 250ms;
@@ -509,7 +511,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<text_box>("text_box", {})};
-        style->Border.Type         = element::border::type::Solid;
+        style->Border.Type         = border::type::Solid;
         style->Border.Size         = 3_px;
         style->Border.Radius       = 5_px;
         style->Text.Style          = {false, font::weight::Normal};
@@ -559,7 +561,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     // THUMBS
     {
         auto style {retValue.create<thumb_style>("slider_thumb", {}, {})};
-        style->Thumb.Type          = element::thumb::type::Rect;
+        style->Thumb.Type          = thumb::type::Rect;
         style->Thumb.LongSide      = 25_pct;
         style->Thumb.ShortSide     = 80_pct;
         style->Thumb.Border.Size   = 3_px;
@@ -577,7 +579,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<thumb_style>("scrollbar_thumb", {}, {})};
-        style->Thumb.Type        = element::thumb::type::Rect;
+        style->Thumb.Type        = thumb::type::Rect;
         style->Thumb.LongSide    = 25_pct;
         style->Thumb.ShortSide   = 80_pct;
         style->Thumb.Border.Size = 3_px;
@@ -676,7 +678,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Item.Padding        = {5_px};
         style->Item.Text.Style     = {false, font::weight::Bold};
         style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
-        style->Item.Text.AutoSize  = element::text::auto_size_mode::OnlyShrink;
+        style->Item.Text.AutoSize  = text_element::auto_size_mode::OnlyShrink;
         style->Item.Text.Size      = 15_px;
         style->Item.Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Middle};
         style->Item.Border.Size    = 5_px;
@@ -702,7 +704,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Item.Padding        = {10_px};
         style->Item.Text.Style     = {false, font::weight::Normal};
         style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
-        style->Item.Text.AutoSize  = element::text::auto_size_mode::OnlyShrink;
+        style->Item.Text.AutoSize  = text_element::auto_size_mode::OnlyShrink;
         style->Item.Text.Size      = 20_px;
         style->Item.Text.Color     = normal.Text;
         style->Item.Text.Alignment = {horizontal_alignment::Left, vertical_alignment::Middle};

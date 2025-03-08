@@ -83,7 +83,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     auto gridPanel {panel0Layout->create_widget<panel>({230, 20, 250, 250}, "SPanel0")};
     (*gridPanel->TabStop).Enabled = false;
-    auto gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 4})};
+    auto gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 3})};
     auto createGridWidget {
         [&](rect_i loc, std::string const& name) {
             auto b {gridLayout->create_widget<button>(loc, "gridB" + name, true)};
@@ -368,7 +368,7 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
 
         auto gridPanel {tabContainer0->create_tab<panel>("SPanel1")};
         (*gridPanel->TabStop).Enabled = false;
-        auto gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 4})};
+        auto gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 3})};
 
         auto createGridWidget {
             [&](rect_i loc, std::string const& name) {
@@ -432,7 +432,7 @@ auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::sha
 
         auto gridPanel {accordion0->create_section<panel>("SPanel1")};
         (*gridPanel->TabStop).Enabled = false;
-        auto gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 4})};
+        auto gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 3})};
 
         auto const createGridWidget {[&](rect_i loc, std::string const& name) {
             auto b {gridLayout->create_widget<button>(loc, "gridB" + name, true)};
