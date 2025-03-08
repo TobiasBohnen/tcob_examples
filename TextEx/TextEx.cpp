@@ -88,7 +88,7 @@ void TextEx::on_start()
 
         auto                 font2 {fontFam->get_font({.IsItalic = false, .Weight = font::weight::ExtraBold}, 128)};
         string               text {"Vertex"};
-        std::vector<polygon> polys {font2->polygonize_text(text, true)};
+        std::vector<polygon> polys {polygonize_text(*font2, text, true)};
 
         auto shapeOutline {std::make_shared<poly_shape>()};
         shapeOutline->Color    = colors::Blue;
