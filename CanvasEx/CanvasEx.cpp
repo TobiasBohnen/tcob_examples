@@ -242,6 +242,11 @@ void CanvasEx::canvas_fancy_lines()
     _canvas.line_to({400, 250});
     _canvas.fill();
     _canvas.stroke();
+    /*
+   _canvas.begin_path();
+    _canvas.circle(_center, _rotation);
+    _canvas.clip();
+*/
 
     _canvas.begin_path();
     _canvas.rounded_rect({20, 30, 300, 100}, 50);

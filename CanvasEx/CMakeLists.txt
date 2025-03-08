@@ -12,7 +12,7 @@ set_target_properties(CanvasEx PROPERTIES
 
 if(EMSCRIPTEN)
     target_compile_options(CanvasEx PRIVATE -fexperimental-library -pthread)
-    target_link_options(CanvasEx PRIVATE -sFULL_ES3 -sASSERTIONS -sPTHREAD_POOL_SIZE=8 -sASYNCIFY -pthread)
+    target_link_options(CanvasEx PRIVATE -sFULL_ES3 -sMAX_WEBGL_VERSION=2 -sASSERTIONS -sPTHREAD_POOL_SIZE=8 -sASYNCIFY -pthread)
 endif()
 
 if(NOT TCOB_BUILD_SHARED)
