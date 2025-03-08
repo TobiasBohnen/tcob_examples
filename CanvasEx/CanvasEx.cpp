@@ -14,6 +14,16 @@ CanvasEx::CanvasEx(game& game)
     : scene {game}
 {
     font_family::SingleFont(_font, trim_ttf);
+
+    _modes = {
+        &CanvasEx::canvas_clip,
+        &CanvasEx::canvas_ring,
+        &CanvasEx::canvas_ray_cast,
+        &CanvasEx::canvas_gradient,
+        &CanvasEx::canvas_path2d,
+        &CanvasEx::canvas_fancy_lines,
+        &CanvasEx::canvas_text,
+    };
 }
 
 CanvasEx::~CanvasEx() = default;
@@ -27,7 +37,7 @@ void CanvasEx::on_fixed_update(milliseconds /* deltaTime */)
     stream << " best FPS:" << stats.best_FPS();
     stream << " worst FPS:" << stats.worst_FPS();
 
-    window().Title = "TestGame " + stream.str();
+    window().Title = "TestGame " + stream.str() + "| press 'm' to cycle example";
 }
 
 void CanvasEx::on_start()
@@ -36,12 +46,7 @@ void CanvasEx::on_start()
 
 void CanvasEx::on_update(milliseconds /* deltaTime */)
 {
-    // canvas_ring();
-    // canvas_ray_cast();
-    // canvas_gradient();
-    // canvas_path2d();
-    canvas_fancy_lines();
-    // canvas_text();
+    (this->*_modes[_mode])();
 }
 
 void CanvasEx::on_draw_to(render_target& target)
@@ -57,6 +62,10 @@ void CanvasEx::on_key_down(keyboard::event const& ev)
     case scan_code::R: {
         auto _ = window().copy_to_image().save("screen01.webp");
     } break;
+    case scan_code::M: {
+        _mode  = (_mode + 1) % _modes.size();
+        _value = 45;
+    } break;
     case scan_code::BACKSPACE:
         parent().pop_current_scene();
         break;
@@ -67,12 +76,12 @@ void CanvasEx::on_key_down(keyboard::event const& ev)
 
 void CanvasEx::on_mouse_motion(mouse::motion_event const& ev)
 {
-    _center = point_f {ev.Position};
+    _mp = point_f {ev.Position};
 }
 
 void CanvasEx::on_mouse_wheel(mouse::wheel_event const& ev)
 {
-    _rotation += (ev.Scroll.Y * 5);
+    _value += (ev.Scroll.Y * 5);
 }
 
 void CanvasEx::canvas_ring()
@@ -80,7 +89,7 @@ void CanvasEx::canvas_ring()
     _canvas.begin_frame(window().Size(), 1);
 
     f32 outerRadius {200};
-    f32 innerRadius {_rotation};
+    f32 innerRadius {_value};
     i32 segments {10};
     f32 gapSize {5};
 
@@ -93,8 +102,8 @@ void CanvasEx::canvas_ring()
         radian_f const innerEndAngle {static_cast<f32>(((i + 1) * TAU_F) / segments - igap)};
 
         _canvas.begin_path();
-        _canvas.arc(_center, outerRadius, startAngle, outerEndAngle, winding::CW);
-        _canvas.arc(_center, innerRadius, innerEndAngle, startAngle, winding::CCW); // NOLINT(readability-suspicious-call-argument)
+        _canvas.arc(_mp, outerRadius, startAngle, outerEndAngle, winding::CW);
+        _canvas.arc(_mp, innerRadius, innerEndAngle, startAngle, winding::CCW); // NOLINT(readability-suspicious-call-argument)
         _canvas.close_path();
 
         // Fill the segment
@@ -116,17 +125,17 @@ void CanvasEx::canvas_ray_cast()
 
     std::vector<ray::result> points;
     f32                      size {75};
-    rect_f                   rect {{_center.X - (size / 2), _center.Y - (size / 2)}, {size - 10, size - 20}};
+    rect_f                   rect {{_mp.X - (size / 2), _mp.Y - (size / 2)}, {size - 10, size - 20}};
 
     transform xform;
-    xform.rotate_at(degree_f {_rotation}, rect.center());
+    xform.rotate_at(degree_f {_value}, rect.center());
 
     _canvas.set_stroke_style(colors::Red);
     _canvas.set_stroke_width(5);
 
     auto castRay {
         [&](auto&& ray) {
-            auto points0 {ray.intersect_circle(_center, size)};
+            auto points0 {ray.intersect_circle(_mp, size)};
             points.insert(points.end(), points0.begin(), points0.end());
             auto points1 {ray.intersect_rect(rect, xform)};
             points.insert(points.end(), points1.begin(), points1.end());
@@ -136,16 +145,16 @@ void CanvasEx::canvas_ray_cast()
             _canvas.line_to(ray.get_point(1000));
             _canvas.stroke();
         }};
-    castRay(ray {point_f {0, 0}, degree_f {135}});
-    castRay(ray {point_f {600, 0}, degree_f {225}});
-    castRay(ray {point_f {300, 0}, degree_f {180}});
+    castRay(ray {{0, 0}, degree_f {135}});
+    castRay(ray {{600, 0}, degree_f {225}});
+    castRay(ray {{300, 0}, degree_f {180}});
     castRay(ray {{0, 300}, degree_f {90}});
 
     // draw circle
     _canvas.set_stroke_style(colors::Green);
     _canvas.set_stroke_width(5);
     _canvas.begin_path();
-    _canvas.circle(_center, size);
+    _canvas.circle(_mp, size);
     _canvas.stroke();
 
     // draw rect
@@ -232,10 +241,10 @@ void CanvasEx::canvas_fancy_lines()
     _canvas.set_fill_style(colors::Green);
     _canvas.set_stroke_style(colors::Black);
     _canvas.set_stroke_width(8);
-    // _canvas.set_line_dash(std::array {_rotation, _rotation / 2});
-    _canvas.set_line_dash(std::array {2.f, 16.f});
+
+    _canvas.set_line_dash(std::array {_value, _value / 2});
     _canvas.set_line_cap(line_cap::Round);
-    //_canvas.set_dash_offset(_rotation);
+    _canvas.set_dash_offset(_value);
 
     _canvas.begin_path();
     _canvas.move_to({350, 50});
@@ -244,7 +253,7 @@ void CanvasEx::canvas_fancy_lines()
     _canvas.stroke();
     /*
    _canvas.begin_path();
-    _canvas.circle(_center, _rotation);
+    _canvas.circle(_mp, _value);
     _canvas.clip();
 */
 
@@ -319,13 +328,13 @@ void CanvasEx::canvas_fancy_lines()
     _canvas.set_stroke_width(15);
     _canvas.begin_path();
     _canvas.move_to({350, 750});
-    _canvas.wavy_line_to(_center, 10, 0.5f);
+    _canvas.wavy_line_to(_mp, 10, 0.5f);
     _canvas.stroke();
 
     _canvas.set_stroke_style(colors::Black);
     _canvas.begin_path();
     _canvas.move_to({350, 750});
-    _canvas.line_to(_center);
+    _canvas.line_to(_mp);
     //_canvas.line_to({850, 350});
     _canvas.stroke();
 */
@@ -345,6 +354,37 @@ void CanvasEx::canvas_text()
     _canvas.begin_path();
     _canvas.fill_text("Lorem ipsum dolor sit amet", {10, 300});
     _canvas.stroke();
+
+    _canvas.end_frame();
+}
+
+void CanvasEx::canvas_clip()
+{
+    _canvas.begin_frame(window().Size(), 1);
+
+    _canvas.set_fill_style(colors::Green);
+    _canvas.set_stroke_style(colors::BurlyWood);
+    _canvas.set_stroke_width(2);
+
+    _canvas.begin_path();
+    _canvas.rect({30, 30, 300, 400});
+    _canvas.stroke();
+
+    _canvas.begin_path();
+    _canvas.circle({30, 30}, 150);
+    _canvas.clip();
+
+    _canvas.begin_path();
+    _canvas.rect({30, 30, 300, 400});
+    _canvas.fill();
+
+    _canvas.begin_path();
+    _canvas.circle({330, 430}, 150);
+    _canvas.clip();
+
+    _canvas.begin_path();
+    _canvas.rect({30, 30, 300, 400});
+    _canvas.fill();
 
     _canvas.end_frame();
 }

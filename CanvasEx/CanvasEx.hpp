@@ -30,12 +30,16 @@ private:
     void canvas_path2d();
     void canvas_fancy_lines();
     void canvas_text();
+    void canvas_clip();
 
     canvas          _canvas;
     canvas_renderer _renderer {_canvas};
 
-    point_f _center;
-    f32     _rotation {45};
+    point_f _mp;
+    f32     _value {45};
 
     font_family _font {""};
+
+    i32                               _mode {0};
+    std::vector<void (CanvasEx::*)()> _modes;
 };
