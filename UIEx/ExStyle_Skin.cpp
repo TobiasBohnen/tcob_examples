@@ -86,7 +86,6 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->Border.Size = 5_px;
         style->Margin      = {5_px};
         style->Padding     = {2_px};
-        style->Tick.Type   = tick_type::None;
         style->Tick.Size   = 100_pct;
 
         auto disabledStyle {retValue.create<checkbox>("checkbox", {.Disabled = true})};
@@ -101,7 +100,6 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->Background = blue.Circle;
         style->Margin     = {5_px};
         style->Padding    = {5_px};
-        style->Tick.Type  = tick_type::None;
 
         auto disabledStyle {retValue.create<radio_button>("radio_button", {.Disabled = true})};
         disabledStyle->Background = colors::FireBrick;
@@ -118,12 +116,10 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->Padding         = {2_px};
         style->Delay           = 500ms;
         style->Tick.Foreground = red.Cross;
-        style->Tick.Type       = tick_type::None;
 
         auto checkedStyle {retValue.create<toggle>("toggle", {.Checked = true})};
         *checkedStyle                 = *style;
         checkedStyle->Tick.Foreground = green.Checkmark;
-        checkedStyle->Tick.Type       = tick_type::None;
 
         auto disabledStyle {retValue.create<toggle>("toggle", {.Disabled = true})};
         disabledStyle->Background = colors::FireBrick;
@@ -406,7 +402,6 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
     // NAV ARROWS
     {
         auto style {retValue.create<nav_arrows_style>("nav_arrows", {}, {})};
-        style->NavArrow.Type           = nav_arrow_type::None;
         style->NavArrow.Size.Height    = {0.75f, length::type::Relative};
         style->NavArrow.Size.Width     = {0.25f, length::type::Relative};
         style->NavArrow.UpBackground   = blue.SliderUp;

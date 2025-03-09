@@ -140,13 +140,14 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Border.Radius     = 5_px;
         style->Margin            = {5_px};
         style->Padding           = {2_px};
-        style->Tick.Type         = tick_type::Disc;
-        style->Tick.Size         = 100_pct;
+        style->Tick.Type         = tick_type::Triangle;
+        style->Tick.Size         = 90_pct;
 
         auto disabledStyle {retValue.create<checkbox>("checkbox", {.Disabled = true})};
 
         auto hoverStyle {retValue.create<checkbox>("checkbox", {.Hover = true})};
-        *hoverStyle = *style;
+        *hoverStyle           = *style;
+        hoverStyle->Tick.Type = tick_type::Rect;
 
         normal.apply(style);
         disabled.apply(disabledStyle);
@@ -161,8 +162,8 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Border.Radius = 5_px;
         style->Margin        = {5_px};
         style->Padding       = {5_px};
-        style->Tick.Type     = tick_type::Disc;
-        style->Tick.Size     = 100_pct;
+        style->Tick.Type     = tick_type::Triangle;
+        style->Tick.Size     = 80_pct;
 
         auto disabledStyle {retValue.create<radio_button>("radio_button", {.Disabled = true})};
 
