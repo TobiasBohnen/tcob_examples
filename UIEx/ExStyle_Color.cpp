@@ -1,8 +1,8 @@
 #include "ExStyle_Color.hpp"
 
 using namespace std::chrono_literals;
-using namespace tcob::gfx::ui::element;
-using text_element = tcob::gfx::ui::element::text;
+using namespace tcob::ui::element;
+using text_element = tcob::ui::element::text;
 
 auto create_color_styles(assets::group const& resGrp) -> style_collection
 {

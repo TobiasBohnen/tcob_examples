@@ -6,7 +6,7 @@
 #pragma once
 
 #include "../_common/Common.hpp"
-using namespace tcob::gfx::ui;
+using namespace tcob::ui;
 
 auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form>;
 auto create_form1(window* wnd) -> std::shared_ptr<form>;

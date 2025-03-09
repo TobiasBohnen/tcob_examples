@@ -6,7 +6,7 @@
 #pragma once
 
 #include "../_common/Common.hpp"
-using namespace tcob::gfx::ui;
+using namespace tcob::ui;
 
 class UIEx : public scene {
 public:
