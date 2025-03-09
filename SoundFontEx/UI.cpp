@@ -65,14 +65,14 @@ void piano_form::gen_styles()
     style_collection styles;
     {
         auto style {styles.create<button>("white-keys", {})};
-        style->Border.Type    = border_element::type::Solid;
+        style->Border.Type    = line_type::Solid;
         style->Border.Size    = 3_px;
         style->Border.Radius  = 5_px;
         style->Text.Style     = {false, font::weight::Normal};
         style->Text.Font      = _font;
         style->Text.Size      = 25_pct;
         style->Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Bottom};
-        style->Text.AutoSize  = text_element::auto_size_mode::OnlyShrink;
+        style->Text.AutoSize  = auto_size_mode::OnlyShrink;
         style->Margin         = {2_px};
         style->Padding        = {2_px};
 
@@ -96,14 +96,14 @@ void piano_form::gen_styles()
     }
     {
         auto style {styles.create<button>("black-keys", {})};
-        style->Border.Type    = border_element::type::Solid;
+        style->Border.Type    = line_type::Solid;
         style->Border.Size    = 3_px;
         style->Border.Radius  = 5_px;
         style->Text.Style     = {false, font::weight::Normal};
         style->Text.Font      = _font;
         style->Text.Size      = 50_pct;
         style->Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Middle};
-        style->Text.AutoSize  = text_element::auto_size_mode::OnlyShrink;
+        style->Text.AutoSize  = auto_size_mode::OnlyShrink;
         style->Margin         = {2_px};
         style->Padding        = {2_px};
 
@@ -127,13 +127,13 @@ void piano_form::gen_styles()
     }
     {
         auto style {styles.create<label>("label", {})};
-        style->Border.Type    = border_element::type::Solid;
+        style->Border.Type    = line_type::Solid;
         style->Border.Size    = 3_px;
         style->Text.Style     = {false, font::weight::Normal};
         style->Text.Font      = _font;
         style->Text.Size      = 40_pct;
         style->Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Middle};
-        style->Text.AutoSize  = text_element::auto_size_mode::OnlyShrink;
+        style->Text.AutoSize  = auto_size_mode::OnlyShrink;
         style->Margin         = {2_px};
         style->Padding        = {2_px};
 
@@ -146,7 +146,7 @@ void piano_form::gen_styles()
         style->Margin            = {5_px};
         style->Padding           = {2_px};
         style->ThumbClass        = "slider_thumb";
-        style->Bar.Type          = bar_element::type::Continuous;
+        style->Bar.Type          = bar_type::Continuous;
         style->Bar.Size          = 95_pct;
         style->Bar.Delay         = 0ms;
         style->Bar.Border.Size   = 3_px;
@@ -158,7 +158,7 @@ void piano_form::gen_styles()
     }
     {
         auto style {styles.create<thumb_style>("slider_thumb", {}, {})};
-        style->Thumb.Type          = thumb_element::type::Rect;
+        style->Thumb.Type          = thumb_type::Rect;
         style->Thumb.LongSide      = 25_pct;
         style->Thumb.ShortSide     = 80_pct;
         style->Thumb.Border.Size   = 3_px;
