@@ -1,8 +1,6 @@
 #include "ExStyle_Color.hpp"
 
 using namespace std::chrono_literals;
-using namespace tcob::ui::element;
-using text_element = tcob::ui::element::text;
 
 auto create_color_styles(assets::group const& resGrp) -> style_collection
 {
@@ -83,7 +81,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     style_collection retValue;
     {
         auto style {retValue.create<button>("button", {})};
-        style->Border.Type         = border::type::Double;
+        style->Border.Type         = border_element::type::Double;
         style->Border.Size         = 3_px;
         style->Border.Radius       = 5_px;
         style->Text.Style          = {false, font::weight::Normal};
@@ -94,7 +92,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Text.Alignment      = {horizontal_alignment::Centered, vertical_alignment::Middle};
 
         style->Text.Decoration.Line.LineThrough = true;
-        style->Text.Decoration.Style            = deco::style::Solid;
+        style->Text.Decoration.Style            = deco_element::style::Solid;
         style->Text.Decoration.Size             = {3_px};
 
         style->Margin  = {5_px};
@@ -135,14 +133,14 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<checkbox>("checkbox", {})};
-        style->Border.Type       = border::type::Dashed;
+        style->Border.Type       = border_element::type::Dashed;
         style->Border.Dash       = std::vector {20_pct, 10_pct, 10_pct, 5_pct};
         style->Border.DashOffset = 100;
         style->Border.Size       = 3_px;
         style->Border.Radius     = 5_px;
         style->Margin            = {5_px};
         style->Padding           = {2_px};
-        style->Tick.Type         = tick::type::Disc;
+        style->Tick.Type         = tick_element::type::Disc;
         style->Tick.Size         = 100_pct;
 
         auto disabledStyle {retValue.create<checkbox>("checkbox", {.Disabled = true})};
@@ -158,26 +156,26 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<radio_button>("radio_button", {})};
-        style->Border.Type   = border::type::Dotted;
+        style->Border.Type   = border_element::type::Dotted;
         style->Border.Size   = 3_px;
         style->Border.Radius = 5_px;
         style->Margin        = {5_px};
         style->Padding       = {5_px};
-        style->Tick.Type     = tick::type::Disc;
+        style->Tick.Type     = tick_element::type::Disc;
         style->Tick.Size     = 100_pct;
 
         auto disabledStyle {retValue.create<radio_button>("radio_button", {.Disabled = true})};
 
         auto hoverStyle {retValue.create<radio_button>("radio_button", {.Hover = true})};
         *hoverStyle           = *style;
-        hoverStyle->Tick.Type = tick::type::Circle;
+        hoverStyle->Tick.Type = tick_element::type::Circle;
 
         auto focusStyle {retValue.create<radio_button>("radio_button", {.Focus = true})};
         *focusStyle = *style;
 
         auto focusHoverStyle {retValue.create<radio_button>("radio_button", {.Focus = true, .Hover = true})};
         *focusHoverStyle           = *focusStyle;
-        focusHoverStyle->Tick.Type = tick::type::Circle;
+        focusHoverStyle->Tick.Type = tick_element::type::Circle;
 
         auto activeStyle {retValue.create<radio_button>("radio_button", {.Focus = true, .Active = true})};
         *activeStyle = *style;
@@ -196,12 +194,12 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Margin        = {5_px};
         style->Padding       = {2_px};
         style->Delay         = 500ms;
-        style->Tick.Type     = tick::type::Square;
+        style->Tick.Type     = tick_element::type::Square;
         style->Tick.Size     = 100_pct;
 
         auto checkedStyle {retValue.create<toggle>("toggle", {.Checked = true})};
         *checkedStyle           = *style;
-        checkedStyle->Tick.Type = tick::type::Disc;
+        checkedStyle->Tick.Type = tick_element::type::Disc;
         checkedStyle->Tick.Size = 100_pct;
 
         auto disabledStyle {retValue.create<toggle>("toggle", {.Disabled = true})};
@@ -251,7 +249,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Margin            = {5_px};
         style->Padding           = {2_px, 15_px};
         style->ThumbClass        = "slider_thumb";
-        style->Bar.Type          = bar::type::Continuous;
+        style->Bar.Type          = bar_element::type::Continuous;
         style->Bar.Size          = 50_pct;
         style->Bar.Delay         = 250ms;
         style->Bar.Border.Size   = 3_px;
@@ -269,7 +267,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Border.Radius = 5_px;
         style->Margin        = {5_px};
         style->Padding       = {5_px, 5_px};
-        style->Bar.Type      = bar::type::Continuous;
+        style->Bar.Type      = bar_element::type::Continuous;
         style->Bar.Border    = style->Border;
         style->Bar.Delay     = 250ms;
 
@@ -349,7 +347,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Padding                    = {5_px};
         style->DropShadow.Color           = color {0, 0, 0, 128};
         style->VScrollBar.ThumbClass      = "scrollbar_thumb";
-        style->VScrollBar.Bar.Type        = bar::type::Continuous;
+        style->VScrollBar.Bar.Type        = bar_element::type::Continuous;
         style->VScrollBar.Bar.Size        = 30_px;
         style->VScrollBar.Bar.Border.Size = 3_px;
         style->VScrollBar.Bar.Delay       = 250ms;
@@ -381,7 +379,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->ItemHeight                 = 20_pct;
         style->ItemClass                  = "list_items";
         style->VScrollBar.ThumbClass      = "scrollbar_thumb";
-        style->VScrollBar.Bar.Type        = bar::type::Continuous;
+        style->VScrollBar.Bar.Type        = bar_element::type::Continuous;
         style->VScrollBar.Bar.Size        = 20_pct;
         style->VScrollBar.Bar.Border.Size = 3_px;
         style->VScrollBar.Bar.Delay       = 250ms;
@@ -411,7 +409,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->ItemHeight                 = 150_pct;
         style->ItemClass                  = "list_items";
         style->VScrollBar.ThumbClass      = "scrollbar_thumb";
-        style->VScrollBar.Bar.Type        = bar::type::Continuous;
+        style->VScrollBar.Bar.Type        = bar_element::type::Continuous;
         style->VScrollBar.Bar.Size        = 20_pct;
         style->VScrollBar.Bar.Border.Size = 3_px;
         style->VScrollBar.Bar.Delay       = 250ms;
@@ -436,7 +434,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->HeaderItemClass            = "header_items";
         style->RowItemClass               = "row_items";
         style->VScrollBar.ThumbClass      = "scrollbar_thumb";
-        style->VScrollBar.Bar.Type        = bar::type::Continuous;
+        style->VScrollBar.Bar.Type        = bar_element::type::Continuous;
         style->VScrollBar.Bar.Size        = 5_pct;
         style->VScrollBar.Bar.Border.Size = 3_px;
         style->VScrollBar.Bar.Delay       = 250ms;
@@ -511,7 +509,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<text_box>("text_box", {})};
-        style->Border.Type         = border::type::Solid;
+        style->Border.Type         = border_element::type::Solid;
         style->Border.Size         = 3_px;
         style->Border.Radius       = 5_px;
         style->Text.Style          = {false, font::weight::Normal};
@@ -561,7 +559,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     // THUMBS
     {
         auto style {retValue.create<thumb_style>("slider_thumb", {}, {})};
-        style->Thumb.Type          = thumb::type::Rect;
+        style->Thumb.Type          = thumb_element::type::Rect;
         style->Thumb.LongSide      = 25_pct;
         style->Thumb.ShortSide     = 80_pct;
         style->Thumb.Border.Size   = 3_px;
@@ -579,7 +577,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<thumb_style>("scrollbar_thumb", {}, {})};
-        style->Thumb.Type        = thumb::type::Rect;
+        style->Thumb.Type        = thumb_element::type::Rect;
         style->Thumb.LongSide    = 25_pct;
         style->Thumb.ShortSide   = 80_pct;
         style->Thumb.Border.Size = 3_px;

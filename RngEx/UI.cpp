@@ -43,14 +43,14 @@ void rng_form::gen_styles()
     style_collection styles;
     {
         auto style {styles.create<button>("button", {})};
-        style->Border.Type    = element::border::type::Solid;
+        style->Border.Type    = border_element::type::Solid;
         style->Border.Size    = 3_px;
         style->Border.Radius  = 5_px;
         style->Text.Style     = {false, font::weight::Normal};
         style->Text.Font      = _font;
         style->Text.Size      = 50_pct;
         style->Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Top};
-        style->Text.AutoSize  = element::text::auto_size_mode::OnlyShrink;
+        style->Text.AutoSize  = text_element::auto_size_mode::OnlyShrink;
         style->Margin         = {2_px};
         style->Padding        = {2_px};
 
@@ -74,13 +74,13 @@ void rng_form::gen_styles()
     }
     {
         auto style {styles.create<label>("label", {})};
-        style->Border.Type    = element::border::type::Solid;
+        style->Border.Type    = border_element::type::Solid;
         style->Border.Size    = 3_px;
         style->Text.Style     = {false, font::weight::Normal};
         style->Text.Font      = _font;
         style->Text.Size      = 40_pct;
         style->Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Middle};
-        style->Text.AutoSize  = element::text::auto_size_mode::OnlyShrink;
+        style->Text.AutoSize  = text_element::auto_size_mode::OnlyShrink;
         style->Margin         = {2_px};
         style->Padding        = {2_px};
 
@@ -107,7 +107,7 @@ void rng_form::gen_styles()
         style->Item.Text.Font      = _font;
         style->Item.Text.Size      = 50_pct;
         style->Item.Text.Alignment = {horizontal_alignment::Left, vertical_alignment::Middle};
-        style->Item.Text.AutoSize  = element::text::auto_size_mode::OnlyShrink;
+        style->Item.Text.AutoSize  = text_element::auto_size_mode::OnlyShrink;
         style->Item.Border.Size    = 3_px;
 
         style->Item.Background        = colors::LightGray;

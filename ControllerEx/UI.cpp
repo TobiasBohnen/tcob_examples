@@ -91,14 +91,14 @@ void crtl_form::gen_styles()
     style_collection styles;
     {
         auto style {styles.create<button>("button", {})};
-        style->Border.Type    = element::border::type::Solid;
+        style->Border.Type    = border_element::type::Solid;
         style->Border.Size    = 3_px;
         style->Border.Radius  = 5_px;
         style->Text.Style     = {false, font::weight::Normal};
         style->Text.Font      = _font;
         style->Text.Size      = 50_pct;
         style->Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Top};
-        style->Text.AutoSize  = element::text::auto_size_mode::OnlyShrink;
+        style->Text.AutoSize  = text_element::auto_size_mode::OnlyShrink;
         style->Margin         = {2_px};
         style->Padding        = {2_px};
 
@@ -122,13 +122,13 @@ void crtl_form::gen_styles()
     }
     {
         auto style {styles.create<label>("label", {})};
-        style->Border.Type    = element::border::type::Solid;
+        style->Border.Type    = border_element::type::Solid;
         style->Border.Size    = 3_px;
         style->Text.Style     = {false, font::weight::Normal};
         style->Text.Font      = _font;
         style->Text.Size      = 40_pct;
         style->Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Middle};
-        style->Text.AutoSize  = element::text::auto_size_mode::Always;
+        style->Text.AutoSize  = text_element::auto_size_mode::Always;
         style->Margin         = {2_px};
         style->Padding        = {2_px};
 
@@ -141,7 +141,7 @@ void crtl_form::gen_styles()
         style->Margin            = {5_px};
         style->Padding           = {2_px};
         style->ThumbClass        = "slider_thumb";
-        style->Bar.Type          = element::bar::type::Continuous;
+        style->Bar.Type          = bar_element::type::Continuous;
         style->Bar.Size          = 75_pct;
         style->Bar.Delay         = 0ms;
         style->Bar.Border.Size   = 3_px;
@@ -153,7 +153,7 @@ void crtl_form::gen_styles()
     }
     {
         auto style {styles.create<thumb_style>("slider_thumb", {}, {})};
-        style->Thumb.Type          = element::thumb::type::Rect;
+        style->Thumb.Type          = thumb_element::type::Rect;
         style->Thumb.LongSide      = 10_pct;
         style->Thumb.ShortSide     = 100_pct;
         style->Thumb.Border.Size   = 3_px;

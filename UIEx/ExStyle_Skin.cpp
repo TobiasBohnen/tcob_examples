@@ -58,7 +58,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         auto hoverStyle {retValue.create<button>("button", {.Hover = true})};
         *hoverStyle                = *style;
         hoverStyle->Background     = blue.Button02;
-        hoverStyle->Text.Transform = element::text::transform::Lowercase;
+        hoverStyle->Text.Transform = text_element::transform::Lowercase;
 
         auto focusStyle {retValue.create<button>("button", {.Focus = true})};
         *focusStyle = *style;
@@ -86,7 +86,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->Border.Size = 5_px;
         style->Margin      = {5_px};
         style->Padding     = {2_px};
-        style->Tick.Type   = element::tick::type::None;
+        style->Tick.Type   = tick_element::type::None;
         style->Tick.Size   = 100_pct;
 
         auto disabledStyle {retValue.create<checkbox>("checkbox", {.Disabled = true})};
@@ -101,7 +101,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->Background = blue.Circle;
         style->Margin     = {5_px};
         style->Padding    = {5_px};
-        style->Tick.Type  = element::tick::type::None;
+        style->Tick.Type  = tick_element::type::None;
 
         auto disabledStyle {retValue.create<radio_button>("radio_button", {.Disabled = true})};
         disabledStyle->Background = colors::FireBrick;
@@ -118,12 +118,12 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->Padding         = {2_px};
         style->Delay           = 500ms;
         style->Tick.Foreground = red.Cross;
-        style->Tick.Type       = element::tick::type::None;
+        style->Tick.Type       = tick_element::type::None;
 
         auto checkedStyle {retValue.create<toggle>("toggle", {.Checked = true})};
         *checkedStyle                 = *style;
         checkedStyle->Tick.Foreground = green.Checkmark;
-        checkedStyle->Tick.Type       = element::tick::type::None;
+        checkedStyle->Tick.Type       = tick_element::type::None;
 
         auto disabledStyle {retValue.create<toggle>("toggle", {.Disabled = true})};
         disabledStyle->Background = colors::FireBrick;
@@ -133,7 +133,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         hstyle->Margin               = {5_px};
         hstyle->Padding              = {2_px, 15_px};
         hstyle->ThumbClass           = "h_slider_thumb";
-        hstyle->Bar.Type             = element::bar::type::Continuous;
+        hstyle->Bar.Type             = bar_element::type::Continuous;
         hstyle->Bar.Size             = 50_pct;
         hstyle->Bar.LowerBackground  = blue.Panel;
         hstyle->Bar.HigherBackground = blue.Panel;
@@ -154,7 +154,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->Border.Size          = 3_px;
         style->Margin               = {5_px};
         style->Padding              = {5_px, 5_px};
-        style->Bar.Type             = element::bar::type::Continuous;
+        style->Bar.Type             = bar_element::type::Continuous;
         style->Bar.LowerBackground  = blue.Button00;
         style->Bar.HigherBackground = blue.Button13;
         style->Bar.Border           = style->Border;
@@ -222,7 +222,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->Padding          = {5_px};
         style->DropShadow.Color = color {0, 0, 0, 128};
 
-        style->VScrollBar.Bar.Type             = element::bar::type::Continuous;
+        style->VScrollBar.Bar.Type             = bar_element::type::Continuous;
         style->VScrollBar.Bar.Size             = 30_px;
         style->VScrollBar.Bar.LowerBackground  = yellow.Panel;
         style->VScrollBar.Bar.HigherBackground = yellow.Panel;
@@ -249,7 +249,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->ItemHeight                      = 20_pct;
         style->ItemClass                       = "list_items";
         style->VScrollBar.ThumbClass           = "v_scrollbar_thumb";
-        style->VScrollBar.Bar.Type             = element::bar::type::Continuous;
+        style->VScrollBar.Bar.Type             = bar_element::type::Continuous;
         style->VScrollBar.Bar.Size             = 30_px;
         style->VScrollBar.Bar.LowerBackground  = yellow.Panel;
         style->VScrollBar.Bar.HigherBackground = yellow.Panel;
@@ -274,7 +274,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->ItemHeight                      = 150_pct;
         style->ItemClass                       = "list_items";
         style->VScrollBar.ThumbClass           = "v_scrollbar_thumb";
-        style->VScrollBar.Bar.Type             = element::bar::type::Continuous;
+        style->VScrollBar.Bar.Type             = bar_element::type::Continuous;
         style->VScrollBar.Bar.Size             = 30_px;
         style->VScrollBar.Bar.LowerBackground  = yellow.Panel;
         style->VScrollBar.Bar.HigherBackground = yellow.Panel;
@@ -294,7 +294,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->HeaderItemClass                 = "header_items";
         style->RowItemClass                    = "row_items";
         style->VScrollBar.ThumbClass           = "v_scrollbar_thumb";
-        style->VScrollBar.Bar.Type             = element::bar::type::Continuous;
+        style->VScrollBar.Bar.Type             = bar_element::type::Continuous;
         style->VScrollBar.Bar.Size             = 30_px;
         style->VScrollBar.Bar.LowerBackground  = yellow.Panel;
         style->VScrollBar.Bar.HigherBackground = yellow.Panel;
@@ -353,7 +353,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
     // THUMBS
     {
         auto style {retValue.create<thumb_style>("v_slider_thumb", {}, {})};
-        style->Thumb.Type       = element::thumb::type::Rect;
+        style->Thumb.Type       = thumb_element::type::Rect;
         style->Thumb.LongSide   = 25_pct;
         style->Thumb.ShortSide  = 80_pct;
         style->Thumb.Background = blue.SliderRight;
@@ -366,7 +366,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<thumb_style>("h_slider_thumb", {}, {})};
-        style->Thumb.Type       = element::thumb::type::Rect;
+        style->Thumb.Type       = thumb_element::type::Rect;
         style->Thumb.LongSide   = 25_pct;
         style->Thumb.ShortSide  = 80_pct;
         style->Thumb.Background = blue.SliderUp;
@@ -380,7 +380,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
     {
         auto style {retValue.create<thumb_style>("v_scrollbar_thumb", {}, {})};
         style->Thumb.Background = blue.SliderRight;
-        style->Thumb.Type       = element::thumb::type::Rect;
+        style->Thumb.Type       = thumb_element::type::Rect;
         style->Thumb.LongSide   = 5_pct;
         style->Thumb.ShortSide  = 80_pct;
 
@@ -393,7 +393,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
     {
         auto style {retValue.create<thumb_style>("h_scrollbar_thumb", {}, {})};
         style->Thumb.Background = blue.SliderUp;
-        style->Thumb.Type       = element::thumb::type::Rect;
+        style->Thumb.Type       = thumb_element::type::Rect;
         style->Thumb.LongSide   = 5_pct;
         style->Thumb.ShortSide  = 80_pct;
 
@@ -406,7 +406,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
     // NAV ARROWS
     {
         auto style {retValue.create<nav_arrows_style>("nav_arrows", {}, {})};
-        style->NavArrow.Type           = element::nav_arrow::type::None;
+        style->NavArrow.Type           = nav_arrow_element::type::None;
         style->NavArrow.Size.Height    = {0.75f, length::type::Relative};
         style->NavArrow.Size.Width     = {0.25f, length::type::Relative};
         style->NavArrow.UpBackground   = blue.SliderUp;
