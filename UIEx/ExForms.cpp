@@ -12,20 +12,20 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     auto retValue {std::make_shared<form>("form0", wnd)};
 
     auto tooltip0 {retValue->create_tooltip<tooltip>("tooltip")};
-    auto tooltipLayout {tooltip0->get_layout<fixed_layout>()};
+    auto tooltipLayout {tooltip0->get_layout<static_layout>()};
     tooltip0->Bounds = {0, 0, 170, 50};
     auto tooltipLabel0 {tooltipLayout->create_widget<label>({5, 5, 160, 40}, "TTLabel0")};
     tooltip0->Popup.connect([tooltipLabel0](auto const& event) { tooltipLabel0->Label = event.Widget->name(); });
 
     auto panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
     panel0->Flex = {.Width = 100_pct, .Height = 100_pct};
-    auto panel0Layout {panel0->get_layout<fixed_layout>()};
+    auto panel0Layout {panel0->get_layout<static_layout>()};
     (*panel0->TabStop).Enabled = false;
     panel0->ScrollEnabled      = true;
 
     auto label0 {panel0Layout->create_widget<label>({0, 520, 200, 40}, "Label0")};
     auto button0 {panel0Layout->create_widget<button>({0, 0, 200, 100}, "Button0")};
-    button0->Label = "b1";
+    button0->Label = "In ä Hürri";
     button0->Icon  = {.Texture = resGrp.get<texture>("blue_boxCheckmark")};
 
     label0->For = button0;
@@ -47,7 +47,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     progressBar0->Value = 50;
 
     auto sliderPanel {panel0Layout->create_widget<panel>({490, 390, 350, 350}, "SliderPanel")};
-    auto sliderPanelLayout {sliderPanel->get_layout<fixed_layout>()};
+    auto sliderPanelLayout {sliderPanel->get_layout<static_layout>()};
     sliderPanel->ZOrder = 5;
 
     auto slider0 {sliderPanelLayout->create_widget<slider>({0, 0, 250, 100}, "Slider0")};
@@ -230,15 +230,15 @@ auto create_form1(window* wnd) -> std::shared_ptr<form>
     auto panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
     panel0->Flex          = {100_pct, 100_pct};
     panel0->ScrollEnabled = true;
-    auto panel0Layout {panel0->get_layout<fixed_layout>()};
+    auto panel0Layout {panel0->get_layout<static_layout>()};
 
     auto panel1 {panel0Layout->create_widget<panel>({50, 30, 400, 400}, "Panel1")};
     panel1->ScrollEnabled = true;
-    auto panel1Layout {panel1->get_layout<fixed_layout>()};
+    auto panel1Layout {panel1->get_layout<static_layout>()};
 
     auto panel2 {panel1Layout->create_widget<panel>({50, 30, 400, 400}, "Panel2")};
     panel2->ScrollEnabled = true;
-    auto panel2Layout {panel2->get_layout<fixed_layout>()};
+    auto panel2Layout {panel2->get_layout<static_layout>()};
 
     auto button0 {panel2Layout->create_widget<button>({-10, -10, 30, 30}, "Button0")};
     auto button1 {panel2Layout->create_widget<button>({350, 350, 80, 50}, "Button1")};
@@ -253,7 +253,7 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form>
 
     auto panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
     panel0->Flex = {100_pct, 100_pct};
-    auto panel0Layout {panel0->get_layout<fixed_layout>()};
+    auto panel0Layout {panel0->get_layout<static_layout>()};
     (*panel0->TabStop).Enabled = false;
     {
         size_i const termSize {80, 24};
@@ -343,7 +343,7 @@ auto create_form_colorpicker(window* wnd) -> std::shared_ptr<form>
 
     auto panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
     panel0->Flex = {25_pct, 25_pct};
-    auto panel0Layout {panel0->get_layout<fixed_layout>()};
+    auto panel0Layout {panel0->get_layout<static_layout>()};
     auto colorPicker00 {panel0Layout->create_widget<color_picker>({5, 5, 300, 200}, "CP1")};
     colorPicker00->SelectedColor.Changed.connect([wnd](auto val) {
         wnd->ClearColor = val;
@@ -464,7 +464,7 @@ auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::sha
         auto panel0 {retValue->create_container<panel>(dock_style::Left, "Panel0")};
         panel0->Flex          = {30_pct, 100_pct};
         panel0->ScrollEnabled = true;
-        auto panel0Layout {panel0->get_layout<fixed_layout>()};
+        auto panel0Layout {panel0->get_layout<static_layout>()};
 
         auto accordion0 {panel0Layout->create_widget<accordion>({0, 0, 500, 500}, "Accordion0")};
         createSections(accordion0);

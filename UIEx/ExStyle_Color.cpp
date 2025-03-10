@@ -102,7 +102,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
 
         auto hoverStyle {retValue.create<button>("button", {.Hover = true})};
         *hoverStyle                      = *style;
-        hoverStyle->Text.Transform       = text_transform::Lowercase;
+        hoverStyle->Text.Transform       = text_transform::Capitalize;
         hoverStyle->Text.Decoration.Size = {10_px};
 
         auto focusStyle {retValue.create<button>("button", {.Focus = true})};
