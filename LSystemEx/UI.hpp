@@ -16,7 +16,7 @@ struct settings {
     f32      StrokeWidth {};
 };
 
-class lsystem_form : public form {
+class lsystem_form : public form<dock_layout> {
 public:
     lsystem_form(window* window, rect_f const& bounds);
 

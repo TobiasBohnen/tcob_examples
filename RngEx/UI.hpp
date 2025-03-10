@@ -10,7 +10,7 @@ using namespace tcob::ui;
 
 ////////////////////////////////////////////////////////////
 
-class rng_form : public form {
+class rng_form : public form<dock_layout> {
 public:
     rng_form(window* window);
 

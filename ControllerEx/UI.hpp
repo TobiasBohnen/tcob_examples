@@ -10,7 +10,7 @@ using namespace tcob::ui;
 
 ////////////////////////////////////////////////////////////
 
-class crtl_form : public form {
+class crtl_form : public form<dock_layout> {
 public:
     crtl_form(window* window);
 

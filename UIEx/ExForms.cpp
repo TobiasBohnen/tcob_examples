@@ -5,11 +5,11 @@ using namespace std::chrono_literals;
 
 ////////////////////////////////////////////////////////////
 
-auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form>
+auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form<dock_layout>>
 {
     // TODO: remove shared_ptr self capture
     //
-    auto retValue {std::make_shared<form>("form0", wnd)};
+    auto retValue {std::make_shared<form<dock_layout>>("form0", wnd)};
 
     auto tooltip0 {retValue->create_tooltip<tooltip>("tooltip")};
     auto tooltipLayout {tooltip0->get_layout<static_layout>()};
@@ -223,9 +223,9 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
 ////////////////////////////////////////////////////////////
 
-auto create_form1(window* wnd) -> std::shared_ptr<form>
+auto create_form1(window* wnd) -> std::shared_ptr<form<dock_layout>>
 {
-    auto retValue {std::make_shared<form>("form1", wnd)};
+    auto retValue {std::make_shared<form<dock_layout>>("form1", wnd)};
 
     auto panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
     panel0->Flex          = {100_pct, 100_pct};
@@ -247,9 +247,9 @@ auto create_form1(window* wnd) -> std::shared_ptr<form>
     return retValue;
 }
 
-auto create_form_displays(window* wnd) -> std::shared_ptr<form>
+auto create_form_displays(window* wnd) -> std::shared_ptr<form<dock_layout>>
 {
-    auto retValue {std::make_shared<form>("form2", wnd)};
+    auto retValue {std::make_shared<form<dock_layout>>("form2", wnd)};
 
     auto panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
     panel0->Flex = {100_pct, 100_pct};
@@ -337,9 +337,9 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form>
     return retValue;
 }
 
-auto create_form_colorpicker(window* wnd) -> std::shared_ptr<form>
+auto create_form_colorpicker(window* wnd) -> std::shared_ptr<form<dock_layout>>
 {
-    auto retValue {std::make_shared<form>("form2", wnd)};
+    auto retValue {std::make_shared<form<dock_layout>>("form2", wnd)};
 
     auto panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
     panel0->Flex = {25_pct, 25_pct};
@@ -353,9 +353,9 @@ auto create_form_colorpicker(window* wnd) -> std::shared_ptr<form>
     return retValue;
 }
 
-auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form>
+auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form<dock_layout>>
 {
-    auto retValue {std::make_shared<form>("form3", wnd)};
+    auto retValue {std::make_shared<form<dock_layout>>("form3", wnd)};
 
     auto createTabs = [](std::shared_ptr<tab_container> const& tabContainer0) {
         auto boxVPanel0 {tabContainer0->create_tab<panel>("SPanel0")};
@@ -417,9 +417,9 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
     return retValue;
 }
 
-auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form>
+auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form<dock_layout>>
 {
-    auto retValue {std::make_shared<form>("form4", wnd)};
+    auto retValue {std::make_shared<form<dock_layout>>("form4", wnd)};
 
     auto const createSections {[](std::shared_ptr<accordion> const& accordion0) {
         auto boxVPanel0 {accordion0->create_section<panel>("SPanel0")};

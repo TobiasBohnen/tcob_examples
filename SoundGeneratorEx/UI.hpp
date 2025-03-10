@@ -10,7 +10,7 @@ using namespace tcob::ui;
 
 ////////////////////////////////////////////////////////////
 
-class generator_form : public form {
+class generator_form : public form<dock_layout> {
 public:
     generator_form(window* window);
 

@@ -10,7 +10,7 @@ using namespace tcob::ui;
 
 ////////////////////////////////////////////////////////////
 
-class piano_form : public form {
+class piano_form : public form<dock_layout> {
 public:
     piano_form(window* window);
 
