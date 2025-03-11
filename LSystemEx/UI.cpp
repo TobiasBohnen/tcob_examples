@@ -13,8 +13,8 @@ using namespace tcob::random;
 
 ////////////////////////////////////////////////////////////
 
-lsystem_form::lsystem_form(window* window, rect_f const& bounds)
-    : form {"lsystem", window, bounds}
+lsystem_form::lsystem_form(rect_i const& bounds)
+    : form {{"lsystem", bounds}}
     , _font {"trim", "trim"}
 {
     font_family::SingleFont(*_font.ptr(), trim_ttf);

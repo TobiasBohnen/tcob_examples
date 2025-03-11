@@ -38,7 +38,7 @@ void LSystemEx::on_start()
     i32 const uiWidth {static_cast<i32>(windowSize.Height / 2)};
 
     rect_i const menuBounds {windowSize.Width - uiWidth, 0, uiWidth, windowSize.Height};
-    _mainForm = std::make_shared<lsystem_form>(&win, rect_f {menuBounds});
+    _mainForm = std::make_shared<lsystem_form>(menuBounds);
     _mainForm->Start.connect([this, windowSize, uiWidth]() {
         auto const settings {_mainForm->get_settings()};
         _lstring    = settings.String;

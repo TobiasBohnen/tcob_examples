@@ -13,8 +13,8 @@ using namespace tcob::random;
 
 ////////////////////////////////////////////////////////////
 
-rng_form::rng_form(window* window)
-    : form {"generator", window}
+rng_form::rng_form(window& window)
+    : form {{"generator", window.bounds()}}
     , _font {"trim", "trim"}
 {
     font_family::SingleFont(*_font.ptr(), trim_ttf);

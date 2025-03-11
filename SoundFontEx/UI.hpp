@@ -12,7 +12,7 @@ using namespace tcob::ui;
 
 class piano_form : public form<dock_layout> {
 public:
-    piano_form(window* window);
+    piano_form(window& window);
 
     std::shared_ptr<button> C;
     std::shared_ptr<button> CSharp;

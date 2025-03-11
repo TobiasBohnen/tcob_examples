@@ -15,8 +15,8 @@ using namespace tcob::random;
 
 ////////////////////////////////////////////////////////////
 
-piano_form::piano_form(window* window)
-    : form {"piano", window}
+piano_form::piano_form(window& window)
+    : form {{"piano", window.bounds()}}
     , _font {"trim", "trim"}
 {
     font_family::SingleFont(*_font.ptr(), trim_ttf);

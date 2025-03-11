@@ -12,7 +12,7 @@ using namespace tcob::ui;
 
 class crtl_form : public form<dock_layout> {
 public:
-    crtl_form(window* window);
+    crtl_form(window& window);
 
     std::shared_ptr<label> Controller;
 

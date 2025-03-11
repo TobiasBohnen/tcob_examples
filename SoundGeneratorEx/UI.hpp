@@ -12,7 +12,7 @@ using namespace tcob::ui;
 
 class generator_form : public form<dock_layout> {
 public:
-    generator_form(window* window);
+    generator_form(window& window);
 
     std::shared_ptr<button> GenPickupCoin;
     std::shared_ptr<button> GenLaserShot;

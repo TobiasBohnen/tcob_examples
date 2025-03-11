@@ -12,8 +12,8 @@ using namespace std::chrono_literals;
 
 ////////////////////////////////////////////////////////////
 
-generator_form::generator_form(window* window)
-    : form {"generator", window}
+generator_form::generator_form(window& window)
+    : form {{"generator", window.bounds()}}
     , _font {"trim", "trim"}
 {
     font_family::SingleFont(*_font.ptr(), trim_ttf);

@@ -7,7 +7,7 @@
 
 RngEx::RngEx(game& game)
     : scene {game}
-    , _form0 {std::make_shared<rng_form>(&window())}
+    , _form0 {std::make_shared<rng_form>(window())}
 {
 }
 

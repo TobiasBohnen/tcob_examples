@@ -18,7 +18,7 @@ struct settings {
 
 class lsystem_form : public form<dock_layout> {
 public:
-    lsystem_form(window* window, rect_f const& bounds);
+    lsystem_form(rect_i const& bounds);
 
     signal<> Start;
     auto     get_settings() const -> settings;

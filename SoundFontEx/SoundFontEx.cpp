@@ -7,7 +7,7 @@
 
 SoundFontEx::SoundFontEx(game& game)
     : scene {game}
-    , _form0 {std::make_shared<piano_form>(&window())}
+    , _form0 {std::make_shared<piano_form>(window())}
 {
 }
 
