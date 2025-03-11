@@ -20,36 +20,36 @@ crtl_form::crtl_form(window& window)
     font_family::SingleFont(*_font.ptr(), trim_ttf);
     gen_styles();
 
-    auto mainPanel {create_container<glass>(dock_style::Fill, "main")};
-    auto mainPanelLayout {mainPanel->create_layout<grid_layout>(size_i {40, 40})};
+    auto  mainPanel {create_container<glass>(dock_style::Fill, "main")};
+    auto& mainPanelLayout {mainPanel->create_layout<grid_layout>(size_i {40, 40})};
 
-    Controller = mainPanelLayout->create_widget<label>({13, 1, 10, 2}, "lbl");
+    Controller = mainPanelLayout.create_widget<label>({13, 1, 10, 2}, "lbl");
 
     // pressed button
-    _button = mainPanelLayout->create_widget<label>({1, 5, 10, 4}, "lblButton");
+    _button = mainPanelLayout.create_widget<label>({1, 5, 10, 4}, "lblButton");
 
     // rumble
-    auto btnRumble0 {mainPanelLayout->create_widget<button>({1, 12, 10, 4}, "btnRumble0")};
+    auto btnRumble0 {mainPanelLayout.create_widget<button>({1, 12, 10, 4}, "btnRumble0")};
     btnRumble0->Click.connect([&]() { _input.get_controller(0)->rumble(0, 0xFFFF, 1s); });
     btnRumble0->Label = "High Freq";
 
-    auto btnRumble1 {mainPanelLayout->create_widget<button>({1, 17, 10, 4}, "btnRumble1")};
+    auto btnRumble1 {mainPanelLayout.create_widget<button>({1, 17, 10, 4}, "btnRumble1")};
     btnRumble1->Click.connect([&]() { _input.get_controller(0)->rumble(0xFFFF, 0, 1s); });
     btnRumble1->Label = "Low Freq";
 
-    auto btnRumble2 {mainPanelLayout->create_widget<button>({1, 22, 10, 4}, "btnRumble2")};
+    auto btnRumble2 {mainPanelLayout.create_widget<button>({1, 22, 10, 4}, "btnRumble2")};
     btnRumble2->Click.connect([&]() { _input.get_controller(0)->rumble(0xFFFF, 0xFFFF, 1s); });
     btnRumble2->Label = "Both";
 
     // axes
     auto createSlider {[&](std::shared_ptr<slider>& ptr, rect_i const& bounds, rect_i const& lblBounds, i16 min, i16 max, controller::axis axis) {
         string const name {_input.get_controller(0)->get_axis_name(axis)};
-        ptr      = mainPanelLayout->create_widget<slider>(bounds, name);
+        ptr      = mainPanelLayout.create_widget<slider>(bounds, name);
         ptr->Min = min;
         ptr->Max = max;
         ptr->disable();
 
-        auto lbl {mainPanelLayout->create_widget<label>(lblBounds, "lbl" + name)};
+        auto lbl {mainPanelLayout.create_widget<label>(lblBounds, "lbl" + name)};
         lbl->Label = name;
     }};
 

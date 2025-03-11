@@ -20,13 +20,13 @@ lsystem_form::lsystem_form(rect_i const& bounds)
     font_family::SingleFont(*_font.ptr(), trim_ttf);
     gen_styles();
 
-    auto mainPanel {create_container<glass>(dock_style::Fill, "main")};
-    auto mainPanelLayout {mainPanel->create_layout<grid_layout>(size_i {40, 40})};
+    auto  mainPanel {create_container<glass>(dock_style::Fill, "main")};
+    auto& mainPanelLayout {mainPanel->create_layout<grid_layout>(size_i {40, 40})};
 
-    create_rule(*mainPanelLayout);
-    create_settings(*mainPanelLayout);
+    create_rule(mainPanelLayout);
+    create_settings(mainPanelLayout);
 
-    auto btnStart {mainPanelLayout->create_widget<button>({1, 35, 12, 2}, "btnStart")};
+    auto btnStart {mainPanelLayout.create_widget<button>({1, 35, 12, 2}, "btnStart")};
     btnStart->Label = "Start";
     btnStart->Click.connect([this]() { Start(); });
 }

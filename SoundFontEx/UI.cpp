@@ -22,15 +22,15 @@ piano_form::piano_form(window& window)
     font_family::SingleFont(*_font.ptr(), trim_ttf);
     gen_styles();
 
-    auto mainPanel {create_container<glass>(dock_style::Fill, "main")};
-    auto mainPanelLayout {mainPanel->create_layout<grid_layout>(size_i {24, 6})};
+    auto  mainPanel {create_container<glass>(dock_style::Fill, "main")};
+    auto& mainPanelLayout {mainPanel->create_layout<grid_layout>(size_i {24, 6})};
 
     // White keys
     std::vector<std::tuple<std::shared_ptr<button>&, i32, std::string>> const whiteKeys {
         {C, 0, "C"}, {D, 3, "D"}, {E, 6, "E"}, {F, 9, "F"}, {G, 12, "G"}, {A, 15, "A"}, {B, 18, "B"}};
 
     for (auto const& [btn, posX, label] : whiteKeys) {
-        btn         = mainPanelLayout->create_widget<button>({posX, 0, 3, 6}, label);
+        btn         = mainPanelLayout.create_widget<button>({posX, 0, 3, 6}, label);
         btn->Class  = "white-keys";
         btn->Label  = label;
         btn->ZOrder = 1;
@@ -41,18 +41,18 @@ piano_form::piano_form(window& window)
         {CSharp, 2, "C#"}, {DSharp, 5, "D#"}, {FSharp, 11, "F#"}, {GSharp, 14, "G#"}, {ASharp, 17, "A#"}};
 
     for (auto const& [btn, posX, label] : blackKeys) {
-        btn         = mainPanelLayout->create_widget<button>({posX, 0, 2, 3}, label);
+        btn         = mainPanelLayout.create_widget<button>({posX, 0, 2, 3}, label);
         btn->Class  = "black-keys";
         btn->Label  = label;
         btn->ZOrder = 2;
     }
 
     // Octave
-    Octave      = mainPanelLayout->create_widget<slider>({22, 1, 2, 5}, "Octave");
+    Octave      = mainPanelLayout.create_widget<slider>({22, 1, 2, 5}, "Octave");
     Octave->Min = 0;
     Octave->Max = 8;
 
-    auto lbl {mainPanelLayout->create_widget<label>({22, 0, 2, 1}, "lblOctave")};
+    auto lbl {mainPanelLayout.create_widget<label>({22, 0, 2, 1}, "lblOctave")};
     Octave->Value.Changed.connect([ptr = lbl.get()](auto val) {
         ptr->Label = std::to_string(val);
     });

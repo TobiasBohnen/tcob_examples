@@ -20,18 +20,18 @@ rng_form::rng_form(window& window)
     font_family::SingleFont(*_font.ptr(), trim_ttf);
     gen_styles();
 
-    auto mainPanel {create_container<glass>(dock_style::Fill, "main")};
-    auto mainPanelLayout {mainPanel->create_layout<grid_layout>(size_i {40, 40})};
+    auto  mainPanel {create_container<glass>(dock_style::Fill, "main")};
+    auto& mainPanelLayout {mainPanel->create_layout<grid_layout>(size_i {40, 40})};
 
-    _canvas = {mainPanelLayout->create_widget<canvas_widget>({8, 1, 30, 38}, "uxCanvas")};
+    _canvas = {mainPanelLayout.create_widget<canvas_widget>({8, 1, 30, 38}, "uxCanvas")};
 
-    auto rollDice {mainPanelLayout->create_widget<button>({1, 1, 4, 2}, "uxRollDice")};
+    auto rollDice {mainPanelLayout.create_widget<button>({1, 1, 4, 2}, "uxRollDice")};
     rollDice->Label = "Roll Dice";
     rollDice->Click.connect([this]() {
         draw_dice();
     });
 
-    auto drawNoise {mainPanelLayout->create_widget<button>({1, 4, 4, 2}, "uxDrawNoise")};
+    auto drawNoise {mainPanelLayout.create_widget<button>({1, 4, 4, 2}, "uxDrawNoise")};
     drawNoise->Label = "Draw Noise";
     drawNoise->Click.connect([this]() {
         draw_noise();
