@@ -25,6 +25,6 @@ protected:
     void on_mouse_motion(mouse::motion_event const& ev) override;
 
 private:
-    std::shared_ptr<form<dock_layout>> _form0;
-    bool                               _switch {false};
+    std::shared_ptr<form_base> _form0;
+    bool                       _switch {false};
 };

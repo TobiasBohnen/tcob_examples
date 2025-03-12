@@ -5,7 +5,7 @@ using namespace std::chrono_literals;
 
 ////////////////////////////////////////////////////////////
 
-auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form<dock_layout>>
+auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
 {
     // TODO: remove shared_ptr self capture
     //
@@ -232,31 +232,41 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
 ////////////////////////////////////////////////////////////
 
-auto create_form1(window* wnd) -> std::shared_ptr<form<dock_layout>>
+auto create_form1(window* wnd) -> std::shared_ptr<form_base>
 {
-    auto retValue {std::make_shared<form<dock_layout>>(form_init {"form1", wnd->bounds()})};
+    auto retValue {std::make_shared<form<static_layout>>(form_init {"form1", wnd->bounds()})};
 
-    auto panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
-    panel0->Flex          = {100_pct, 100_pct};
-    panel0->ScrollEnabled = true;
-    auto& panel0Layout {panel0->get_layout<static_layout>()};
+    {
+        auto panel0 {retValue->create_container<panel>(rect_f {0, 0, 400, 400}, "Panel0")};
+        panel0->Flex          = {100_pct, 100_pct};
+        panel0->ScrollEnabled = true;
+        panel0->Movable       = true;
+        auto& panel0Layout {panel0->get_layout<static_layout>()};
 
-    auto panel1 {panel0Layout.create_widget<panel>({50, 30, 400, 400}, "Panel1")};
-    panel1->ScrollEnabled = true;
-    auto& panel1Layout {panel1->get_layout<static_layout>()};
+        auto panel1 {panel0Layout.create_widget<panel>({50, 30, 400, 400}, "Panel1")};
+        panel1->ScrollEnabled = true;
+        auto& panel1Layout {panel1->get_layout<static_layout>()};
 
-    auto panel2 {panel1Layout.create_widget<panel>({50, 30, 400, 400}, "Panel2")};
-    panel2->ScrollEnabled = true;
-    auto& panel2Layout {panel2->get_layout<static_layout>()};
+        auto panel2 {panel1Layout.create_widget<panel>({50, 30, 400, 400}, "Panel2")};
+        panel2->ScrollEnabled = true;
+        auto& panel2Layout {panel2->get_layout<static_layout>()};
 
-    auto button0 {panel2Layout.create_widget<button>({-10, -10, 30, 30}, "Button0")};
-    auto button1 {panel2Layout.create_widget<button>({350, 350, 80, 50}, "Button1")};
+        auto button0 {panel2Layout.create_widget<button>({-10, -10, 30, 30}, "Button0")};
+        auto button1 {panel2Layout.create_widget<button>({350, 350, 80, 50}, "Button1")};
+    }
 
-    // styles
+    {
+        auto panel0 {retValue->create_container<panel>(rect_f {800, 0, 400, 400}, "Panel3")};
+        panel0->Flex          = {100_pct, 100_pct};
+        panel0->ScrollEnabled = true;
+        panel0->Movable       = true;
+        auto& panel0Layout {panel0->get_layout<static_layout>()};
+    }
+
     return retValue;
 }
 
-auto create_form_displays(window* wnd) -> std::shared_ptr<form<dock_layout>>
+auto create_form_terminal(window* wnd) -> std::shared_ptr<form<dock_layout>>
 {
     auto retValue {std::make_shared<form<dock_layout>>(form_init {"form2", wnd->bounds()})};
 
@@ -264,6 +274,7 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form<dock_layout>>
     panel0->Flex = {100_pct, 100_pct};
     auto& panel0Layout {panel0->get_layout<static_layout>()};
     (*panel0->TabStop).Enabled = false;
+
     {
         size_i const termSize {80, 24};
         auto         terminal0 {panel0Layout.create_widget<terminal>({5, 5, termSize.Width * 14.f, termSize.Height * 28.f}, "Term1")};
@@ -305,6 +316,18 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form<dock_layout>>
             ptr->move({0, ptr->get_xy().Y + 1});
         });
     }
+
+    return retValue;
+}
+
+auto create_form_displays(window* wnd) -> std::shared_ptr<form<dock_layout>>
+{
+    auto retValue {std::make_shared<form<dock_layout>>(form_init {"form2", wnd->bounds()})};
+
+    auto panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
+    panel0->Flex = {100_pct, 100_pct};
+    auto& panel0Layout {panel0->get_layout<static_layout>()};
+    (*panel0->TabStop).Enabled = false;
     {
         auto canvas {panel0Layout.create_widget<canvas_widget>({5, 700, 200, 200}, "Canvas1")};
         canvas->set_fill_style(colors::Blue);
@@ -324,25 +347,28 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form<dock_layout>>
     }
 
     {
-        auto dotMatrix {panel0Layout.create_widget<dot_matrix_display>({1150, 60, 320, 288}, "DM1")};
-        dotMatrix->Size = {80, 72};
+        auto dotMatrix {panel0Layout.create_widget<dot_matrix_display>({1150, 60, 320, 320}, "DM1")};
+        dotMatrix->Size = {64, 64};
         rng             rand;
         std::vector<u8> dots;
         dots.reserve(dotMatrix->Size->Width * dotMatrix->Size->Height);
-        for (i32 i {0}; i < dots.capacity(); ++i) {
-            dots.push_back(rand(0, 255));
-        }
-        dotMatrix->Dots = dots;
+        for (i32 i {0}; i < dots.capacity(); ++i) { dots.push_back(i / 64); }
+        //  for (i32 i {0}; i < dots.capacity(); ++i) { dots.push_back(rand(0, 255)); }
+
+        dotMatrix->Dots               = dots;
+        dotMatrix->TransitionDuration = 500ms;
     }
 
     {
         auto lcdDisplay0 {panel0Layout.create_widget<seven_segment_display>({1150, 400, 350, 70}, "LCD0")};
-        lcdDisplay0->Text = "0123456789 -=\"',";
+        lcdDisplay0->draw_text("0123456789 -=\"',");
+        lcdDisplay0->TransitionDuration = 500ms;
         auto lcdDisplay1 {panel0Layout.create_widget<seven_segment_display>({1150, 470, 350, 70}, "LCD1")};
-        lcdDisplay1->Text = "ABCDEFGHIJLOPSUZ";
+        // lcdDisplay1->draw_text("ABCDEFGHIJLOPSUZ");
+        lcdDisplay1->draw_segments(std::array<seven_segment_display::segment, 1> {{{.A = true, .B = true, .C = true, .D = true, .E = true, .F = true, .G = false}}});
+        lcdDisplay1->TransitionDuration = 500ms;
     }
 
-    // styles
     return retValue;
 }
 
@@ -358,7 +384,6 @@ auto create_form_colorpicker(window* wnd) -> std::shared_ptr<form<dock_layout>>
         wnd->ClearColor = val;
     });
 
-    // styles
     return retValue;
 }
 

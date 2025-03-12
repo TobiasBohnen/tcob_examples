@@ -546,15 +546,26 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         auto style {retValue.create<dot_matrix_display>("dot_matrix_display", {})};
         rng  r;
         for (isize i {0}; i < 256; ++i) {
-            style->Dot.Colors[i] = color::FromHSLA({.Hue = degree_f {360.f * (i / 255.f)}, .Saturation = 0.8f, .X = 0.5f});
+            style->Colors[i] = color::FromHSLA({.Hue = degree_f {360.f * (i / 255.f)}, .Saturation = 0.8f, .X = 0.5f});
         }
-        style->Dot.Type = dot_matrix_display::dot::type::Disc;
+        style->Type = dot_matrix_display::dot_type::Disc;
+
+        auto hoverStyle {retValue.create<dot_matrix_display>("dot_matrix_display", {.Hover = true})};
+        for (isize i {0}; i < 256; ++i) {
+            hoverStyle->Colors[i] = style->Colors[255 - i];
+        }
+        hoverStyle->Type = dot_matrix_display::dot_type::Disc;
     }
     {
         auto style {retValue.create<seven_segment_display>("seven_segment_display", {})};
-        style->Segment.Size          = 5_pct;
-        style->Segment.ActiveColor   = colors::Red;
-        style->Segment.InactiveColor = colors::LightGray;
+        style->Size          = 5_pct;
+        style->ActiveColor   = colors::Red;
+        style->InactiveColor = colors::Black;
+
+        auto hoverStyle {retValue.create<seven_segment_display>("seven_segment_display", {.Hover = true})};
+        hoverStyle->Size          = 8_pct;
+        hoverStyle->ActiveColor   = colors::Blue;
+        hoverStyle->InactiveColor = colors::White;
     }
 
     // THUMBS
