@@ -325,34 +325,40 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form<dock_layout>>
     auto retValue {std::make_shared<form<dock_layout>>(form_init {"form2", wnd->bounds()})};
 
     auto panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
-    panel0->Flex = {100_pct, 100_pct};
-    auto& panel0Layout {panel0->get_layout<static_layout>()};
+    panel0->Flex = {80_pct, 80_pct};
+    auto& panel0Layout {panel0->create_layout<grid_layout>(size_i {200, 200})};
     (*panel0->TabStop).Enabled = false;
     {
-        auto canvas {panel0Layout.create_widget<canvas_widget>({5, 700, 200, 200}, "Canvas1")};
-        canvas->set_fill_style(colors::Blue);
-        canvas->begin_path();
-        canvas->rect({0, 0, 100, 100});
-        canvas->fill();
+        auto canvas {panel0Layout.create_widget<canvas_widget>({0, 0, 80, 80}, "Canvas1")};
+        canvas->Bounds.Changed.connect([canvas = canvas.get()](rect_f const& bounds) {
+            size_f s {bounds.Size / 3};
+            canvas->set_fill_style(colors::Blue);
+            canvas->begin_path();
+            canvas->rect({0, 0, s.Width, s.Height});
+            canvas->fill();
 
-        canvas->set_fill_style(colors::Red);
-        canvas->begin_path();
-        canvas->rect({50, 50, 100, 100});
-        canvas->fill();
+            canvas->set_fill_style(colors::Red);
+            canvas->begin_path();
+            canvas->rect({s.Width / 2, s.Height / 2, s.Width, s.Height});
+            canvas->fill();
 
-        canvas->set_fill_style(colors::Green);
-        canvas->begin_path();
-        canvas->rect({150, 150, 100, 100});
-        canvas->fill();
+            canvas->set_fill_style(colors::Green);
+            canvas->begin_path();
+            canvas->rect({s.Width, s.Height, s.Width, s.Height});
+            canvas->fill();
+        });
     }
-
     {
-        auto dotMatrix {panel0Layout.create_widget<dot_matrix_display>({1150, 60, 320, 320}, "DM1")};
+        auto colorPicker00 {panel0Layout.create_widget<color_picker>({100, 0, 90, 80}, "CP1")};
+        colorPicker00->SelectedColor.Changed.connect([wnd](auto val) { wnd->ClearColor = val; });
+    }
+    {
+        auto dotMatrix {panel0Layout.create_widget<dot_matrix_display>({100, 100, 50, 88}, "DM1")};
         dotMatrix->Size = {64, 64};
         rng             rand;
         std::vector<u8> dots;
         dots.reserve(dotMatrix->Size->Width * dotMatrix->Size->Height);
-        for (i32 i {0}; i < dots.capacity(); ++i) { dots.push_back(i / 64); }
+        for (i32 i {0}; i < dots.capacity(); ++i) { dots.push_back(i / 64 * 4); }
         //  for (i32 i {0}; i < dots.capacity(); ++i) { dots.push_back(rand(0, 255)); }
 
         dotMatrix->Dots               = dots;
@@ -360,29 +366,14 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form<dock_layout>>
     }
 
     {
-        auto lcdDisplay0 {panel0Layout.create_widget<seven_segment_display>({1150, 400, 350, 70}, "LCD0")};
+        auto lcdDisplay0 {panel0Layout.create_widget<seven_segment_display>({0, 90, 50, 50}, "LCD0")};
         lcdDisplay0->draw_text("0123456789 -=\"',");
         lcdDisplay0->TransitionDuration = 500ms;
-        auto lcdDisplay1 {panel0Layout.create_widget<seven_segment_display>({1150, 470, 350, 70}, "LCD1")};
+        auto lcdDisplay1 {panel0Layout.create_widget<seven_segment_display>({0, 140, 50, 50}, "LCD1")};
         // lcdDisplay1->draw_text("ABCDEFGHIJLOPSUZ");
         lcdDisplay1->draw_segments(std::array<seven_segment_display::segment, 1> {{{.A = true, .B = true, .C = true, .D = true, .E = true, .F = true, .G = false}}});
         lcdDisplay1->TransitionDuration = 500ms;
     }
-
-    return retValue;
-}
-
-auto create_form_colorpicker(window* wnd) -> std::shared_ptr<form<dock_layout>>
-{
-    auto retValue {std::make_shared<form<dock_layout>>(form_init {"form2", wnd->bounds()})};
-
-    auto panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
-    panel0->Flex = {25_pct, 25_pct};
-    auto& panel0Layout {panel0->get_layout<static_layout>()};
-    auto  colorPicker00 {panel0Layout.create_widget<color_picker>({5, 5, 300, 200}, "CP1")};
-    colorPicker00->SelectedColor.Changed.connect([wnd](auto val) {
-        wnd->ClearColor = val;
-    });
 
     return retValue;
 }

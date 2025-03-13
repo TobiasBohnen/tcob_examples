@@ -9,9 +9,9 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     normal.Border         = colors::Black;
     normal.DropShadow     = color {0, 0, 0, 128};
     normal.Text           = colors::Black;
-    normal.BarLower       = colors::Blue;
-    normal.BarHigher      = colors::Red;
-    normal.Caret          = colors::DarkGray;
+    normal.BarLower       = colors::LightGreen;
+    normal.BarHigher      = colors::DarkGreen;
+    normal.Caret          = colors::Black;
     normal.Item           = colors::LightGray;
     normal.NavArrowInc    = colors::White;
     normal.NavArrowDec    = colors::White;
@@ -91,9 +91,9 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Text.Shadow.OffsetY = 1_px;
         style->Text.Alignment      = {horizontal_alignment::Centered, vertical_alignment::Middle};
 
-        style->Text.Decoration.Line.LineThrough = true;
-        style->Text.Decoration.Style            = line_type::Solid;
-        style->Text.Decoration.Size             = {3_px};
+        // style->Text.Decoration.Line.LineThrough = true;
+        // style->Text.Decoration.Style            = line_type::Solid;
+        // style->Text.Decoration.Size             = {3_px};
 
         style->Margin  = {5_px};
         style->Padding = {2_px};
@@ -101,9 +101,9 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         auto disabledStyle {retValue.create<button>("button", {.Disabled = true})};
 
         auto hoverStyle {retValue.create<button>("button", {.Hover = true})};
-        *hoverStyle                      = *style;
-        hoverStyle->Text.Transform       = text_transform::Capitalize;
-        hoverStyle->Text.Decoration.Size = {10_px};
+        *hoverStyle = *style;
+        //   hoverStyle->Text.Transform       = text_transform::Capitalize;
+        //   hoverStyle->Text.Decoration.Size = {10_px};
 
         auto focusStyle {retValue.create<button>("button", {.Focus = true})};
         *focusStyle = *style;
@@ -548,7 +548,8 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         for (isize i {0}; i < 256; ++i) {
             style->Colors[i] = color::FromHSLA({.Hue = degree_f {360.f * (i / 255.f)}, .Saturation = 0.8f, .X = 0.5f});
         }
-        style->Type = dot_matrix_display::dot_type::Disc;
+        style->Type       = dot_matrix_display::dot_type::Disc;
+        style->Background = colors::Black;
 
         auto hoverStyle {retValue.create<dot_matrix_display>("dot_matrix_display", {.Hover = true})};
         for (isize i {0}; i < 256; ++i) {
