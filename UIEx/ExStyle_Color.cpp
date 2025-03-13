@@ -560,6 +560,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     {
         auto style {retValue.create<seven_segment_display>("seven_segment_display", {})};
         style->Size          = 5_pct;
+        style->Background    = colors::DarkGreen;
         style->ActiveColor   = colors::Red;
         style->InactiveColor = colors::Black;
 
