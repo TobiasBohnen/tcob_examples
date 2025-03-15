@@ -300,7 +300,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->DropShadow.Color = color {0, 0, 0, 128};
         style->TabBarSize       = 10_pct;
         style->TabItemClass     = "tab_items";
-        style->TabBarPosition   = tab_container::position::Bottom;
+        style->TabBarPosition   = position::Bottom;
 
         auto disabledStyle {retValue.create<tab_container>("tab_container", {.Disabled = true})};
         disabledStyle->Background = colors::FireBrick;

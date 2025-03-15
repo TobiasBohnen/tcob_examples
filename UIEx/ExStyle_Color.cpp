@@ -452,7 +452,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->DropShadow.Color = color {0, 0, 0, 128};
         style->TabBarSize       = 20_pct;
         style->TabItemClass     = "tab_items";
-        style->TabBarPosition   = tab_container::position::Top;
+        style->TabBarPosition   = position::Top;
 
         auto hoverStyle {retValue.create<tab_container>("tab_container", {.Hover = true})};
         *hoverStyle = *style;
