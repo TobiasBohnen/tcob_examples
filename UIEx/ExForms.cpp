@@ -48,7 +48,6 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     auto  sliderPanel {panel0Layout.create_widget<panel>({490, 390, 350, 350}, "SliderPanel")};
     auto& sliderPanelLayout {sliderPanel->get_layout<static_layout>()};
-    sliderPanel->ZOrder = 5;
 
     auto slider0 {sliderPanelLayout.create_widget<slider>({0, 0, 250, 100}, "Slider0")};
     slider0->Min               = 0;
@@ -148,7 +147,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
         fb->Label = std::to_string(i);
     }
-    masonryPanel0->ZOrder = 10;
+    masonryPanel0->ZOrder = 100;
 
     auto dropDownList0 {panel0Layout.create_widget<drop_down_list>({1000, 50, 150, 50}, "DropDownList0")};
     for (i32 i {0}; i < 4; ++i) {
@@ -324,12 +323,14 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form<dock_layout>>
 {
     auto retValue {std::make_shared<form<dock_layout>>(form_init {"form2", wnd->bounds()})};
 
-    auto panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
-    panel0->Flex = {80_pct, 80_pct};
-    auto& panel0Layout {panel0->create_layout<grid_layout>(size_i {200, 200})};
-    (*panel0->TabStop).Enabled = false;
+    retValue->Bounds = rect_f {0, 0, wnd->Size().Width * 0.8f, static_cast<f32>(wnd->Size().Height)};
+
     {
-        auto canvas {panel0Layout.create_widget<canvas_widget>({0, 0, 80, 80}, "Canvas1")};
+        auto panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
+        panel0->Flex = {100_pct, 25_pct};
+        auto& panel0Layout {panel0->create_layout<dock_layout>()};
+
+        auto canvas {panel0Layout.create_widget<canvas_widget>(dock_style::Fill, "Canvas1")};
         canvas->Bounds.Changed.connect([canvas = canvas.get()](rect_f const& bounds) {
             size_f s {bounds.Size / 3};
             canvas->set_fill_style(colors::Blue);
@@ -349,16 +350,29 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form<dock_layout>>
         });
     }
     {
-        auto colorPicker00 {panel0Layout.create_widget<color_picker>({100, 0, 90, 80}, "CP1")};
+        auto panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
+        panel0->Flex = {100_pct, 25_pct};
+        auto& panel0Layout {panel0->create_layout<dock_layout>()};
+
+        auto colorPicker00 {panel0Layout.create_widget<color_picker>(dock_style::Fill, "CP1")};
         colorPicker00->SelectedColor.Changed.connect([wnd](auto val) { wnd->ClearColor = val; });
     }
     {
-        auto dotMatrix {panel0Layout.create_widget<dot_matrix_display>({100, 100, 50, 88}, "DM1")};
-        dotMatrix->Size = {64, 64};
-        rng             rand;
-        std::vector<u8> dots;
-        dots.reserve(dotMatrix->Size->Width * dotMatrix->Size->Height);
-        for (i32 i {0}; i < dots.capacity(); ++i) { dots.push_back(i / 64 * 4); }
+        auto panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
+        panel0->Flex = {100_pct, 25_pct};
+        auto& panel0Layout {panel0->create_layout<dock_layout>()};
+
+        auto     dotMatrix {panel0Layout.create_widget<dot_matrix_display>(dock_style::Fill, "DM1")};
+        rng      rand;
+        grid<u8> dots {{25, 5}};
+        string   str {"0000000000003666666666666"
+                      "0020002000203655555555556"
+                      "0002021202003656666666646"
+                      "0000201020003656644466646"
+                      "0000000000003666666666666"};
+        isize    i {0};
+        for (auto c : str) { dots[i++] = (c - '0'); }
+        // for (i32 i {0}; i < dots.size(); ++i) { dots[i] = (i / 64 * 4); }
         //  for (i32 i {0}; i < dots.capacity(); ++i) { dots.push_back(rand(0, 255)); }
 
         dotMatrix->Dots               = dots;
@@ -366,10 +380,14 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form<dock_layout>>
     }
 
     {
-        auto lcdDisplay0 {panel0Layout.create_widget<seven_segment_display>({0, 90, 50, 50}, "LCD0")};
+        auto panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
+        panel0->Flex = {100_pct, 25_pct};
+        auto& panel0Layout {panel0->create_layout<grid_layout>(size_i {200, 200})};
+
+        auto lcdDisplay0 {panel0Layout.create_widget<seven_segment_display>({0, 0, 100, 100}, "LCD0")};
         lcdDisplay0->draw_text("0123456789 -=\"',");
         lcdDisplay0->TransitionDuration = 500ms;
-        auto lcdDisplay1 {panel0Layout.create_widget<seven_segment_display>({0, 140, 50, 50}, "LCD1")};
+        auto lcdDisplay1 {panel0Layout.create_widget<seven_segment_display>({100, 0, 100, 100}, "LCD1")};
         // lcdDisplay1->draw_text("ABCDEFGHIJLOPSUZ");
         lcdDisplay1->draw_segments(std::array<seven_segment_display::segment, 1> {{{.A = true, .B = true, .C = true, .D = true, .E = true, .F = true, .G = false}}});
         lcdDisplay1->TransitionDuration = 500ms;

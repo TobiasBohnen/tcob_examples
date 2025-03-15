@@ -545,15 +545,25 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     {
         auto style {retValue.create<dot_matrix_display>("dot_matrix_display", {})};
         rng  r;
+        /*
         for (isize i {0}; i < 256; ++i) {
             style->Colors[i] = color::FromHSLA({.Hue = degree_f {360.f * (i / 255.f)}, .Saturation = 0.8f, .X = 0.5f});
         }
+            */
+        style->Colors[0] = colors::Cyan;
+        style->Colors[1] = colors::Violet;
+        style->Colors[2] = colors::White;
+        style->Colors[3] = colors::Black;
+        style->Colors[4] = colors::Chartreuse;
+        style->Colors[5] = colors::OrangeRed;
+        style->Colors[6] = colors::Yellow;
+
         style->Type       = dot_matrix_display::dot_type::Disc;
-        style->Background = colors::Black;
+        style->Background = colors::Gray;
 
         auto hoverStyle {retValue.create<dot_matrix_display>("dot_matrix_display", {.Hover = true})};
-        for (isize i {0}; i < 256; ++i) {
-            hoverStyle->Colors[i] = style->Colors[255 - i];
+        for (isize i {0}; i < style->Colors.size(); ++i) {
+            hoverStyle->Colors[i] = style->Colors[style->Colors.size() - i - 1];
         }
         hoverStyle->Type = dot_matrix_display::dot_type::Disc;
     }
