@@ -450,9 +450,9 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Margin           = {5_px};
         style->Padding          = {5_px};
         style->DropShadow.Color = color {0, 0, 0, 128};
-        style->TabBarHeight     = 10_pct;
+        style->TabBarSize       = 20_pct;
         style->TabItemClass     = "tab_items";
-        style->TabBarPosition   = tab_container::position::Bottom;
+        style->TabBarPosition   = tab_container::position::Top;
 
         auto hoverStyle {retValue.create<tab_container>("tab_container", {.Hover = true})};
         *hoverStyle = *style;
@@ -635,6 +635,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Item.Text.Style     = {false, font::weight::Normal};
         style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
         style->Item.Text.Size      = 25_pct;
+        style->Item.Text.AutoSize  = auto_size_mode::Always;
         style->Item.Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Middle};
         style->Item.Border.Size    = 3_px;
 

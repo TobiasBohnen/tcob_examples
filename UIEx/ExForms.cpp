@@ -405,7 +405,7 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
 {
     auto retValue {std::make_shared<form<dock_layout>>(form_init {"form3", wnd->bounds()})};
 
-    auto createTabs = [](std::shared_ptr<tab_container> const& tabContainer0) {
+    auto createTabs {[](std::shared_ptr<tab_container> const& tabContainer0) {
         auto boxVPanel0 {tabContainer0->create_tab<panel>("SPanel0")};
         (*boxVPanel0->TabStop).Enabled = false;
         auto& boxVLayout0 {boxVPanel0->create_layout<vertical_layout>()};
@@ -418,11 +418,10 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
         (*gridPanel->TabStop).Enabled = false;
         auto& gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 3})};
 
-        auto createGridWidget {
-            [&](rect_i loc, std::string const& name) {
-                auto b {gridLayout.create_widget<button>(loc, "gridB" + name, true)};
-                b->Label = name;
-            }};
+        auto createGridWidget {[&](rect_i loc, std::string const& name) {
+            auto b {gridLayout.create_widget<button>(loc, "gridB" + name, true)};
+            b->Label = name;
+        }};
         createGridWidget({0, 0, 2, 1}, "0");
         createGridWidget({2, 0, 2, 1}, "1");
         createGridWidget({0, 1, 4, 1}, "2");
@@ -437,7 +436,7 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
         for (i32 i {0}; i < 4; i++) {
             boxHLayout1.create_widget<checkbox>("Check" + std::to_string(i));
         }
-    };
+    }};
 
     {
         auto tabContainer0 {retValue->create_container<tab_container>(dock_style::Left, "TabContainer0")};

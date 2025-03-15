@@ -298,7 +298,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->Margin           = {5_px};
         style->Padding          = {5_px};
         style->DropShadow.Color = color {0, 0, 0, 128};
-        style->TabBarHeight     = 10_pct;
+        style->TabBarSize       = 10_pct;
         style->TabItemClass     = "tab_items";
         style->TabBarPosition   = tab_container::position::Bottom;
 
