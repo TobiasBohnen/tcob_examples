@@ -182,18 +182,10 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<cycle_button>("cycle_button", {})};
-        style->Background          = blue.Button00;
-        style->Border.Size         = 3_px;
-        style->Text.Style          = {false, font::weight::Normal};
-        style->Text.Font           = resGrp.get<font_family>("Poppins");
-        style->Text.Size           = 50_pct;
-        style->Text.Color          = colors::Black;
-        style->Text.Shadow.Color   = colors::White;
-        style->Text.Shadow.OffsetX = 0_px;
-        style->Text.Shadow.OffsetY = 1_px;
-        style->Text.Alignment      = {horizontal_alignment::Centered, vertical_alignment::Middle};
-        style->Margin              = {5_px};
-        style->Padding             = {5_px};
+        style->Background  = blue.Button00;
+        style->Border.Size = 3_px;
+        style->Margin      = {5_px};
+        style->Padding     = {5_px};
 
         auto disabledStyle {retValue.create<cycle_button>("cycle_button", {.Disabled = true})};
         disabledStyle->Background = colors::FireBrick;
@@ -466,6 +458,17 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         auto activeStyle {retValue.create<item_style>("list_items", {.Active = true})};
         activeStyle->Item            = style->Item;
         activeStyle->Item.Background = red.Button13;
+    }
+    {
+        auto style {retValue.create<item_style>("items", {}, {})};
+        style->Item.Padding        = {5_px};
+        style->Item.Background     = yellow.Button13;
+        style->Item.Text.Style     = {false, font::weight::Normal};
+        style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
+        style->Item.Text.Size      = 50_pct;
+        style->Item.Text.Color     = colors::Black;
+        style->Item.Text.Alignment = {horizontal_alignment::Left, vertical_alignment::Middle};
+        style->Item.Border.Size    = 5_px;
     }
     // GRID HEADER ITEMS
     {

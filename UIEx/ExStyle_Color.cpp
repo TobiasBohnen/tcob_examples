@@ -302,16 +302,10 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<cycle_button>("cycle_button", {})};
-        style->Border.Size         = 3_px;
-        style->Border.Radius       = 5_px;
-        style->Text.Style          = {false, font::weight::Normal};
-        style->Text.Font           = resGrp.get<font_family>("Poppins");
-        style->Text.Size           = 50_pct;
-        style->Text.Shadow.OffsetX = 0_px;
-        style->Text.Shadow.OffsetY = 1_px;
-        style->Text.Alignment      = {horizontal_alignment::Centered, vertical_alignment::Middle};
-        style->Margin              = {5_px};
-        style->Padding             = {5_px};
+        style->Border.Size   = 3_px;
+        style->Border.Radius = 5_px;
+        style->Margin        = {5_px};
+        style->Padding       = {5_px};
 
         auto disabledStyle {retValue.create<cycle_button>("cycle_button", {.Disabled = true})};
 
@@ -694,6 +688,17 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         hover.apply(hoverStyle);
         active.apply(activeStyle);
     }
+    {
+        auto style {retValue.create<item_style>("items", {}, {})};
+        style->Item.Padding        = {5_px};
+        style->Item.Text.Style     = {false, font::weight::Normal};
+        style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
+        style->Item.Text.Size      = 50_pct;
+        style->Item.Text.Alignment = {horizontal_alignment::Left, vertical_alignment::Middle};
+        style->Item.Border.Size    = 3_px;
+
+        normal.apply(style);
+    }
     // GRID HEADER ITEMS
     {
         auto style {retValue.create<item_style>("header_items", {}, {})};
@@ -775,12 +780,9 @@ void color_theme::apply(std::shared_ptr<checkbox::style> const& style) const
 
 void color_theme::apply(std::shared_ptr<cycle_button::style> const& style) const
 {
-    style->Background            = Background;
-    style->Border.Background     = Border;
-    style->DropShadow.Color      = DropShadow;
-    style->Text.Color            = Text;
-    style->Text.Decoration.Color = TextDecoration;
-    style->Text.Shadow.Color     = TextShadow;
+    style->Background        = Background;
+    style->Border.Background = Border;
+    style->DropShadow.Color  = DropShadow;
 }
 
 void color_theme::apply(std::shared_ptr<drop_down_list::style> const& style) const
