@@ -482,6 +482,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->DropShadow.Color = color {0, 0, 0, 128};
         style->SectionBarHeight = 10_pct;
         style->SectionItemClass = "section_items";
+        style->Delay            = 1250ms;
 
         auto hoverStyle {retValue.create<accordion>("accordion", {.Hover = true})};
         *hoverStyle = *style;

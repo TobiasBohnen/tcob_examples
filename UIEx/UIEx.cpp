@@ -29,10 +29,10 @@ void UIEx::on_start()
     window().Cursor           = defaultCursor;
     defaultCursor->ActiveMode = "default";
 
-    //_form0 = create_form0(&window(), *resGrp);
+    _form0 = create_form0(&window(), *resGrp);
     //_form0 = create_form1(&window());
     //_form0 = create_form_displays(&window());
-    _form0 = create_form_tabcontainer(&window(), *resGrp);
+    //_form0 = create_form_tabcontainer(&window(), *resGrp);
     //_form0 = create_form_accordion(&window(), *resGrp);
     //_form0 = create_form_terminal(&window());
 
@@ -81,9 +81,16 @@ void UIEx::on_key_down(keyboard::event const& ev)
         }
     } break;
     case scan_code::F: {
-        data::config::object obj;
-        _form0->submit(obj);
-        obj.save("form0.ini");
+        {
+            data::config::object obj;
+            _form0->submit(obj);
+            obj.save("form0.json");
+        }
+        {
+            data::config::object obj;
+            std::dynamic_pointer_cast<panel>(_form0->find_widget_by_name("Panel0"))->submit(obj);
+            obj.save("Panel0.json");
+        }
     } break;
     case scan_code::S: {
         auto img {window().copy_to_image()};
@@ -91,6 +98,9 @@ void UIEx::on_key_down(keyboard::event const& ev)
     } break;
     case scan_code::R: {
         locate_service<gfx::render_system>().stats().reset();
+    } break;
+    case scan_code::G: {
+        _form0->Shader = library().get_group("ui")->get<shader>("sepia");
     } break;
     case scan_code::V: {
         window().VSync = !window().VSync;

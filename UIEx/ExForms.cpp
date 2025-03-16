@@ -123,7 +123,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     }
     retValue->CursorChanged.connect([wnd, form = retValue.get()](string const& cursor) {
         if (wnd->SystemCursorEnabled) { return; }
-
+        if (!wnd->Cursor()) { return; }
         wnd->Cursor->ActiveMode = cursor;
 
         size_f off {wnd->Cursor->bounds().Size};
