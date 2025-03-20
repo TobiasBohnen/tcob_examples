@@ -30,20 +30,20 @@ crtl_form::crtl_form(window& window)
 
     // rumble
     auto btnRumble0 {mainPanelLayout.create_widget<button>({1, 12, 10, 4}, "btnRumble0")};
-    btnRumble0->Click.connect([&]() { _input.get_controller(0)->rumble(0, 0xFFFF, 1s); });
+    btnRumble0->Click.connect([&]() { _input.first_controller().rumble(0, 0xFFFF, 1s); });
     btnRumble0->Label = "High Freq";
 
     auto btnRumble1 {mainPanelLayout.create_widget<button>({1, 17, 10, 4}, "btnRumble1")};
-    btnRumble1->Click.connect([&]() { _input.get_controller(0)->rumble(0xFFFF, 0, 1s); });
+    btnRumble1->Click.connect([&]() { _input.first_controller().rumble(0xFFFF, 0, 1s); });
     btnRumble1->Label = "Low Freq";
 
     auto btnRumble2 {mainPanelLayout.create_widget<button>({1, 22, 10, 4}, "btnRumble2")};
-    btnRumble2->Click.connect([&]() { _input.get_controller(0)->rumble(0xFFFF, 0xFFFF, 1s); });
+    btnRumble2->Click.connect([&]() { _input.first_controller().rumble(0xFFFF, 0xFFFF, 1s); });
     btnRumble2->Label = "Both";
 
     // axes
     auto createSlider {[&](std::shared_ptr<slider>& ptr, rect_i const& bounds, rect_i const& lblBounds, i16 min, i16 max, controller::axis axis) {
-        string const name {_input.get_controller(0)->get_axis_name(axis)};
+        string const name {_input.first_controller().get_axis_name(axis)};
         ptr      = mainPanelLayout.create_widget<slider>(bounds, name);
         ptr->Min = min;
         ptr->Max = max;
@@ -78,7 +78,7 @@ void crtl_form::on_controller_axis_motion(input::controller::axis_event const& e
 
 void crtl_form::on_controller_button_down(input::controller::button_event const& ev)
 {
-    _button->Label = _input.get_controller(0)->get_button_name(ev.Button);
+    _button->Label = _input.first_controller().get_button_name(ev.Button);
 }
 
 void crtl_form::on_controller_button_up(input::controller::button_event const& ev)
