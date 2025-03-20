@@ -73,13 +73,6 @@ void UIEx::on_key_down(keyboard::event const& ev)
     case scan_code::BACKSPACE:
         parent().pop_current_scene();
         break;
-    case scan_code::D: {
-        if (_form0->find_widget_by_name("Panel0")->is_enabled()) {
-            _form0->find_widget_by_name("Panel0")->disable();
-        } else {
-            _form0->find_widget_by_name("Panel0")->enable();
-        }
-    } break;
     case scan_code::F: {
         {
             data::config::object obj;

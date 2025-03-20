@@ -46,7 +46,12 @@ private:
     std::shared_ptr<gfx::rect_shape>    _aniTexSprite;
     tween_queue                         _rvc;
 
-    audio::playlist _audioPlaylist;
+    assets::asset_ptr<sound> _sound_mp3;
+    assets::asset_ptr<sound> _sound_opus;
+    assets::asset_ptr<sound> _sound_wav;
+    assets::asset_ptr<sound> _sound_ogg;
+    assets::asset_ptr<sound> _sound_flac;
+    assets::asset_ptr<sound> _sound_it;
 
     std::shared_ptr<sound> _sound_speech0;
 

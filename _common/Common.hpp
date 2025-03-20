@@ -63,7 +63,7 @@ public:
 
     void on_mouse_wheel(mouse::wheel_event const& ev)
     {
-        _zoomStage = std::clamp(_zoomStage - ev.Scroll.Y, 0, 6);
+        _zoomStage = std::clamp(_zoomStage - static_cast<i32>(ev.Scroll.Y), 0, 6);
         constexpr std::array<size_f, 7> zoomLevels {{{5.f, 5.f}, {3.f, 3.f}, {2.f, 2.f}, {1.f, 1.f}, {0.75f, 0.75f}, {0.5f, 0.5f}, {0.25f, 0.25f}}};
         camera().Zoom = zoomLevels[_zoomStage];
     }

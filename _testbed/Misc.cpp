@@ -72,12 +72,12 @@ void MiscScene::on_start()
         _uniBuf.update<f32>(bufData, 0);
     */
 
-    _audioPlaylist.add("mp3", resGrp->get<sound>("mp3-test").ptr());
-    _audioPlaylist.add("wav", resGrp->get<sound>("wav-test").ptr());
-    _audioPlaylist.add("ogg", resGrp->get<sound>("ogg-test").ptr());
-    _audioPlaylist.add("flac", resGrp->get<sound>("flac-test").ptr());
-    _audioPlaylist.add("it", resGrp->get<sound>("it-test").ptr());
-    _audioPlaylist.add("opus", resGrp->get<sound>("opus-test").ptr());
+    _sound_mp3  = resGrp->get<sound>("mp3-test");
+    _sound_wav  = resGrp->get<sound>("wav-test");
+    _sound_ogg  = resGrp->get<sound>("ogg-test");
+    _sound_opus = resGrp->get<sound>("opus-test");
+    _sound_flac = resGrp->get<sound>("flac-test");
+    _sound_it   = resGrp->get<sound>("it-test");
 
     _music0 = resGrp->get<music>("test");
 
@@ -119,8 +119,8 @@ void MiscScene::on_update(milliseconds deltaTime)
     */
     _layer0.update(deltaTime);
 
-    asset_ptr<animated_texture> aniTex = library().get_group("res")->get<texture>("test-ani");
-    aniTex->update(deltaTime);
+    // asset_ptr<animated_texture> aniTex = library().get_group("res")->get<texture>("test-ani");
+    // aniTex->update(deltaTime);
 }
 
 void MiscScene::on_fixed_update(milliseconds deltaTime)
@@ -167,6 +167,8 @@ void MiscScene::on_key_down(keyboard::event const& ev)
     } else if (ev.ScanCode == scan_code::D7) {
         asset_ptr<animated_texture> aniTex = resMgr.get_group("res")->get<texture>("test-ani");
         aniTex->toggle_pause();
+    } else if (ev.ScanCode == scan_code::R) {
+        locate_service<gfx::render_system>().stats().reset();
     } else if (ev.ScanCode == scan_code::A) {
         camera.move_by({-moveFactor, 0});
     } else if (ev.ScanCode == scan_code::D) {
@@ -182,24 +184,35 @@ void MiscScene::on_key_down(keyboard::event const& ev)
     } else if (ev.ScanCode == scan_code::C) {
         window().Cursor = nullptr;
     } else if (ev.ScanCode == scan_code::KP_1) {
-        _audioPlaylist.queue("wav");
-        _audioPlaylist.queue("mp3");
-        _audioPlaylist.queue("ogg");
-        _audioPlaylist.queue("flac");
-        _audioPlaylist.queue("it");
-        _audioPlaylist.queue("opus");
+        _sound_mp3->restart();
+        std::cout << _sound_mp3->duration().count() / 1000 << "\n";
     } else if (ev.ScanCode == scan_code::KP_2) {
-        _audioPlaylist.play("wav");
-        _audioPlaylist.play("mp3");
-        _audioPlaylist.play("ogg");
-        _audioPlaylist.play("flac");
-        _audioPlaylist.play("it");
-        _audioPlaylist.play("opus");
+        _sound_wav->restart();
+        std::cout << _sound_wav->duration().count() / 1000 << "\n";
+    } else if (ev.ScanCode == scan_code::KP_3) {
+        _sound_ogg->restart();
+        std::cout << _sound_ogg->duration().count() / 1000 << "\n";
+    } else if (ev.ScanCode == scan_code::KP_4) {
+        _sound_flac->restart();
+        std::cout << _sound_flac->duration().count() / 1000 << "\n";
+    } else if (ev.ScanCode == scan_code::KP_5) {
+        if (_sound_it->status() == playback_status::Running) {
+            _sound_it->pause();
+        } else if (_sound_it->status() == playback_status::Paused) {
+            _sound_it->resume();
+        } else {
+            _sound_it->restart();
+        }
+
+        std::cout << _sound_it->duration().count() / 1000 << "\n";
+    } else if (ev.ScanCode == scan_code::KP_6) {
+        _sound_opus->restart();
+        std::cout << _sound_opus->duration().count() / 1000 << "\n";
     } else if (ev.ScanCode == scan_code::KP_7) {
         _sound_speech0 = speech_generator {}.create_sound("1 2 3 4 5 6 7 8 9 0");
-        _sound_speech0->play();
+        _sound_speech0->restart();
     } else if (ev.ScanCode == scan_code::K) {
-        _music0->play();
+        _music0->restart();
     } else if (ev.ScanCode == scan_code::M) {
         static std::vector<animated_image_encoder::frame> frames;
 
