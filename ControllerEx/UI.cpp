@@ -59,8 +59,8 @@ crtl_form::crtl_form(window& window)
     createSlider(_raxisx, {25, 7, 8, 4}, {25, 5, 8, 2}, -32768, 32767, controller::axis::RightX);
     createSlider(_raxisy, {28, 14, 2, 8}, {25, 12, 8, 2}, -32768, 32767, controller::axis::RightY);
 
-    createSlider(_laxis, {15, 25, 8, 4}, {15, 23, 8, 2}, 0, 32767, controller::axis::TriggerLeft);
-    createSlider(_raxis, {25, 25, 8, 4}, {25, 23, 8, 2}, 0, 32767, controller::axis::TriggerRight);
+    createSlider(_laxis, {15, 25, 8, 4}, {15, 23, 8, 2}, 0, 32767, controller::axis::LeftTrigger);
+    createSlider(_raxis, {25, 25, 8, 4}, {25, 23, 8, 2}, 0, 32767, controller::axis::RightTrigger);
 }
 
 void crtl_form::on_controller_axis_motion(input::controller::axis_event const& ev)
@@ -70,8 +70,8 @@ void crtl_form::on_controller_axis_motion(input::controller::axis_event const& e
     case controller::axis::LeftY: _laxisy->Value = -ev.Value; break;
     case controller::axis::RightX: _raxisx->Value = ev.Value; break;
     case controller::axis::RightY: _raxisy->Value = -ev.Value; break;
-    case controller::axis::TriggerLeft: _laxis->Value = ev.Value; break;
-    case controller::axis::TriggerRight: _raxis->Value = ev.Value; break;
+    case controller::axis::LeftTrigger: _laxis->Value = ev.Value; break;
+    case controller::axis::RightTrigger: _raxis->Value = ev.Value; break;
     case controller::axis::Invalid: break;
     }
 }

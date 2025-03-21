@@ -22,7 +22,7 @@ ControllerEx::~ControllerEx() = default;
 void ControllerEx::on_start()
 {
     if (locate_service<input::system>().controllers().empty()) { std::terminate(); }
-    _form0->Controller->Label = locate_service<input::system>().controllers().begin()->second->name();
+    _form0->Controller->Label = locate_service<input::system>().first_controller().name();
     root_node()->Entity       = _form0;
 }
 
