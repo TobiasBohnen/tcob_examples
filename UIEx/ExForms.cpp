@@ -29,7 +29,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     button0->Icon  = {.Texture = resGrp.get<texture>("anim"),
                       .Region  = "l1"};
     button0->Click.connect([btn = button0.get(), resGrp = &resGrp]() {
-        //       btn->start_animation(*resGrp->get<frame_animation>("anim"), playback_mode::Looped);
+        btn->start_animation(*resGrp->get<frame_animation>("anim"), playback_mode::Looped);
     });
 
     label0->For = button0;
@@ -175,15 +175,16 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     }
     listbox0->SelectedItemIndex.Changed.connect([label0, listbox0](isize value) { label0->Label = "selected: " + std::to_string(value); });
     listbox0->HoveredItemIndex.Changed.connect([label0, listbox0](isize value) { label0->Label = "hovered: " + std::to_string(value); });
+    listbox0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::Looped);
 
     auto imgBox0 {panel0Layout.create_widget<image_box>({750, 20, 150, 200}, "ImageBox0")};
     imgBox0->Image = {.Texture = resGrp.get<texture>("anim"),
                       .Region  = "l1"};
-    //  imgBox0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::AlternatedLooped);
+    imgBox0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::AlternatedLooped);
 
     auto gridView0 {panel0Layout.create_widget<grid_view>({1080, 400, 450, 400}, "GridView0")};
     gridView0->set_columns({"Last", "First", "Age", "City"});
-    std::array<list_item, 4> items;
+    std::array<item, 4> items;
     items[0].Text = "Smith";
     items[0].Icon = {.Texture = resGrp.get<texture>("anim"), .Region = "l1"};
     items[1].Text = "John";
@@ -197,7 +198,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     gridView0->HeaderSelectable = true;
     gridView0->SelectMode       = grid_view::select_mode::Row;
     gridView0->SelectedCellIndex.Changed.connect([label0, gridView0]() {
-        label0->Label = std::format("grid: {}", gridView0->get_cell(gridView0->SelectedCellIndex)->Text);
+        label0->Label = std::format("grid: {}", gridView0->get_cell(gridView0->SelectedCellIndex).Text);
     });
     gridView0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::Looped);
 
