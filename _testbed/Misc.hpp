@@ -52,6 +52,8 @@ private:
     assets::asset_ptr<sound> _sound_ogg;
     assets::asset_ptr<sound> _sound_flac;
     assets::asset_ptr<sound> _sound_it;
+    std::shared_ptr<sound>   _sound;
+    recording                _record;
 
     std::shared_ptr<sound> _sound_speech0;
 

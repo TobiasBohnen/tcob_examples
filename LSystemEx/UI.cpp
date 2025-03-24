@@ -54,9 +54,9 @@ void lsystem_form::create_rule(grid_layout& layout)
     _grdRules->SelectMode       = grid_view::select_mode::Row;
     _grdRules->SelectedCellIndex.Changed.connect([uxRules = _grdRules.get(), uxVar = txbVariable.get(), uxRule = txbRule.get(), uxProp = spnProp.get()] {
         if (uxRules->SelectedCellIndex->Y < 1) { return; }
-        uxVar->Text   = uxRules->get_cell({0, uxRules->SelectedCellIndex->Y});
-        uxRule->Text  = uxRules->get_cell({1, uxRules->SelectedCellIndex->Y});
-        uxProp->Value = *helper::to_number<i32>(uxRules->get_cell({2, uxRules->SelectedCellIndex->Y}));
+        uxVar->Text   = uxRules->get_cell({0, uxRules->SelectedCellIndex->Y})->Text;
+        uxRule->Text  = uxRules->get_cell({1, uxRules->SelectedCellIndex->Y})->Text;
+        uxProp->Value = *helper::to_number<i32>(uxRules->get_cell({2, uxRules->SelectedCellIndex->Y})->Text);
     });
 
     _grdRules->add_row({"F", "FF", "100"});
@@ -131,9 +131,9 @@ auto lsystem_form::get_settings() const -> settings
     l_system system {};
     for (i32 i {0}; i < _grdRules->row_count(); ++i) {
         system.add_rule(
-            _grdRules->get_cell({0, i + 1})[0],
-            {.Replacement = _grdRules->get_cell({1, i + 1}),
-             .Probability = *helper::to_number<f32>(_grdRules->get_cell({2, i + 1})) / 100.f});
+            _grdRules->get_cell({0, i + 1})->Text[0],
+            {.Replacement = _grdRules->get_cell({1, i + 1})->Text,
+             .Probability = *helper::to_number<f32>(_grdRules->get_cell({2, i + 1})->Text) / 100.f});
     }
     retValue.String = system.generate(_txbAxiom->Text, _spnIterations->Value);
 

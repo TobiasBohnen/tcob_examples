@@ -183,10 +183,20 @@ void MiscScene::on_key_down(keyboard::event const& ev)
         camera.zoom_by({0.8f, 0.8f});
     } else if (ev.ScanCode == scan_code::C) {
         window().Cursor = nullptr;
+    } else if (ev.ScanCode == scan_code::KP_0) {
+        audio::buffer             buffer {speech_generator {}.create_buffer("1 2 3 4 5 6 7")};
+        auto const                specs {buffer.info().Specs};
+        audio::delay_effect       eff0 {0.25s, 0.8f, 0.2f};
+        audio::pitch_shift_effect eff1 {1.125f};
+        _sound = std::make_shared<sound>(eff1(eff0(buffer)));
+        _sound->restart();
+        std::cout << _sound->duration().count() / 1000 << "\n";
     } else if (ev.ScanCode == scan_code::KP_1) {
+        _sound_mp3->Volume = 1;
         _sound_mp3->restart();
         std::cout << _sound_mp3->duration().count() / 1000 << "\n";
     } else if (ev.ScanCode == scan_code::KP_2) {
+        _sound_wav->Volume = 0.5f;
         _sound_wav->restart();
         std::cout << _sound_wav->duration().count() / 1000 << "\n";
     } else if (ev.ScanCode == scan_code::KP_3) {
@@ -197,9 +207,7 @@ void MiscScene::on_key_down(keyboard::event const& ev)
         std::cout << _sound_flac->duration().count() / 1000 << "\n";
     } else if (ev.ScanCode == scan_code::KP_5) {
         if (_sound_it->status() == playback_status::Running) {
-            _sound_it->pause();
-        } else if (_sound_it->status() == playback_status::Paused) {
-            _sound_it->resume();
+            _sound_it->stop();
         } else {
             _sound_it->restart();
         }
@@ -209,19 +217,31 @@ void MiscScene::on_key_down(keyboard::event const& ev)
         _sound_opus->restart();
         std::cout << _sound_opus->duration().count() / 1000 << "\n";
     } else if (ev.ScanCode == scan_code::KP_7) {
-        _sound_speech0 = speech_generator {}.create_sound("1 2 3 4 5 6 7 8 9 0");
+        _sound_speech0 = speech_generator {}.create_sound("1 2 3 4 5 6 7");
         _sound_speech0->restart();
-    } else if (ev.ScanCode == scan_code::K) {
+    } else if (ev.ScanCode == scan_code::KP_8) {
+        _record.start();
+    } else if (ev.ScanCode == scan_code::KP_9) {
+        auto buffer {_record.stop()};
+        _sound = std::make_shared<sound>(buffer);
+        _sound->restart();
+        std::ignore = buffer.save("speech.wav");
+        std::cout << _sound->duration().count() / 1000 << "\n";
+    }
+
+    else if (ev.ScanCode == scan_code::K) {
         _music0->restart();
+    } else if (ev.ScanCode == scan_code::L) {
+        _music0->toggle_pause();
     } else if (ev.ScanCode == scan_code::M) {
         static std::vector<animated_image_encoder::frame> frames;
 
-        if (frames.size() < 5) {
+        if (frames.size() < 250) {
             auto img {window().copy_to_image()};
-            frames.push_back({.Image = img, .TimeStamp = milliseconds {frames.size() * 250}});
+            frames.push_back({.Image = img, .TimeStamp = milliseconds {frames.size() * 5}});
         }
 
-        if (frames.size() == 5) {
+        if (frames.size() == 250) {
             io::ofstream of {"test_ani1.webp"};
             locate_service<animated_image_encoder::factory>().create(".webp")->encode(frames, of);
             frames.clear();
@@ -234,6 +254,11 @@ void MiscScene::on_key_down(keyboard::event const& ev)
 
 void MiscScene::on_mouse_motion(mouse::motion_event const& ev)
 {
+    f32 const winSize {static_cast<f32>(window().Size().Width)};
+
+    f32 const pan {std::clamp((ev.Position.X / winSize) * 2 - 1, -1.f, 1.f)};
+    _music0->Panning = pan;
+    logger::Error("{}", pan);
 }
 
 void MiscScene::on_mouse_wheel(mouse::wheel_event const& ev)
