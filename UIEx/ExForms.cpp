@@ -26,8 +26,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     auto label0 {panel0Layout.create_widget<label>({0, 520, 200, 40}, "Label0")};
     auto button0 {panel0Layout.create_widget<button>({0, 0, 200, 100}, "Button0")};
     button0->Label = "In ä Hürri";
-    button0->Icon  = {.Texture = resGrp.get<texture>("anim"),
-                      .Region  = "l1"};
+    // button0->Icon = {.Texture = resGrp.get<texture>("anim"),                     .Region  = "l1"};
     button0->Click.connect([btn = button0.get(), resGrp = &resGrp]() {
         btn->start_animation(*resGrp->get<frame_animation>("anim"), playback_mode::Looped);
     });
@@ -180,7 +179,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     auto imgBox0 {panel0Layout.create_widget<image_box>({750, 20, 150, 200}, "ImageBox0")};
     imgBox0->Image = {.Texture = resGrp.get<texture>("anim"),
                       .Region  = "l1"};
-    imgBox0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::AlternatedLooped);
+    // imgBox0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::AlternatedLooped);
 
     auto gridView0 {panel0Layout.create_widget<grid_view>({1080, 400, 450, 400}, "GridView0")};
     gridView0->set_columns({"Last", "First", "Age", "City"});
