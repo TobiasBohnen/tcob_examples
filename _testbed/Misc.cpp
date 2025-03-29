@@ -206,7 +206,7 @@ void MiscScene::on_key_down(keyboard::event const& ev)
         _sound_flac->restart();
         std::cout << _sound_flac->duration().count() / 1000 << "\n";
     } else if (ev.ScanCode == scan_code::KP_5) {
-        if (_sound_it->status() == playback_status::Running) {
+        if (_sound_it->state() == playback_state::Running) {
             _sound_it->stop();
         } else {
             _sound_it->restart();
@@ -230,9 +230,12 @@ void MiscScene::on_key_down(keyboard::event const& ev)
     }
 
     else if (ev.ScanCode == scan_code::K) {
-        _music0->restart();
+        _music0->FadeIn = 2s;
+        _music0->Volume = 1;
+        _music0->play();
     } else if (ev.ScanCode == scan_code::L) {
-        _music0->toggle_pause();
+        _music0->FadeOut = 5s;
+        _music0->stop();
     } else if (ev.ScanCode == scan_code::M) {
         static std::vector<animated_image_encoder::frame> frames;
 
@@ -252,13 +255,8 @@ void MiscScene::on_key_down(keyboard::event const& ev)
     }
 }
 
-void MiscScene::on_mouse_motion(mouse::motion_event const& ev)
+void MiscScene::on_mouse_motion(mouse::motion_event const& /* ev */)
 {
-    f32 const winSize {static_cast<f32>(window().Size().Width)};
-
-    f32 const pan {std::clamp((ev.Position.X / winSize) * 2 - 1, -1.f, 1.f)};
-    _music0->Panning = pan;
-    logger::Error("{}", pan);
 }
 
 void MiscScene::on_mouse_wheel(mouse::wheel_event const& ev)
