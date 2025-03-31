@@ -39,5 +39,13 @@ private:
 
     std::unique_ptr<ai::astar_pathfinding> _pathfinder;
     grid<tile_index_t>                     _tiles {GRID_SIZE, 1};
-    grid<tile_index_t>                     _costTiles {GRID_SIZE, 1};
+
+    struct grid_view {
+        auto get_cost(point_i p) const -> u64
+        {
+            return std::pow((*Parent)[p], 3);
+        }
+        grid<tile_index_t>* Parent;
+    };
+    grid_view _costs {&_tiles};
 };

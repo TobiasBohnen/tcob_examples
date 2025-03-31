@@ -52,8 +52,7 @@ void PathfindingEx::on_start()
     for (u32 i {0}; i < values.size(); ++i) {
         tile_index_t const val {static_cast<tile_index_t>(std::clamp((values[i] - min) / (max - min) * 256 + 1, 1.0f, 256.0f))};
 
-        _tiles[i]     = val;
-        _costTiles[i] = std::pow(val, 3);
+        _tiles[i] = val;
     }
 
     f32 const size {window().Size().Height / static_cast<f32>(GRID_SIZE.Height)};
@@ -143,7 +142,7 @@ void PathfindingEx::on_mouse_button_down(mouse::button_event const& ev)
     }
 
     if (_start != INVALID && _end != INVALID) {
-        _path = _pathfinder->find_path(_costTiles, _start, _end);
+        _path = _pathfinder->find_path(_costs, _tiles.extent(), _start, _end);
     } else {
         _path.clear();
     }
