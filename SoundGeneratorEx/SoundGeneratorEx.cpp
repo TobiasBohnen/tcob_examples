@@ -41,13 +41,13 @@ void SoundGeneratorEx::on_start()
     _form0->Load->MouseDown.connect([&]() {
         config::object loadFile;
         if (loadFile.load("sound_wave0.ini") == load_status::Ok) {
-            Deserialize(_wave1, loadFile["wave"]);
+            sound_wave::Deserialize(_wave1, loadFile["wave"]);
             _form0->set_values(_wave1);
         }
     });
     _form0->Save->MouseDown.connect([&]() {
         config::object saveFile;
-        Serialize(_wave1, saveFile["wave"]);
+        sound_wave::Serialize(_wave1, saveFile["wave"]);
 
         saveFile.save("sound_wave0.ini");
     });
