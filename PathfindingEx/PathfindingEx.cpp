@@ -142,7 +142,7 @@ void PathfindingEx::on_mouse_button_down(mouse::button_event const& ev)
     }
 
     if (_start != INVALID && _end != INVALID) {
-        _path = _pathfinder->find_path(_costs, _tiles.extent(), _start, _end);
+        _path = _pathfinder->find_path(_costs, _tiles.size(), _start, _end);
     } else {
         _path.clear();
     }
