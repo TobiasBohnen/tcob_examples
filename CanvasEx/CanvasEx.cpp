@@ -16,13 +16,13 @@ CanvasEx::CanvasEx(game& game)
     font_family::SingleFont(_font, trim_ttf);
 
     _modes = {
+        &CanvasEx::canvas_text,
         &CanvasEx::canvas_clip,
         &CanvasEx::canvas_ring,
         &CanvasEx::canvas_ray_cast,
         &CanvasEx::canvas_gradient,
         &CanvasEx::canvas_path2d,
         &CanvasEx::canvas_fancy_lines,
-        &CanvasEx::canvas_text,
     };
 }
 
@@ -346,14 +346,19 @@ void CanvasEx::canvas_text()
 {
     _canvas.begin_frame(window().Size(), 1);
 
+    _canvas.set_font(_font.get_font({}, 128).ptr());
+
     _canvas.set_fill_style(colors::White);
+    _canvas.begin_path();
+    _canvas.fill_text({10, 300}, "Lorem ipsum dolor sit amet");
+
+    _canvas.set_fill_style(colors::Black);
+    _canvas.draw_text({10, 400, 3000, 1000}, "Lorem ipsum dolor sit amet");
+
     _canvas.set_stroke_style(colors::Black);
     _canvas.set_stroke_width(2);
-    _canvas.set_font(_font.get_font({}, 72).ptr());
-
     _canvas.begin_path();
-    _canvas.fill_text("Lorem ipsum dolor sit amet", {10, 300});
-    _canvas.stroke();
+    _canvas.stroke_text({10, 500}, "Lorem ipsum dolor sit amet");
 
     _canvas.end_frame();
 }
