@@ -41,7 +41,7 @@ private:
     grid<tile_index_t>                     _tiles {GRID_SIZE, 1};
 
     struct grid_view {
-        auto get_cost(point_i p) const -> u64
+        auto get_cost(point_i, point_i p) const -> u64
         {
             return std::pow((*Parent)[p], 3);
         }
