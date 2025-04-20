@@ -125,9 +125,9 @@ void PhysicsEx::on_key_down(keyboard::event const& ev)
             distance_joint::settings def;
             def.BodyA        = _objects[_objects.size() - 2].Body.get();
             def.BodyB        = _objects[_objects.size() - 1].Body.get();
-            def.LocalAnchorA = def.BodyA->local_center();
-            def.LocalAnchorB = def.BodyB->local_center();
-            def.Length       = def.BodyA->center().distance_to(def.BodyB->center());
+            def.LocalAnchorA = def.BodyA->local_center_of_mass();
+            def.LocalAnchorB = def.BodyB->local_center_of_mass();
+            def.Length       = def.BodyA->center_of_mass().distance_to(def.BodyB->center_of_mass());
 
             _world.create_joint<distance_joint>(def);
         }
