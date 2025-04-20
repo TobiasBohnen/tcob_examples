@@ -150,7 +150,7 @@ void PhysicsEx::on_mouse_button_up(mouse::button_event const& ev)
     } else if (ev.Button == mouse::button::Right) {
         create_circle({pos});
     } else {
-        _world.explode(pos, 120, 60);
+        _world.explode({.Position = pos, .Radius = 120, .Falloff = 10, .ImpulsePerLength = 60});
     }
 }
 
@@ -161,9 +161,9 @@ void PhysicsEx::create_box(point_f pos)
     obj.Body = _world.create_body({.Center = rect.center()}, {.Type = body_type::Dynamic});
 
     physics::rect_shape::settings shape;
-    shape.Friction = 0.3f;
-    shape.Density  = 0.5f;
-    shape.Extents  = {point_f::Zero, rect.Size};
+    shape.Material.Friction = 0.3f;
+    shape.Density           = 0.5f;
+    shape.Extents           = {point_f::Zero, rect.Size};
 
     obj.Body->create_shape<physics::rect_shape>(shape);
 
@@ -183,9 +183,9 @@ void PhysicsEx::create_circle(point_f pos)
     obj.Body = _world.create_body({.Center = rect.center()}, {.Type = body_type::Dynamic});
 
     physics::circle_shape::settings shape;
-    shape.Friction = 0.3f;
-    shape.Density  = 0.75f;
-    shape.Radius   = rect.width() / 2;
+    shape.Material.Friction = 0.3f;
+    shape.Density           = 0.75f;
+    shape.Radius            = rect.width() / 2;
 
     obj.Body->create_shape<physics::circle_shape>(shape);
 
@@ -202,8 +202,8 @@ void PhysicsEx::create_circle(point_f pos)
 void PhysicsEx::create_obstacle(rect_f const& rect)
 {
     physics::rect_shape::settings shape;
-    shape.Extents     = {rect.center(), rect.Size};
-    shape.Restitution = 0.5f;
+    shape.Extents              = {rect.center(), rect.Size};
+    shape.Material.Restitution = 0.5f;
 
     _obstacles->create_shape<physics::rect_shape>(shape);
 
