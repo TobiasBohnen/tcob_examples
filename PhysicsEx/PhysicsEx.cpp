@@ -161,9 +161,9 @@ void PhysicsEx::create_box(point_f pos)
     obj.Body = _world.create_body({.Center = rect.center()}, {.Type = body_type::Dynamic});
 
     physics::rect_shape::settings shape;
-    shape.Material.Friction = 0.3f;
-    shape.Density           = 0.5f;
-    shape.Extents           = {point_f::Zero, rect.Size};
+    shape.Shape.Material.Friction = 0.3f;
+    shape.Shape.Density           = 0.5f;
+    shape.Extents                 = {point_f::Zero, rect.Size};
 
     obj.Body->create_shape<physics::rect_shape>(shape);
 
@@ -183,9 +183,9 @@ void PhysicsEx::create_circle(point_f pos)
     obj.Body = _world.create_body({.Center = rect.center()}, {.Type = body_type::Dynamic});
 
     physics::circle_shape::settings shape;
-    shape.Material.Friction = 0.3f;
-    shape.Density           = 0.75f;
-    shape.Radius            = rect.width() / 2;
+    shape.Shape.Material.Friction = 0.3f;
+    shape.Shape.Density           = 0.75f;
+    shape.Radius                  = rect.width() / 2;
 
     obj.Body->create_shape<physics::circle_shape>(shape);
 
@@ -202,8 +202,8 @@ void PhysicsEx::create_circle(point_f pos)
 void PhysicsEx::create_obstacle(rect_f const& rect)
 {
     physics::rect_shape::settings shape;
-    shape.Extents              = {rect.center(), rect.Size};
-    shape.Material.Restitution = 0.5f;
+    shape.Extents                    = {rect.center(), rect.Size};
+    shape.Shape.Material.Restitution = 0.5f;
 
     _obstacles->create_shape<physics::rect_shape>(shape);
 
@@ -216,8 +216,8 @@ void PhysicsEx::create_obstacle(rect_f const& rect)
 void PhysicsEx::create_edge(point_f pos0, point_f pos1)
 {
     segment_shape::settings shape;
-    shape.Point0 = pos0;
-    shape.Point1 = pos1;
+    shape.Point1 = pos0;
+    shape.Point2 = pos1;
 
     _obstacles->create_shape<segment_shape>(shape);
 
