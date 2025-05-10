@@ -66,7 +66,7 @@ inline void rng_form::draw_dice()
         f32 const totalBarHeight {barHeight * count * barOffset};
         for (i32 i {0}; i < count; ++i) {
             _canvas->begin_path();
-            _canvas->rect({{pos.X + xoff / 10, bounds.height() - (barHeight * i * barOffset)}, {xoff / 5 * 4, barHeight}});
+            _canvas->rect({{pos.X + (xoff / 10), bounds.height() - (barHeight * i * barOffset)}, {xoff / 5 * 4, barHeight}});
             _canvas->set_fill_style(colors::DimGray);
             _canvas->fill();
         }
