@@ -95,7 +95,7 @@ void TileMapEx::on_start()
     grid<tile_index_t> tiles {size_i {tmWidth, tmHeight}};
     for (i32 x {0}; x < tiles.width(); x++) {
         for (i32 y {0}; y < tiles.height(); y++) {
-            tiles[{x, y}] = _rand(1, 12);
+            tiles[x, y] = _rand(1, 12);
         }
     }
 
@@ -227,7 +227,7 @@ void TileMapEx::on_key_down(keyboard::event const& ev)
     } break;
 
     case scan_code::R: _tileMapOrtho.clear(); break;
-    default: break;
+    default:           break;
     }
 
     _cam.on_key_down(ev);
