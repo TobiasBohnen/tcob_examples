@@ -75,12 +75,12 @@ void UIEx::on_key_down(keyboard::event const& ev)
         break;
     case scan_code::F: {
         {
-            data::config::object obj;
+            data::object obj;
             _form0->submit(obj);
             obj.save("form0.json");
         }
         {
-            data::config::object obj;
+            data::object obj;
             std::dynamic_pointer_cast<panel>(_form0->find_widget_by_name("Panel0"))->submit(obj);
             obj.save("Panel0.json");
         }

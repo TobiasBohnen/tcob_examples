@@ -37,7 +37,7 @@ private:
     buffer                 _audioData;
     std::shared_ptr<sound> _sound1;
 
-    enum class wave_state {
+    enum class wave_state : u8 {
         Dirty,
         Generating,
         Ready,
