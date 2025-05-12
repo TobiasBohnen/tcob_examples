@@ -7,7 +7,7 @@ target_sources(LSystemEx PRIVATE
 )
 
 set_target_properties(LSystemEx PROPERTIES
-    CXX_STANDARD 20
+    CXX_STANDARD 23
     CXX_STANDARD_REQUIRED TRUE
 )
 

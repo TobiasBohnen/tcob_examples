@@ -7,7 +7,7 @@ target_sources(ControllerEx PRIVATE
 )
 
 set_target_properties(ControllerEx PROPERTIES
-    CXX_STANDARD 20
+    CXX_STANDARD 23
     CXX_STANDARD_REQUIRED TRUE
 )
 
