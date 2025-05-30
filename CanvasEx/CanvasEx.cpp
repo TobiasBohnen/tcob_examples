@@ -98,8 +98,8 @@ void CanvasEx::canvas_ring()
 
     for (isize i {0}; i < segments; i++) {
         radian_f const startAngle {radian_f {(i * TAU_F) / segments}};
-        radian_f const outerEndAngle {static_cast<f32>(((i + 1) * TAU_F) / segments - ogap)};
-        radian_f const innerEndAngle {static_cast<f32>(((i + 1) * TAU_F) / segments - igap)};
+        radian_f const outerEndAngle {static_cast<f32>((((i + 1) * TAU_F) / segments) - ogap)};
+        radian_f const innerEndAngle {static_cast<f32>((((i + 1) * TAU_F) / segments) - igap)};
 
         _canvas.begin_path();
         _canvas.arc(_mp, outerRadius, startAngle, outerEndAngle, winding::CW);
@@ -180,18 +180,18 @@ void CanvasEx::canvas_gradient()
 {
     _canvas.begin_frame(window().Size(), 1);
 
-    auto linearGradient0 = _canvas.create_linear_gradient(
+    auto linearGradient0 {_canvas.create_linear_gradient(
         {0, 0}, {0, 200},
-        color_gradient {{0, colors::Red}, {0.25, colors::Gold}, {0.75, colors::Green}, {1, colors::White}});
+        color_gradient {{0, colors::Red}, {0.25, colors::Gold}, {0.75, colors::Green}, {1, colors::White}})};
 
     _canvas.set_fill_style(linearGradient0);
     _canvas.begin_path();
     _canvas.rect({{0, 0}, {200, 200}});
     _canvas.fill();
 
-    auto linearGradient1 = _canvas.create_linear_gradient(
+    auto linearGradient1 {_canvas.create_linear_gradient(
         {250, 0}, {450, 0},
-        color_gradient {{0, colors::Green}, {0.25, colors::Blue}, {0.75, colors::Orange}, {1, colors::SlateBlue}});
+        color_gradient {{0, colors::Green}, {0.25, colors::Blue}, {0.75, colors::Orange}, {1, colors::SlateBlue}})};
 
     _canvas.set_global_alpha(0.5f);
     _canvas.set_fill_style(linearGradient1);
@@ -199,9 +199,9 @@ void CanvasEx::canvas_gradient()
     _canvas.rect({{250, 0}, {200, 200}});
     _canvas.fill();
 
-    auto linearGradient2 = _canvas.create_linear_gradient(
+    auto linearGradient2 {_canvas.create_linear_gradient(
         {500, 0}, {0, 700},
-        color_gradient {colors::Green, colors::Green});
+        color_gradient {colors::Green, colors::Green})};
 
     _canvas.set_global_alpha(1.0f);
     _canvas.set_fill_style(linearGradient2);

@@ -74,15 +74,15 @@ void PointCloudEx::on_start()
 {
     _cloud0 = std::make_shared<point_cloud>(numPoints.Width * numPoints.Height);
     i32 i {0};
-    for (f32 y = 0; y < pointSize * numPoints.Height; y += pointSize) {
-        for (f32 x = 0; x < pointSize * numPoints.Width; x += pointSize) {
-            auto& v     = _cloud0->create_point();
+    for (f32 y {0}; y < pointSize * numPoints.Height; y += pointSize) {
+        for (f32 x {0}; x < pointSize * numPoints.Width; x += pointSize) {
+            auto& v {_cloud0->create_point()};
             v.Position  = {(x + (pointSize / 2)), (y + (pointSize / 2))};
             v.Color     = {255, 255, 255, 255};
-            v.TexCoords = {x / (pointSize * numPoints.Width),
-                           y / (pointSize * numPoints.Height),
-                           0};
-            _quadtree.add({i++, &v});
+            v.TexCoords = {.U     = x / (pointSize * numPoints.Width),
+                           .V     = y / (pointSize * numPoints.Height),
+                           .Level = 0};
+            _quadtree.add({.ID = i++, .Vertex = &v});
         }
     }
 
