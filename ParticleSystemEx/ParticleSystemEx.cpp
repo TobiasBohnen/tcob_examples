@@ -10,8 +10,8 @@ using namespace std::chrono_literals;
 
 ParticleSystemEx::ParticleSystemEx(game& game)
     : scene(game)
-    , _particleSystem0 {true, 50000}
-    , _particleSystem1 {true, 50000}
+    , _system0 {true, 50000}
+    , _system1 {true, 50000}
 {
     auto const colors {color_gradient {{0.0f, colors::Red},
                                        {0.14f, colors::Orange},
@@ -37,8 +37,8 @@ void ParticleSystemEx::on_start()
     auto* resGrp {resMgr.get_group("res")};
 
     {
-        _particleSystem0.Material = resGrp->get<material>("QuadParticleMat");
-        auto emi0 {_particleSystem0.create_emitter()};
+        _system0.Material = resGrp->get<material>("QuadParticleMat");
+        auto emi0 {_system0.create_emitter()};
         emi0->Settings.Template = {
             .Speed     = std::minmax(30.f, 50.f),
             .Direction = std::minmax(0_deg, 180_deg),
@@ -65,13 +65,13 @@ void ParticleSystemEx::on_start()
         emi0->Settings.SpawnRate   = 1000;
         emi0->Settings.IsExplosion = true;
 
-        _particleSystem0.start();
+        _system0.start();
     }
     {
-        _particleSystem1.Material            = resGrp->get<material>("PointParticleMat");
-        _particleSystem1.Material->PointSize = 10;
+        _system1.Material            = resGrp->get<material>("PointParticleMat");
+        _system1.Material->PointSize = 10;
 
-        auto emi0 {_particleSystem1.create_emitter()};
+        auto emi0 {_system1.create_emitter()};
         emi0->Settings.Template = {
             .Speed     = std::minmax(3.f, 5.f),
             .Direction = std::minmax(0_deg, 180_deg),
@@ -87,20 +87,20 @@ void ParticleSystemEx::on_start()
         emi0->Settings.SpawnArea = {1200, 450, 120, 75};
         emi0->Settings.SpawnRate = 100;
 
-        _particleSystem1.start();
+        _system1.start();
     }
 }
 
 void ParticleSystemEx::on_draw_to(render_target& target)
 {
-    _particleSystem0.draw_to(target);
-    _particleSystem1.draw_to(target);
+    _system0.draw_to(target);
+    _system1.draw_to(target);
 }
 
 void ParticleSystemEx::on_update(milliseconds deltaTime)
 {
-    _particleSystem0.update(_reverse ? -deltaTime : deltaTime);
-    _particleSystem1.update(_reverse ? -deltaTime : deltaTime);
+    _system0.update(_reverse ? -deltaTime : deltaTime);
+    _system1.update(_reverse ? -deltaTime : deltaTime);
 }
 
 void ParticleSystemEx::on_fixed_update(milliseconds deltaTime)
@@ -111,7 +111,7 @@ void ParticleSystemEx::on_fixed_update(milliseconds deltaTime)
     stream << "avg FPS:" << stats.average_FPS();
     stream << " best FPS:" << stats.best_FPS();
     stream << " worst FPS:" << stats.worst_FPS();
-    stream << "| particle count:" << (_particleSystem0.particle_count() + _particleSystem1.particle_count());
+    stream << "| particle count:" << (_system0.particle_count() + _system1.particle_count());
 
     window().Title = "TestGame " + stream.str();
 }
@@ -123,21 +123,21 @@ void ParticleSystemEx::on_key_down(keyboard::event const& ev)
         parent().pop_current_scene();
         break;
     case scan_code::D1:
-        _particleSystem0.restart();
-        _particleSystem1.restart();
+        _system0.restart();
+        _system1.restart();
         break;
     case scan_code::D2:
-        if (_particleSystem0.is_running()) {
-            _particleSystem0.stop();
+        if (_system0.is_running()) {
+            _system0.stop();
         } else {
-            _particleSystem0.start();
+            _system0.start();
         }
         break;
     case scan_code::D3:
-        if (_particleSystem1.is_running()) {
-            _particleSystem1.stop();
+        if (_system1.is_running()) {
+            _system1.stop();
         } else {
-            _particleSystem1.start();
+            _system1.start();
         }
         break;
     case scan_code::R:
@@ -178,5 +178,5 @@ void ParticleSystemEx::load_emitter(quad_particle_emitter& emi)
     obj["emi"]["lifetime"]        = 3000;
     auto emi1 {std::make_shared<quad_particle_emitter>()};
     emi1->Settings = obj["emi"].as<quad_particle_emitter::settings>();
-    _particleSystem0.add_emitter(emi1);
+    _system0.add_emitter(emi1);
 }

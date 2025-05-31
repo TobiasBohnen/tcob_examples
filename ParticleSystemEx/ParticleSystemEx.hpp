@@ -29,8 +29,8 @@ protected:
 private:
     void load_emitter(quad_particle_emitter& emi);
 
-    quad_particle_system  _particleSystem0;
-    point_particle_system _particleSystem1;
+    quad_particle_system  _system0;
+    point_particle_system _system1;
 
     basic_cam          _cam;
     bool               _reverse {false};
