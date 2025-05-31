@@ -61,9 +61,9 @@ void ParticleSystemEx::on_start()
             .Spin     = std::minmax(-150_deg, 150_deg),
             .Rotation = std::minmax(-15_deg, 15_deg),
         };
-        emi0->Settings.SpawnArea = {450, 450, 5, 5};
-        emi0->Settings.SpawnRate = 1000;
-        emi0->Settings.Explosion = true;
+        emi0->Settings.SpawnArea   = {450, 450, 5, 5};
+        emi0->Settings.SpawnRate   = 1000;
+        emi0->Settings.IsExplosion = true;
 
         _particleSystem0.start();
     }
@@ -76,7 +76,7 @@ void ParticleSystemEx::on_start()
             .Speed     = std::minmax(3.f, 5.f),
             .Direction = std::minmax(0_deg, 180_deg),
 
-            .LinearAcceleration = std::minmax(5.f, 10.f),
+            .LinearAcceleration = std::minmax(5.f, 25.f),
 
             .Texture      = "snowflake",
             .Colors       = _colors,
@@ -99,8 +99,8 @@ void ParticleSystemEx::on_draw_to(render_target& target)
 
 void ParticleSystemEx::on_update(milliseconds deltaTime)
 {
-    _particleSystem0.update(deltaTime);
-    _particleSystem1.update(deltaTime);
+    _particleSystem0.update(_reverse ? -deltaTime : deltaTime);
+    _particleSystem1.update(_reverse ? -deltaTime : deltaTime);
 }
 
 void ParticleSystemEx::on_fixed_update(milliseconds deltaTime)
@@ -139,6 +139,9 @@ void ParticleSystemEx::on_key_down(keyboard::event const& ev)
         } else {
             _particleSystem1.start();
         }
+        break;
+    case scan_code::R:
+        _reverse = !_reverse;
         break;
     default:
         break;

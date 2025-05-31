@@ -32,7 +32,7 @@ private:
     quad_particle_system  _particleSystem0;
     point_particle_system _particleSystem1;
 
-    basic_cam _cam;
-
+    basic_cam          _cam;
+    bool               _reverse {false};
     std::vector<color> _colors;
 };
