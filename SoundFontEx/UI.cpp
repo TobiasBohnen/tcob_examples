@@ -16,7 +16,7 @@ using namespace tcob::random;
 ////////////////////////////////////////////////////////////
 
 piano_form::piano_form(window& window)
-    : form {{"piano", window.bounds()}}
+    : form {{.Name = "piano", .Bounds = window.bounds()}}
     , _font {"trim", "trim"}
 {
     font_family::SingleFont(*_font.ptr(), trim_ttf);
@@ -26,8 +26,8 @@ piano_form::piano_form(window& window)
     auto& mainPanelLayout {mainPanel->create_layout<grid_layout>(size_i {24, 6})};
 
     // White keys
-    std::vector<std::tuple<std::shared_ptr<button>&, i32, std::string>> const whiteKeys {
-        {C, 0, "C"}, {D, 3, "D"}, {E, 6, "E"}, {F, 9, "F"}, {G, 12, "G"}, {A, 15, "A"}, {B, 18, "B"}};
+    std::array<std::tuple<std::shared_ptr<button>&, i32, std::string>, 7> const whiteKeys {
+        {{C, 0, "C"}, {D, 3, "D"}, {E, 6, "E"}, {F, 9, "F"}, {G, 12, "G"}, {A, 15, "A"}, {B, 18, "B"}}};
 
     for (auto const& [btn, posX, label] : whiteKeys) {
         btn         = mainPanelLayout.create_widget<button>({posX, 0, 3, 6}, label);
@@ -37,14 +37,14 @@ piano_form::piano_form(window& window)
     }
 
     // Black keys
-    std::vector<std::tuple<std::shared_ptr<button>&, i32, std::string>> const blackKeys {
-        {CSharp, 2, "C#"}, {DSharp, 5, "D#"}, {FSharp, 11, "F#"}, {GSharp, 14, "G#"}, {ASharp, 17, "A#"}};
+    std::array<std::tuple<std::shared_ptr<button>&, i32, std::string>, 5> const blackKeys {
+        {{CSharp, 2, "C#"}, {DSharp, 5, "D#"}, {FSharp, 11, "F#"}, {GSharp, 14, "G#"}, {ASharp, 17, "A#"}}};
 
     for (auto const& [btn, posX, label] : blackKeys) {
         btn         = mainPanelLayout.create_widget<button>({posX, 0, 2, 3}, label);
         btn->Class  = "black-keys";
         btn->Label  = label;
-        btn->ZOrder = 2;
+        btn->ZOrder = 10;
     }
 
     // Octave
