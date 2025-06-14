@@ -29,8 +29,7 @@ auto main(void) -> int
 #else
 auto main(int /* argc */, char* argv[]) -> int
 {
-    tcob::game game {{.Path    = argv[0],
-                      .Name    = "BackgroundEx",
+    tcob::game game {{.Name    = "BackgroundEx",
                       .LogFile = "stdout"}};
 #endif
 

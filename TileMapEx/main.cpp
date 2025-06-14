@@ -26,10 +26,9 @@ auto main(void) -> int
                       .ConfigDefaults = config,
                       .WorkerThreads  = 8}};
 #else
-auto main(int /* argc */, char* argv[]) -> int
+auto main(int argc, char* argv[]) -> int
 {
-    tcob::game game {{.Path    = argv[0],
-                      .Name    = "TileMapEx",
+    tcob::game game {{.Name    = "TileMapEx",
                       .LogFile = "stdout"}};
 #endif
 
