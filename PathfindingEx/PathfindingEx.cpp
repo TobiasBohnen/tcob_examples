@@ -4,6 +4,7 @@
 // https://opensource.org/licenses/MIT
 
 #include "PathfindingEx.hpp"
+#include <algorithm>
 #include <iomanip>
 
 using namespace std::chrono_literals;
@@ -44,8 +45,8 @@ void PathfindingEx::on_start()
             point_f pos {static_cast<f32>(x), static_cast<f32>(y)};
             pos /= GRID_SIZE.Width;
             f32 const f {1 - noise(pos)};
-            if (min > f) { min = f; }
-            if (max < f) { max = f; }
+            min = std::min(min, f);
+            max = std::max(max, f);
             values.push_back(f);
         }
     }
@@ -142,7 +143,7 @@ void PathfindingEx::on_mouse_button_down(mouse::button_event const& ev)
     }
 
     if (_start != INVALID && _end != INVALID) {
-        _path = _pathfinder->find_path(_costs, _tiles.size(), _start, _end);
+        _path = _pathfinder.find_path(_costs, _tiles.size(), _start, _end);
     } else {
         _path.clear();
     }

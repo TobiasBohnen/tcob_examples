@@ -37,8 +37,8 @@ private:
     point_i              _end {INVALID};
     std::vector<point_i> _path;
 
-    std::unique_ptr<ai::astar_pathfinding> _pathfinder;
-    grid<tile_index_t>                     _tiles {GRID_SIZE, 1};
+    ai::astar_pathfinding _pathfinder;
+    grid<tile_index_t>    _tiles {GRID_SIZE, 1};
 
     struct grid_view {
         auto get_cost(point_i, point_i p) const -> u64
