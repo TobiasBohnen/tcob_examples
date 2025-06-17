@@ -31,13 +31,13 @@ private:
     shape_batch _layer0;
 
     std::shared_ptr<tcob::gfx::poly_shape> _wall;
-    assets::owning_asset_ptr<material>     _mat0;
+    assets::asset_owner_ptr<material>      _mat0;
 
     std::shared_ptr<tcob::gfx::rect_shape> _back;
-    assets::owning_asset_ptr<material>     _mat1;
+    assets::asset_owner_ptr<material>      _mat1;
 
     std::shared_ptr<tcob::gfx::rect_shape> _front;
-    assets::owning_asset_ptr<material>     _mat2;
+    assets::asset_owner_ptr<material>      _mat2;
 
     sine_wave_tween<f32> _tween {seconds {5}};
 };

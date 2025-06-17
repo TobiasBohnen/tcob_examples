@@ -24,7 +24,7 @@ protected:
     void on_mouse_motion(mouse::motion_event const& ev) override;
 
 private:
-    shape_batch                _layer1;
-    owning_asset_ptr<material> _mat0 {};
-    owning_asset_ptr<texture>  _tex0 {};
+    shape_batch               _layer1;
+    asset_owner_ptr<material> _mat0 {};
+    asset_owner_ptr<texture>  _tex0 {};
 };

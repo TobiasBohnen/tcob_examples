@@ -29,8 +29,8 @@ protected:
 private:
     basic_cam _cam;
 
-    shape_batch                        _layer0;
-    assets::owning_asset_ptr<material> _material;
+    shape_batch                       _layer0;
+    assets::asset_owner_ptr<material> _material;
 
     std::shared_ptr<parallax_background> _back0;
 };

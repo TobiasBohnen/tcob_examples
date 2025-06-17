@@ -41,7 +41,7 @@ private:
     std::shared_ptr<physics::body> _obstacles {};
     std::vector<Box2DExObject>     _objects {};
 
-    assets::owning_asset_ptr<material> _mat;
+    assets::asset_owner_ptr<material> _mat;
 
     shape_batch _layer1;
     bool        _forceOn {false};
