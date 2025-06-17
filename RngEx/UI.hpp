@@ -80,18 +80,18 @@ inline void rng_form::draw_noise()
     auto const bounds {_canvas->content_bounds()};
     _canvas->clear();
 
-    u64 const seed = static_cast<u64>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+    u64 const seed {static_cast<u64>(std::chrono::high_resolution_clock::now().time_since_epoch().count())};
 
     auto rng {random::rng_split_mix_64 {seed}};
 
-    _tex->create({256, 256}, 1, texture::format::RGBA8);
+    _tex = {"Noise", size_i {256, 256}, 1, texture::format::RGBA8};
     std::array<color, 256 * 256> data;
     for (auto& c : data) {
         c.R = c.G = c.B = rng(0, 255);
         c.A             = 255;
     }
     _tex->update_data(data.data(), 0, 256, 1);
-    _tex->add_region("default", {{0, 0, 1, 1}, 0});
+    _tex->add_region("default", {.UVRect = {0, 0, 1, 1}, .Level = 0});
 
     _canvas->draw_image(_tex.ptr(), "default", bounds);
 }
