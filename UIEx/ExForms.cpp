@@ -160,8 +160,8 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
         dropDownList0->add_item("item " + std::to_string(i));
     }
     dropDownList0->add_item({.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .Region = "l1"}});
-    dropDownList0->SelectedItemIndex.Changed.connect([label0, dropDownList0](i32 value) { label0->Label = "selected: " + std::to_string(value); });
-    dropDownList0->HoveredItemIndex.Changed.connect([label0, dropDownList0](i32 value) { label0->Label = "hovered: " + std::to_string(value); });
+    dropDownList0->SelectedItemIndex.Changed.connect([label0, dropDownList0](isize value) { label0->Label = "selected: " + std::to_string(value); });
+    dropDownList0->HoveredItemIndex.Changed.connect([label0, dropDownList0](isize value) { label0->Label = "hovered: " + std::to_string(value); });
     dropDownList0->ZOrder = 1;
     dropDownList0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::Looped);
 

@@ -24,7 +24,7 @@ void LightingSystemEx::on_start()
     _lightingSystem0.Bounds = {point_f::Zero, size_f {1600, 900}};
 
     _lightSource0        = _lightingSystem0.create_light_source();
-    _lightSource0->Range = 100;
+    _lightSource0->Range = 100.0f;
     _lightSource0->Color = {255, 255, 0, 128};
 
     auto const createSC {[&](std::vector<point_f> const& points) {
