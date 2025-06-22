@@ -269,7 +269,7 @@ auto create_form1(window* wnd) -> std::shared_ptr<form_base>
 
     {
         auto panel0 {retValue->create_container<panel>(rect_f {800, 0, 400, 400}, "Panel3")};
-        panel0->Flex          = {100_pct, 100_pct};
+        panel0->Flex          = {.Width = 100_pct, .Height = 100_pct};
         panel0->ScrollEnabled = true;
         panel0->Movable       = true;
         auto& panel0Layout {panel0->get_layout<static_layout>()};
@@ -340,7 +340,7 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form<dock_layout>>
 
     {
         auto panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
-        panel0->Flex = {100_pct, 25_pct};
+        panel0->Flex = {.Width = 100_pct, .Height = 25_pct};
         auto& panel0Layout {panel0->create_layout<dock_layout>()};
 
         auto canvas {panel0Layout.create_widget<canvas_widget>(dock_style::Fill, "Canvas1")};
@@ -364,7 +364,7 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form<dock_layout>>
     }
     {
         auto panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
-        panel0->Flex = {100_pct, 25_pct};
+        panel0->Flex = {.Width = 100_pct, .Height = 25_pct};
         auto& panel0Layout {panel0->create_layout<dock_layout>()};
 
         auto colorPicker00 {panel0Layout.create_widget<color_picker>(dock_style::Fill, "CP1")};
@@ -372,7 +372,7 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form<dock_layout>>
     }
     {
         auto panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
-        panel0->Flex = {100_pct, 25_pct};
+        panel0->Flex = {.Width = 100_pct, .Height = 25_pct};
         auto& panel0Layout {panel0->create_layout<dock_layout>()};
 
         auto     dotMatrix {panel0Layout.create_widget<dot_matrix_display>(dock_style::Fill, "DM1")};
@@ -399,7 +399,7 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form<dock_layout>>
 
     {
         auto panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
-        panel0->Flex = {100_pct, 25_pct};
+        panel0->Flex = {.Width = 100_pct, .Height = 25_pct};
         auto& panel0Layout {panel0->create_layout<grid_layout>(size_i {200, 200})};
 
         auto lcdDisplay0 {panel0Layout.create_widget<seven_segment_display>({0, 0, 100, 100}, "LCD0")};
@@ -416,7 +416,7 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form<dock_layout>>
 
 auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form<dock_layout>>
 {
-    auto retValue {std::make_shared<form<dock_layout>>(form_init {"form3", wnd->bounds()})};
+    auto retValue {std::make_shared<form<dock_layout>>(form_init {.Name = "form3", .Bounds = wnd->bounds()})};
 
     auto createTabs {[](std::shared_ptr<tab_container> const& tabContainer0) {
         auto boxVPanel0 {tabContainer0->create_tab<panel>("SPanel0")};
@@ -453,21 +453,21 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
 
     {
         auto tabContainer0 {retValue->create_container<tab_container>(dock_style::Left, "TabContainer0")};
-        tabContainer0->Flex = {50_pct, 100_pct};
+        tabContainer0->Flex = {.Width = 50_pct, .Height = 100_pct};
         createTabs(tabContainer0);
     }
 
     {
-        auto tabContainer0 {retValue->create_container<tab_container>(dock_style::Left, "TabContainer0")};
-        tabContainer0->Flex = {50_pct, 100_pct};
+        auto tabContainer0 {retValue->create_container<tab_container>(dock_style::Left, "TabContainer1")};
+        tabContainer0->Flex = {.Width = 50_pct, .Height = 100_pct};
 
-        auto tabContainer1 {tabContainer0->create_tab<tab_container>("TabContainer1", {.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .Region = "l1"}})};
+        auto tabContainer1 {tabContainer0->create_tab<tab_container>("TabContainer11", {.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .Region = "l1"}})};
         createTabs(tabContainer1);
 
-        auto tabContainer2 {tabContainer0->create_tab<tab_container>("TabContainer2")};
+        auto tabContainer2 {tabContainer0->create_tab<tab_container>("TabContainer12")};
         createTabs(tabContainer2);
 
-        auto tabContainer3 {tabContainer0->create_tab<tab_container>("TabContainer3")};
+        auto tabContainer3 {tabContainer0->create_tab<tab_container>("TabContainer13")};
         createTabs(tabContainer3);
 
         tabContainer0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::Looped);
@@ -481,7 +481,7 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
 
 auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form<dock_layout>>
 {
-    auto retValue {std::make_shared<form<dock_layout>>(form_init {"form4", wnd->bounds()})};
+    auto retValue {std::make_shared<form<dock_layout>>(form_init {.Name = "form4", .Bounds = wnd->bounds()})};
 
     auto const createSections {[](std::shared_ptr<accordion> const& accordion0) {
         auto boxVPanel0 {accordion0->create_section<panel>("SPanel0")};

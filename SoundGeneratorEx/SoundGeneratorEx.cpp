@@ -62,7 +62,7 @@ void SoundGeneratorEx::on_start()
     _form0->Exit->MouseDown.connect([&]() {
         parent().pop_current_scene();
     });
-    _form0->fixed_update(0ms);
+    _form0->update(0ms);
     draw_wave();
 }
 
