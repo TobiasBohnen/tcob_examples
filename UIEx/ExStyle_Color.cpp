@@ -124,10 +124,10 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<label>("label", {})};
-        style->Text.Style     = {false, font::weight::Normal};
+        style->Text.Style     = {.IsItalic = false, .Weight = font::weight::Normal};
         style->Text.Font      = resGrp.get<font_family>("Poppins");
         style->Text.Size      = 50_pct;
-        style->Text.Alignment = {horizontal_alignment::Left, vertical_alignment::Middle};
+        style->Text.Alignment = {.Horizontal = horizontal_alignment::Left, .Vertical = vertical_alignment::Middle};
 
         normal.apply(style);
     }
@@ -482,7 +482,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->DropShadow.Color = color {0, 0, 0, 128};
         style->SectionBarHeight = 10_pct;
         style->SectionItemClass = "section_items";
-        style->ExpandDuration   = 1250ms;
+        style->ExpandDuration   = 500ms;
 
         auto hoverStyle {retValue.create<accordion>("accordion", {.Hover = true})};
         *hoverStyle = *style;

@@ -518,13 +518,13 @@ auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::sha
 
     {
         auto accordion0 {retValue->create_container<accordion>(dock_style::Left, "Accordion0")};
-        accordion0->Flex = {30_pct, 100_pct};
+        accordion0->Flex = {.Width = 30_pct, .Height = 100_pct};
         createSections(accordion0);
     }
 
     {
         auto panel0 {retValue->create_container<panel>(dock_style::Left, "Panel0")};
-        panel0->Flex          = {30_pct, 100_pct};
+        panel0->Flex          = {.Width = 30_pct, .Height = 100_pct};
         panel0->ScrollEnabled = true;
         auto& panel0Layout {panel0->get_layout<static_layout>()};
 
@@ -534,7 +534,7 @@ auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::sha
 
     {
         auto accordion0 {retValue->create_container<accordion>(dock_style::Left, "Accordion0")};
-        accordion0->Flex                  = {30_pct, 100_pct};
+        accordion0->Flex                  = {.Width = 30_pct, .Height = 100_pct};
         accordion0->MaximizeActiveSection = true;
 
         auto accordion1 {accordion0->create_section<accordion>("Accordion1", {.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .Region = "l1"}})};
