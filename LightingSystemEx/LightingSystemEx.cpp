@@ -36,8 +36,8 @@ void LightingSystemEx::on_start()
         auto sc0 {_lightingSystem0.create_shadow_caster()};
         sc0->Polygon = points;
         sc0->Hit.connect([=](auto const& ev) {
-            if (ev.Source->Falloff && ev.Source->Range()) {
-                if (ev.Distance < *ev.Source->Range() / 2) {
+            if (ev.Source->Falloff && *ev.Source->Range) {
+                if (ev.Distance < **ev.Source->Range / 2) {
                     shape0->Color = colors::Green;
                 }
             } else {
@@ -114,26 +114,26 @@ void LightingSystemEx::on_key_down(keyboard::event const& ev)
     case scan_code::L: {
         static rng rand;
         auto       lightSource1  = _lightingSystem0.create_light_source();
-        lightSource1->Color      = _lightSource0->Color();
-        lightSource1->Position   = _lightSource0->Position();
-        lightSource1->Range      = _lightSource0->Range();
-        lightSource1->Falloff    = _lightSource0->Falloff();
-        lightSource1->StartAngle = _lightSource0->StartAngle();
-        lightSource1->EndAngle   = _lightSource0->EndAngle();
+        lightSource1->Color      = *_lightSource0->Color;
+        lightSource1->Position   = *_lightSource0->Position;
+        lightSource1->Range      = *_lightSource0->Range;
+        lightSource1->Falloff    = *_lightSource0->Falloff;
+        lightSource1->StartAngle = *_lightSource0->StartAngle;
+        lightSource1->EndAngle   = *_lightSource0->EndAngle;
     } break;
     case scan_code::K: {
         if (!_lightSourceSec0) {
             _lightSourceSec0           = _lightingSystem0.create_light_source();
-            _lightSourceSec0->Color    = _lightSource0->Color();
-            _lightSourceSec0->Position = _lightSource0->Position() + point_f {0, 15};
-            _lightSourceSec0->Falloff  = _lightSource0->Falloff();
-            _lightSourceSec0->Range    = _lightSource0->Range();
+            _lightSourceSec0->Color    = *_lightSource0->Color;
+            _lightSourceSec0->Position = *_lightSource0->Position + point_f {0, 15};
+            _lightSourceSec0->Falloff  = *_lightSource0->Falloff;
+            _lightSourceSec0->Range    = *_lightSource0->Range;
 
             _lightSourceSec1           = _lightingSystem0.create_light_source();
-            _lightSourceSec1->Color    = _lightSource0->Color();
-            _lightSourceSec1->Position = _lightSource0->Position() - point_f {0, 15};
-            _lightSourceSec1->Falloff  = _lightSource0->Falloff();
-            _lightSourceSec1->Range    = _lightSource0->Range();
+            _lightSourceSec1->Color    = *_lightSource0->Color;
+            _lightSourceSec1->Position = *_lightSource0->Position - point_f {0, 15};
+            _lightSourceSec1->Falloff  = *_lightSource0->Falloff;
+            _lightSourceSec1->Range    = *_lightSource0->Range;
         } else {
             _lightingSystem0.remove_light_source(*_lightSourceSec0);
             _lightSourceSec0 = nullptr;
@@ -145,11 +145,11 @@ void LightingSystemEx::on_key_down(keyboard::event const& ev)
         _lightSource0->Falloff = !_lightSource0->Falloff;
     } break;
     case scan_code::R: {
-        if (_lightSource0->Range()) {
+        if (*_lightSource0->Range) {
             if (*_lightSource0->Range == 500) {
                 _lightSource0->Range = std::nullopt;
             } else {
-                _lightSource0->Range = *_lightSource0->Range() + 100;
+                _lightSource0->Range = **_lightSource0->Range + 100.f;
             }
         } else {
             _lightSource0->Range = 100;
@@ -157,13 +157,13 @@ void LightingSystemEx::on_key_down(keyboard::event const& ev)
 
     } break;
     case scan_code::T: {
-        if (_lightSource0->StartAngle()) {
+        if (*_lightSource0->StartAngle) {
             if (_lightSource0->StartAngle->Value >= 80) {
                 _lightSource0->StartAngle = std::nullopt;
                 _lightSource0->EndAngle   = std::nullopt;
             } else {
-                _lightSource0->StartAngle = *_lightSource0->StartAngle() + degree_f(10);
-                _lightSource0->EndAngle   = *_lightSource0->EndAngle() - degree_f(10);
+                _lightSource0->StartAngle = **_lightSource0->StartAngle + degree_f(10);
+                _lightSource0->EndAngle   = **_lightSource0->EndAngle - degree_f(10);
             }
         } else {
             _lightSource0->StartAngle = degree_f {10};
@@ -193,8 +193,8 @@ void LightingSystemEx::on_mouse_motion(mouse::motion_event const& ev)
     _cam.on_mouse_motion(ev);
     _lightSource0->Position = (window().camera()).convert_screen_to_world(ev.Position);
     if (_lightSourceSec0) {
-        _lightSourceSec0->Position = _lightSource0->Position() + point_f {0, 10};
-        _lightSourceSec1->Position = _lightSource0->Position() - point_f {0, 10};
+        _lightSourceSec0->Position = *_lightSource0->Position + point_f {0, 10};
+        _lightSourceSec1->Position = *_lightSource0->Position - point_f {0, 10};
     }
 }
 

@@ -28,7 +28,7 @@ void SoundFontEx::on_start()
 
     auto mouseDown {[&](auto&& btn, midi_note baseNote) {
         btn->MouseDown.connect([&, baseNote]() {
-            auto const note {static_cast<midi_note>(static_cast<u8>(baseNote) + ((_form0->Octave->Value() + 1) * 12))};
+            auto const note {static_cast<midi_note>(static_cast<u8>(baseNote) + ((_form0->Octave->Value + 1) * 12))};
             play_note(quarter, 0, note);
         });
     }};

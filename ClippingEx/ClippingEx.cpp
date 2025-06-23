@@ -70,7 +70,7 @@ void ClippingEx::on_mouse_button_down(mouse::button_event const& ev)
         _layer0.remove_shape(*_polyShape);
         std::array colors {colors::Red, colors::Blue, colors::Green, colors::Yellow, colors::Brown, colors::DodgerBlue};
         i32        i {0};
-        for (auto const& poly : _polyShape->Polygons()) {
+        for (auto const& poly : *_polyShape->Polygons) {
             auto shape      = _layer0.create_shape<gfx::poly_shape>();
             shape->Material = material::Empty();
             shape->Color    = colors[i++ % colors.size()];

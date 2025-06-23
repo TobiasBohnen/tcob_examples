@@ -56,11 +56,11 @@ void PathfindingEx::on_start()
         _tiles[i] = val;
     }
 
-    f32 const size {window().Size().Height / static_cast<f32>(GRID_SIZE.Height)};
+    f32 const size {(*window().Size).Height / static_cast<f32>(GRID_SIZE.Height)};
     _tileSize          = {size, size};
     _tileMapOrtho.Grid = {.TileSize = _tileSize};
 
-    tcob::gfx::tilemap_layer layer {_tiles};
+    tcob::gfx::tilemap_layer layer {.Tiles = _tiles};
     _tileMapOrtho.add_layer(layer);
     _tileMapOrtho.Material = material::Empty();
 }
@@ -69,7 +69,7 @@ void PathfindingEx::on_draw_to(render_target& target)
 {
     _tileMapOrtho.draw_to(target);
 
-    auto const size {target.Size()};
+    auto const size {*target.Size};
 
     _canvas.begin_frame(size, 1);
 
@@ -96,7 +96,7 @@ void PathfindingEx::on_draw_to(render_target& target)
     _canvas.end_frame();
 
     _renderer.set_layer(0);
-    _renderer.set_bounds({point_f::Zero, size_f {window().Size()}});
+    _renderer.set_bounds({point_f::Zero, size_f {*window().Size}});
     _renderer.render_to_target(target);
 }
 

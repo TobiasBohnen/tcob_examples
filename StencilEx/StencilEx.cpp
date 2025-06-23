@@ -105,5 +105,5 @@ void StencilEx::create_shapes()
 void StencilEx::update_shapes()
 {
     _back->Bounds  = {{50, _tween.Value}, _back->Bounds->Size};
-    _front->Bounds = _back->Bounds();
+    _front->Bounds = *_back->Bounds;
 }

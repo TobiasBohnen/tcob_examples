@@ -64,7 +64,7 @@ generator_form::generator_form(window& window)
 
     _valStartFrequency = genSlider({10, 27, 4, 2}, "Start Frequency", 0, 100);
     _valMinFrequency   = genSlider({10, 29, 4, 2}, "Min Frequency", 0, 100);
-    _valMinFrequency->Value.Changed.connect([this] { _valStartFrequency->Min = _valMinFrequency->Value(); });
+    _valMinFrequency->Value.Changed.connect([this] { _valStartFrequency->Min = *_valMinFrequency->Value; });
 
     _valSlide        = genSlider({10, 31, 4, 2}, "Slide", -100, 100);
     _valDeltaSlide   = genSlider({10, 33, 4, 2}, "Delta Slide", -100, 100);
@@ -273,10 +273,10 @@ void generator_form::gen_styles()
 void generator_form::set_values(sound_wave const& wave)
 {
     switch (wave.WaveType) {
-    case sound_wave::type::Square: _valWaveType->select_item("Square"); break;
+    case sound_wave::type::Square:   _valWaveType->select_item("Square"); break;
     case sound_wave::type::Sawtooth: _valWaveType->select_item("Sawtooth"); break;
-    case sound_wave::type::Sine: _valWaveType->select_item("Sine"); break;
-    case sound_wave::type::Noise: _valWaveType->select_item("Noise"); break;
+    case sound_wave::type::Sine:     _valWaveType->select_item("Sine"); break;
+    case sound_wave::type::Noise:    _valWaveType->select_item("Noise"); break;
     case sound_wave::type::Triangle: _valWaveType->select_item("Triangle"); break;
     }
 

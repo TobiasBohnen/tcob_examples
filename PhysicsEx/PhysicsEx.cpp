@@ -38,10 +38,10 @@ void PhysicsEx::on_update(milliseconds deltaTime)
         std::visit(
             overloaded {
                 [&](std::shared_ptr<gfx::rect_shape> const& rect) {
-                    auto const bounds {rect->Bounds->as_centered_at(it->Body->Transform().Center * 12)};
+                    auto const bounds {rect->Bounds->as_centered_at((*it->Body->Transform).Center * 12)};
                     if (rect->Bounds != bounds) {
                         rect->Bounds   = bounds;
-                        rect->Rotation = it->Body->Transform().Angle;
+                        rect->Rotation = (*it->Body->Transform).Angle;
 
                         if (rect->Bounds->center().Y > 1000) {
                             _layer1.remove_shape(*rect);
@@ -51,9 +51,9 @@ void PhysicsEx::on_update(milliseconds deltaTime)
                     }
                 },
                 [&](std::shared_ptr<gfx::circle_shape> const& circle) {
-                    if (circle->Center != it->Body->Transform().Center * 12) {
-                        circle->Center   = it->Body->Transform().Center * 12;
-                        circle->Rotation = it->Body->Transform().Angle;
+                    if (circle->Center != (*it->Body->Transform).Center * 12) {
+                        circle->Center   = (*it->Body->Transform).Center * 12;
+                        circle->Rotation = (*it->Body->Transform).Angle;
 
                         if (circle->Center->Y > 1000) {
                             _layer1.remove_shape(*circle);

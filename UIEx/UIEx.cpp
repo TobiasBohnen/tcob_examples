@@ -37,7 +37,7 @@ void UIEx::on_start()
     //_form0 = create_form_terminal(&window());
 
     _form0->Styles = create_color_styles(*resGrp);
-    // _form0->Bounds = rect_f {{300, 450}, size_f {window().Size() * 2}};
+    // _form0->Bounds = rect_f {{300, 450}, size_f {*window().Size * 2}};
     //_form0->Scale  = {0.5f, 0.5f};
 
     _switch             = false;

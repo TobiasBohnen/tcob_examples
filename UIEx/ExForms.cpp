@@ -20,8 +20,8 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     auto panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
     panel0->Flex = {.Width = 100_pct, .Height = 100_pct};
     auto& panel0Layout {panel0->get_layout<static_layout>()};
-    (*panel0->TabStop).Enabled = false;
-    panel0->ScrollEnabled      = true;
+    panel0->TabStop       = {.Enabled = false};
+    panel0->ScrollEnabled = true;
 
     auto label0 {panel0Layout.create_widget<label>({0, 520, 200, 40}, "Label0")};
     auto button0 {panel0Layout.create_widget<button>({0, 0, 200, 100}, "Button0")};
@@ -63,8 +63,8 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     slider0->IncrementalChange = false;
 
     auto sliderLabel0 {sliderPanelLayout.create_widget<label>({50, 150, 50, 50}, "Label2")};
-    sliderLabel0->For                = slider0;
-    (*sliderLabel0->TabStop).Enabled = false;
+    sliderLabel0->For     = slider0;
+    sliderLabel0->TabStop = {.Enabled = false};
     slider0->Value.Changed.connect([sliderLabel0, slider0](auto val) {
         sliderLabel0->Label = std::to_string(val);
         slider0->Alpha      = val / 255.f;
@@ -81,13 +81,13 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     auto textBox0 {panel0Layout.create_widget<text_box>({890, 350, 125, 50}, "TextBox0")};
     textBox0->MaxLength = 9;
-    textBox0->Submit.connect([label0, textBox0](auto const&) { label0->Label = "submitted: " + textBox0->Text(); });
+    textBox0->Submit.connect([label0, textBox0](auto const&) { label0->Label = "submitted: " + *textBox0->Text; });
 
     auto toggle0 {panel0Layout.create_widget<toggle>({890, 500, 150, 75}, "Toggle0")};
     toggle0->Checked = true;
 
     auto gridPanel {panel0Layout.create_widget<panel>({230, 20, 250, 250}, "SPanel0")};
-    (*gridPanel->TabStop).Enabled = false;
+    gridPanel->TabStop = {.Enabled = false};
     auto& gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 3})};
     auto  createGridWidget {
         [&](rect_i loc, std::string const& name) {
@@ -104,7 +104,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     createGridWidget({3, 2, 1, 1}, "6");
 
     auto boxVPanel0 {panel0Layout.create_widget<panel>({490, 20, 250, 250}, "SPanel1")};
-    (*boxVPanel0->TabStop).Enabled = false;
+    boxVPanel0->TabStop = {.Enabled = false};
     auto& boxVLayout0 {boxVPanel0->create_layout<vertical_layout>()};
     for (i32 i {0}; i < 4; i++) {
         auto bb {boxVLayout0.create_widget<button>("Button" + std::to_string(i))};
@@ -112,7 +112,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     }
 
     auto boxHPanel1 {panel0Layout.create_widget<panel>({230, 280, 250, 100}, "SPanel2")};
-    (*boxHPanel1->TabStop).Enabled = false;
+    boxHPanel1->TabStop = {.Enabled = false};
     auto& boxHLayout1 {boxHPanel1->create_layout<horizontal_layout>()};
     for (i32 i {0}; i < 4; i++) {
         auto chk {boxHLayout1.create_widget<checkbox>("Check" + std::to_string(i))};
@@ -120,7 +120,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     }
 
     auto boxHPanel2 {panel0Layout.create_widget<panel>({490, 280, 250, 100}, "SPanel3")};
-    (*boxHPanel2->TabStop).Enabled = false;
+    boxHPanel2->TabStop = {.Enabled = false};
     auto& boxHLayout2 {boxHPanel2->create_layout<horizontal_layout>()};
     for (i32 i {0}; i < 4; i++) {
         auto rb {boxHLayout2.create_widget<radio_button>("Radio" + std::to_string(i))};
@@ -129,7 +129,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     }
     retValue->CursorChanged.connect([wnd, form = retValue.get()](string const& cursor) {
         if (wnd->SystemCursorEnabled) { return; }
-        if (!wnd->Cursor()) { return; }
+        if (!wnd->Cursor) { return; }
         wnd->Cursor->ActiveMode = cursor;
 
         size_f off {wnd->Cursor->bounds().Size};
@@ -137,18 +137,18 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     });
 
     auto masonryPanel0 {panel0Layout.create_widget<panel>({230, 390, 250, 550}, "SPanel4")};
-    (*masonryPanel0->TabStop).Enabled = false;
-    masonryPanel0->FocusGained.connect([](widget_event ev) { (*ev.Sender->Bounds).Size.Width = 800; });
-    masonryPanel0->FocusLost.connect([](widget_event ev) { (*ev.Sender->Bounds).Size.Width = 250; });
+    masonryPanel0->TabStop = {.Enabled = false};
+    masonryPanel0->FocusGained.connect([](widget_event ev) { ev.Sender->Bounds.mut_ref().Size.Width = 800; });
+    masonryPanel0->FocusLost.connect([](widget_event ev) { ev.Sender->Bounds.mut_ref().Size.Width = 250; });
     auto& masonryLayout0 {masonryPanel0->create_layout<masonry_layout>(6)};
     for (i32 i {0}; i < 16; i++) {
         auto fb {masonryLayout0.create_widget<button>("FButton" + std::to_string(i))};
         if (i % 3 == 0) {
-            fb->Flex = {100_pct, 40_pct};
+            fb->Flex = {.Width = 100_pct, .Height = 40_pct};
         } else if (i % 2 == 0) {
-            fb->Flex = {100_pct, 30_pct};
+            fb->Flex = {.Width = 100_pct, .Height = 30_pct};
         } else {
-            fb->Flex = {100_pct, 20_pct};
+            fb->Flex = {.Width = 100_pct, .Height = 20_pct};
         }
 
         fb->Label = std::to_string(i);
@@ -223,18 +223,18 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     });
 
     // nav map
-    auto& navMap {*retValue->NavMap};
-    navMap["gridB0"] = {.Left = "Slider0", .Right = "gridB1", .Down = "gridB2"};
-    navMap["gridB1"] = {.Left = "gridB0", .Down = "gridB2"};
-    navMap["gridB2"] = {.Up = "gridB0", .Down = "gridB3"};
-    navMap["gridB3"] = {.Up = "gridB2", .Right = "gridB4"};
-    navMap["gridB4"] = {.Left = "gridB3", .Up = "gridB2", .Right = "gridB5"};
-    navMap["gridB5"] = {.Left = "gridB4", .Up = "gridB2", .Right = "gridB6"};
-    navMap["gridB6"] = {.Left = "gridB5", .Up = "gridB2", .Down = "Check0"};
-    navMap["Check0"] = {.Up = "gridB6", .Right = "Check1"};
-    navMap["Check1"] = {.Left = "Check0", .Right = "Check2"};
-    navMap["Check2"] = {.Left = "Check1", .Right = "Check3"};
-    navMap["Check3"] = {.Left = "Check2"};
+    auto& nm {retValue->NavMap.mut_ref()};
+    nm["gridB0"] = {.Left = "Slider0", .Right = "gridB1", .Down = "gridB2"};
+    nm["gridB1"] = {.Left = "gridB0", .Down = "gridB2"};
+    nm["gridB2"] = {.Up = "gridB0", .Down = "gridB3"};
+    nm["gridB3"] = {.Up = "gridB2", .Right = "gridB4"};
+    nm["gridB4"] = {.Left = "gridB3", .Up = "gridB2", .Right = "gridB5"};
+    nm["gridB5"] = {.Left = "gridB4", .Up = "gridB2", .Right = "gridB6"};
+    nm["gridB6"] = {.Left = "gridB5", .Up = "gridB2", .Down = "Check0"};
+    nm["Check0"] = {.Up = "gridB6", .Right = "Check1"};
+    nm["Check1"] = {.Left = "Check0", .Right = "Check2"};
+    nm["Check2"] = {.Left = "Check1", .Right = "Check3"};
+    nm["Check3"] = {.Left = "Check2"};
 
     for (auto* c : retValue->all_widgets()) {
         c->TransitionDuration = 250ms;
@@ -283,9 +283,9 @@ auto create_form_terminal(window* wnd) -> std::shared_ptr<form<dock_layout>>
     auto retValue {std::make_shared<form<dock_layout>>(form_init {"form2", wnd->bounds()})};
 
     auto panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
-    panel0->Flex = {100_pct, 100_pct};
+    panel0->Flex = {.Width = 100_pct, .Height = 100_pct};
     auto& panel0Layout {panel0->get_layout<static_layout>()};
-    (*panel0->TabStop).Enabled = false;
+    panel0->TabStop = {.Enabled = false};
 
     {
         size_i const termSize {80, 24};
@@ -334,9 +334,9 @@ auto create_form_terminal(window* wnd) -> std::shared_ptr<form<dock_layout>>
 
 auto create_form_displays(window* wnd) -> std::shared_ptr<form<dock_layout>>
 {
-    auto retValue {std::make_shared<form<dock_layout>>(form_init {"form2", wnd->bounds()})};
+    auto retValue {std::make_shared<form<dock_layout>>(form_init {.Name = "form2", .Bounds = wnd->bounds()})};
 
-    retValue->Bounds = rect_f {0, 0, wnd->Size().Width * 0.8f, static_cast<f32>(wnd->Size().Height)};
+    retValue->Bounds = rect_f {0, 0, (*wnd->Size).Width * 0.8f, static_cast<f32>((*wnd->Size).Height)};
 
     {
         auto panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
@@ -420,7 +420,7 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
 
     auto createTabs {[](std::shared_ptr<tab_container> const& tabContainer0) {
         auto boxVPanel0 {tabContainer0->create_tab<panel>("SPanel0")};
-        (*boxVPanel0->TabStop).Enabled = false;
+        boxVPanel0->TabStop = {.Enabled = false};
         auto& boxVLayout0 {boxVPanel0->create_layout<vertical_layout>()};
         for (i32 i {0}; i < 4; i++) {
             auto bb {boxVLayout0.create_widget<button>("Button" + std::to_string(i))};
@@ -428,7 +428,7 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
         }
 
         auto gridPanel {tabContainer0->create_tab<panel>("SPanel1")};
-        (*gridPanel->TabStop).Enabled = false;
+        gridPanel->TabStop = {.Enabled = false};
         auto& gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 3})};
 
         auto createGridWidget {[&](rect_i loc, std::string const& name) {
@@ -444,7 +444,7 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
         createGridWidget({3, 2, 1, 1}, "6");
 
         auto boxHPanel1 {tabContainer0->create_tab<panel>("SPanel2")};
-        (*boxHPanel1->TabStop).Enabled = false;
+        boxHPanel1->TabStop = {.Enabled = false};
         auto& boxHLayout1 {boxHPanel1->create_layout<horizontal_layout>()};
         for (i32 i {0}; i < 4; i++) {
             boxHLayout1.create_widget<checkbox>("Check" + std::to_string(i));
@@ -485,7 +485,7 @@ auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::sha
 
     auto const createSections {[](std::shared_ptr<accordion> const& accordion0) {
         auto boxVPanel0 {accordion0->create_section<panel>("SPanel0")};
-        (*boxVPanel0->TabStop).Enabled = false;
+        boxVPanel0->TabStop = {.Enabled = false};
         auto& boxVLayout0 {boxVPanel0->create_layout<vertical_layout>()};
         for (i32 i {0}; i < 4; i++) {
             auto bb {boxVLayout0.create_widget<button>("Button" + std::to_string(i))};
@@ -493,7 +493,7 @@ auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::sha
         }
 
         auto gridPanel {accordion0->create_section<panel>("SPanel1")};
-        (*gridPanel->TabStop).Enabled = false;
+        gridPanel->TabStop = {.Enabled = false};
         auto& gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 3})};
 
         auto const createGridWidget {[&](rect_i loc, std::string const& name) {
@@ -509,7 +509,7 @@ auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::sha
         createGridWidget({3, 2, 1, 1}, "6");
 
         auto boxHPanel1 {accordion0->create_section<panel>("SPanel2")};
-        (*boxHPanel1->TabStop).Enabled = false;
+        boxHPanel1->TabStop = {.Enabled = false};
         auto& boxHLayout1 {boxHPanel1->create_layout<horizontal_layout>()};
         for (i32 i {0}; i < 4; i++) {
             boxHLayout1.create_widget<checkbox>("Check" + std::to_string(i));

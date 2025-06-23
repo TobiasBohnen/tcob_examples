@@ -39,7 +39,7 @@ void HtmlEx::on_start()
     auto& resMgr {library()};
     auto* resGrp {resMgr.get_group("res")};
 
-    auto const winSize {window().Size()};
+    auto const winSize {*window().Size};
 
     _navHtml = std::make_shared<html::document>(
         html::document::config {.AssetGroup      = resGrp,

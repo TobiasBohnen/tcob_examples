@@ -51,10 +51,10 @@ void TextEx::on_start()
         effects.create(1, duration, effect::typing {});
         effects.create(2, duration, effect::fade_in {3});
         effects.create(3, duration, effect::fade_out {2});
-        effects.create(4, duration, effect::blink {colors::Orange, colors::Teal, 5.f});
-        effects.create(5, duration, effect::shake {3.f, rng {12345}})->Interval = 25ms;
-        effects.create(6, duration, effect::wave {30.f, 4.f});
-        effects.create(7, duration, effect::size {1.0f, 0.0f, 1.0f, 0.0f, {horizontal_alignment::Centered, vertical_alignment::Middle}});
+        effects.create(4, duration, effect::blink {.Color0 = colors::Orange, .Color1 = colors::Teal, .Frequency = 5.f});
+        effects.create(5, duration, effect::shake {.Intensity = 3.f, .RNG = rng {12345}})->Interval = 25ms;
+        effects.create(6, duration, effect::wave {.Height = 30.f, .Amplitude = 4.f});
+        effects.create(7, duration, effect::size {.WidthStart = 1.0f, .WidthEnd = 0.0f, .HeightStart = 1.0f, .HeightEnd = 0.0f, .Anchor = {.Horizontal = horizontal_alignment::Centered, .Vertical = vertical_alignment::Middle}});
         effects.create(8, duration, effect::rotate {1.0f});
         effects.create(9, duration, effect::gradient {color_gradient {colors::Orange, colors::LightBlue}.colors()});
 
@@ -94,7 +94,7 @@ void TextEx::on_start()
         shapeOutline->Color    = colors::Blue;
         shapeOutline->Material = material::Empty();
         shapeOutline->Polygons = polys;
-        polygons::offset(*shapeOutline->Polygons, 5, offset_join::Square);
+        polygons::offset(shapeOutline->Polygons.mut_ref(), 5, offset_join::Square);
         shapeOutline->move_by({10, 650});
         _layer0.add_shape(shapeOutline);
 
@@ -102,16 +102,16 @@ void TextEx::on_start()
         shapeText->Color    = colors::Green;
         shapeText->Material = material::Empty();
         shapeText->Polygons = polys;
-        assert(polygons::check_winding(shapeText->Polygons()));
+        assert(polygons::check_winding(*shapeText->Polygons));
         shapeText->move_by({10, 650});
         _layer0.add_shape(shapeText);
 
         transform xform0;
         xform0.rotate_at(degree_f {45}, shapeText->Polygons->at(1).info().Centroid);
-        (*shapeText->Polygons).at(1).apply_transform(xform0);
+        shapeText->Polygons.mut_ref()[1].apply_transform(xform0);
         transform xform1;
         xform1.rotate_at(degree_f {45}, shapeText->Polygons->at(4).info().Centroid);
-        (*shapeText->Polygons).at(4).apply_transform(xform1);
+        shapeText->Polygons.mut_ref()[4].apply_transform(xform1);
     }
 }
 

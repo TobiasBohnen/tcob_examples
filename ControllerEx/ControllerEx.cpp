@@ -42,7 +42,7 @@ void ControllerEx::on_fixed_update(milliseconds deltaTime)
     stream << "avg FPS:" << stats.average_FPS();
     stream << " best FPS:" << stats.best_FPS();
     stream << " worst FPS:" << stats.worst_FPS();
-    stream << " input mode:" << static_cast<i32>(locate_service<input::system>().InputMode());
+    stream << " input mode:" << static_cast<i32>(*locate_service<input::system>().InputMode);
 
     window().Title = "ControllerEx " + stream.str();
 }

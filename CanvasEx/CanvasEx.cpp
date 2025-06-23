@@ -52,7 +52,7 @@ void CanvasEx::on_update(milliseconds /* deltaTime */)
 void CanvasEx::on_draw_to(render_target& target)
 {
     _renderer.set_layer(0);
-    _renderer.set_bounds({point_f::Zero, size_f {window().Size()}});
+    _renderer.set_bounds({point_f::Zero, size_f {*window().Size}});
     _renderer.render_to_target(target);
 }
 
@@ -86,7 +86,7 @@ void CanvasEx::on_mouse_wheel(mouse::wheel_event const& ev)
 
 void CanvasEx::canvas_ring()
 {
-    _canvas.begin_frame(window().Size(), 1);
+    _canvas.begin_frame(window().Size, 1);
 
     f32 outerRadius {200};
     f32 innerRadius {_value};
@@ -121,7 +121,7 @@ void CanvasEx::canvas_ring()
 
 void CanvasEx::canvas_ray_cast()
 {
-    _canvas.begin_frame(window().Size(), 1);
+    _canvas.begin_frame(window().Size, 1);
 
     std::vector<ray::result> points;
     f32                      size {75};
@@ -178,7 +178,7 @@ void CanvasEx::canvas_ray_cast()
 
 void CanvasEx::canvas_gradient()
 {
-    _canvas.begin_frame(window().Size(), 1);
+    _canvas.begin_frame(window().Size, 1);
 
     auto linearGradient0 {_canvas.create_linear_gradient(
         {0, 0}, {0, 200},
@@ -214,7 +214,7 @@ void CanvasEx::canvas_gradient()
 
 void CanvasEx::canvas_path2d()
 {
-    _canvas.begin_frame(window().Size(), 1);
+    _canvas.begin_frame(window().Size, 1);
     _canvas.set_fill_style(colors::Green);
     _canvas.path_2d(*path2d::Parse("M 80 80 A 45 45, 0, 0, 0, 125 125 L 125 80 Z"));
     _canvas.fill();
@@ -236,7 +236,7 @@ void CanvasEx::canvas_path2d()
 
 void CanvasEx::canvas_fancy_lines()
 {
-    _canvas.begin_frame(window().Size(), 1);
+    _canvas.begin_frame(window().Size, 1);
 
     _canvas.set_fill_style(colors::Green);
     _canvas.set_stroke_style(colors::Black);
@@ -344,7 +344,7 @@ void CanvasEx::canvas_fancy_lines()
 
 void CanvasEx::canvas_text()
 {
-    _canvas.begin_frame(window().Size(), 1);
+    _canvas.begin_frame(window().Size, 1);
 
     _canvas.set_font(_font.get_font({}, 128).ptr());
 
@@ -365,7 +365,7 @@ void CanvasEx::canvas_text()
 
 void CanvasEx::canvas_clip()
 {
-    _canvas.begin_frame(window().Size(), 1);
+    _canvas.begin_frame(window().Size, 1);
 
     _canvas.set_fill_style(colors::Green);
     _canvas.set_stroke_style(colors::BurlyWood);

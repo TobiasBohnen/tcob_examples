@@ -34,7 +34,7 @@ void LSystemEx::on_fixed_update(milliseconds /* deltaTime */)
 void LSystemEx::on_start()
 {
     auto&     win {window()};
-    auto      windowSize {win.Size()};
+    auto      windowSize {*win.Size};
     i32 const uiWidth {static_cast<i32>(windowSize.Height / 2)};
 
     rect_i const menuBounds {windowSize.Width - uiWidth, 0, uiWidth, windowSize.Height};
@@ -73,7 +73,7 @@ void LSystemEx::on_update(milliseconds deltaTime)
 void LSystemEx::on_draw_to(render_target& target)
 {
     _renderer.set_layer(0);
-    _renderer.set_bounds({point_f::Zero, size_f {window().Size()}});
+    _renderer.set_bounds({point_f::Zero, size_f {*window().Size}});
     _renderer.render_to_target(target);
 }
 
@@ -93,7 +93,7 @@ void LSystemEx::on_key_down(keyboard::event const& ev)
 
 void LSystemEx::step()
 {
-    _canvas.begin_frame(window().Size(), 1, 0, false);
+    _canvas.begin_frame(*window().Size, 1, 0, false);
 
     _canvas.set_edge_antialias(false);
     _canvas.set_stroke_style(colors::Black);
