@@ -138,8 +138,12 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     auto masonryPanel0 {panel0Layout.create_widget<panel>({230, 390, 250, 550}, "SPanel4")};
     masonryPanel0->TabStop = {.Enabled = false};
-    masonryPanel0->FocusGained.connect([](widget_event ev) { ev.Sender->Bounds.mut_ref().Size.Width = 800; });
-    masonryPanel0->FocusLost.connect([](widget_event ev) { ev.Sender->Bounds.mut_ref().Size.Width = 250; });
+    masonryPanel0->FocusGained.connect([](widget_event ev) {
+        ev.Sender->Bounds = {ev.Sender->Bounds->Position, {800, ev.Sender->Bounds->height()}};
+    });
+    masonryPanel0->FocusLost.connect([](widget_event ev) {
+        ev.Sender->Bounds = {ev.Sender->Bounds->Position, {250, ev.Sender->Bounds->height()}};
+    });
     auto& masonryLayout0 {masonryPanel0->create_layout<masonry_layout>(6)};
     for (i32 i {0}; i < 16; i++) {
         auto fb {masonryLayout0.create_widget<button>("FButton" + std::to_string(i))};
@@ -223,18 +227,19 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     });
 
     // nav map
-    auto& nm {retValue->NavMap.mut_ref()};
-    nm["gridB0"] = {.Left = "Slider0", .Right = "gridB1", .Down = "gridB2"};
-    nm["gridB1"] = {.Left = "gridB0", .Down = "gridB2"};
-    nm["gridB2"] = {.Up = "gridB0", .Down = "gridB3"};
-    nm["gridB3"] = {.Up = "gridB2", .Right = "gridB4"};
-    nm["gridB4"] = {.Left = "gridB3", .Up = "gridB2", .Right = "gridB5"};
-    nm["gridB5"] = {.Left = "gridB4", .Up = "gridB2", .Right = "gridB6"};
-    nm["gridB6"] = {.Left = "gridB5", .Up = "gridB2", .Down = "Check0"};
-    nm["Check0"] = {.Up = "gridB6", .Right = "Check1"};
-    nm["Check1"] = {.Left = "Check0", .Right = "Check2"};
-    nm["Check2"] = {.Left = "Check1", .Right = "Check3"};
-    nm["Check3"] = {.Left = "Check2"};
+    nav_map nm;
+    nm["gridB0"]     = {.Left = "Slider0", .Right = "gridB1", .Down = "gridB2"};
+    nm["gridB1"]     = {.Left = "gridB0", .Down = "gridB2"};
+    nm["gridB2"]     = {.Up = "gridB0", .Down = "gridB3"};
+    nm["gridB3"]     = {.Up = "gridB2", .Right = "gridB4"};
+    nm["gridB4"]     = {.Left = "gridB3", .Up = "gridB2", .Right = "gridB5"};
+    nm["gridB5"]     = {.Left = "gridB4", .Up = "gridB2", .Right = "gridB6"};
+    nm["gridB6"]     = {.Left = "gridB5", .Up = "gridB2", .Down = "Check0"};
+    nm["Check0"]     = {.Up = "gridB6", .Right = "Check1"};
+    nm["Check1"]     = {.Left = "Check0", .Right = "Check2"};
+    nm["Check2"]     = {.Left = "Check1", .Right = "Check3"};
+    nm["Check3"]     = {.Left = "Check2"};
+    retValue->NavMap = nm;
 
     for (auto* c : retValue->all_widgets()) {
         c->TransitionDuration = 250ms;

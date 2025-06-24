@@ -94,7 +94,8 @@ void TextEx::on_start()
         shapeOutline->Color    = colors::Blue;
         shapeOutline->Material = material::Empty();
         shapeOutline->Polygons = polys;
-        polygons::offset(shapeOutline->Polygons.mut_ref(), 5, offset_join::Square);
+        shapeOutline->Polygons.apply([&](auto& polys) { polygons::offset(polys, 5, offset_join::Square); });
+
         shapeOutline->move_by({10, 650});
         _layer0.add_shape(shapeOutline);
 
@@ -108,10 +109,10 @@ void TextEx::on_start()
 
         transform xform0;
         xform0.rotate_at(degree_f {45}, shapeText->Polygons->at(1).info().Centroid);
-        shapeText->Polygons.mut_ref()[1].apply_transform(xform0);
+        shapeText->Polygons.apply([&](auto& poly) { poly[1].apply_transform(xform0); });
         transform xform1;
         xform1.rotate_at(degree_f {45}, shapeText->Polygons->at(4).info().Centroid);
-        shapeText->Polygons.mut_ref()[4].apply_transform(xform1);
+        shapeText->Polygons.apply([&](auto& poly) { poly[4].apply_transform(xform1); });
     }
 }
 
