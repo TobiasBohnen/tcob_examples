@@ -48,8 +48,8 @@ void lsystem_form::create_rule(grid_layout& layout)
     auto btnAdd {layout.create_widget<button>({34, 1, 4, 3}, "btnAdd")};
     btnAdd->Label = "+";
 
-    _grdRules = layout.create_widget<grid_view>({1, 4, 38, 20}, "grdRules");
-    _grdRules->set_columns({"Variable", "Rule", "Probability"});
+    _grdRules                   = layout.create_widget<grid_view>({1, 4, 38, 20}, "grdRules");
+    _grdRules->Header           = {{"Variable"}, {"Rule"}, {"Probability"}};
     _grdRules->HeaderSelectable = false;
     _grdRules->SelectMode       = grid_view::select_mode::Row;
     _grdRules->SelectedCellIndex.Changed.connect([uxRules = _grdRules.get(), uxVar = txbVariable.get(), uxRule = txbRule.get(), uxProp = spnProp.get()] {
@@ -59,30 +59,39 @@ void lsystem_form::create_rule(grid_layout& layout)
         uxProp->Value = *helper::to_number<i32>(uxRules->get_cell({2, uxRules->SelectedCellIndex->Y}).Text);
     });
 
-    _grdRules->add_row({"F", "FF", "100"});
-    _grdRules->add_row({"X", "F[+X]F[-X]+X", "100"});
+    grid<item> grid {{3, 2}};
+    grid.assign({0, 0}, std::vector<item> {{"F"}, {"FF"}, {"100"}});
+    grid.assign({0, 1}, std::vector<item> {{"X"}, {"F[+X]F[-X]+X"}, {"100"}});
+    _grdRules->Grid = grid;
+
     _grdRules->KeyDown.connect([uxRules = _grdRules.get(), uxAdd = btnAdd.get()](keyboard_event const& ev) {
         if (ev.Event.KeyCode == key_code::DEL) {
             if (uxRules->SelectedCellIndex->Y < 1) { return; }
-            uxRules->remove_row(uxRules->SelectedCellIndex->Y - 1);
+            uxRules->Grid.mutate([&](auto& grid) {
+                grid.erase(uxRules->SelectedCellIndex->Y - 1);
+            });
             uxAdd->enable();
         }
     });
 
     btnAdd->Click.connect([uxRules = _grdRules.get(), uxVar = txbVariable.get(), uxRule = txbRule.get(), uxProp = spnProp.get()](widget_event const& ev) {
-        if (uxRules->row_count() >= 5 || uxVar->Text->empty() || uxRule->Text->empty()) { return; }
+        if (uxRules->Grid->height() >= 5 || uxVar->Text->empty() || uxRule->Text->empty()) { return; }
 
-        // remove duplicate row
-        for (i32 i {0}; i < uxRules->row_count(); ++i) {
-            auto const& row {uxRules->get_row(i)};
-            if (row[0].Text == uxVar->Text && row[2].Text == std::to_string(uxProp->Value)) {
-                uxRules->remove_row(i);
-                break;
+        uxRules->Grid.mutate([&](auto& grid) {
+            for (i32 i {0}; i < grid.height(); ++i) {
+                auto const row {grid.row(i)};
+                if (row[0].Text == uxVar->Text && row[2].Text == std::to_string(uxProp->Value)) { // remove duplicate row
+                    grid.erase(i);
+                    break;
+                }
             }
-        }
 
-        uxRules->add_row({uxVar->Text, uxRule->Text, std::to_string(uxProp->Value)});
-        if (uxRules->row_count() == 5) { ev.Sender->disable(); }
+            grid.append({{uxVar->Text}, {uxRule->Text}, {std::to_string(uxProp->Value)}});
+        });
+
+        if (uxRules->Grid->height() == 5) {
+            ev.Sender->disable();
+        }
     });
 }
 
@@ -129,7 +138,7 @@ auto lsystem_form::get_settings() const -> settings
 {
     settings retValue;
     l_system system {};
-    for (i32 i {0}; i < _grdRules->row_count(); ++i) {
+    for (i32 i {0}; i < _grdRules->Grid->height(); ++i) {
         system.add_rule(
             _grdRules->get_cell({0, i + 1}).Text[0],
             {.Replacement = _grdRules->get_cell({1, i + 1}).Text,

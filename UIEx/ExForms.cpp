@@ -186,21 +186,28 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     // imgBox0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::AlternatedLooped);
 
     auto gridView0 {panel0Layout.create_widget<grid_view>({1080, 400, 450, 400}, "GridView0")};
-    gridView0->set_columns({"Last", "First", "Age", "City"});
-    std::array<item, 4> items;
-    items[0].Text = "Smith";
-    items[0].Icon = {.Texture = resGrp.get<texture>("anim"), .Region = "l1"};
-    items[1].Text = "John";
-    items[2].Text = "28";
-    items[3].Text = "New York";
-    gridView0->add_row(items);
-    gridView0->add_row({"Johnson", "Emily", "35", "Los Angeles"});
-    gridView0->add_row({"Brown", "Michael", "22", "Chicago"});
-    gridView0->add_row({"Davis", "Sarah", "40", "Houston"});
-    gridView0->add_row({"Patel", "Raj", "32", "San Francisco"});
+    gridView0->Header = {{"Last"}, {"First"}, {"Age"}, {"City"}};
+    gridView0->Grid.mutate([&](auto& grid) {
+        grid.resize({4, 5});
+
+        std::array<item, 4> items;
+        items[0].Text = "Smith";
+        items[0].Icon = {.Texture = resGrp.get<texture>("anim"), .Region = "l1"};
+        items[1].Text = "John";
+        items[2].Text = "28";
+        items[3].Text = "New York";
+        grid.assign({0, 0}, items);
+
+        grid.assign({0, 1}, {{"Johnson"}, {"Emily"}, {"35"}, {"Los Angeles"}});
+        grid.assign({0, 2}, {{"Brown"}, {"Michael"}, {"22"}, {"Chicago"}});
+        grid.assign({0, 3}, {{"Davis"}, {"Sarah"}, {"40"}, {"Houston"}});
+        grid.assign({0, 4}, {{"Patel"}, {"Raj"}, {"32"}, {"San Francisco"}});
+    });
+
     gridView0->HeaderSelectable = true;
     gridView0->SelectMode       = grid_view::select_mode::Row;
     gridView0->SelectedCellIndex.Changed.connect([label0, gridView0]() {
+        if (*gridView0->SelectedCellIndex == point_i {-1, -1}) { return; }
         label0->Label = std::format("grid: {}", gridView0->get_cell(gridView0->SelectedCellIndex).Text);
     });
     gridView0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::Looped);
@@ -209,9 +216,12 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
         progressBar0->Value = progressBar0->Value == 100
             ? 0
             : progressBar0->Value + 10;
-        listbox0->add_item({.Text = std::to_string(progressBar0->Value), .Icon = {resGrp.get<texture>("blue_boxCheckmark")}, .UserData = {}});
+        listbox0->add_item({.Text = std::to_string(progressBar0->Value), .Icon = {.Texture = resGrp.get<texture>("blue_boxCheckmark")}, .UserData = {}});
         dropDownList0->add_item(std::to_string(progressBar0->Value));
-        gridView0->add_row({"XXX", "XX", std::to_string(progressBar0->Value * 10), "XXXXX"});
+        gridView0->Grid.mutate([&](auto& grid) {
+            grid.resize({grid.width(), grid.height() + 1});
+            grid.assign({0, grid.height() - 1}, {{"XXX"}, {"XX"}, {std::to_string(progressBar0->Value * 10)}, {"XXXXX"}});
+        });
     });
 
     locate_service<input::system>().InputMode.Changed.connect([retValue, wnd, &resGrp](input::mode mode) {

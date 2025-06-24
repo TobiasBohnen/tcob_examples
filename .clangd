@@ -72,6 +72,7 @@ Diagnostics:
             - "bugprone-narrowing-conversions"
             - "bugprone-incorrect-roundings"
             - "modernize-use-nodiscard"
+            - "modernize-use-designated-initializers"
             - "readability-isolate-declaration"
             - "readability-uppercase-literal-suffix"
             - "readability-identifier-length"
