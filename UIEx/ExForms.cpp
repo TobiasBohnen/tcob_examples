@@ -40,9 +40,11 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     spinner0->Value = 0;
 
     auto cycleButton0 {panel0Layout.create_widget<cycle_button>({0, 260, 120, 100}, "CycleButton0")};
-    cycleButton0->add_item({.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .Region = "l1"}});
-    cycleButton0->add_item("def");
-    cycleButton0->add_item("ghi");
+    cycleButton0->Items.mutate([&](auto& items) {
+        items.push_back({.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .Region = "l1"}});
+        items.push_back({"def"});
+        items.push_back({"ghi"});
+    });
     cycleButton0->Click.connect([btn = cycleButton0.get(), resGrp = &resGrp]() {
         btn->start_animation(*resGrp->get<frame_animation>("anim"), playback_mode::Looped);
     });
@@ -160,10 +162,12 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     masonryPanel0->ZOrder = 100;
 
     auto dropDownList0 {panel0Layout.create_widget<drop_down_list>({1000, 50, 150, 50}, "DropDownList0")};
-    for (i32 i {0}; i < 4; ++i) {
-        dropDownList0->add_item("item " + std::to_string(i));
-    }
-    dropDownList0->add_item({.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .Region = "l1"}});
+    dropDownList0->Items.mutate([&](auto& items) {
+        for (i32 i {0}; i < 4; ++i) {
+            items.push_back({"item " + std::to_string(i)});
+        }
+        items.push_back({.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .Region = "l1"}});
+    });
     dropDownList0->SelectedItemIndex.Changed.connect([label0, dropDownList0](isize value) { label0->Label = "selected: " + std::to_string(value); });
     dropDownList0->HoveredItemIndex.Changed.connect([label0, dropDownList0](isize value) { label0->Label = "hovered: " + std::to_string(value); });
     dropDownList0->ZOrder = 1;
@@ -221,7 +225,10 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
             items.push_back({.Text = std::to_string(progressBar0->Value), .Icon = {.Texture = resGrp.get<texture>("blue_boxCheckmark")}, .UserData = {}});
         });
 
-        dropDownList0->add_item(std::to_string(progressBar0->Value));
+        dropDownList0->Items.mutate([&](auto& items) {
+            items.push_back({std::to_string(progressBar0->Value)});
+        });
+
         gridView0->Grid.mutate([&](auto& grid) {
             grid.resize({grid.width(), grid.height() + 1});
             grid.assign({0, grid.height() - 1}, {{"XXX"}, {"XX"}, {std::to_string(progressBar0->Value * 10)}, {"XXXXX"}});
