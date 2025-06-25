@@ -169,13 +169,14 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     dropDownList0->ZOrder = 1;
     dropDownList0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::Looped);
 
-    auto listbox0 {panel0Layout.create_widget<list_box>({1200, 80, 150, 300}, "Listbox0")};
-    // listbox0->add_item({.Text = "x0", .Icon = {resGrp.get<texture>("blue_boxCheckmark")}, .UserData = {}});
-    // listbox0->add_item({.Text = "", .Icon = {resGrp.get<texture>("blue_boxCheckmark")}, .UserData = {}});
-    listbox0->add_item({.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .Region = "l1"}});
+    auto              listbox0 {panel0Layout.create_widget<list_box>({1200, 80, 150, 300}, "Listbox0")};
+    std::vector<item> listboxtItems;
+    listboxtItems.push_back({.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .Region = "l1"}});
     for (i32 i {0}; i < 40; ++i) {
-        listbox0->add_item("item " + std::to_string(i));
+        listboxtItems.push_back({.Text = "item " + std::to_string(i)});
     }
+    listbox0->Items = listboxtItems;
+
     listbox0->SelectedItemIndex.Changed.connect([label0, listbox0](isize value) { label0->Label = "selected: " + std::to_string(value); });
     listbox0->HoveredItemIndex.Changed.connect([label0, listbox0](isize value) { label0->Label = "hovered: " + std::to_string(value); });
     listbox0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::Looped);
@@ -216,7 +217,10 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
         progressBar0->Value = progressBar0->Value == 100
             ? 0
             : progressBar0->Value + 10;
-        listbox0->add_item({.Text = std::to_string(progressBar0->Value), .Icon = {.Texture = resGrp.get<texture>("blue_boxCheckmark")}, .UserData = {}});
+        listbox0->Items.mutate([&](auto& items) {
+            items.push_back({.Text = std::to_string(progressBar0->Value), .Icon = {.Texture = resGrp.get<texture>("blue_boxCheckmark")}, .UserData = {}});
+        });
+
         dropDownList0->add_item(std::to_string(progressBar0->Value));
         gridView0->Grid.mutate([&](auto& grid) {
             grid.resize({grid.width(), grid.height() + 1});
