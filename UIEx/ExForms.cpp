@@ -54,6 +54,11 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     progressBar0->Max   = 100;
     progressBar0->Value = 50;
 
+    auto progressBar1 {panel0Layout.create_widget<progress_bar>({50, 370, 200, 75}, "ProgressBar1")};
+    progressBar1->Min   = 0;
+    progressBar1->Max   = 100;
+    progressBar1->Value = 50;
+
     auto  sliderPanel {panel0Layout.create_widget<panel>({490, 390, 350, 350}, "SliderPanel")};
     auto& sliderPanelLayout {sliderPanel->get_layout<static_layout>()};
 
@@ -64,7 +69,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     slider0->Step              = 5;
     slider0->IncrementalChange = false;
 
-    auto sliderLabel0 {sliderPanelLayout.create_widget<label>({50, 150, 50, 50}, "Label2")};
+    auto sliderLabel0 {sliderPanelLayout.create_widget<label>({50, 150, 150, 50}, "Label2")};
     sliderLabel0->For     = slider0;
     sliderLabel0->TabStop = {.Enabled = false};
     slider0->Value.Changed.connect([sliderLabel0, slider0](auto val) {
@@ -79,6 +84,16 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     slider1->IncrementalChange = false;
     slider1->Value.Changed.connect([sliderLabel0](auto val) {
         sliderLabel0->Label = std::to_string(val);
+    });
+
+    auto rangeSlider0 {sliderPanelLayout.create_widget<range_slider>({0, 160, 250, 100}, "RangeSlider0")};
+    rangeSlider0->Min               = 0;
+    rangeSlider0->Max               = 100;
+    rangeSlider0->Values            = {50, 75};
+    rangeSlider0->Step              = 5;
+    rangeSlider0->IncrementalChange = false;
+    rangeSlider0->Values.Changed.connect([sliderLabel0](auto val) {
+        sliderLabel0->Label = std::to_string(val.first) + ":" + std::to_string(val.second);
     });
 
     auto textBox0 {panel0Layout.create_widget<text_box>({890, 350, 125, 50}, "TextBox0")};
@@ -221,6 +236,9 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
         progressBar0->Value = progressBar0->Value == 100
             ? 0
             : progressBar0->Value + 10;
+        progressBar1->Value = progressBar1->Value == 100
+            ? 0
+            : progressBar1->Value + 10;
         listbox0->Items.mutate([&](auto& items) {
             items.push_back({.Text = std::to_string(progressBar0->Value), .Icon = {.Texture = resGrp.get<texture>("blue_boxCheckmark")}, .UserData = {}});
         });

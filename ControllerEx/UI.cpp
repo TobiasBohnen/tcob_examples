@@ -66,13 +66,13 @@ crtl_form::crtl_form(window& window)
 void crtl_form::on_controller_axis_motion(input::controller::axis_event const& ev)
 {
     switch (ev.Axis) {
-    case controller::axis::LeftX: _laxisx->Value = ev.Value; break;
-    case controller::axis::LeftY: _laxisy->Value = -ev.Value; break;
-    case controller::axis::RightX: _raxisx->Value = ev.Value; break;
-    case controller::axis::RightY: _raxisy->Value = -ev.Value; break;
-    case controller::axis::LeftTrigger: _laxis->Value = ev.Value; break;
+    case controller::axis::LeftX:        _laxisx->Value = ev.Value; break;
+    case controller::axis::LeftY:        _laxisy->Value = -ev.Value; break;
+    case controller::axis::RightX:       _raxisx->Value = ev.Value; break;
+    case controller::axis::RightY:       _raxisy->Value = -ev.Value; break;
+    case controller::axis::LeftTrigger:  _laxis->Value = ev.Value; break;
     case controller::axis::RightTrigger: _raxis->Value = ev.Value; break;
-    case controller::axis::Invalid: break;
+    case controller::axis::Invalid:      break;
     }
 }
 
@@ -141,7 +141,6 @@ void crtl_form::gen_styles()
         style->Margin             = {5_px};
         style->Padding            = {2_px};
         style->ThumbClass         = "slider_thumb";
-        style->Bar.Type           = bar_type::Continuous;
         style->Bar.Size           = 75_pct;
         style->Bar.MotionDuration = 0ms;
         style->Bar.Border.Size    = 3_px;

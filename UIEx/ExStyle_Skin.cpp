@@ -129,7 +129,6 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         hstyle->Margin               = {5_px};
         hstyle->Padding              = {2_px, 15_px};
         hstyle->ThumbClass           = "h_slider_thumb";
-        hstyle->Bar.Type             = bar_type::Continuous;
         hstyle->Bar.Size             = 50_pct;
         hstyle->Bar.LowerBackground  = blue.Panel;
         hstyle->Bar.HigherBackground = blue.Panel;
@@ -150,7 +149,6 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->Border.Size          = 3_px;
         style->Margin               = {5_px};
         style->Padding              = {5_px, 5_px};
-        style->Bar.Type             = bar_type::Continuous;
         style->Bar.LowerBackground  = blue.Button00;
         style->Bar.HigherBackground = blue.Button13;
         style->Bar.Border           = style->Border;
@@ -210,7 +208,6 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->Padding          = {5_px};
         style->DropShadow.Color = color {0, 0, 0, 128};
 
-        style->VScrollBar.Bar.Type             = bar_type::Continuous;
         style->VScrollBar.Bar.Size             = 30_px;
         style->VScrollBar.Bar.LowerBackground  = yellow.Panel;
         style->VScrollBar.Bar.HigherBackground = yellow.Panel;
@@ -237,7 +234,6 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->ItemHeight                      = 20_pct;
         style->ItemClass                       = "list_items";
         style->VScrollBar.ThumbClass           = "v_scrollbar_thumb";
-        style->VScrollBar.Bar.Type             = bar_type::Continuous;
         style->VScrollBar.Bar.Size             = 30_px;
         style->VScrollBar.Bar.LowerBackground  = yellow.Panel;
         style->VScrollBar.Bar.HigherBackground = yellow.Panel;
@@ -262,7 +258,6 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->ItemHeight                      = 150_pct;
         style->ItemClass                       = "list_items";
         style->VScrollBar.ThumbClass           = "v_scrollbar_thumb";
-        style->VScrollBar.Bar.Type             = bar_type::Continuous;
         style->VScrollBar.Bar.Size             = 30_px;
         style->VScrollBar.Bar.LowerBackground  = yellow.Panel;
         style->VScrollBar.Bar.HigherBackground = yellow.Panel;
@@ -282,7 +277,6 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->HeaderItemClass                 = "header_items";
         style->RowItemClass                    = "row_items";
         style->VScrollBar.ThumbClass           = "v_scrollbar_thumb";
-        style->VScrollBar.Bar.Type             = bar_type::Continuous;
         style->VScrollBar.Bar.Size             = 30_px;
         style->VScrollBar.Bar.LowerBackground  = yellow.Panel;
         style->VScrollBar.Bar.HigherBackground = yellow.Panel;

@@ -250,7 +250,6 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Margin             = {5_px};
         style->Padding            = {2_px, 15_px};
         style->ThumbClass         = "slider_thumb";
-        style->Bar.Type           = bar_type::Continuous;
         style->Bar.Size           = 50_pct;
         style->Bar.MotionDuration = 250ms;
         style->Bar.Border.Size    = 3_px;
@@ -262,13 +261,27 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         disabled.apply(disabledStyle);
     }
     {
+        auto style {retValue.create<range_slider>("range_slider", {})};
+        style->Margin             = {5_px};
+        style->Padding            = {2_px, 15_px};
+        style->ThumbClass         = "range_slider_thumb";
+        style->Bar.Size           = 50_pct;
+        style->Bar.MotionDuration = 250ms;
+        style->Bar.Border.Size    = 3_px;
+        style->Bar.Border.Radius  = 5_px;
+
+        auto disabledStyle {retValue.create<range_slider>("range_slider", {.Disabled = true})};
+
+        normal.apply(style);
+        disabled.apply(disabledStyle);
+    }
+    {
         auto style {retValue.create<progress_bar>("progress_bar", {})};
 
         style->Border.Size        = 3_px;
         style->Border.Radius      = 5_px;
         style->Margin             = {5_px};
         style->Padding            = {5_px, 5_px};
-        style->Bar.Type           = bar_type::Continuous;
         style->Bar.Border         = style->Border;
         style->Bar.MotionDuration = 250ms;
 
@@ -342,7 +355,6 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Padding                       = {5_px};
         style->DropShadow.Color              = color {0, 0, 0, 128};
         style->VScrollBar.ThumbClass         = "scrollbar_thumb";
-        style->VScrollBar.Bar.Type           = bar_type::Continuous;
         style->VScrollBar.Bar.Size           = 30_px;
         style->VScrollBar.Bar.Border.Size    = 3_px;
         style->VScrollBar.Bar.MotionDuration = 250ms;
@@ -374,7 +386,6 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->ItemHeight                    = 20_pct;
         style->ItemClass                     = "list_items";
         style->VScrollBar.ThumbClass         = "scrollbar_thumb";
-        style->VScrollBar.Bar.Type           = bar_type::Continuous;
         style->VScrollBar.Bar.Size           = 20_pct;
         style->VScrollBar.Bar.Border.Size    = 3_px;
         style->VScrollBar.Bar.MotionDuration = 250ms;
@@ -404,7 +415,6 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->ItemHeight                    = 150_pct;
         style->ItemClass                     = "list_items";
         style->VScrollBar.ThumbClass         = "scrollbar_thumb";
-        style->VScrollBar.Bar.Type           = bar_type::Continuous;
         style->VScrollBar.Bar.Size           = 20_pct;
         style->VScrollBar.Bar.Border.Size    = 3_px;
         style->VScrollBar.Bar.MotionDuration = 250ms;
@@ -429,7 +439,6 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->HeaderItemClass               = "header_items";
         style->RowItemClass                  = "row_items";
         style->VScrollBar.ThumbClass         = "scrollbar_thumb";
-        style->VScrollBar.Bar.Type           = bar_type::Continuous;
         style->VScrollBar.Bar.Size           = 5_pct;
         style->VScrollBar.Bar.Border.Size    = 3_px;
         style->VScrollBar.Bar.MotionDuration = 250ms;
@@ -588,6 +597,24 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         hoverStyle->Thumb = style->Thumb;
 
         auto activeStyle {retValue.create<thumb_style>("slider_thumb", {.Active = true})};
+        activeStyle->Thumb = style->Thumb;
+
+        normal.apply(style);
+        hover.apply(hoverStyle);
+        active.apply(activeStyle);
+    }
+    {
+        auto style {retValue.create<thumb_style>("range_slider_thumb", {}, {})};
+        style->Thumb.Type          = thumb_type::Rect;
+        style->Thumb.LongSide      = 15_pct;
+        style->Thumb.ShortSide     = 80_pct;
+        style->Thumb.Border.Size   = 3_px;
+        style->Thumb.Border.Radius = 5_px;
+
+        auto hoverStyle {retValue.create<thumb_style>("range_slider_thumb", {.Hover = true})};
+        hoverStyle->Thumb = style->Thumb;
+
+        auto activeStyle {retValue.create<thumb_style>("range_slider_thumb", {.Active = true})};
         activeStyle->Thumb = style->Thumb;
 
         normal.apply(style);
