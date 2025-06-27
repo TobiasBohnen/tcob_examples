@@ -108,6 +108,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     auto textBox0 {panel0Layout.create_widget<text_box>({890, 350, 125, 50}, "TextBox0")};
     textBox0->MaxLength = 9;
     textBox0->Submit.connect([label0, textBox0](auto const&) { label0->Label = "submitted: " + *textBox0->Text; });
+    textBox0->Selectable = true;
 
     auto toggle0 {panel0Layout.create_widget<toggle>({890, 500, 150, 75}, "Toggle0")};
     toggle0->Checked = true;
