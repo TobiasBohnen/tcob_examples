@@ -144,6 +144,25 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         disabledStyle->Bar.HigherBackground = colors::FireBrick;
     }
     {
+        auto hstyle {retValue.create<range_slider>("range_slider", {}, {{"orientation", orientation::Horizontal}})};
+        hstyle->Margin               = {5_px};
+        hstyle->Padding              = {2_px, 15_px};
+        hstyle->ThumbClass           = "h_slider_thumb";
+        hstyle->Bar.Size             = 50_pct;
+        hstyle->Bar.LowerBackground  = blue.Panel;
+        hstyle->Bar.HigherBackground = blue.Panel;
+        hstyle->Bar.Border.Size      = 5_px;
+        hstyle->Bar.MotionDuration   = 200ms;
+
+        auto vstyle {retValue.create<range_slider>("range_slider", {}, {{"orientation", orientation::Vertical}})};
+        *vstyle            = *hstyle;
+        vstyle->ThumbClass = "v_slider_thumb";
+
+        auto disabledStyle {retValue.create<range_slider>("range_slider", {.Disabled = true})};
+        disabledStyle->Bar.LowerBackground  = colors::FireBrick;
+        disabledStyle->Bar.HigherBackground = colors::FireBrick;
+    }
+    {
         auto style {retValue.create<progress_bar>("progress_bar", {})};
         style->Background           = blue.Button13;
         style->Border.Size          = 3_px;

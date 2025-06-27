@@ -62,29 +62,28 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     auto  sliderPanel {panel0Layout.create_widget<panel>({490, 390, 350, 550}, "SliderPanel")};
     auto& sliderPanelLayout {sliderPanel->get_layout<static_layout>()};
 
-    auto sliderLabel0 {sliderPanelLayout.create_widget<label>({200, 10, 150, 50}, "Label2")};
+    auto sliderLabel0 {sliderPanelLayout.create_widget<label>({180, 220, 150, 50}, "Label2")};
     sliderLabel0->TabStop = {.Enabled = false};
 
     auto slider0 {sliderPanelLayout.create_widget<slider>({0, 0, 250, 100}, "Slider0")};
     slider0->Min   = 0;
-    slider0->Max   = 255;
-    slider0->Value = 50;
-    slider0->Step  = 5;
+    slider0->Max   = 100;
+    slider0->Value = 0;
+    slider0->Step  = 1;
     slider0->Value.Changed.connect([sliderLabel0, slider0](auto val) {
-        sliderLabel0->Label = std::to_string(val);
-        slider0->Alpha      = val / 255.f;
+        sliderLabel0->Label = std::format("{:.2f}", val);
     });
 
     auto rangeSlider0 {sliderPanelLayout.create_widget<range_slider>({0, 110, 250, 100}, "RangeSlider0")};
     rangeSlider0->Min    = 0;
     rangeSlider0->Max    = 100;
     rangeSlider0->Values = {50, 75};
-    rangeSlider0->Step   = 5;
+    rangeSlider0->Step   = 1;
     rangeSlider0->Values.Changed.connect([sliderLabel0](auto val) {
-        sliderLabel0->Label = std::to_string(val.first) + ":" + std::to_string(val.second);
+        sliderLabel0->Label = std::format("{:.2f}:{:.2f}", val.first, val.second);
     });
-    rangeSlider0->MinRange = 10;
-    rangeSlider0->MaxRange = 50;
+    //  rangeSlider0->MinRange = 10;
+    //  rangeSlider0->MaxRange = 50;
 
     auto slider1 {sliderPanelLayout.create_widget<slider>({0, 220, 75, 250}, "Slider1")};
     slider1->Min   = 0;
@@ -92,19 +91,19 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     slider1->Value = 100;
     slider1->Step  = 5;
     slider1->Value.Changed.connect([sliderLabel0](auto val) {
-        sliderLabel0->Label = std::to_string(val);
+        sliderLabel0->Label = std::format("{:.2f}", val);
     });
 
     auto rangeSlider1 {sliderPanelLayout.create_widget<range_slider>({100, 220, 75, 250}, "RangeSlider1")};
     rangeSlider1->Min    = 0;
-    rangeSlider1->Max    = 100;
-    rangeSlider1->Values = {50, 75};
-    rangeSlider1->Step   = 5;
+    rangeSlider1->Max    = 1;
+    rangeSlider1->Values = {0.01f, 0.15f};
+    rangeSlider1->Step   = 0.01f;
     rangeSlider1->Values.Changed.connect([sliderLabel0](auto val) {
-        sliderLabel0->Label = std::to_string(val.first) + ":" + std::to_string(val.second);
+        sliderLabel0->Label = std::format("{:.2f}:{:.2f}", val.first, val.second);
     });
-    rangeSlider1->MinRange = 10;
-    rangeSlider1->MaxRange = 50;
+    rangeSlider1->MinRange = 0.05f;
+    rangeSlider1->MaxRange = 0.5f;
 
     auto textBox0 {panel0Layout.create_widget<text_box>({890, 350, 125, 50}, "TextBox0")};
     textBox0->MaxLength = 9;
