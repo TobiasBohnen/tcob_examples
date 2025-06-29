@@ -370,7 +370,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         hover.apply(hoverStyle);
     }
     {
-        auto style {retValue.create<tooltip>("tooltip", {})};
+        auto style {retValue.create<popup>("popup", {})};
         style->Border.Size   = 3_px;
         style->Border.Radius = 5_px;
 
