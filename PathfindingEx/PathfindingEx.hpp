@@ -27,8 +27,8 @@ protected:
     void on_mouse_button_down(mouse::button_event const& ev) override;
 
 private:
-    ortho_tilemap _tileMapOrtho;
-    size_f        _tileSize;
+    orthogonal_tilemap _tileMapOrtho;
+    size_f             _tileSize;
 
     canvas          _canvas;
     canvas_renderer _renderer {_canvas};

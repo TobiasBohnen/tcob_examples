@@ -29,11 +29,11 @@ protected:
 private:
     rng _rand;
 
-    ortho_tilemap _tileMapOrtho;
-    iso_tilemap   _tileMapIso;
-    iso_tilemap   _tileMapIsoStaggered;
-    hex_tilemap   _tileMapHexPointy;
-    hex_tilemap   _tileMapHexFlat;
+    orthogonal_tilemap _tileMapOrtho;
+    isometric_tilemap  _tileMapIso;
+    isometric_tilemap  _tileMapIsoStaggered;
+    hexagonal_tilemap  _tileMapHexPointy;
+    hexagonal_tilemap  _tileMapHexFlat;
 
     uid _layerID {INVALID_ID};
 
