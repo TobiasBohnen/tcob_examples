@@ -49,9 +49,9 @@ void ParticleSystemEx::on_start()
 
             .Gravity = {{0, 10.f}, {0, 10.f}},
 
-            .Texture      = "snowflake",
-            .Colors       = {colors::Black},
-            .Transparency = std::minmax(0.0f, 0.5f),
+            .TextureRegion = "snowflake",
+            .Colors        = {colors::Black},
+            .Transparency  = std::minmax(0.0f, 0.5f),
 
             .Lifetime = std::minmax(5000ms, 25000ms),
 
@@ -78,9 +78,9 @@ void ParticleSystemEx::on_start()
 
             .LinearAcceleration = std::minmax(5.f, 25.f),
 
-            .Texture      = "snowflake",
-            .Colors       = _colors,
-            .Transparency = std::minmax(0.0f, 0.0f),
+            .TextureRegion = "snowflake",
+            .Colors        = _colors,
+            .Transparency  = std::minmax(0.0f, 0.0f),
 
             .Lifetime = std::minmax(5000ms, 25000ms),
         };

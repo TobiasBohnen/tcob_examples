@@ -41,7 +41,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     auto cycleButton0 {panel0Layout.create_widget<cycle_button>({0, 260, 120, 100}, "CycleButton0")};
     cycleButton0->Items.mutate([&](auto& items) {
-        items.push_back({.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .Region = "l1"}});
+        items.push_back({.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}});
         items.push_back({"def"});
         items.push_back({"ghi"});
     });
@@ -191,7 +191,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
         for (i32 i {0}; i < 4; ++i) {
             items.push_back({"item " + std::to_string(i)});
         }
-        items.push_back({.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .Region = "l1"}});
+        items.push_back({.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}});
     });
     dropDownList0->SelectedItemIndex.Changed.connect([label0, dropDownList0](isize value) { label0->Label = "selected: " + std::to_string(value); });
     dropDownList0->HoveredItemIndex.Changed.connect([label0, dropDownList0](isize value) { label0->Label = "hovered: " + std::to_string(value); });
@@ -200,7 +200,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     auto              listbox0 {panel0Layout.create_widget<list_box>({1200, 80, 150, 300}, "Listbox0")};
     std::vector<item> listboxtItems;
-    listboxtItems.push_back({.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .Region = "l1"}});
+    listboxtItems.push_back({.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}});
     for (i32 i {0}; i < 40; ++i) {
         listboxtItems.push_back({.Text = "item " + std::to_string(i)});
     }
@@ -211,8 +211,8 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     listbox0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::Looped);
 
     auto imgBox0 {panel0Layout.create_widget<image_box>({750, 20, 150, 200}, "ImageBox0")};
-    imgBox0->Image = {.Texture = resGrp.get<texture>("anim"),
-                      .Region  = "l1"};
+    imgBox0->Image = {.Texture       = resGrp.get<texture>("anim"),
+                      .TextureRegion = "l1"};
     // imgBox0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::AlternatedLooped);
 
     auto gridView0 {panel0Layout.create_widget<grid_view>({1080, 400, 450, 400}, "GridView0")};
@@ -222,7 +222,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
         std::array<item, 4> items;
         items[0].Text = "Smith";
-        items[0].Icon = {.Texture = resGrp.get<texture>("anim"), .Region = "l1"};
+        items[0].Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"};
         items[1].Text = "John";
         items[2].Text = "28";
         items[3].Text = "New York";
@@ -515,7 +515,7 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
         auto tabContainer0 {retValue->create_container<tab_container>(dock_style::Left, "TabContainer1")};
         tabContainer0->Flex = {.Width = 50_pct, .Height = 100_pct};
 
-        auto tabContainer1 {tabContainer0->create_tab<tab_container>("TabContainer11", {.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .Region = "l1"}})};
+        auto tabContainer1 {tabContainer0->create_tab<tab_container>("TabContainer11", {.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
         createTabs(tabContainer1);
 
         auto tabContainer2 {tabContainer0->create_tab<tab_container>("TabContainer12")};
@@ -591,7 +591,7 @@ auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::sha
         accordion0->Flex                  = {.Width = 30_pct, .Height = 100_pct};
         accordion0->MaximizeActiveSection = true;
 
-        auto accordion1 {accordion0->create_section<accordion>("Accordion1", {.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .Region = "l1"}})};
+        auto accordion1 {accordion0->create_section<accordion>("Accordion1", {.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
         createSections(accordion1);
 
         auto accordion2 {accordion0->create_section<accordion>("Accordion2")};
