@@ -9,9 +9,9 @@
 
 using namespace std::chrono_literals;
 
-auto static create_tileset() -> std::unordered_map<tile_index_t, ortho_tile>
+auto static create_tileset() -> std::unordered_map<tile_index_t, orthogonal_tile>
 {
-    std::unordered_map<tile_index_t, ortho_tile> retValue;
+    std::unordered_map<tile_index_t, orthogonal_tile> retValue;
 
     auto const gradLow {color_gradient {{0.0f, colors::White}, {0.10f, colors::LightGreen}, {1.0f, colors::Green}}.colors()};
     auto const gradHigh {color_gradient {{0.0f, colors::White}, {0.10f, colors::LightSalmon}, {1.0f, colors::Red}}.colors()};
@@ -28,7 +28,7 @@ auto static create_tileset() -> std::unordered_map<tile_index_t, ortho_tile>
 
 PathfindingEx::PathfindingEx(game& game)
     : scene(game)
-    , _tileMapOrtho {create_tileset()}
+    , _tileMapOrtho {tileset<orthogonal_tile> {create_tileset()}}
 {
     window().ClearColor = colors::DarkRed;
 }
