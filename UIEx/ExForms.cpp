@@ -5,6 +5,8 @@ using namespace std::chrono_literals;
 
 ////////////////////////////////////////////////////////////
 
+i32 stackIdx {0};
+
 auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
 {
     // TODO: remove shared_ptr self capture
@@ -105,13 +107,35 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     rangeSlider1->MinRange = 0.05f;
     rangeSlider1->MaxRange = 0.5f;
 
-    auto  treePanel {panel0Layout.create_widget<panel>({850, 390, 200, 300}, "TreePanel")};
+    auto  treePanel {panel0Layout.create_widget<panel>({850, 250, 200, 300}, "TreePanel")};
     auto& treePanelLayout {treePanel->create_layout<tree_layout>()};
     treePanelLayout.create_widget<button>(0, "")->Label = "I";
     treePanelLayout.create_widget<button>(1, "")->Label = "I.I";
     treePanelLayout.create_widget<button>(0, "")->Label = "II";
     treePanelLayout.create_widget<button>(1, "")->Label = "II.I";
     treePanelLayout.create_widget<button>(2, "")->Label = "II.I.I";
+
+    auto  stackPanel {panel0Layout.create_widget<panel>({850, 560, 200, 300}, "StackPanel")};
+    auto& stackPanelLayout {stackPanel->create_layout<stack_layout>()};
+    auto  createStackPanel([stackPanel = stackPanel.get(), &stackPanelLayout](string const& lbl) {
+        auto  cp {stackPanelLayout.create_widget<panel>(lbl)};
+        auto& cpLayout {cp->create_layout<grid_layout>(size_i {3, 3})};
+        cpLayout.create_widget<label>({{0, 0}, {3, 1}}, lbl)->Label = lbl;
+        auto btn {cpLayout.create_widget<button>({{0, 2}, {3, 1}}, "next")};
+        btn->Label = lbl;
+
+        btn->Click.connect([stackPanel, &stackPanelLayout] {
+            stackIdx = (stackIdx + 1) % 5;
+            stackPanelLayout.activate_widget(stackPanel->find_child_by_name(std::to_string(stackIdx)).get());
+        });
+        return cp;
+    });
+    auto  cp1 {createStackPanel("0")};
+    auto  cp2 {createStackPanel("1")};
+    auto  cp3 {createStackPanel("2")};
+    auto  cp4 {createStackPanel("3")};
+    auto  cp5 {createStackPanel("4")};
+    stackPanelLayout.activate_widget(cp1.get());
 
     auto textBox0 {panel0Layout.create_widget<text_box>({0, 650, 125, 50}, "TextBox0")};
     textBox0->MaxLength = 9;

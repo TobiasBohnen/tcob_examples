@@ -28,30 +28,30 @@ void SoundGeneratorEx::on_start()
             _waveState = wave_state::Dirty;
         }
     });
-    _form0->GenPickupCoin->MouseDown.connect([&]() { _form0->set_values(_gen1.generate_pickup_coin()); });
-    _form0->GenLaserShot->MouseDown.connect([&]() { _form0->set_values(_gen1.generate_laser_shoot()); });
-    _form0->GenExplosion->MouseDown.connect([&]() { _form0->set_values(_gen1.generate_explosion()); });
-    _form0->GenPowerup->MouseDown.connect([&]() { _form0->set_values(_gen1.generate_powerup()); });
-    _form0->GenHitHurt->MouseDown.connect([&]() { _form0->set_values(_gen1.generate_hit_hurt()); });
-    _form0->GenJump->MouseDown.connect([&]() { _form0->set_values(_gen1.generate_jump()); });
-    _form0->GenBlipSelect->MouseDown.connect([&]() { _form0->set_values(_gen1.generate_blip_select()); });
-    _form0->GenRandom->MouseDown.connect([&]() { _form0->set_values(_gen1.generate_random()); });
-    _form0->Play->MouseDown.connect([&]() { create_data(); play_wave(); });
-    _form0->Mutate->MouseDown.connect([&]() { _form0->set_values(_gen1.mutate_wave(_wave1)); });
-    _form0->Load->MouseDown.connect([&]() {
+    _form0->GenPickupCoin->MouseButtonDown.connect([&]() { _form0->set_values(_gen1.generate_pickup_coin()); });
+    _form0->GenLaserShot->MouseButtonDown.connect([&]() { _form0->set_values(_gen1.generate_laser_shoot()); });
+    _form0->GenExplosion->MouseButtonDown.connect([&]() { _form0->set_values(_gen1.generate_explosion()); });
+    _form0->GenPowerup->MouseButtonDown.connect([&]() { _form0->set_values(_gen1.generate_powerup()); });
+    _form0->GenHitHurt->MouseButtonDown.connect([&]() { _form0->set_values(_gen1.generate_hit_hurt()); });
+    _form0->GenJump->MouseButtonDown.connect([&]() { _form0->set_values(_gen1.generate_jump()); });
+    _form0->GenBlipSelect->MouseButtonDown.connect([&]() { _form0->set_values(_gen1.generate_blip_select()); });
+    _form0->GenRandom->MouseButtonDown.connect([&]() { _form0->set_values(_gen1.generate_random()); });
+    _form0->Play->MouseButtonDown.connect([&]() { create_data(); play_wave(); });
+    _form0->Mutate->MouseButtonDown.connect([&]() { _form0->set_values(_gen1.mutate_wave(_wave1)); });
+    _form0->Load->MouseButtonDown.connect([&]() {
         object loadFile;
         if (loadFile.load("sound_wave0.ini") == load_status::Ok) {
             sound_wave::Deserialize(_wave1, loadFile["wave"]);
             _form0->set_values(_wave1);
         }
     });
-    _form0->Save->MouseDown.connect([&]() {
+    _form0->Save->MouseButtonDown.connect([&]() {
         object saveFile;
         sound_wave::Serialize(_wave1, saveFile["wave"]);
 
         saveFile.save("sound_wave0.ini");
     });
-    _form0->Export->MouseDown.connect([&]() {
+    _form0->Export->MouseButtonDown.connect([&]() {
         string name {};
         i32    i {0};
         do {
@@ -59,7 +59,7 @@ void SoundGeneratorEx::on_start()
         } while (io::is_file(name));
         auto _ = _audioData.save(name);
     });
-    _form0->Exit->MouseDown.connect([&]() {
+    _form0->Exit->MouseButtonDown.connect([&]() {
         parent().pop_current_scene();
     });
     _form0->update(0ms);
