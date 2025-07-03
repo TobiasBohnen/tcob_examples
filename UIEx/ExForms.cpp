@@ -114,6 +114,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     treePanelLayout.create_widget<button>(0, "")->Label = "II";
     treePanelLayout.create_widget<button>(1, "")->Label = "II.I";
     treePanelLayout.create_widget<button>(2, "")->Label = "II.I.I";
+    treePanelLayout.create_widget<button>(1, "")->Label = "II.II";
 
     auto  stackPanel {panel0Layout.create_widget<panel>({850, 560, 200, 300}, "StackPanel")};
     auto& stackPanelLayout {stackPanel->create_layout<stack_layout>()};
@@ -122,7 +123,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
         auto& cpLayout {cp->create_layout<grid_layout>(size_i {3, 3})};
         cpLayout.create_widget<label>({{0, 0}, {3, 1}}, lbl)->Label = lbl;
         auto btn {cpLayout.create_widget<button>({{0, 2}, {3, 1}}, "next")};
-        btn->Label = lbl;
+        btn->Label = "next";
 
         btn->Click.connect([stackPanel, &stackPanelLayout] {
             stackIdx = (stackIdx + 1) % 5;
