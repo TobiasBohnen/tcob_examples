@@ -12,14 +12,14 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     auto retValue {std::make_shared<form<dock_layout>>(form_init {"form0", wnd->bounds()})};
 
     auto  tooltip0 {retValue->create_popup<popup>("tooltip")};
-    auto& tooltipLayout {tooltip0->get_layout<static_layout>()};
+    auto& tooltipLayout {tooltip0->get_layout<panel::default_layout>()};
     tooltip0->Bounds = {0, 0, 170, 50};
     auto tooltipLabel0 {tooltipLayout.create_widget<label>({5, 5, 160, 40}, "TTLabel0")};
     tooltip0->Popup.connect([tooltipLabel0](auto const& event) { tooltipLabel0->Label = event.Widget->name(); });
 
     auto panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
     panel0->Flex = {.Width = 100_pct, .Height = 100_pct};
-    auto& panel0Layout {panel0->get_layout<static_layout>()};
+    auto& panel0Layout {panel0->get_layout<panel::default_layout>()};
     panel0->TabStop       = {.Enabled = false};
     panel0->ScrollEnabled = true;
 
@@ -54,13 +54,13 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     progressBar0->Max   = 100;
     progressBar0->Value = 50;
 
-    auto progressBar1 {panel0Layout.create_widget<progress_bar>({50, 370, 200, 75}, "ProgressBar1")};
+    auto progressBar1 {panel0Layout.create_widget<progress_bar>({10, 370, 200, 75}, "ProgressBar1")};
     progressBar1->Min   = 0;
     progressBar1->Max   = 100;
     progressBar1->Value = 50;
 
     auto  sliderPanel {panel0Layout.create_widget<panel>({490, 390, 350, 550}, "SliderPanel")};
-    auto& sliderPanelLayout {sliderPanel->get_layout<static_layout>()};
+    auto& sliderPanelLayout {sliderPanel->get_layout<panel::default_layout>()};
 
     auto sliderLabel0 {sliderPanelLayout.create_widget<label>({180, 220, 150, 50}, "Label2")};
     sliderLabel0->TabStop = {.Enabled = false};
@@ -105,20 +105,28 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     rangeSlider1->MinRange = 0.05f;
     rangeSlider1->MaxRange = 0.5f;
 
-    auto textBox0 {panel0Layout.create_widget<text_box>({890, 350, 125, 50}, "TextBox0")};
+    auto  treePanel {panel0Layout.create_widget<panel>({850, 390, 200, 300}, "TreePanel")};
+    auto& treePanelLayout {treePanel->create_layout<tree_layout>()};
+    treePanelLayout.create_widget<button>(0, "")->Label = "I";
+    treePanelLayout.create_widget<button>(1, "")->Label = "I.I";
+    treePanelLayout.create_widget<button>(0, "")->Label = "II";
+    treePanelLayout.create_widget<button>(1, "")->Label = "II.I";
+    treePanelLayout.create_widget<button>(2, "")->Label = "II.I.I";
+
+    auto textBox0 {panel0Layout.create_widget<text_box>({0, 650, 125, 50}, "TextBox0")};
     textBox0->MaxLength = 9;
     textBox0->Submit.connect([label0, textBox0](auto const&) { label0->Label = "submitted: " + *textBox0->Text; });
     textBox0->Selectable = true;
 
-    auto toggle0 {panel0Layout.create_widget<toggle>({890, 500, 150, 75}, "Toggle0")};
+    auto toggle0 {panel0Layout.create_widget<toggle>({0, 550, 150, 75}, "Toggle0")};
     toggle0->Checked = true;
 
     auto gridPanel {panel0Layout.create_widget<panel>({230, 20, 250, 250}, "SPanel0")};
     gridPanel->TabStop = {.Enabled = false};
-    auto& gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 3})};
+    auto& gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 3}, true)};
     auto  createGridWidget {
         [&](rect_i loc, std::string const& name) {
-            auto b {gridLayout.create_widget<button>(loc, "gridB" + name, true)};
+            auto b {gridLayout.create_widget<button>(loc, "gridB" + name)};
             b->Label   = name;
             b->Tooltip = tooltip0;
         }};
@@ -215,7 +223,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
                       .TextureRegion = "l1"};
     // imgBox0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::AlternatedLooped);
 
-    auto gridView0 {panel0Layout.create_widget<grid_view>({1080, 400, 450, 400}, "GridView0")};
+    auto gridView0 {panel0Layout.create_widget<grid_view>({1280, 450, 450, 400}, "GridView0")};
     gridView0->Header = {{"Last"}, {"First"}, {"Age"}, {"City"}};
     gridView0->Grid.mutate([&](auto& grid) {
         grid.resize({4, 5});
@@ -307,15 +315,15 @@ auto create_form1(window* wnd) -> std::shared_ptr<form_base>
         panel0->Flex          = {100_pct, 100_pct};
         panel0->ScrollEnabled = true;
         panel0->Movable       = true;
-        auto& panel0Layout {panel0->get_layout<static_layout>()};
+        auto& panel0Layout {panel0->get_layout<panel::default_layout>()};
 
         auto panel1 {panel0Layout.create_widget<panel>({50, 30, 400, 400}, "Panel1")};
         panel1->ScrollEnabled = true;
-        auto& panel1Layout {panel1->get_layout<static_layout>()};
+        auto& panel1Layout {panel1->get_layout<panel::default_layout>()};
 
         auto panel2 {panel1Layout.create_widget<panel>({50, 30, 400, 400}, "Panel2")};
         panel2->ScrollEnabled = true;
-        auto& panel2Layout {panel2->get_layout<static_layout>()};
+        auto& panel2Layout {panel2->get_layout<panel::default_layout>()};
 
         auto button0 {panel2Layout.create_widget<button>({-10, -10, 30, 30}, "Button0")};
         auto button1 {panel2Layout.create_widget<button>({350, 350, 80, 50}, "Button1")};
@@ -326,7 +334,7 @@ auto create_form1(window* wnd) -> std::shared_ptr<form_base>
         panel0->Flex          = {.Width = 100_pct, .Height = 100_pct};
         panel0->ScrollEnabled = true;
         panel0->Movable       = true;
-        auto& panel0Layout {panel0->get_layout<static_layout>()};
+        auto& panel0Layout {panel0->get_layout<panel::default_layout>()};
     }
 
     return retValue;
@@ -338,7 +346,7 @@ auto create_form_terminal(window* wnd) -> std::shared_ptr<form<dock_layout>>
 
     auto panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
     panel0->Flex = {.Width = 100_pct, .Height = 100_pct};
-    auto& panel0Layout {panel0->get_layout<static_layout>()};
+    auto& panel0Layout {panel0->get_layout<panel::default_layout>()};
     panel0->TabStop = {.Enabled = false};
 
     {
@@ -483,10 +491,10 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
 
         auto gridPanel {tabContainer0->create_tab<panel>("SPanel1")};
         gridPanel->TabStop = {.Enabled = false};
-        auto& gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 3})};
+        auto& gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 3}, true)};
 
         auto createGridWidget {[&](rect_i loc, std::string const& name) {
-            auto b {gridLayout.create_widget<button>(loc, "gridB" + name, true)};
+            auto b {gridLayout.create_widget<button>(loc, "gridB" + name)};
             b->Label = name;
         }};
         createGridWidget({0, 0, 2, 1}, "0");
@@ -548,10 +556,10 @@ auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::sha
 
         auto gridPanel {accordion0->create_section<panel>("SPanel1")};
         gridPanel->TabStop = {.Enabled = false};
-        auto& gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 3})};
+        auto& gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 3}, true)};
 
         auto const createGridWidget {[&](rect_i loc, std::string const& name) {
-            auto b {gridLayout.create_widget<button>(loc, "gridB" + name, true)};
+            auto b {gridLayout.create_widget<button>(loc, "gridB" + name)};
             b->Label = name;
         }};
         createGridWidget({0, 0, 2, 1}, "0");
@@ -580,7 +588,7 @@ auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::sha
         auto panel0 {retValue->create_container<panel>(dock_style::Left, "Panel0")};
         panel0->Flex          = {.Width = 30_pct, .Height = 100_pct};
         panel0->ScrollEnabled = true;
-        auto& panel0Layout {panel0->get_layout<static_layout>()};
+        auto& panel0Layout {panel0->get_layout<panel::default_layout>()};
 
         auto accordion0 {panel0Layout.create_widget<accordion>({0, 0, 500, 500}, "Accordion0")};
         createSections(accordion0);
