@@ -160,7 +160,7 @@ void lsystem_form::gen_styles()
 
     {
         auto style {styles.create<button>("button", {})};
-        style->Border.Type    = line_type::Solid;
+        style->Border.Type    = border_type::Solid;
         style->Border.Size    = 3_px;
         style->Border.Radius  = 5_px;
         style->Text.Style     = {false, font::weight::Normal};
@@ -191,7 +191,7 @@ void lsystem_form::gen_styles()
     }
     {
         auto style {styles.create<label>("label", {})};
-        style->Border.Type    = line_type::Solid;
+        style->Border.Type    = border_type::Solid;
         style->Border.Size    = 2_px;
         style->Text.Style     = {false, font::weight::Normal};
         style->Text.Font      = _font;
@@ -207,7 +207,7 @@ void lsystem_form::gen_styles()
     }
     {
         auto style {styles.create<text_box>("text_box", {})};
-        style->Border.Type    = line_type::Solid;
+        style->Border.Type    = border_type::Solid;
         style->Border.Size    = 3_px;
         style->Text.Style     = {false, font::weight::Normal};
         style->Text.Font      = _font;
@@ -284,7 +284,7 @@ void lsystem_form::gen_styles()
     }
     {
         auto style {styles.create<spinner>("spinner", {})};
-        style->Border.Type    = line_type::Solid;
+        style->Border.Type    = border_type::Solid;
         style->Border.Size    = 3_px;
         style->Border.Radius  = 5_px;
         style->Text.Style     = {false, font::weight::Normal};

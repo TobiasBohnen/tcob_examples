@@ -81,7 +81,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     style_collection retValue;
     {
         auto style {retValue.create<button>("button", {})};
-        style->Border.Type         = line_type::Double;
+        style->Border.Type         = border_type::Centered;
         style->Border.Size         = 3_px;
         style->Border.Radius       = 5_px;
         style->Text.Style          = {false, font::weight::Normal};
@@ -90,10 +90,6 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Text.Shadow.OffsetX = 0_px;
         style->Text.Shadow.OffsetY = 1_px;
         style->Text.Alignment      = {horizontal_alignment::Centered, vertical_alignment::Middle};
-
-        // style->Text.Decoration.Line.LineThrough = true;
-        // style->Text.Decoration.Style            = line_type::Solid;
-        // style->Text.Decoration.Size             = {3_px};
 
         style->Margin  = {5_px};
         style->Padding = {2_px};
@@ -133,7 +129,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<checkbox>("checkbox", {})};
-        style->Border.Type       = line_type::Dashed;
+        style->Border.Type       = border_type::Dashed;
         style->Border.Dash       = std::vector {20_pct, 10_pct, 10_pct, 5_pct};
         style->Border.DashOffset = 100;
         style->Border.Size       = 3_px;
@@ -157,7 +153,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<radio_button>("radio_button", {})};
-        style->Border.Type   = line_type::Dotted;
+        style->Border.Type   = border_type::Dotted;
         style->Border.Size   = 3_px;
         style->Border.Radius = 5_px;
         style->Margin        = {5_px};
@@ -514,7 +510,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<text_box>("text_box", {})};
-        style->Border.Type         = line_type::Solid;
+        style->Border.Type         = border_type::Solid;
         style->Border.Size         = 3_px;
         style->Border.Radius       = 5_px;
         style->Text.Style          = {false, font::weight::Normal};

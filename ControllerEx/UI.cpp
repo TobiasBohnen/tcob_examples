@@ -91,7 +91,7 @@ void crtl_form::gen_styles()
     style_collection styles;
     {
         auto style {styles.create<button>("button", {})};
-        style->Border.Type    = line_type::Solid;
+        style->Border.Type    = border_type::Solid;
         style->Border.Size    = 3_px;
         style->Border.Radius  = 5_px;
         style->Text.Style     = {false, font::weight::Normal};
@@ -122,7 +122,7 @@ void crtl_form::gen_styles()
     }
     {
         auto style {styles.create<label>("label", {})};
-        style->Border.Type    = line_type::Solid;
+        style->Border.Type    = border_type::Solid;
         style->Border.Size    = 3_px;
         style->Text.Style     = {false, font::weight::Normal};
         style->Text.Font      = _font;

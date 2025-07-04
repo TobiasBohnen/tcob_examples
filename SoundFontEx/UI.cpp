@@ -65,7 +65,7 @@ void piano_form::gen_styles()
     style_collection styles;
     {
         auto style {styles.create<button>("white-keys", {})};
-        style->Border.Type    = line_type::Solid;
+        style->Border.Type    = border_type::Solid;
         style->Border.Size    = 3_px;
         style->Border.Radius  = 5_px;
         style->Text.Style     = {false, font::weight::Normal};
@@ -96,7 +96,7 @@ void piano_form::gen_styles()
     }
     {
         auto style {styles.create<button>("black-keys", {})};
-        style->Border.Type    = line_type::Solid;
+        style->Border.Type    = border_type::Solid;
         style->Border.Size    = 3_px;
         style->Border.Radius  = 5_px;
         style->Text.Style     = {false, font::weight::Normal};
@@ -127,7 +127,7 @@ void piano_form::gen_styles()
     }
     {
         auto style {styles.create<label>("label", {})};
-        style->Border.Type    = line_type::Solid;
+        style->Border.Type    = border_type::Solid;
         style->Border.Size    = 3_px;
         style->Text.Style     = {false, font::weight::Normal};
         style->Text.Font      = _font;
