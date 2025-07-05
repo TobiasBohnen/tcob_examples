@@ -16,8 +16,8 @@ CanvasEx::CanvasEx(game& game)
     font_family::SingleFont(_font, trim_ttf);
 
     _modes = {
-        &CanvasEx::canvas_text,
         &CanvasEx::canvas_clip,
+        &CanvasEx::canvas_text,
         &CanvasEx::canvas_ring,
         &CanvasEx::canvas_ray_cast,
         &CanvasEx::canvas_gradient,

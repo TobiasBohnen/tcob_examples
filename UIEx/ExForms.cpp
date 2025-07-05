@@ -11,7 +11,9 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
 {
     // TODO: remove shared_ptr self capture
     //
-    auto retValue {std::make_shared<form<dock_layout>>(form_init {"form0", wnd->bounds()})};
+    auto bounds {wnd->bounds()};
+    // bounds.Position += point_i {40, 40};
+    auto retValue {std::make_shared<form<dock_layout>>(form_init {"form0", bounds})};
 
     auto  tooltip0 {retValue->create_popup<popup>("tooltip")};
     auto& tooltipLayout {tooltip0->get_layout<panel::default_layout>()};
@@ -72,8 +74,9 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     slider0->Max   = 100;
     slider0->Value = 0;
     slider0->Step  = 1;
-    slider0->Value.Changed.connect([sliderLabel0, slider0](auto val) {
+    slider0->Value.Changed.connect([sliderLabel0, slider0 = slider0.get(), button0 = button0.get()](auto val) {
         sliderLabel0->Label = std::format("{:.2f}", val);
+        button0->Alpha      = slider0->Value / 100.f;
     });
 
     auto rangeSlider0 {sliderPanelLayout.create_widget<range_slider>({0, 110, 250, 100}, "RangeSlider0")};
@@ -137,6 +140,24 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     auto  cp4 {createStackPanel("3")};
     auto  cp5 {createStackPanel("4")};
     stackPanelLayout.activate_widget(cp1.get());
+
+    auto  circlePanel {panel0Layout.create_widget<panel>({1050, 450, 200, 150}, "CirclePanel")};
+    auto& circlePanelLayout {circlePanel->create_layout<circle_layout>()};
+    auto  createCircleButton([&circlePanelLayout](string const& lbl) {
+        auto btn {circlePanelLayout.create_widget<button>(lbl)};
+        btn->Flex  = {20_pct, 25_pct};
+        btn->Label = lbl;
+    });
+    createCircleButton("1");
+    createCircleButton("2");
+    createCircleButton("3");
+    createCircleButton("4");
+    createCircleButton("5");
+    createCircleButton("6");
+    createCircleButton("7");
+    createCircleButton("8");
+    createCircleButton("9");
+    createCircleButton("0");
 
     auto textBox0 {panel0Layout.create_widget<text_box>({0, 650, 125, 50}, "TextBox0")};
     textBox0->MaxLength = 9;
@@ -244,8 +265,13 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     listbox0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::Looped);
 
     auto imgBox0 {panel0Layout.create_widget<image_box>({750, 20, 150, 200}, "ImageBox0")};
-    imgBox0->Image = {.Texture       = resGrp.get<texture>("anim"),
-                      .TextureRegion = "l1"};
+    imgBox0->Image     = {.Texture       = resGrp.get<texture>("anim"),
+                          .TextureRegion = "l1"};
+    imgBox0->Draggable = true;
+    imgBox0->Dropped.connect([label0 = label0.get(), form = retValue.get()](auto&& ev) {
+        label0->Label = std::format("drop:{}", ev.Target ? ev.Target->name() : "");
+    });
+
     // imgBox0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::AlternatedLooped);
 
     auto gridView0 {panel0Layout.create_widget<grid_view>({1280, 450, 450, 400}, "GridView0")};
