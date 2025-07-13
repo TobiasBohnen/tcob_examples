@@ -30,7 +30,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     auto label0 {panel0Layout.create_widget<label>({0, 520, 200, 40}, "Label0")};
     auto button0 {panel0Layout.create_widget<button>({0, 0, 200, 100}, "Button0")};
     button0->Label = "In ä Hürri";
-    // button0->Icon = {.Texture = resGrp.get<texture>("anim"),                     .Region  = "l1"};
+    button0->Icon  = icon {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"};
     button0->Click.connect([btn = button0.get(), resGrp = &resGrp]() {
         btn->start_animation(*resGrp->get<frame_animation>("anim"), playback_mode::Looped);
     });
@@ -74,10 +74,6 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     slider0->Max   = 100;
     slider0->Value = 0;
     slider0->Step  = 1;
-    slider0->Value.Changed.connect([sliderLabel0, slider0 = slider0.get(), button0 = button0.get()](auto val) {
-        sliderLabel0->Label = std::format("{:.2f}", val);
-        button0->Alpha      = slider0->Value / 100.f;
-    });
 
     auto rangeSlider0 {sliderPanelLayout.create_widget<range_slider>({0, 110, 250, 100}, "RangeSlider0")};
     rangeSlider0->Min    = 0;
@@ -86,6 +82,10 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     rangeSlider0->Step   = 1;
     rangeSlider0->Values.Changed.connect([sliderLabel0](auto val) {
         sliderLabel0->Label = std::format("{:.2f}:{:.2f}", val.first, val.second);
+    });
+    slider0->Value.Changed.connect([sliderLabel0, slider0 = slider0.get(), rangeSlider0 = rangeSlider0.get()](auto val) {
+        sliderLabel0->Label = std::format("{:.2f}", val);
+        rangeSlider0->Alpha = slider0->Value / 100.f;
     });
     //  rangeSlider0->MinRange = 10;
     //  rangeSlider0->MaxRange = 50;
@@ -653,10 +653,10 @@ auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::sha
         auto accordion1 {accordion0->create_section<accordion>("Accordion1", {.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
         createSections(accordion1);
 
-        auto accordion2 {accordion0->create_section<accordion>("Accordion2")};
+        auto accordion2 {accordion0->create_section<accordion>("Accordion2", {.Text = "def", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
         createSections(accordion2);
 
-        auto accordion3 {accordion0->create_section<accordion>("Accordion3")};
+        auto accordion3 {accordion0->create_section<accordion>("Accordion3", {.Text = "ghi", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
         createSections(accordion3);
 
         accordion0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::Looped);

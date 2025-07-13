@@ -21,8 +21,7 @@ auto main(void) -> int
     video.RenderSystem         = "OPENGLES30";
     config["video"]            = video;
 
-    tcob::game game {{.Path           = ".",
-                      .Name           = "HtmlEx",
+    tcob::game game {{.Name           = "HtmlEx",
                       .LogFile        = "stdout",
                       .ConfigDefaults = config,
                       .WorkerThreads  = 8}};

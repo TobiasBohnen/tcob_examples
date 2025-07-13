@@ -15,6 +15,7 @@ using namespace std::chrono_literals;
 LSystemEx::LSystemEx(game& game)
     : scene {game}
 {
+    window().ClearColor = colors::Green;
 }
 
 LSystemEx::~LSystemEx() = default;

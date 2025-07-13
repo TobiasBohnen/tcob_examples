@@ -640,8 +640,9 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         auto style {retValue.create<nav_arrows_style>("nav_arrows", {}, {})};
         style->NavArrow.Size.Height   = {0.75f, length::type::Relative};
         style->NavArrow.Size.Width    = {0.25f, length::type::Relative};
-        style->NavArrow.Border.Size   = 3_px;
+        style->NavArrow.Border.Size   = 1_px;
         style->NavArrow.Border.Radius = 0_px;
+        style->NavArrow.Padding       = 2_px;
 
         auto hoverStyle {retValue.create<nav_arrows_style>("nav_arrows", {.Hover = true})};
         hoverStyle->NavArrow = style->NavArrow;
@@ -683,6 +684,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Item.Text.Size      = 50_pct;
         style->Item.Text.Alignment = {horizontal_alignment::Left, vertical_alignment::Middle};
         style->Item.Border.Size    = 3_px;
+        style->Item.IconTextOrder  = icon_text_order::TextBeforeIcon;
 
         auto hoverStyle {retValue.create<item_style>("section_items", {.Hover = true})};
         hoverStyle->Item = style->Item;
@@ -754,13 +756,13 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     // GRID ROW ITEMS
     {
         auto style {retValue.create<item_style>("row_items", {}, {})};
-        style->Item.Padding        = {10_px};
+        style->Item.Padding        = {2_px};
         style->Item.Text.Style     = {false, font::weight::Normal};
         style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
         style->Item.Text.AutoSize  = auto_size_mode::OnlyShrink;
         style->Item.Text.Size      = 20_px;
         style->Item.Text.Color     = normal.Text;
-        style->Item.Text.Alignment = {horizontal_alignment::Left, vertical_alignment::Middle};
+        style->Item.Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Middle};
         style->Item.Border.Size    = 2_px;
 
         auto hoverStyle {retValue.create<item_style>("row_items", {.Hover = true})};

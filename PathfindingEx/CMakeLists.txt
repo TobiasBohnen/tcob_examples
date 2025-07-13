@@ -12,7 +12,7 @@ set_target_properties(PathfindingEx PROPERTIES
 
 if(EMSCRIPTEN)
     target_compile_options(PathfindingEx PRIVATE -fexperimental-library -pthread)
-    target_link_options(PathfindingEx PRIVATE -sFULL_ES3 -sASSERTIONS -sPTHREAD_POOL_SIZE=8 -sASYNCIFY -pthread --embed-file pathfindingex.zip)
+    target_link_options(PathfindingEx PRIVATE -sFULL_ES3 -sASSERTIONS -sPTHREAD_POOL_SIZE=8 -sASYNCIFY -pthread)
 endif()
 
 if(NOT TCOB_BUILD_SHARED)
