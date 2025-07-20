@@ -201,7 +201,7 @@ void RaycasterEx::cast(i32 x, i32 w, i32 h)
     // Starting texture coordinate
     f64       texPos {(drawStart - h / 2 + lineHeight / 2) * texStep};
     for (i32 y {drawStart}; y < drawEnd; y++) {
-        // Cast the texture coordinate to i32eger, and mask with (texHeight - 1) in case of overflow
+        // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
         i32 const texY {static_cast<i32>(texPos) & (texHeight - 1)};
         texPos += texStep;
         color color {_textures[texNum].get_pixel({texX, texY})};
