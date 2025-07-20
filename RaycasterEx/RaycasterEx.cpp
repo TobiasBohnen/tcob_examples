@@ -200,7 +200,7 @@ void RaycasterEx::cast(i32 x, i32 w, i32 h)
         // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
         i32 const texY {static_cast<i32>(texPos) & (texHeight - 1)};
         texPos += texStep;
-        color color {_textures[texNum].get_pixel({texX, texY})};
+        color color {tex.get_pixel({texX, texY})};
         // make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
         if (side) {
             color.R /= 2;
