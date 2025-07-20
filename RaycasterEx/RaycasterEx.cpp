@@ -20,6 +20,8 @@ constexpr i32 mapWidth {24};
 constexpr i32 mapHeight {24};
 constexpr i32 texWidth {256};
 constexpr i32 texHeight {256};
+constexpr i32 floorTexture {8};
+constexpr i32 ceilingTexture {9};
 
 static_grid<u8, mapWidth, mapHeight> worldMap {
     {4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 7},
@@ -94,96 +96,28 @@ void RaycasterEx::on_update(milliseconds deltaTime)
         auto const [w, h] {_texture->info().Size};
         //  _buffer.fill(0);
 
-        draw_floors(w, h);
-        draw_walls(w, h);
+        //     draw_floors(w, h);
+        draw(w, h);
 
         _update = false;
         _texture->update_data(_buffer.data(), 0);
     }
 }
 
-void RaycasterEx::draw_floors(i32 w, i32 h)
-{
-    i32 const min {(h / 2) + 1};
-
-    locate_service<task_manager>().run_parallel(
-        [&](par_task const& ctx) {
-            for (isize y {ctx.Start + min}; y < ctx.End + min; y++) {
-                draw_floor(static_cast<i32>(y), w, h);
-            }
-        },
-        h - min);
-}
-
-void RaycasterEx::draw_floor(i32 y, i32 w, i32 h)
-{
-    // rayDir for leftmost ray (x = 0) and rightmost ray (x = w)
-    point_d const rayDir0 {_dir - _plane};
-    point_d const rayDir1 {_dir + _plane};
-
-    // Current y position compared to the center of the screen (the horizon)
-    i32 const p {y - (h / 2)};
-
-    // Vertical position of the camera.
-    f64 const posZ {0.5 * h};
-
-    // Horizontal distance from the camera to the floor for the current row.
-    // 0.5 is the z position exactly in the middle between floor and ceiling.
-    f64 const rowDistance {posZ / p};
-
-    // calculate the real world step vector we have to add for each x (parallel to camera plane)
-    // adding step by step avoids multiplications with a weight in the inner loop
-    point_d const floorStep {rowDistance * (rayDir1.X - rayDir0.X) / w, rowDistance * (rayDir1.Y - rayDir0.Y) / w};
-
-    // real world coordinates of the leftmost column. This will be updated as we step to the right.
-    point_d floor {_pos.X + (rowDistance * rayDir0.X), _pos.Y + (rowDistance * rayDir0.Y)};
-
-    for (i32 x {0}; x < w; ++x) {
-        // the cell coord is simply got from the integer parts of floorX and floorY
-        i32 const cellX {static_cast<i32>(floor.X)};
-        i32 const cellY {static_cast<i32>(floor.Y)};
-
-        // get the texture coordinate from the fractional part
-        i32 const tx {static_cast<i32>(texWidth * (floor.X - cellX)) & (texWidth - 1)};
-        i32 const ty {static_cast<i32>(texHeight * (floor.Y - cellY)) & (texHeight - 1)};
-
-        floor.X += floorStep.X;
-        floor.Y += floorStep.Y;
-
-        // choose texture and draw the pixel
-        i32 constexpr floorTexture {8};
-        i32 constexpr ceilingTexture {9};
-        color color;
-
-        // floor
-        color = _textures[floorTexture].get_pixel({tx, ty});
-        color.R /= 2;
-        color.G /= 2;
-        color.B /= 2;
-        _buffer[x, y] = std::byteswap(color.value());
-
-        // ceiling (symmetrical, at screenHeight - y - 1 instead of y)
-        color = _textures[ceilingTexture].get_pixel({tx, ty});
-        color.R /= 2;
-        color.G /= 2;
-        color.B /= 2;
-        _buffer[x, h - y - 1] = std::byteswap(color.value());
-    }
-}
-
-void RaycasterEx::draw_walls(i32 w, i32 h)
+void RaycasterEx::draw(i32 w, i32 h)
 {
     locate_service<task_manager>().run_parallel(
         [&](par_task const& ctx) {
             for (isize x {ctx.Start}; x < ctx.End; x++) {
-                draw_wall(static_cast<i32>(x), w, h);
+                cast(static_cast<i32>(x), w, h);
             }
         },
         w);
 }
 
-void RaycasterEx::draw_wall(i32 x, i32 w, i32 h)
+void RaycasterEx::cast(i32 x, i32 w, i32 h)
 {
+    // WALL CASTING
     // calculate ray position and direction
     f64 const     cameraX {(2 * x / static_cast<f64>(w)) - 1}; // x-coordinate in camera space
     point_d const rayDir {_dir + (_plane * cameraX)};
@@ -244,7 +178,7 @@ void RaycasterEx::draw_wall(i32 x, i32 w, i32 h)
 
     // calculate lowest and highest pixel to fill in current stripe
     i32 const drawStart {std::max((-lineHeight / 2) + (h / 2), 0)};
-    i32 const drawEnd {std::min((lineHeight / 2) + (h / 2), h - 1)};
+    i32       drawEnd {std::min((lineHeight / 2) + (h / 2), h - 1)};
 
     // texturing calculations
     i32 const texNum {worldMap[map] - 1}; // 1 subtracted from it so that texture 0 can be used!
@@ -267,7 +201,7 @@ void RaycasterEx::draw_wall(i32 x, i32 w, i32 h)
     // Starting texture coordinate
     f64       texPos {(drawStart - h / 2 + lineHeight / 2) * texStep};
     for (i32 y {drawStart}; y < drawEnd; y++) {
-        // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
+        // Cast the texture coordinate to i32eger, and mask with (texHeight - 1) in case of overflow
         i32 const texY {static_cast<i32>(texPos) & (texHeight - 1)};
         texPos += texStep;
         color color {_textures[texNum].get_pixel({texX, texY})};
@@ -278,6 +212,47 @@ void RaycasterEx::draw_wall(i32 x, i32 w, i32 h)
             color.B /= 2;
         }
         _buffer[x, y] = std::byteswap(color.value());
+    }
+
+    // FLOOR CASTING (vertical version, directly after drawing the vertical wall stripe for the current x)
+    point_d floorWall {}; // x, y position of the floor texel at the bottom of the wall
+
+    // 4 different wall directions possible
+    if (!side && rayDir.X > 0) {
+        floorWall.X = map.X;
+        floorWall.Y = map.Y + wallX;
+    } else if (!side && rayDir.X < 0) {
+        floorWall.X = map.X + 1.0;
+        floorWall.Y = map.Y + wallX;
+    } else if (side && rayDir.Y > 0) {
+        floorWall.X = map.X + wallX;
+        floorWall.Y = map.Y;
+    } else {
+        floorWall.X = map.X + wallX;
+        floorWall.Y = map.Y + 1.0;
+    }
+
+    // draw the floor from drawEnd to the bottom of the screen
+    for (i32 y {drawEnd + 1}; y < h; y++) {
+        f64 const currentDist {h / (2.0 * y - h)}; // you could make a small lookup table for this instead
+        f64 const weight {currentDist / perpWallDist};
+
+        point_d const currentFloor {(weight * floorWall.X) + ((1.0 - weight) * _pos.X), (weight * floorWall.Y) + ((1.0 - weight) * _pos.Y)};
+        point_i const floorTex {static_cast<i32>(currentFloor.X * texWidth) % texWidth, static_cast<i32>(currentFloor.Y * texWidth) % texWidth};
+
+        // floor
+        color color {_textures[floorTexture].get_pixel(floorTex)};
+        color.R /= 2;
+        color.G /= 2;
+        color.B /= 2;
+        _buffer[x, y] = std::byteswap(color.value());
+
+        // ceiling (symmetrical, at screenHeight - y - 1 instead of y)
+        color = _textures[ceilingTexture].get_pixel(floorTex);
+        color.R /= 2;
+        color.G /= 2;
+        color.B /= 2;
+        _buffer[x, h - y - 1] = std::byteswap(color.value());
     }
 }
 
@@ -374,7 +349,7 @@ void RaycasterEx::move(milliseconds deltaTime)
 
 void RaycasterEx::on_key_down(keyboard::event const& ev)
 {
-    switch (ev.ScanCode) { // NOLINT
+    switch (ev.ScanCode) { // NOLi32
     case scan_code::R: {
         auto _ = window().copy_to_image().save("screen01.webp");
     } break;
