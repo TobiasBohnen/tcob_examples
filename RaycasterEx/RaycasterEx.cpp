@@ -18,8 +18,6 @@ RaycasterEx::~RaycasterEx() = default;
 
 constexpr i32 mapWidth {24};
 constexpr i32 mapHeight {24};
-constexpr i32 texWidth {256};
-constexpr i32 texHeight {256};
 constexpr i32 floorTexture {8};
 constexpr i32 ceilingTexture {9};
 
@@ -67,7 +65,7 @@ void RaycasterEx::on_draw_to(render_target& target)
     geometry::set_texcoords(q, {.UVRect = render_texture::GetTexcoords(), .Level = 0});
     _renderer.set_geometry(q);
 
-    size_i newTexSize {size};
+    size_i const newTexSize {size};
     if (_texture->info().Size != newTexSize) {
         _texture->create(newTexSize, 1, texture::format::RGBA8);
         _texture->Filtering = texture::filtering::NearestNeighbor;
@@ -118,7 +116,7 @@ void RaycasterEx::cast(i32 x, i32 w, i32 h)
 {
     // WALL CASTING
     // calculate ray position and direction
-    f64 const     cameraX {(2 * x / static_cast<f64>(w)) - 1}; // x-coordinate in camera space
+    f64 const     cameraX {(2.0 * x / w) - 1.0}; // x-coordinate in camera space
     point_d const rayDir {_dir + (_plane * cameraX)};
 
     // which box of the map we're in
@@ -180,7 +178,9 @@ void RaycasterEx::cast(i32 x, i32 w, i32 h)
     i32       drawEnd {std::min((lineHeight / 2) + (h / 2), h - 1)};
 
     // texturing calculations
-    i32 const texNum {worldMap[map] - 1}; // 1 subtracted from it so that texture 0 can be used!
+    i32 const   texNum {worldMap[map] - 1}; // 1 subtracted from it so that texture 0 can be used!
+    auto const& tex {_textures[texNum]};
+    auto const [texWidth, texHeight] {tex.info().Size};
 
     // calculate value of wallX
     f64 wallX {!side ? _pos.Y + (perpWallDist * rayDir.Y) : _pos.X + (perpWallDist * rayDir.X)}; // where exactly the wall was hit
@@ -188,10 +188,7 @@ void RaycasterEx::cast(i32 x, i32 w, i32 h)
 
     // x coordinate on the texture
     i32 texX {static_cast<i32>(wallX * static_cast<f64>(texWidth))};
-    if (!side && rayDir.X > 0) {
-        texX = texWidth - texX - 1;
-    }
-    if (side && rayDir.Y < 0) {
+    if ((!side && rayDir.X > 0) || (side && rayDir.Y < 0)) {
         texX = texWidth - texX - 1;
     }
 
@@ -233,7 +230,7 @@ void RaycasterEx::cast(i32 x, i32 w, i32 h)
 
     // draw the floor from drawEnd to the bottom of the screen
     for (i32 y {drawEnd + 1}; y < h; y++) {
-        f64 const currentDist {h / (2.0 * y - h)}; // you could make a small lookup table for this instead
+        f64 const currentDist {h / (2.0 * y - h)};
         f64 const weight {currentDist / perpWallDist};
 
         point_d const currentFloor {(weight * floorWall.X) + ((1.0 - weight) * _pos.X), (weight * floorWall.Y) + ((1.0 - weight) * _pos.Y)};
