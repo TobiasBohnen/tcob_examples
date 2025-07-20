@@ -66,10 +66,12 @@ void RaycasterEx::on_draw_to(render_target& target)
     geometry::set_position(q, {0, 0, static_cast<f32>(size.Width), static_cast<f32>(size.Height)});
     geometry::set_texcoords(q, {.UVRect = render_texture::GetTexcoords(), .Level = 0});
     _renderer.set_geometry(q);
-    if (_texture->info().Size != size) {
-        _texture->create(size, 1, texture::format::RGBA8);
-        _texture->Filtering = texture::filtering::Linear;
-        _buffer.resize({size.Width, size.Height});
+
+    size_i newTexSize {size};
+    if (_texture->info().Size != newTexSize) {
+        _texture->create(newTexSize, 1, texture::format::RGBA8);
+        _texture->Filtering = texture::filtering::NearestNeighbor;
+        _buffer.resize(newTexSize);
         _update = true;
     }
 
@@ -93,19 +95,16 @@ void RaycasterEx::on_update(milliseconds deltaTime)
     move(deltaTime);
 
     if (_update) {
-        auto const [w, h] {_texture->info().Size};
-        //  _buffer.fill(0);
-
-        //     draw_floors(w, h);
-        draw(w, h);
+        draw();
 
         _update = false;
         _texture->update_data(_buffer.data(), 0);
     }
 }
 
-void RaycasterEx::draw(i32 w, i32 h)
+void RaycasterEx::draw()
 {
+    auto const [w, h] {_texture->info().Size};
     locate_service<task_manager>().run_parallel(
         [&](par_task const& ctx) {
             for (isize x {ctx.Start}; x < ctx.End; x++) {

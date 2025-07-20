@@ -28,7 +28,7 @@ protected:
     void on_key_down(keyboard::event const& ev) override;
 
 private:
-    void draw(i32 w, i32 h);
+    void draw();
     void cast(i32 x, i32 w, i32 h);
 
     void move(milliseconds deltaTime);
