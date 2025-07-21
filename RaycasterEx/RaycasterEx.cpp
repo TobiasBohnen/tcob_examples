@@ -207,7 +207,7 @@ void RaycasterEx::cast(i32 x, i32 w, i32 h)
             color.G /= 2;
             color.B /= 2;
         }
-        _buffer[x, y] = std::byteswap(color.value());
+        _buffer[x, h - y - 1] = std::byteswap(color.value());
     }
 
     // FLOOR CASTING (vertical version, directly after drawing the vertical wall stripe for the current x)
@@ -241,14 +241,14 @@ void RaycasterEx::cast(i32 x, i32 w, i32 h)
         color.R /= 2;
         color.G /= 2;
         color.B /= 2;
-        _buffer[x, y] = std::byteswap(color.value());
+        _buffer[x, h - y - 1] = std::byteswap(color.value());
 
-        // ceiling (symmetrical, at screenHeight - y - 1 instead of y)
+        // ceiling
         color = _textures[ceilingTexture].get_pixel(floorTex);
         color.R /= 2;
         color.G /= 2;
         color.B /= 2;
-        _buffer[x, h - y - 1] = std::byteswap(color.value());
+        _buffer[x, y] = std::byteswap(color.value());
     }
 }
 
