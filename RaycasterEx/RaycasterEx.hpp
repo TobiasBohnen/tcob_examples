@@ -31,7 +31,7 @@ private:
     void draw();
     void cast(i32 x, i32 w, i32 h);
 
-    void move(milliseconds deltaTime);
+    auto move(milliseconds deltaTime) -> bool;
 
     void load();
 

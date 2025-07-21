@@ -90,11 +90,10 @@ void RaycasterEx::on_fixed_update(milliseconds deltaTime)
 
 void RaycasterEx::on_update(milliseconds deltaTime)
 {
-    move(deltaTime);
+    _update = move(deltaTime) || _update;
 
     if (_update) {
         draw();
-
         _update = false;
         _texture->update_data(_buffer.data(), 0);
     }
@@ -110,6 +109,16 @@ void RaycasterEx::draw()
             }
         },
         w);
+}
+
+auto static blend(u32& raw, color c, bool darken)
+{
+    if (darken) {
+        c.R /= 2;
+        c.G /= 2;
+        c.B /= 2;
+    }
+    raw = std::byteswap(c.value());
 }
 
 void RaycasterEx::cast(i32 x, i32 w, i32 h)
@@ -177,37 +186,32 @@ void RaycasterEx::cast(i32 x, i32 w, i32 h)
     i32 const drawStart {std::max((-lineHeight / 2) + (h / 2), 0)};
     i32       drawEnd {std::min((lineHeight / 2) + (h / 2), h - 1)};
 
-    // texturing calculations
-    i32 const   texNum {worldMap[map] - 1}; // 1 subtracted from it so that texture 0 can be used!
-    auto const& tex {_textures[texNum]};
-    auto const [texWidth, texHeight] {tex.info().Size};
-
     // calculate value of wallX
     f64 wallX {!side ? _pos.Y + (perpWallDist * rayDir.Y) : _pos.X + (perpWallDist * rayDir.X)}; // where exactly the wall was hit
     wallX -= std::floor(wallX);
 
-    // x coordinate on the texture
-    i32 texX {static_cast<i32>(wallX * static_cast<f64>(texWidth))};
-    if ((!side && rayDir.X > 0) || (side && rayDir.Y < 0)) {
-        texX = texWidth - texX - 1;
-    }
+    {                                                                                            // texturing calculations
+        i32 const   texNum {worldMap[map] - 1};                                                  // 1 subtracted from it so that texture 0 can be used!
+        auto const& tex {_textures[texNum]};
+        auto const [texWidth, texHeight] {tex.info().Size};
 
-    // How much to increase the texture coordinate per screen pixel
-    f64 const texStep {1.0 * texHeight / lineHeight};
-    // Starting texture coordinate
-    f64       texPos {(drawStart - h / 2 + lineHeight / 2) * texStep};
-    for (i32 y {drawStart}; y < drawEnd; y++) {
-        // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
-        i32 const texY {static_cast<i32>(texPos) & (texHeight - 1)};
-        texPos += texStep;
-        color color {tex.get_pixel({texX, texY})};
-        // make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
-        if (side) {
-            color.R /= 2;
-            color.G /= 2;
-            color.B /= 2;
+        // x coordinate on the texture
+        i32 texX {static_cast<i32>(wallX * static_cast<f64>(texWidth))};
+        if ((!side && rayDir.X > 0) || (side && rayDir.Y < 0)) {
+            texX = texWidth - texX - 1;
         }
-        _buffer[x, h - y - 1] = std::byteswap(color.value());
+
+        // How much to increase the texture coordinate per screen pixel
+        f64 const texStep {1.0 * texHeight / lineHeight};
+        // Starting texture coordinate
+        f64       texPos {(drawStart - h / 2 + lineHeight / 2) * texStep};
+        for (i32 y {drawStart}; y < drawEnd; y++) {
+            // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
+            i32 const texY {static_cast<i32>(texPos) & (texHeight - 1)};
+            texPos += texStep;
+            color color {tex.get_pixel({texX, texY})};
+            blend(_buffer[x, h - y - 1], color, side);
+        }
     }
 
     // FLOOR CASTING (vertical version, directly after drawing the vertical wall stripe for the current x)
@@ -229,31 +233,31 @@ void RaycasterEx::cast(i32 x, i32 w, i32 h)
     }
 
     // draw the floor from drawEnd to the bottom of the screen
-    for (i32 y {drawEnd + 1}; y < h; y++) {
+    for (i32 y {drawEnd}; y < h; y++) {
         f64 const currentDist {h / (2.0 * y - h)};
-        f64 const weight {currentDist / perpWallDist};
+        f64 const weight {std::min(currentDist / perpWallDist, 1.0)};
 
         point_d const currentFloor {(weight * floorWall.X) + ((1.0 - weight) * _pos.X), (weight * floorWall.Y) + ((1.0 - weight) * _pos.Y)};
-        point_i const floorTex {static_cast<i32>(currentFloor.X * texWidth) % texWidth, static_cast<i32>(currentFloor.Y * texWidth) % texWidth};
 
+        assert(h - y - 1 >= 0);
         // floor
-        color color {_textures[floorTexture].get_pixel(floorTex)};
-        color.R /= 2;
-        color.G /= 2;
-        color.B /= 2;
-        _buffer[x, h - y - 1] = std::byteswap(color.value());
+        auto const& floorTex {_textures[floorTexture]};
+        auto const [floorTexW, floorTexH] {floorTex.info().Size};
+        point_i const floorTexUV {static_cast<i32>(currentFloor.X * floorTexW) % floorTexW, static_cast<i32>(currentFloor.Y * floorTexH) % floorTexH};
+        blend(_buffer[x, h - y - 1], floorTex.get_pixel(floorTexUV), true);
 
-        // ceiling
-        color = _textures[ceilingTexture].get_pixel(floorTex);
-        color.R /= 2;
-        color.G /= 2;
-        color.B /= 2;
-        _buffer[x, y] = std::byteswap(color.value());
+        // ceil
+        auto const& ceilTex {_textures[ceilingTexture]};
+        auto const [ceilTexW, ceilTexH] {ceilTex.info().Size};
+        point_i const ceilTexUV {static_cast<i32>(currentFloor.X * ceilTexW) % ceilTexW, static_cast<i32>(currentFloor.Y * ceilTexH) % ceilTexH};
+        blend(_buffer[x, y], ceilTex.get_pixel(ceilTexUV), true);
     }
 }
 
-void RaycasterEx::move(milliseconds deltaTime)
+auto RaycasterEx::move(milliseconds deltaTime) -> bool
 {
+    bool retValue {false};
+
     f64 const moveSpeed {deltaTime.count() / 1000 * 4.0}; // the constant value is in squares/second
     f64 const rotSpeed {deltaTime.count() / 1000 * 3.0};  // the constant value is in radians/second
 
@@ -283,15 +287,15 @@ void RaycasterEx::move(milliseconds deltaTime)
         point_d const checkPos {_pos + (_dir * (moveSpeed + margin) * forwardDir)};
 
         if (is_position_clear(checkPos)) {
-            _pos    = newPos;
-            _update = true;
+            _pos     = newPos;
+            retValue = true;
         } else {
             if (is_position_clear({_pos.X, checkPos.Y})) {
-                _pos.Y  = newPos.Y;
-                _update = true;
+                _pos.Y   = newPos.Y;
+                retValue = true;
             } else if (is_position_clear({checkPos.X, _pos.Y})) {
-                _pos.X  = newPos.X;
-                _update = true;
+                _pos.X   = newPos.X;
+                retValue = true;
             }
         }
     }
@@ -311,15 +315,15 @@ void RaycasterEx::move(milliseconds deltaTime)
         point_d const checkPos {_pos + (strafe * (moveSpeed + margin) * strafeDir)};
 
         if (is_position_clear(checkPos)) {
-            _pos    = newPos;
-            _update = true;
+            _pos     = newPos;
+            retValue = true;
         } else {
             if (is_position_clear({_pos.X, checkPos.Y})) {
-                _pos.Y  = newPos.Y;
-                _update = true;
+                _pos.Y   = newPos.Y;
+                retValue = true;
             } else if (is_position_clear({checkPos.X, _pos.Y})) {
-                _pos.X  = newPos.X;
-                _update = true;
+                _pos.X   = newPos.X;
+                retValue = true;
             }
         }
     }
@@ -339,20 +343,21 @@ void RaycasterEx::move(milliseconds deltaTime)
         f64 const oldPlaneX {_plane.X};
         _plane.X = _plane.X * std::cos(rotateAmount) - _plane.Y * std::sin(rotateAmount);
         _plane.Y = oldPlaneX * std::sin(rotateAmount) + _plane.Y * std::cos(rotateAmount);
-        _update  = true;
+        retValue = true;
     }
+
+    return retValue;
 }
 
 void RaycasterEx::on_key_down(keyboard::event const& ev)
 {
-    switch (ev.ScanCode) { // NOLi32
+    switch (ev.ScanCode) { // NOLINT
     case scan_code::R: {
         auto _ = window().copy_to_image().save("screen01.webp");
     } break;
     case scan_code::BACKSPACE:
         parent().pop_current_scene();
         break;
-
     default:
 
         break;
@@ -370,6 +375,6 @@ void RaycasterEx::load()
     _textures[6] = image::Load("res/wall6.png").value();
     _textures[7] = image::Load("res/wall7.png").value();
 
-    _textures[8] = image::Load("res/floor.png").value();
-    _textures[9] = image::Load("res/ceiling.png").value();
+    _textures[floorTexture]   = image::Load("res/floor.png").value();
+    _textures[ceilingTexture] = image::Load("res/ceiling.png").value();
 }
