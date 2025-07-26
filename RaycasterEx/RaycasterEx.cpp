@@ -7,19 +7,23 @@
 
 #include <algorithm>
 
+using gfx_cache = cache<{800, 600}, {256, 256}>;
+
 RaycasterEx::RaycasterEx(game& game)
     : scene {game}
+    , _cache {std::make_unique<gfx_cache>()}
 {
     _material->Texture = _texture;
     _renderer.set_material(_material.ptr());
+
+    _texture->create(_cache->screen_size(), 1, texture::format::RGBA8);
+    _texture->Filtering = texture::filtering::NearestNeighbor;
 }
 
 RaycasterEx::~RaycasterEx() = default;
 
 constexpr i32 mapWidth {24};
 constexpr i32 mapHeight {24};
-constexpr i32 floorTexture {8};
-constexpr i32 ceilingTexture {9};
 
 static_grid<u8, mapWidth, mapHeight> worldMap {
     {4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 7},
@@ -52,7 +56,7 @@ void RaycasterEx::on_start()
     auto& resMgr {library()};
     auto* resGrp {resMgr.get_group("res")};
 
-    load();
+    _cache->load();
 }
 
 void RaycasterEx::on_draw_to(render_target& target)
@@ -64,14 +68,6 @@ void RaycasterEx::on_draw_to(render_target& target)
     geometry::set_position(q, {0, 0, static_cast<f32>(size.Width), static_cast<f32>(size.Height)});
     geometry::set_texcoords(q, {.UVRect = render_texture::GetTexcoords(), .Level = 0});
     _renderer.set_geometry(q);
-
-    size_i const newTexSize {size};
-    if (_texture->info().Size != newTexSize) {
-        _texture->create(newTexSize, 1, texture::format::RGBA8);
-        _texture->Filtering = texture::filtering::NearestNeighbor;
-        _buffer.resize(newTexSize);
-        _update = true;
-    }
 
     _renderer.render_to_target(target);
 }
@@ -95,7 +91,7 @@ void RaycasterEx::on_update(milliseconds deltaTime)
     if (_update) {
         draw();
         _update = false;
-        _texture->update_data(_buffer.data(), 0);
+        _texture->update_data(_cache->screen(0), 0);
     }
 }
 
@@ -111,18 +107,29 @@ void RaycasterEx::draw()
         w);
 }
 
-auto static blend(u32& raw, color c, bool darken)
+void static blend(u32* raw, color c, bool darken)
 {
     if (darken) {
         c.R /= 2;
         c.G /= 2;
         c.B /= 2;
     }
-    raw = std::byteswap(c.value());
+    *raw = std::byteswap(c.value());
+}
+
+auto static get_pixel(u8 const* img, usize idx) -> color
+{
+    u8 const r {img[idx + 0]};
+    u8 const g {img[idx + 1]};
+    u8 const b {img[idx + 2]};
+    return {r, g, b, 255};
 }
 
 void RaycasterEx::cast(i32 x, i32 w, i32 h)
 {
+    auto const [texWidth, texHeight] {_cache->tex_size()};
+    auto const texBpp {_cache->tex_bpp()};
+
     // WALL CASTING
     // calculate ray position and direction
     f64 const     cameraX {(2.0 * x / w) - 1.0}; // x-coordinate in camera space
@@ -192,8 +199,7 @@ void RaycasterEx::cast(i32 x, i32 w, i32 h)
 
     {                                                                                            // texturing calculations
         i32 const   texNum {worldMap[map] - 1};                                                  // 1 subtracted from it so that texture 0 can be used!
-        auto const& tex {_textures[texNum]};
-        auto const [texWidth, texHeight] {tex.info().Size};
+        auto const* tex {_cache->texture(texNum)};
 
         // x coordinate on the texture
         i32 texX {static_cast<i32>(wallX * static_cast<f64>(texWidth))};
@@ -206,11 +212,12 @@ void RaycasterEx::cast(i32 x, i32 w, i32 h)
         // Starting texture coordinate
         f64       texPos {(drawStart - h / 2 + lineHeight / 2) * texStep};
         for (i32 y {drawStart}; y < drawEnd; y++) {
-            // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
+            // Cast the texture coordinate to integer, and mask with (cache::TexSize.Height - 1) in case of overflow
             i32 const texY {static_cast<i32>(texPos) & (texHeight - 1)};
             texPos += texStep;
-            color color {tex.get_pixel({texX, texY})};
-            blend(_buffer[x, h - y - 1], color, side);
+            blend(_cache->screen(x + ((h - y - 1) * w)),
+                  get_pixel(tex, (texX + (texY * texWidth)) * texBpp),
+                  side);
         }
     }
 
@@ -241,16 +248,20 @@ void RaycasterEx::cast(i32 x, i32 w, i32 h)
 
         assert(h - y - 1 >= 0);
         // floor
-        auto const& floorTex {_textures[floorTexture]};
-        auto const [floorTexW, floorTexH] {floorTex.info().Size};
-        point_i const floorTexUV {static_cast<i32>(currentFloor.X * floorTexW) % floorTexW, static_cast<i32>(currentFloor.Y * floorTexH) % floorTexH};
-        blend(_buffer[x, h - y - 1], floorTex.get_pixel(floorTexUV), true);
+        auto const* floorTex {_cache->texture(floorTexture)};
+        i32 const   floorTexX {static_cast<i32>(currentFloor.X * texWidth) % texWidth};
+        i32 const   floorTexY {static_cast<i32>(currentFloor.Y * texHeight) % texHeight};
+        blend(_cache->screen(x + ((h - y - 1) * w)),
+              get_pixel(floorTex, (floorTexX + (floorTexY * texWidth)) * texBpp),
+              true);
 
         // ceil
-        auto const& ceilTex {_textures[ceilingTexture]};
-        auto const [ceilTexW, ceilTexH] {ceilTex.info().Size};
-        point_i const ceilTexUV {static_cast<i32>(currentFloor.X * ceilTexW) % ceilTexW, static_cast<i32>(currentFloor.Y * ceilTexH) % ceilTexH};
-        blend(_buffer[x, y], ceilTex.get_pixel(ceilTexUV), true);
+        auto const* ceilTex {_cache->texture(ceilingTexture)};
+        i32 const   ceilTexX {static_cast<i32>(currentFloor.X * texWidth) % texWidth};
+        i32 const   ceilTexY {static_cast<i32>(currentFloor.Y * texHeight) % texHeight};
+        blend(_cache->screen(x + (y * w)),
+              get_pixel(ceilTex, (ceilTexX + (ceilTexY * texWidth)) * texBpp),
+              true);
     }
 }
 
@@ -272,8 +283,8 @@ auto RaycasterEx::move(milliseconds deltaTime) -> bool
         return (worldMap[tileX, tileY] == 0);
     }};
 
-    auto      keyboard {locate_service<input::system>().keyboard()};
-    f64 const margin {0.4}; // extra margin for checking
+    auto const keyboard {locate_service<input::system>().keyboard()};
+    f64 const  margin {0.4}; // extra margin for checking
 
     // Forward/Backward
     i32 forwardDir {0};
@@ -362,19 +373,4 @@ void RaycasterEx::on_key_down(keyboard::event const& ev)
 
         break;
     }
-}
-void RaycasterEx::load()
-{
-    _textures.resize(10);
-    _textures[0] = image::Load("res/wall0.png").value();
-    _textures[1] = image::Load("res/wall1.png").value();
-    _textures[2] = image::Load("res/wall2.png").value();
-    _textures[3] = image::Load("res/wall3.png").value();
-    _textures[4] = image::Load("res/wall4.png").value();
-    _textures[5] = image::Load("res/wall5.png").value();
-    _textures[6] = image::Load("res/wall6.png").value();
-    _textures[7] = image::Load("res/wall7.png").value();
-
-    _textures[floorTexture]   = image::Load("res/floor.png").value();
-    _textures[ceilingTexture] = image::Load("res/ceiling.png").value();
 }

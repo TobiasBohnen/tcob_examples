@@ -8,9 +8,12 @@
 
 #pragma once
 #include "../_common/Common.hpp"
+#include "Cache.hpp"
 
 using namespace std::chrono_literals;
 using namespace tcob::literals;
+
+////////////////////////////////////////////////////////////
 
 class RaycasterEx : public scene {
 public:
@@ -33,19 +36,15 @@ private:
 
     auto move(milliseconds deltaTime) -> bool;
 
-    void load();
-
-    asset_owner_ptr<material> _material;
-    asset_owner_ptr<texture>  _texture;
-    grid<u32>                 _buffer;
-
-    std::vector<image> _textures;
-
     point_d _pos {5, 5};      // x and y start position
     point_d _dir {-1, 0};     // initial direction vector
     point_d _plane {0, 0.66}; // the 2d raycaster version of camera plane
 
-    quad_renderer _renderer {buffer_usage_hint::StaticDraw};
+    asset_owner_ptr<material> _material;
+    asset_owner_ptr<texture>  _texture;
+    quad_renderer             _renderer {buffer_usage_hint::StaticDraw};
 
-    bool _update {false};
+    std::unique_ptr<cache_base> _cache;
+
+    bool _update {true};
 };
