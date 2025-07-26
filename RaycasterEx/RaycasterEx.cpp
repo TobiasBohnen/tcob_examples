@@ -17,7 +17,7 @@ RaycasterEx::RaycasterEx(game& game)
     _renderer.set_material(_material.ptr());
 
     _texture->create(_cache->screen_size(), 1, texture::format::RGBA8);
-    _texture->Filtering = texture::filtering::NearestNeighbor;
+    _texture->Filtering = texture::filtering::Linear;
 }
 
 RaycasterEx::~RaycasterEx() = default;
@@ -105,24 +105,6 @@ void RaycasterEx::draw()
             }
         },
         w);
-}
-
-void static blend(u32* raw, color c, bool darken)
-{
-    if (darken) {
-        c.R /= 2;
-        c.G /= 2;
-        c.B /= 2;
-    }
-    *raw = std::byteswap(c.value());
-}
-
-auto static get_pixel(u8 const* img, usize idx) -> color
-{
-    u8 const r {img[idx + 0]};
-    u8 const g {img[idx + 1]};
-    u8 const b {img[idx + 2]};
-    return {r, g, b, 255};
 }
 
 void RaycasterEx::cast(i32 x, i32 w, i32 h)
@@ -215,9 +197,7 @@ void RaycasterEx::cast(i32 x, i32 w, i32 h)
             // Cast the texture coordinate to integer, and mask with (cache::TexSize.Height - 1) in case of overflow
             i32 const texY {static_cast<i32>(texPos) & (texHeight - 1)};
             texPos += texStep;
-            blend(_cache->screen(x + ((h - y - 1) * w)),
-                  get_pixel(tex, (texX + (texY * texWidth)) * texBpp),
-                  side);
+            _cache->copy(x + ((h - y - 1) * w), tex, (texX + (texY * texWidth)) * texBpp);
         }
     }
 
@@ -251,17 +231,13 @@ void RaycasterEx::cast(i32 x, i32 w, i32 h)
         auto const* floorTex {_cache->texture(floorTexture)};
         i32 const   floorTexX {static_cast<i32>(currentFloor.X * texWidth) % texWidth};
         i32 const   floorTexY {static_cast<i32>(currentFloor.Y * texHeight) % texHeight};
-        blend(_cache->screen(x + ((h - y - 1) * w)),
-              get_pixel(floorTex, (floorTexX + (floorTexY * texWidth)) * texBpp),
-              true);
+        _cache->copy(x + ((h - y - 1) * w), floorTex, (floorTexX + (floorTexY * texWidth)) * texBpp);
 
         // ceil
         auto const* ceilTex {_cache->texture(ceilingTexture)};
         i32 const   ceilTexX {static_cast<i32>(currentFloor.X * texWidth) % texWidth};
         i32 const   ceilTexY {static_cast<i32>(currentFloor.Y * texHeight) % texHeight};
-        blend(_cache->screen(x + (y * w)),
-              get_pixel(ceilTex, (ceilTexX + (ceilTexY * texWidth)) * texBpp),
-              true);
+        _cache->copy(x + (y * w), ceilTex, (ceilTexX + (ceilTexY * texWidth)) * texBpp);
     }
 }
 
