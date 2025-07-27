@@ -91,7 +91,7 @@ inline void rng_form::draw_noise()
         c.A             = 255;
     }
     _tex->update_data(data.data(), 0, 256, 1);
-    _tex->add_region("default", {.UVRect = {0, 0, 1, 1}, .Level = 0});
+    _tex->regions()["default"] = {.UVRect = {0, 0, 1, 1}, .Level = 0};
 
     _canvas->draw_image(_tex.ptr(), "default", bounds);
 }

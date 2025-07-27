@@ -18,29 +18,31 @@ ImageFilterEx::ImageFilterEx(game& game)
     auto  imgSize {img0.info().Size};
     _tex0->create(imgSize, 7, texture::format::RGBA8);
 
+    auto& regs {_tex0->regions()};
+
     _tex0->update_data(img0.data(), 0);
-    _tex0->add_region("normal", {{0, 0, 1, 1}, 0});
+    regs["normal"] = {{0, 0, 1, 1}, 0};
 
     {
         edge_detect_filter filter;
         filter.IncludeAlpha = true;
         image filterImg {filter(img0)};
         _tex0->update_data(filterImg.data(), 1);
-        _tex0->add_region("edgedetect", {{0, 0, 1, 1}, 1});
+        regs["edgedetect"] = {{0, 0, 1, 1}, 1};
     }
 
     {
         blur_filter filter;
         image       filterImg {filter(img0)};
         _tex0->update_data(filterImg.data(), 2);
-        _tex0->add_region("blur", {{0, 0, 1, 1}, 2});
+        regs["blur"] = {{0, 0, 1, 1}, 2};
     }
 
     {
         emboss_filter filter;
         image         filterImg {filter(img0)};
         _tex0->update_data(filterImg.data(), 3);
-        _tex0->add_region("emboss", {{0, 0, 1, 1}, 3});
+        regs["emboss"] = {{0, 0, 1, 1}, 3};
     }
 
     {
@@ -48,21 +50,21 @@ ImageFilterEx::ImageFilterEx(game& game)
         filter.IncludeAlpha = true;
         image filterImg {filter(img0)};
         _tex0->update_data(filterImg.data(), 4);
-        _tex0->add_region("edgeenhance", {{0, 0, 1, 1}, 4});
+        regs["edgeenhance"] = {{0, 0, 1, 1}, 4};
     }
 
     {
         motion_blur_filter filter;
         image              filterImg {filter(img0)};
         _tex0->update_data(filterImg.data(), 5);
-        _tex0->add_region("motionblur", {{0, 0, 1, 1}, 5});
+        regs["motionblur"] = {{0, 0, 1, 1}, 5};
     }
 
     {
         sharpen_filter filter;
         image          filterImg {filter(img0)};
         _tex0->update_data(filterImg.data(), 6);
-        _tex0->add_region("sharpen", {{0, 0, 1, 1}, 6});
+        regs["sharpen"] = {{0, 0, 1, 1}, 6};
     }
 }
 

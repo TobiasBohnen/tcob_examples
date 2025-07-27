@@ -54,7 +54,7 @@ piano_form::piano_form(window& window)
 
     auto lbl {mainPanelLayout.create_widget<label>({22, 0, 2, 1}, "lblOctave")};
     Octave->Value.Changed.connect([ptr = lbl.get()](auto val) {
-        ptr->Label = std::to_string(val);
+        ptr->Label = std::to_string(static_cast<i32>(val));
     });
 
     Octave->Value = 4;
