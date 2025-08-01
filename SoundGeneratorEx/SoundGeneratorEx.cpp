@@ -40,7 +40,7 @@ void SoundGeneratorEx::on_start()
     _form0->Mutate->MouseButtonDown.connect([&]() { _form0->set_values(_gen1.mutate_wave(_wave1)); });
     _form0->Load->MouseButtonDown.connect([&]() {
         object loadFile;
-        if (loadFile.load("sound_wave0.ini") == load_status::Ok) {
+        if (loadFile.load("sound_wave0.ini")) {
             sound_wave::Deserialize(_wave1, loadFile["wave"]);
             _form0->set_values(_wave1);
         }
