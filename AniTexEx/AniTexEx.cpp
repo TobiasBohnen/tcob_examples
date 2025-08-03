@@ -32,12 +32,12 @@ void AniTexEx::on_fixed_update(milliseconds /* deltaTime */)
 void AniTexEx::on_start()
 {
     /*
-        std::vector<animated_image_encoder::frame> frames;
+        std::vector<image_frame> frames;
         for (i32 i {0}; i < 15; ++i) {
             image img {image::CreateEmpty({256, 256}, image::format::RGBA)};
             img.fill({i * 2, i * 5, 20, 20}, {static_cast<u8>(i * 20), static_cast<u8>(i * 30), static_cast<u8>(i * 40)});
-            frames.push_back(animated_image_encoder::frame {img, milliseconds {200}});
-            frames.push_back(animated_image_encoder::frame {img, milliseconds {200}});
+            frames.push_back(image_frame {img, milliseconds {200}});
+            frames.push_back(image_frame {img, milliseconds {200}});
         }
         io::ofstream out {"test.png"};
         auto         enc {locate_service<gfx::animated_image_encoder::factory>().create(".png")};
