@@ -34,6 +34,9 @@ private:
     asset_owner_ptr<animated_texture> _texWebp;
     asset_owner_ptr<material>         _matWebp;
 
+    asset_owner_ptr<animated_texture> _texPng;
+    asset_owner_ptr<material>         _matPng;
+
     asset_owner_ptr<animated_texture> _texTheora;
     asset_owner_ptr<material>         _matTheora;
 

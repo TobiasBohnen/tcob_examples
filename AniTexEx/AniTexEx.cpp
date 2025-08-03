@@ -43,13 +43,15 @@ void AniTexEx::on_start()
 
     createShape(_texGif, _matGif, ani_gif, ".gif", rect_f {10, 10, 500, 500});
     createShape(_texWebp, _matWebp, ani_webp, ".webp", rect_f {600, 10, 500, 500});
-    createShape(_texTheora, _matTheora, ani_theora, ".ogg", rect_f {1190, 10, 500, 500});
+    createShape(_texPng, _matPng, ani_png, ".png", rect_f {10, 550, 500, 500});
+    createShape(_texTheora, _matTheora, ani_theora, ".ogg", rect_f {600, 550, 500, 500});
 }
 
 void AniTexEx::on_update(milliseconds deltaTime)
 {
     _texGif->update(deltaTime);
     _texWebp->update(deltaTime);
+    _texPng->update(deltaTime);
     _texTheora->update(deltaTime);
 
     _layer0.update(deltaTime);
@@ -66,6 +68,7 @@ void AniTexEx::on_key_down(keyboard::event const& ev)
     case scan_code::R: {
         _texGif->restart();
         _texWebp->restart();
+        _texPng->restart();
         _texTheora->restart();
     } break;
     case scan_code::BACKSPACE:
