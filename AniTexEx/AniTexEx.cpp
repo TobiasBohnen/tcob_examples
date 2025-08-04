@@ -32,16 +32,18 @@ void AniTexEx::on_fixed_update(milliseconds /* deltaTime */)
 void AniTexEx::on_start()
 {
     /*
-        std::vector<image_frame> frames;
-        for (i32 i {0}; i < 15; ++i) {
+        std::vector<image_frame>  frames;
+        easing::quad_bezier_curve curv;
+        curv.StartPoint   = {196, 40};
+        curv.ControlPoint = {0, 256};
+        curv.EndPoint     = {196, 216};
+
+        for (i32 i {0}; i < 1500; ++i) {
             image img {image::CreateEmpty({256, 256}, image::format::RGBA)};
-            img.fill({i * 2, i * 5, 20, 20}, {static_cast<u8>(i * 20), static_cast<u8>(i * 30), static_cast<u8>(i * 40)});
-            frames.push_back(image_frame {img, milliseconds {200}});
-            frames.push_back(image_frame {img, milliseconds {200}});
+            img.fill({point_i {curv(i / 1500.)}, size_i {25, 25}}, colors::Red);
+            frames.push_back(image_frame {img, milliseconds {5}});
         }
-        io::ofstream out {"test.png"};
-        auto         enc {locate_service<gfx::animated_image_encoder::factory>().create(".png")};
-        enc->encode(frames, out);
+        std::ignore = save_animation("test-ani.png", frames);
     */
     auto createShape {[&](auto&& tex, auto&& mat, auto&& img, auto&& ext, auto&& bounds) {
         std::ignore  = tex->load(std::make_shared<io::isstream>(img), ext);
