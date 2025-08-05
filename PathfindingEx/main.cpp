@@ -32,9 +32,6 @@ auto main(int /* argc */, char* argv[]) -> int
 #endif
 
     auto& resMgr {game.library()};
-    auto& resGrp {resMgr.create_or_get_group("res")};
-    resGrp.mount("./pathfindingex.zip");
-    resMgr.load_all_groups();
 
     game.push_scene<PathfindingEx>();
     game.start();
