@@ -434,7 +434,7 @@ auto create_form_terminal(window* wnd) -> std::shared_ptr<form<dock_layout>>
                 auto         _ = terminal0->restore(str);
             }
             terminal0->flash();
-            locate_service<render_system>().stats().reset();
+            locate_service<render_system>().statistics().reset();
         });
         terminal0->Submit.connect([label0, ptr = terminal0.get()]() {
             label0->Label = ptr->get_str({ptr->get_xy().X, ptr->get_xy().Y - 1});
