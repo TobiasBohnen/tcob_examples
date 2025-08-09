@@ -532,7 +532,7 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
     auto retValue {std::make_shared<form<dock_layout>>(form_init {.Name = "form3", .Bounds = wnd->bounds()})};
 
     auto createTabs {[](std::shared_ptr<tab_container> const& tabContainer0) {
-        auto boxVPanel0 {tabContainer0->create_tab<panel>("SPanel0")};
+        auto boxVPanel0 {tabContainer0->create_tab<panel>("TAB0")};
         boxVPanel0->TabStop = {.Enabled = false};
         auto& boxVLayout0 {boxVPanel0->create_layout<vertical_layout>()};
         for (i32 i {0}; i < 4; i++) {
@@ -540,7 +540,7 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
             bb->Label = std::to_string(i);
         }
 
-        auto gridPanel {tabContainer0->create_tab<panel>("SPanel1")};
+        auto gridPanel {tabContainer0->create_tab<panel>("TAB1")};
         gridPanel->TabStop = {.Enabled = false};
         auto& gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 3}, true)};
 
@@ -556,7 +556,7 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
         createGridWidget({2, 2, 1, 1}, "5");
         createGridWidget({3, 2, 1, 1}, "6");
 
-        auto boxHPanel1 {tabContainer0->create_tab<panel>("SPanel2")};
+        auto boxHPanel1 {tabContainer0->create_tab<panel>("TAB2")};
         boxHPanel1->TabStop = {.Enabled = false};
         auto& boxHLayout1 {boxHPanel1->create_layout<horizontal_layout>()};
         for (i32 i {0}; i < 4; i++) {
@@ -583,6 +583,15 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
         auto tabContainer3 {tabContainer0->create_tab<tab_container>("TabContainer13")};
         createTabs(tabContainer3);
 
+        auto tabContainer4 {tabContainer0->create_tab<tab_container>("TabContainer14")};
+        createTabs(tabContainer4);
+
+        auto tabContainer5 {tabContainer0->create_tab<tab_container>("TabContainer15")};
+        createTabs(tabContainer5);
+
+        auto tabContainer6 {tabContainer0->create_tab<tab_container>("TabContainer16")};
+        createTabs(tabContainer6);
+
         tabContainer0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::Looped);
     }
 
@@ -597,7 +606,7 @@ auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::sha
     auto retValue {std::make_shared<form<dock_layout>>(form_init {.Name = "form4", .Bounds = wnd->bounds()})};
 
     auto const createSections {[](std::shared_ptr<accordion> const& accordion0) {
-        auto boxVPanel0 {accordion0->create_section<panel>("SPanel0")};
+        auto boxVPanel0 {accordion0->create_section<panel>("TAB0")};
         boxVPanel0->TabStop = {.Enabled = false};
         auto& boxVLayout0 {boxVPanel0->create_layout<vertical_layout>()};
         for (i32 i {0}; i < 4; i++) {
@@ -605,7 +614,7 @@ auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::sha
             bb->Label = std::to_string(i);
         }
 
-        auto gridPanel {accordion0->create_section<panel>("SPanel1")};
+        auto gridPanel {accordion0->create_section<panel>("TAB1")};
         gridPanel->TabStop = {.Enabled = false};
         auto& gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 3}, true)};
 
@@ -621,7 +630,7 @@ auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::sha
         createGridWidget({2, 2, 1, 1}, "5");
         createGridWidget({3, 2, 1, 1}, "6");
 
-        auto boxHPanel1 {accordion0->create_section<panel>("SPanel2")};
+        auto boxHPanel1 {accordion0->create_section<panel>("TAB2")};
         boxHPanel1->TabStop = {.Enabled = false};
         auto& boxHLayout1 {boxHPanel1->create_layout<horizontal_layout>()};
         for (i32 i {0}; i < 4; i++) {
