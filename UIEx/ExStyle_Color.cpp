@@ -55,7 +55,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     active.Background  = colors::LightCyan;
     active.Border      = colors::DarkKhaki;
     active.Text        = colors::White;
-    active.Tick        = colors::White;
+    active.Tick        = colors::Blue;
     active.Item        = colors::FireBrick;
     active.Thumb       = colors::Black;
     active.NavArrowInc = colors::Green;
@@ -192,13 +192,13 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Border.Radius     = 25_px;
         style->Margin            = {5_px};
         style->Padding           = {2_px};
-        style->AnimationDuration = 500ms;
-        style->Tick.Type         = tick_type::Square;
-        style->Tick.Size         = 100_pct;
+        style->AnimationDuration = 1000ms;
+        style->Tick.Type         = tick_type::Circle;
+        style->Tick.Size         = 80_pct;
+        style->EasingFunc        = easing_func::SmootherStep;
 
         auto checkedStyle {retValue.create<toggle>("toggle", {.Checked = true})};
         *checkedStyle           = *style;
-        checkedStyle->Tick.Type = tick_type::Disc;
         checkedStyle->Tick.Size = 100_pct;
 
         auto disabledStyle {retValue.create<toggle>("toggle", {.Disabled = true})};
@@ -252,6 +252,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Bar.MotionDuration = 250ms;
         style->Bar.Border.Size    = 3_px;
         style->Bar.Border.Radius  = 5_px;
+        style->EasingFunc         = easing_func::ExpoInOut;
 
         auto disabledStyle {retValue.create<slider>("slider", {.Disabled = true})};
 
@@ -282,6 +283,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Padding            = {5_px, 5_px};
         style->Bar.Border         = style->Border;
         style->Bar.MotionDuration = 250ms;
+        style->EasingFunc         = easing_func::QuadInOut;
 
         auto disabledStyle {retValue.create<progress_bar>("progress_bar", {.Disabled = true})};
 
