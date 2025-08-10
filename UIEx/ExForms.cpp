@@ -350,7 +350,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     retValue->NavMap = nm;
 
     for (auto* c : retValue->all_widgets()) {
-        c->TransitionDuration = 250ms;
+        c->TransitionDuration = 500ms;
     }
     return retValue;
 }

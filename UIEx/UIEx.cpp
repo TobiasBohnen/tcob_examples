@@ -29,10 +29,10 @@ void UIEx::on_start()
     window().Cursor           = defaultCursor;
     defaultCursor->ActiveMode = "default";
 
-    //_form0 = create_form0(&window(), *resGrp);
+    _form0 = create_form0(&window(), *resGrp);
     //_form0 = create_form1(&window());
     //_form0 = create_form_displays(&window());
-    _form0 = create_form_tabcontainer(&window(), *resGrp);
+    // _form0 = create_form_tabcontainer(&window(), *resGrp);
     //_form0 = create_form_accordion(&window(), *resGrp);
     //_form0 = create_form_terminal(&window());
 
