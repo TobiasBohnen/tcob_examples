@@ -572,24 +572,25 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
 
     {
         auto tabContainer0 {retValue->create_container<tab_container>(dock_style::Left, "TabContainer1")};
-        tabContainer0->Flex = {.Width = 50_pct, .Height = 100_pct};
+        tabContainer0->Flex            = {.Width = 50_pct, .Height = 100_pct};
+        tabContainer0->HeaderLineCount = 2;
 
         auto tabContainer1 {tabContainer0->create_tab<tab_container>("TabContainer11", {.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
         createTabs(tabContainer1);
 
-        auto tabContainer2 {tabContainer0->create_tab<tab_container>("TabContainer12")};
+        auto tabContainer2 {tabContainer0->create_tab<tab_container>("TabContainer12", {.Text = "def"})};
         createTabs(tabContainer2);
 
-        auto tabContainer3 {tabContainer0->create_tab<tab_container>("TabContainer13")};
+        auto tabContainer3 {tabContainer0->create_tab<tab_container>("TabContainer13", {.Text = "ghi"})};
         createTabs(tabContainer3);
 
-        auto tabContainer4 {tabContainer0->create_tab<tab_container>("TabContainer14")};
+        auto tabContainer4 {tabContainer0->create_tab<tab_container>("TabContainer14", {.Text = "jkl"})};
         createTabs(tabContainer4);
 
-        auto tabContainer5 {tabContainer0->create_tab<tab_container>("TabContainer15")};
+        auto tabContainer5 {tabContainer0->create_tab<tab_container>("TabContainer15", {.Text = "mno"})};
         createTabs(tabContainer5);
 
-        auto tabContainer6 {tabContainer0->create_tab<tab_container>("TabContainer16")};
+        auto tabContainer6 {tabContainer0->create_tab<tab_container>("TabContainer16", {.Text = "pqr"})};
         createTabs(tabContainer6);
 
         tabContainer0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::Looped);
