@@ -456,10 +456,11 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Margin           = {5_px};
         style->Padding          = {5_px};
         style->DropShadow.Color = color {0, 0, 0, 128};
-        style->HeaderSize       = 20_pct;
+        style->HeaderSize       = 10_pct;
         style->TabItemClass     = "tab_items";
-        style->HeaderPosition   = position::Left;
-        style->HeaderMode       = tab_container::header_mode::Compact;
+        style->HeaderPosition   = position::Top;
+        style->HeaderMode       = tab_container::header_mode::Fill;
+        style->HeaderLineCount  = 3;
 
         auto hoverStyle {retValue.create<tab_container>("tab_container", {.Hover = true})};
         *hoverStyle = *style;
@@ -470,13 +471,13 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         disabled.apply(disabledStyle);
         hover.apply(hoverStyle);
 
-        auto hoverStyleX {retValue.create<tab_container>("tab_container", {.Hover = true}, {{"hover", "SPanel0"}})};
+        auto hoverStyleX {retValue.create<tab_container>("tab_container", {.Hover = true}, {{"hover", "def"}})};
         *hoverStyleX            = *hoverStyle;
         hoverStyleX->Background = colors::Orange;
-        auto hoverStyleY {retValue.create<tab_container>("tab_container", {.Hover = true}, {{"hover", "SPanel1"}})};
+        auto hoverStyleY {retValue.create<tab_container>("tab_container", {.Hover = true}, {{"hover", "ghi"}})};
         *hoverStyleY            = *hoverStyle;
         hoverStyleY->Background = colors::Red;
-        auto hoverStyleZ {retValue.create<tab_container>("tab_container", {.Hover = true}, {{"hover", "SPanel2"}})};
+        auto hoverStyleZ {retValue.create<tab_container>("tab_container", {.Hover = true}, {{"hover", "jkl"}})};
         *hoverStyleZ            = *hoverStyle;
         hoverStyleZ->Background = colors::LavenderBlush;
     }

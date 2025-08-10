@@ -572,8 +572,7 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
 
     {
         auto tabContainer0 {retValue->create_container<tab_container>(dock_style::Left, "TabContainer1")};
-        tabContainer0->Flex            = {.Width = 50_pct, .Height = 100_pct};
-        tabContainer0->HeaderLineCount = 2;
+        tabContainer0->Flex = {.Width = 50_pct, .Height = 100_pct};
 
         auto tabContainer1 {tabContainer0->create_tab<tab_container>("TabContainer11", {.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
         createTabs(tabContainer1);
