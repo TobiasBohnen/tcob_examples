@@ -281,13 +281,35 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Border.Radius      = 5_px;
         style->Margin             = {5_px};
         style->Padding            = {5_px, 5_px};
-        style->Bar.Border         = style->Border;
+        style->Bar.Border.Size    = 1_px;
         style->Bar.MotionDuration = 250ms;
         style->EasingFunc         = easing_func::QuadInOut;
 
         auto disabledStyle {retValue.create<progress_bar>("progress_bar", {.Disabled = true})};
 
         normal.apply(style);
+
+        auto style2 {retValue.create<progress_bar>("progress_bar", {},
+                                                   {{"value", {{op::GreaterEqual, 60}}},
+                                                    {"orientation", {{op::Equal, orientation::Horizontal}}}})};
+        *style2                      = *style;
+        style2->Bar.HigherBackground = colors::Yellow;
+        style2->Bar.LowerBackground  = colors::Orange;
+
+        auto style3 {retValue.create<progress_bar>("progress_bar", {},
+                                                   {{"value", {{op::GreaterEqual, 40}}},
+                                                    {"orientation", {{op::Equal, orientation::Vertical}}}})};
+        *style3                      = *style;
+        style3->Bar.HigherBackground = colors::Transparent;
+        style3->Bar.LowerBackground  = colors::Red;
+
+        auto style4 {retValue.create<progress_bar>("progress_bar", {},
+                                                   {{"value", {{op::GreaterEqual, 80}}},
+                                                    {"orientation", {{op::Equal, orientation::Vertical}}}})};
+        *style4                      = *style;
+        style4->Bar.HigherBackground = colors::Yellow;
+        style4->Bar.LowerBackground  = colors::Black;
+
         disabled.apply(disabledStyle);
     }
     {
@@ -475,13 +497,13 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         disabled.apply(disabledStyle);
         hover.apply(hoverStyle);
 
-        auto hoverStyleX {retValue.create<tab_container>("tab_container", {.Hover = true}, {{"hover", "def"}})};
+        auto hoverStyleX {retValue.create<tab_container>("tab_container", {.Hover = true}, {{"hover", {{op::Equal, "def"}}}})};
         *hoverStyleX            = *hoverStyle;
         hoverStyleX->Background = colors::Orange;
-        auto hoverStyleY {retValue.create<tab_container>("tab_container", {.Hover = true}, {{"hover", "ghi"}})};
+        auto hoverStyleY {retValue.create<tab_container>("tab_container", {.Hover = true}, {{"hover", {{op::Equal, "ghi"}}}})};
         *hoverStyleY            = *hoverStyle;
         hoverStyleY->Background = colors::Red;
-        auto hoverStyleZ {retValue.create<tab_container>("tab_container", {.Hover = true}, {{"hover", "jkl"}})};
+        auto hoverStyleZ {retValue.create<tab_container>("tab_container", {.Hover = true}, {{"hover", {{op::Equal, "jkl"}}}})};
         *hoverStyleZ            = *hoverStyle;
         hoverStyleZ->Background = colors::LavenderBlush;
     }
@@ -505,13 +527,13 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         disabled.apply(disabledStyle);
         hover.apply(hoverStyle);
 
-        auto hoverStyleX {retValue.create<accordion>("accordion", {.Hover = true}, {{"active", "SPanel0"}})};
+        auto hoverStyleX {retValue.create<accordion>("accordion", {.Hover = true}, {{"active", {{op::Equal, "SPanel0"}}}})};
         *hoverStyleX            = *hoverStyle;
         hoverStyleX->Background = colors::Orange;
-        auto hoverStyleY {retValue.create<accordion>("accordion", {.Hover = true}, {{"active", "SPanel1"}})};
+        auto hoverStyleY {retValue.create<accordion>("accordion", {.Hover = true}, {{"active", {{op::Equal, "SPanel1"}}}})};
         *hoverStyleY            = *hoverStyle;
         hoverStyleY->Background = colors::Red;
-        auto hoverStyleZ {retValue.create<accordion>("accordion", {.Hover = true}, {{"active", "SPanel2"}})};
+        auto hoverStyleZ {retValue.create<accordion>("accordion", {.Hover = true}, {{"active", {{op::Equal, "SPanel2"}}}})};
         *hoverStyleZ            = *hoverStyle;
         hoverStyleZ->Background = colors::LavenderBlush;
     }
@@ -862,11 +884,12 @@ void color_theme::apply(std::shared_ptr<list_box::style> const& style) const
 
 void color_theme::apply(std::shared_ptr<progress_bar::style> const& style) const
 {
-    style->Background           = Background;
-    style->Border.Background    = Border;
-    style->DropShadow.Color     = DropShadow;
-    style->Bar.HigherBackground = BarHigher;
-    style->Bar.LowerBackground  = BarLower;
+    style->Background            = Background;
+    style->Border.Background     = Border;
+    style->DropShadow.Color      = DropShadow;
+    style->Bar.Border.Background = Border;
+    style->Bar.HigherBackground  = BarHigher;
+    style->Bar.LowerBackground   = BarLower;
 }
 
 void color_theme::apply(std::shared_ptr<radio_button::style> const& style) const

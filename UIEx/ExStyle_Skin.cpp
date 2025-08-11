@@ -125,7 +125,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         disabledStyle->Background = colors::FireBrick;
     }
     {
-        auto hstyle {retValue.create<slider>("slider", {}, {{"orientation", orientation::Horizontal}})};
+        auto hstyle {retValue.create<slider>("slider", {}, {{"orientation", {{op::Equal, orientation::Horizontal}}}})};
         hstyle->Margin               = {5_px};
         hstyle->Padding              = {2_px, 15_px};
         hstyle->ThumbClass           = "h_slider_thumb";
@@ -135,7 +135,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         hstyle->Bar.Border.Size      = 5_px;
         hstyle->Bar.MotionDuration   = 200ms;
 
-        auto vstyle {retValue.create<slider>("slider", {}, {{"orientation", orientation::Vertical}})};
+        auto vstyle {retValue.create<slider>("slider", {}, {{"orientation", {{op::Equal, orientation::Vertical}}}})};
         *vstyle            = *hstyle;
         vstyle->ThumbClass = "v_slider_thumb";
 
@@ -144,7 +144,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         disabledStyle->Bar.HigherBackground = colors::FireBrick;
     }
     {
-        auto hstyle {retValue.create<range_slider>("range_slider", {}, {{"orientation", orientation::Horizontal}})};
+        auto hstyle {retValue.create<range_slider>("range_slider", {}, {{"orientation", {{op::Equal, orientation::Horizontal}}}})};
         hstyle->Margin               = {5_px};
         hstyle->Padding              = {2_px, 15_px};
         hstyle->ThumbClass           = "h_slider_thumb";
@@ -154,7 +154,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         hstyle->Bar.Border.Size      = 5_px;
         hstyle->Bar.MotionDuration   = 200ms;
 
-        auto vstyle {retValue.create<range_slider>("range_slider", {}, {{"orientation", orientation::Vertical}})};
+        auto vstyle {retValue.create<range_slider>("range_slider", {}, {{"orientation", {{op::Equal, orientation::Vertical}}}})};
         *vstyle            = *hstyle;
         vstyle->ThumbClass = "v_slider_thumb";
 
