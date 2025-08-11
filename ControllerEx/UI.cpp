@@ -30,15 +30,15 @@ crtl_form::crtl_form(window& window)
 
     // rumble
     auto btnRumble0 {mainPanelLayout.create_widget<button>({1, 12, 10, 4}, "btnRumble0")};
-    btnRumble0->Click.connect([&]() { _input.first_controller().rumble(0, 0xFFFF, 1s); });
+    btnRumble0->Click += [this] { _input.first_controller().rumble(0, 0xFFFF, 1s); };
     btnRumble0->Label = "High Freq";
 
     auto btnRumble1 {mainPanelLayout.create_widget<button>({1, 17, 10, 4}, "btnRumble1")};
-    btnRumble1->Click.connect([&]() { _input.first_controller().rumble(0xFFFF, 0, 1s); });
+    btnRumble1->Click += [this] { _input.first_controller().rumble(0xFFFF, 0, 1s); };
     btnRumble1->Label = "Low Freq";
 
     auto btnRumble2 {mainPanelLayout.create_widget<button>({1, 22, 10, 4}, "btnRumble2")};
-    btnRumble2->Click.connect([&]() { _input.first_controller().rumble(0xFFFF, 0xFFFF, 1s); });
+    btnRumble2->Click += [this] { _input.first_controller().rumble(0xFFFF, 0xFFFF, 1s); };
     btnRumble2->Label = "Both";
 
     // axes
