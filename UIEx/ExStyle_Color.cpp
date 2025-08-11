@@ -6,7 +6,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
 {
     color_theme normal;
     normal.Background     = colors::LightBlue;
-    normal.Border         = colors::Black;
+    normal.Border         = colors::Gray;
     normal.DropShadow     = color {0, 0, 0, 128};
     normal.Text           = colors::Black;
     normal.BarLower       = colors::LightGreen;
@@ -24,7 +24,8 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
 
     color_theme hover {normal};
     hover.Background     = colors::LightGray;
-    hover.Border         = colors::Gray;
+    hover.Border         = colors::Black;
+    normal.DropShadow    = color {0, 0, 0, 32};
     hover.Item           = colors::LightGreen;
     hover.Thumb          = colors::DarkKhaki;
     hover.NavArrowInc    = colors::Red;
@@ -53,7 +54,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
 
     color_theme active {normal};
     active.Background  = colors::LightCyan;
-    active.Border      = colors::DarkKhaki;
+    active.Border      = colors::Silver;
     active.Text        = colors::White;
     active.Tick        = colors::Blue;
     active.Item        = colors::FireBrick;
@@ -303,9 +304,10 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style3->Bar.HigherBackground = colors::Transparent;
         style3->Bar.LowerBackground  = colors::Red;
 
-        auto style4 {retValue.create<progress_bar>("progress_bar", {},
-                                                   {{"value", {{op::GreaterEqual, 80}}},
-                                                    {"orientation", {{op::Equal, orientation::Vertical}}}})};
+        std::vector<style_attributes::rules> rules;
+        rules.push_back({"value", {{op::GreaterEqual, 80}}});
+        rules.push_back({"orientation", {{op::Equal, orientation::Vertical}}});
+        auto style4 {retValue.create<progress_bar>("progress_bar", {}, style_attributes {rules})};
         *style4                      = *style;
         style4->Bar.HigherBackground = colors::Yellow;
         style4->Bar.LowerBackground  = colors::Black;
@@ -410,7 +412,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->ItemClass                     = "list_items";
         style->VScrollBar.ThumbClass         = "scrollbar_thumb";
         style->VScrollBar.Bar.Size           = 20_pct;
-        style->VScrollBar.Bar.Border.Size    = 3_px;
+        style->VScrollBar.Bar.Border.Size    = 2_px;
         style->VScrollBar.Bar.MotionDuration = 250ms;
 
         auto hoverStyle {retValue.create<list_box>("list_box", {.Hover = true})};
@@ -843,20 +845,22 @@ void color_theme::apply(std::shared_ptr<cycle_button::style> const& style) const
 
 void color_theme::apply(std::shared_ptr<drop_down_list::style> const& style) const
 {
-    style->Background                      = Background;
-    style->Border.Background               = Border;
-    style->DropShadow.Color                = DropShadow;
-    style->VScrollBar.Bar.HigherBackground = BarHigher;
-    style->VScrollBar.Bar.LowerBackground  = BarLower;
+    style->Background                       = Background;
+    style->Border.Background                = Border;
+    style->DropShadow.Color                 = DropShadow;
+    style->VScrollBar.Bar.HigherBackground  = BarHigher;
+    style->VScrollBar.Bar.LowerBackground   = BarLower;
+    style->VScrollBar.Bar.Border.Background = Border;
 }
 
 void color_theme::apply(std::shared_ptr<grid_view::style> const& style) const
 {
-    style->Background                      = Background;
-    style->Border.Background               = Border;
-    style->DropShadow.Color                = DropShadow;
-    style->VScrollBar.Bar.HigherBackground = BarHigher;
-    style->VScrollBar.Bar.LowerBackground  = BarLower;
+    style->Background                       = Background;
+    style->Border.Background                = Border;
+    style->DropShadow.Color                 = DropShadow;
+    style->VScrollBar.Bar.HigherBackground  = BarHigher;
+    style->VScrollBar.Bar.LowerBackground   = BarLower;
+    style->VScrollBar.Bar.Border.Background = Border;
 }
 
 void color_theme::apply(std::shared_ptr<image_box::style> const& style) const
@@ -875,11 +879,12 @@ void color_theme::apply(std::shared_ptr<label::style> const& style) const
 
 void color_theme::apply(std::shared_ptr<list_box::style> const& style) const
 {
-    style->Background                      = Background;
-    style->Border.Background               = Border;
-    style->DropShadow.Color                = DropShadow;
-    style->VScrollBar.Bar.HigherBackground = BarHigher;
-    style->VScrollBar.Bar.LowerBackground  = BarLower;
+    style->Background                       = Background;
+    style->Border.Background                = Border;
+    style->DropShadow.Color                 = DropShadow;
+    style->VScrollBar.Bar.Border.Background = Border;
+    style->VScrollBar.Bar.HigherBackground  = BarHigher;
+    style->VScrollBar.Bar.LowerBackground   = BarLower;
 }
 
 void color_theme::apply(std::shared_ptr<progress_bar::style> const& style) const
@@ -937,13 +942,15 @@ void color_theme::apply(std::shared_ptr<toggle::style> const& style) const
 
 void color_theme::apply(std::shared_ptr<panel::style> const& style) const
 {
-    style->Background                      = Container;
-    style->Border.Background               = Border;
-    style->DropShadow.Color                = DropShadow;
-    style->VScrollBar.Bar.HigherBackground = BarHigher;
-    style->VScrollBar.Bar.LowerBackground  = BarLower;
-    style->HScrollBar.Bar.HigherBackground = BarHigher;
-    style->HScrollBar.Bar.LowerBackground  = BarLower;
+    style->Background                       = Container;
+    style->Border.Background                = Border;
+    style->DropShadow.Color                 = DropShadow;
+    style->VScrollBar.Bar.HigherBackground  = BarHigher;
+    style->VScrollBar.Bar.LowerBackground   = BarLower;
+    style->VScrollBar.Bar.Border.Background = Border;
+    style->HScrollBar.Bar.HigherBackground  = BarHigher;
+    style->HScrollBar.Bar.LowerBackground   = BarLower;
+    style->HScrollBar.Bar.Border.Background = Border;
 }
 
 void color_theme::apply(std::shared_ptr<tab_container::style> const& style) const
