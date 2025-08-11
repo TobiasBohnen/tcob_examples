@@ -29,11 +29,8 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     auto label0 {panel0Layout.create_widget<label>({0, 520, 200, 40}, "Label0")};
     auto button0 {panel0Layout.create_widget<button>({0, 0, 200, 100}, "Button0")};
-    button0->Label = "In ä Hürri";
+    button0->Label = "äöü";
     button0->Icon  = icon {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"};
-    button0->Click.connect([btn = button0.get(), resGrp = &resGrp]() {
-        btn->start_animation(*resGrp->get<frame_animation>("anim"), playback_mode::Looped);
-    });
 
     label0->For = button0;
 
@@ -48,9 +45,6 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
         items.push_back({.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}});
         items.push_back({"def"});
         items.push_back({"ghi"});
-    });
-    cycleButton0->Click.connect([btn = cycleButton0.get(), resGrp = &resGrp]() {
-        btn->start_animation(*resGrp->get<frame_animation>("anim"), playback_mode::Looped);
     });
 
     auto progressBar0 {panel0Layout.create_widget<progress_bar>({130, 150, 75, 200}, "ProgressBar0")};
@@ -250,7 +244,6 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     dropDownList0->SelectedItemIndex.Changed.connect([label0, dropDownList0](isize value) { label0->Label = "selected: " + std::to_string(value); });
     dropDownList0->HoveredItemIndex.Changed.connect([label0, dropDownList0](isize value) { label0->Label = "hovered: " + std::to_string(value); });
     dropDownList0->ZOrder = 1;
-    dropDownList0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::Looped);
 
     auto              listbox0 {panel0Layout.create_widget<list_box>({1200, 80, 150, 300}, "Listbox0")};
     std::vector<item> listboxtItems;
@@ -262,7 +255,6 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     listbox0->SelectedItemIndex.Changed.connect([label0, listbox0](isize value) { label0->Label = "selected: " + std::to_string(value); });
     listbox0->HoveredItemIndex.Changed.connect([label0, listbox0](isize value) { label0->Label = "hovered: " + std::to_string(value); });
-    listbox0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::Looped);
 
     auto imgBox0 {panel0Layout.create_widget<image_box>({750, 20, 150, 200}, "ImageBox0")};
     imgBox0->Image     = {.Texture       = resGrp.get<texture>("anim"),
@@ -272,7 +264,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
         label0->Label = std::format("drop:{}", ev.Target ? ev.Target->name() : "");
     });
 
-    // imgBox0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::AlternatedLooped);
+    imgBox0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::AlternatedLooped);
 
     auto gridView0 {panel0Layout.create_widget<grid_view>({1280, 450, 450, 400}, "GridView0")};
     gridView0->Header = {{"Last"}, {"First"}, {"Age"}, {"City"}};
@@ -299,7 +291,6 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
         if (*gridView0->SelectedCellIndex == point_i {-1, -1}) { return; }
         label0->Label = std::format("grid: {}", gridView0->get_cell(gridView0->SelectedCellIndex).Text);
     });
-    gridView0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::Looped);
 
     button0->Click.connect([=, &resGrp]() {
         progressBar0->Value = progressBar0->Value == 100
@@ -591,8 +582,6 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
 
         auto tabContainer6 {tabContainer0->create_tab<tab_container>("TabContainer16", {.Text = "pqr"})};
         createTabs(tabContainer6);
-
-        tabContainer0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::Looped);
     }
 
     for (auto* c : retValue->all_widgets()) {
@@ -667,8 +656,6 @@ auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::sha
 
         auto accordion3 {accordion0->create_section<accordion>("Accordion3", {.Text = "ghi", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
         createSections(accordion3);
-
-        accordion0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::Looped);
     }
 
     for (auto* c : retValue->all_widgets()) {
