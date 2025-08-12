@@ -369,7 +369,7 @@ void CanvasEx::canvas_clip()
 
     _canvas.set_fill_style(colors::Green);
     _canvas.set_stroke_style(colors::BurlyWood);
-    _canvas.set_stroke_width(2);
+    _canvas.set_stroke_width(6);
 
     _canvas.begin_path();
     _canvas.rect({30, 30, 300, 400});
@@ -390,6 +390,14 @@ void CanvasEx::canvas_clip()
     _canvas.begin_path();
     _canvas.rect({30, 30, 300, 400});
     _canvas.fill();
+
+    _canvas.set_font(_font.get_font({}, 48).ptr());
+    _canvas.set_fill_style(colors::Black);
+    _canvas.draw_text({10, 350, 3000, 1000}, "Lorem ipsum dolor sit amet");
+
+    _canvas.begin_path();
+    _canvas.rect({10, 350, 1000, 100});
+    _canvas.stroke();
 
     _canvas.end_frame();
 }
