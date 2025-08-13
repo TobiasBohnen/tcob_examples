@@ -41,14 +41,13 @@ void SoundGeneratorEx::on_start()
     _form0->Load->MouseButtonDown.connect([&]() {
         object loadFile;
         if (loadFile.load("sound_wave0.ini")) {
-            sound_wave::Deserialize(_wave1, loadFile["wave"]);
+            _wave1 = loadFile["wave"].as<sound_wave>();
             _form0->set_values(_wave1);
         }
     });
     _form0->Save->MouseButtonDown.connect([&]() {
         object saveFile;
-        sound_wave::Serialize(_wave1, saveFile["wave"]);
-
+        saveFile["wave"] = _wave1;
         saveFile.save("sound_wave0.ini");
     });
     _form0->Export->MouseButtonDown.connect([&]() {

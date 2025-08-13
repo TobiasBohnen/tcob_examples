@@ -82,7 +82,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     style_collection retValue;
     {
         auto style {retValue.create<button>("button", {})};
-        style->Border.Type         = border_type::Centered;
+        style->Border.Type         = border_type::Inset;
         style->Border.Size         = 3_px;
         style->Border.Radius       = 5_px;
         style->Text.Style          = {false, font::weight::Normal};

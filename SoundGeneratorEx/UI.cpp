@@ -39,16 +39,17 @@ generator_form::generator_form(window& window)
     GenRandom            = mainPanelLayout.create_widget<button>({1, 15, 4, 2}, "GenRandom");
     GenRandom->Label     = "Random";
 
-    auto genSlider {[&](rect_i const& bounds, string const& name, i32 min, i32 max) {
+    auto genSlider {[&](rect_i const& bounds, string const& name, f32 min, f32 max) {
         auto retValue {mainPanelLayout.create_widget<slider>(bounds, name)};
-        retValue->Min = min;
-        retValue->Max = max;
+        retValue->Min  = min;
+        retValue->Max  = max;
+        retValue->Step = 0.01f;
         auto lblText {mainPanelLayout.create_widget<label>({bounds.left() - 4, bounds.top(), bounds.width(), bounds.height()}, "lbl" + name)};
         lblText->Label = name;
         auto lblValue {mainPanelLayout.create_widget<label>({bounds.left() + 4, bounds.top(), bounds.width() / 2, bounds.height()}, "lbl" + name + "Val")};
         lblValue->Label = "0";
         retValue->Value.Changed.connect([this, lbl = lblValue.get()](auto val) {
-            std::string str {std::to_string(val / 100.f)};
+            std::string str {std::to_string(std::ceil(val * 100) / 100)};
             str.erase(str.find_last_not_of('0') + 1, std::string::npos);
             str.erase(str.find_last_not_of('.') + 1, std::string::npos);
             lbl->Label = str;
@@ -57,33 +58,33 @@ generator_form::generator_form(window& window)
         return retValue;
     }};
 
-    _valAttackTime   = genSlider({10, 18, 4, 2}, "Attack Time", 0, 100);
-    _valSustainTime  = genSlider({10, 20, 4, 2}, "Sustain Time", 0, 100);
-    _valSustainPunch = genSlider({10, 22, 4, 2}, "Sustain Punch", 0, 100);
-    _valDecayTime    = genSlider({10, 24, 4, 2}, "Decay Time", 0, 100);
+    _valAttackTime   = genSlider({10, 18, 4, 2}, "Attack Time", 0, 1.0f);
+    _valSustainTime  = genSlider({10, 20, 4, 2}, "Sustain Time", 0, 1.0f);
+    _valSustainPunch = genSlider({10, 22, 4, 2}, "Sustain Punch", 0, 1.0f);
+    _valDecayTime    = genSlider({10, 24, 4, 2}, "Decay Time", 0, 1.0f);
 
-    _valStartFrequency = genSlider({10, 27, 4, 2}, "Start Frequency", 0, 100);
-    _valMinFrequency   = genSlider({10, 29, 4, 2}, "Min Frequency", 0, 100);
+    _valStartFrequency = genSlider({10, 27, 4, 2}, "Start Frequency", 0, 1.0f);
+    _valMinFrequency   = genSlider({10, 29, 4, 2}, "Min Frequency", 0, 1.0f);
     _valMinFrequency->Value.Changed.connect([this] { _valStartFrequency->Min = *_valMinFrequency->Value; });
 
-    _valSlide        = genSlider({10, 31, 4, 2}, "Slide", -100, 100);
-    _valDeltaSlide   = genSlider({10, 33, 4, 2}, "Delta Slide", -100, 100);
-    _valVibratoDepth = genSlider({10, 35, 4, 2}, "Vibrato Depth", 0, 100);
-    _valVibratoSpeed = genSlider({10, 37, 4, 2}, "Vibrato Speed", 0, 100);
+    _valSlide        = genSlider({10, 31, 4, 2}, "Slide", -1.0f, 1.0f);
+    _valDeltaSlide   = genSlider({10, 33, 4, 2}, "Delta Slide", -1.0f, 1.0f);
+    _valVibratoDepth = genSlider({10, 35, 4, 2}, "Vibrato Depth", 0, 1.0f);
+    _valVibratoSpeed = genSlider({10, 37, 4, 2}, "Vibrato Speed", 0, 1.0f);
 
-    _valChangeAmount = genSlider({21, 18, 4, 2}, "Change Amount", -100, 100);
-    _valChangeSpeed  = genSlider({21, 20, 4, 2}, "Change Speed", 0, 100);
-    _valSquareDuty   = genSlider({21, 23, 4, 2}, "Square Duty", 0, 100);
-    _valDutySweep    = genSlider({21, 25, 4, 2}, "Duty Sweep", -100, 100);
-    _valRepeatSpeed  = genSlider({21, 28, 4, 2}, "Repeat Speed", 0, 100);
-    _valPhaserOffset = genSlider({21, 31, 4, 2}, "Phaser Offset", -100, 100);
-    _valPhaserSweep  = genSlider({21, 33, 4, 2}, "Phaser Sweep", -100, 100);
+    _valChangeAmount = genSlider({21, 18, 4, 2}, "Change Amount", -1.0f, 1.0f);
+    _valChangeSpeed  = genSlider({21, 20, 4, 2}, "Change Speed", 0, 1.0f);
+    _valSquareDuty   = genSlider({21, 23, 4, 2}, "Square Duty", 0, 1.0f);
+    _valDutySweep    = genSlider({21, 25, 4, 2}, "Duty Sweep", -1.0f, 1.0f);
+    _valRepeatSpeed  = genSlider({21, 28, 4, 2}, "Repeat Speed", 0, 1.0f);
+    _valPhaserOffset = genSlider({21, 31, 4, 2}, "Phaser Offset", -1.0f, 1.0f);
+    _valPhaserSweep  = genSlider({21, 33, 4, 2}, "Phaser Sweep", -1.0f, 1.0f);
 
-    _valLowPassFilterCutoff       = genSlider({32, 18, 4, 2}, "LPF Cutoff", 0, 100);
-    _valLowPassFilterCutoffSweep  = genSlider({32, 20, 4, 2}, "LPF Cutoff Sweep", -100, 100);
-    _valLowPassFilterResonance    = genSlider({32, 22, 4, 2}, "LPF Resonance", 0, 100);
-    _valHighPassFilterCutoff      = genSlider({32, 24, 4, 2}, "HPF Cutoff", 0, 100);
-    _valHighPassFilterCutoffSweep = genSlider({32, 26, 4, 2}, "HPF Cutoff Sweep", -100, 100);
+    _valLowPassFilterCutoff       = genSlider({32, 18, 4, 2}, "LPF Cutoff", 0, 1.0f);
+    _valLowPassFilterCutoffSweep  = genSlider({32, 20, 4, 2}, "LPF Cutoff Sweep", -1.0f, 1.0f);
+    _valLowPassFilterResonance    = genSlider({32, 22, 4, 2}, "LPF Resonance", 0, 1.0f);
+    _valHighPassFilterCutoff      = genSlider({32, 24, 4, 2}, "HPF Cutoff", 0, 1.0f);
+    _valHighPassFilterCutoffSweep = genSlider({32, 26, 4, 2}, "HPF Cutoff Sweep", -1.0f, 1.0f);
 
     _valWaveType = mainPanelLayout.create_widget<drop_down_list>({32, 30, 4, 2}, "Wave Type");
     _valWaveType->Items.mutate([](auto& items) {
@@ -281,31 +282,31 @@ void generator_form::set_values(sound_wave const& wave)
     case sound_wave::type::Triangle: _valWaveType->select_item("Triangle"); break;
     }
 
-    _valAttackTime->Value   = wave.AttackTime * 100;
-    _valSustainTime->Value  = wave.SustainTime * 100;
-    _valSustainPunch->Value = wave.SustainPunch * 100;
-    _valDecayTime->Value    = wave.DecayTime * 100;
+    _valAttackTime->Value   = wave.AttackTime;
+    _valSustainTime->Value  = wave.SustainTime;
+    _valSustainPunch->Value = wave.SustainPunch;
+    _valDecayTime->Value    = wave.DecayTime;
 
-    _valStartFrequency->Value = wave.StartFrequency * 100;
-    _valMinFrequency->Value   = wave.MinFrequency * 100;
-    _valSlide->Value          = wave.Slide * 100;
-    _valDeltaSlide->Value     = wave.DeltaSlide * 100;
-    _valVibratoDepth->Value   = wave.VibratoDepth * 100;
-    _valVibratoSpeed->Value   = wave.VibratoSpeed * 100;
+    _valStartFrequency->Value = wave.StartFrequency;
+    _valMinFrequency->Value   = wave.MinFrequency;
+    _valSlide->Value          = wave.Slide;
+    _valDeltaSlide->Value     = wave.DeltaSlide;
+    _valVibratoDepth->Value   = wave.VibratoDepth;
+    _valVibratoSpeed->Value   = wave.VibratoSpeed;
 
-    _valChangeAmount->Value = wave.ChangeAmount * 100;
-    _valChangeSpeed->Value  = wave.ChangeSpeed * 100;
-    _valSquareDuty->Value   = wave.SquareDuty * 100;
-    _valDutySweep->Value    = wave.DutySweep * 100;
-    _valRepeatSpeed->Value  = wave.RepeatSpeed * 100;
-    _valPhaserOffset->Value = wave.PhaserOffset * 100;
-    _valPhaserSweep->Value  = wave.PhaserSweep * 100;
+    _valChangeAmount->Value = wave.ChangeAmount;
+    _valChangeSpeed->Value  = wave.ChangeSpeed;
+    _valSquareDuty->Value   = wave.SquareDuty;
+    _valDutySweep->Value    = wave.DutySweep;
+    _valRepeatSpeed->Value  = wave.RepeatSpeed;
+    _valPhaserOffset->Value = wave.PhaserOffset;
+    _valPhaserSweep->Value  = wave.PhaserSweep;
 
-    _valLowPassFilterCutoff->Value       = wave.LowPassFilterCutoff * 100;
-    _valLowPassFilterCutoffSweep->Value  = wave.LowPassFilterCutoffSweep * 100;
-    _valLowPassFilterResonance->Value    = wave.LowPassFilterResonance * 100;
-    _valHighPassFilterCutoff->Value      = wave.HighPassFilterCutoff * 100;
-    _valHighPassFilterCutoffSweep->Value = wave.HighPassFilterCutoffSweep * 100;
+    _valLowPassFilterCutoff->Value       = wave.LowPassFilterCutoff;
+    _valLowPassFilterCutoffSweep->Value  = wave.LowPassFilterCutoffSweep;
+    _valLowPassFilterResonance->Value    = wave.LowPassFilterResonance;
+    _valHighPassFilterCutoff->Value      = wave.HighPassFilterCutoff;
+    _valHighPassFilterCutoffSweep->Value = wave.HighPassFilterCutoffSweep;
 }
 
 void generator_form::get_values(sound_wave& wave)
@@ -313,29 +314,29 @@ void generator_form::get_values(sound_wave& wave)
     auto const waveType {_valWaveType->selected_item()};
     wave.WaveType = std::any_cast<sound_wave::type>(waveType.UserData);
 
-    wave.AttackTime   = _valAttackTime->Value / 100.f;
-    wave.SustainTime  = _valSustainTime->Value / 100.f;
-    wave.SustainPunch = _valSustainPunch->Value / 100.f;
-    wave.DecayTime    = _valDecayTime->Value / 100.f;
+    wave.AttackTime   = _valAttackTime->Value;
+    wave.SustainTime  = _valSustainTime->Value;
+    wave.SustainPunch = _valSustainPunch->Value;
+    wave.DecayTime    = _valDecayTime->Value;
 
-    wave.StartFrequency = _valStartFrequency->Value / 100.f;
-    wave.MinFrequency   = _valMinFrequency->Value / 100.f;
-    wave.Slide          = _valSlide->Value / 100.f;
-    wave.DeltaSlide     = _valDeltaSlide->Value / 100.f;
-    wave.VibratoDepth   = _valVibratoDepth->Value / 100.f;
-    wave.VibratoSpeed   = _valVibratoSpeed->Value / 100.f;
+    wave.StartFrequency = _valStartFrequency->Value;
+    wave.MinFrequency   = _valMinFrequency->Value;
+    wave.Slide          = _valSlide->Value;
+    wave.DeltaSlide     = _valDeltaSlide->Value;
+    wave.VibratoDepth   = _valVibratoDepth->Value;
+    wave.VibratoSpeed   = _valVibratoSpeed->Value;
 
-    wave.ChangeAmount = _valChangeAmount->Value / 100.f;
-    wave.ChangeSpeed  = _valChangeSpeed->Value / 100.f;
-    wave.SquareDuty   = _valSquareDuty->Value / 100.f;
-    wave.DutySweep    = _valDutySweep->Value / 100.f;
-    wave.RepeatSpeed  = _valRepeatSpeed->Value / 100.f;
-    wave.PhaserOffset = _valPhaserOffset->Value / 100.f;
-    wave.PhaserSweep  = _valPhaserSweep->Value / 100.f;
+    wave.ChangeAmount = _valChangeAmount->Value;
+    wave.ChangeSpeed  = _valChangeSpeed->Value;
+    wave.SquareDuty   = _valSquareDuty->Value;
+    wave.DutySweep    = _valDutySweep->Value;
+    wave.RepeatSpeed  = _valRepeatSpeed->Value;
+    wave.PhaserOffset = _valPhaserOffset->Value;
+    wave.PhaserSweep  = _valPhaserSweep->Value;
 
-    wave.LowPassFilterCutoff       = _valLowPassFilterCutoff->Value / 100.f;
-    wave.LowPassFilterCutoffSweep  = _valLowPassFilterCutoffSweep->Value / 100.f;
-    wave.LowPassFilterResonance    = _valLowPassFilterResonance->Value / 100.f;
-    wave.HighPassFilterCutoff      = _valHighPassFilterCutoff->Value / 100.f;
-    wave.HighPassFilterCutoffSweep = _valHighPassFilterCutoffSweep->Value / 100.f;
+    wave.LowPassFilterCutoff       = _valLowPassFilterCutoff->Value;
+    wave.LowPassFilterCutoffSweep  = _valLowPassFilterCutoffSweep->Value;
+    wave.LowPassFilterResonance    = _valLowPassFilterResonance->Value;
+    wave.HighPassFilterCutoff      = _valHighPassFilterCutoff->Value;
+    wave.HighPassFilterCutoffSweep = _valHighPassFilterCutoffSweep->Value;
 }
