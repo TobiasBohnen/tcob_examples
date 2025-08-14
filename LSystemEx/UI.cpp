@@ -28,7 +28,7 @@ lsystem_form::lsystem_form(rect_i const& bounds)
 
     auto btnStart {mainPanelLayout.create_widget<button>({1, 35, 12, 2}, "btnStart")};
     btnStart->Label = "Start";
-    btnStart->Click.connect([this]() { Start(); });
+    btnStart->Click.connect([this] { Start(); });
 }
 
 void lsystem_form::create_rule(grid_layout& layout)

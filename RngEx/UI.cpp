@@ -27,13 +27,13 @@ rng_form::rng_form(window& window)
 
     auto rollDice {mainPanelLayout.create_widget<button>({1, 1, 4, 2}, "uxRollDice")};
     rollDice->Label = "Roll Dice";
-    rollDice->Click.connect([this]() {
+    rollDice->Click.connect([this] {
         draw_dice();
     });
 
     auto drawNoise {mainPanelLayout.create_widget<button>({1, 4, 4, 2}, "uxDrawNoise")};
     drawNoise->Label = "Draw Noise";
-    drawNoise->Click.connect([this]() {
+    drawNoise->Click.connect([this] {
         draw_noise();
     });
 }

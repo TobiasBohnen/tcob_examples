@@ -95,7 +95,7 @@ generator_form::generator_form(window& window)
         items.push_back({"Noise", {}, sound_wave::type::Noise});
     });
     _valWaveType->SelectedItemIndex = 0;
-    _valWaveType->SelectedItemIndex.Changed.connect([&]() { NewWave(); });
+    _valWaveType->SelectedItemIndex.Changed.connect([&] { NewWave(); });
     auto lblText {mainPanelLayout.create_widget<label>({32 - 4, 30, 4, 2}, "lblWave Type")};
     lblText->Label = "Wave Type";
 

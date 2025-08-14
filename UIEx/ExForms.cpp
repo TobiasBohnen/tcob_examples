@@ -287,12 +287,12 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     gridView0->HeaderSelectable = true;
     gridView0->SelectMode       = grid_view::select_mode::Row;
-    gridView0->SelectedCellIndex.Changed.connect([label0, gridView0]() {
+    gridView0->SelectedCellIndex.Changed.connect([label0, gridView0] {
         if (*gridView0->SelectedCellIndex == point_i {-1, -1}) { return; }
         label0->Label = std::format("grid: {}", gridView0->get_cell(gridView0->SelectedCellIndex).Text);
     });
 
-    button0->Click.connect([=, &resGrp]() {
+    button0->Click.connect([=, &resGrp] {
         progressBar0->Value = progressBar0->Value == 100
             ? 0
             : progressBar0->Value + 10;
@@ -427,7 +427,7 @@ auto create_form_terminal(window* wnd) -> std::shared_ptr<form<dock_layout>>
             terminal0->flash();
             locate_service<render_system>().statistics().reset();
         });
-        terminal0->Submit.connect([label0, ptr = terminal0.get()]() {
+        terminal0->Submit.connect([label0, ptr = terminal0.get()] {
             label0->Label = ptr->get_str({ptr->get_xy().X, ptr->get_xy().Y - 1});
             ptr->move({0, ptr->get_xy().Y + 1});
         });
