@@ -350,7 +350,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
 auto create_form1(window* wnd) -> std::shared_ptr<form_base>
 {
-    auto retValue {std::make_shared<form<static_layout>>(form_init {"form1", wnd->bounds()})};
+    auto retValue {std::make_shared<form<manual_layout>>(form_init {"form1", wnd->bounds()})};
 
     {
         auto panel0 {retValue->create_container<panel>(rect_f {0, 0, 400, 400}, "Panel0")};
