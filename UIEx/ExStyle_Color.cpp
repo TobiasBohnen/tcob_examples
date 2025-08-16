@@ -339,10 +339,12 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<cycle_button>("cycle_button", {})};
-        style->Border.Size   = 3_px;
-        style->Border.Radius = 5_px;
-        style->Margin        = {5_px};
-        style->Padding       = {5_px};
+        style->Border.Size     = 3_px;
+        style->Border.Radius   = 5_px;
+        style->Margin          = {5_px};
+        style->Padding         = {5_px};
+        style->Bar.Border.Size = 1_px;
+        style->Bar.Size        = 50_pct;
 
         auto disabledStyle {retValue.create<cycle_button>("cycle_button", {.Disabled = true})};
 
@@ -693,7 +695,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Item.Text.Size      = 50_pct;
         style->Item.Text.AutoSize  = auto_size_mode::OnlyShrink;
         style->Item.Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Middle};
-        style->Item.Border.Size    = 3_px;
+        style->Item.Border.Size    = 2_px;
 
         auto hoverStyle {retValue.create<item_style>("tab_items", {.Hover = true})};
         hoverStyle->Item = style->Item;
@@ -713,7 +715,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
         style->Item.Text.Size      = 50_pct;
         style->Item.Text.Alignment = {horizontal_alignment::Left, vertical_alignment::Middle};
-        style->Item.Border.Size    = 3_px;
+        style->Item.Border.Size    = 2_px;
         style->Item.IconTextOrder  = icon_text_order::TextBeforeIcon;
 
         auto hoverStyle {retValue.create<item_style>("section_items", {.Hover = true})};
@@ -734,7 +736,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
         style->Item.Text.Size      = 50_pct;
         style->Item.Text.Alignment = {horizontal_alignment::Left, vertical_alignment::Middle};
-        style->Item.Border.Size    = 3_px;
+        style->Item.Border.Size    = 2_px;
 
         auto hoverStyle {retValue.create<item_style>("list_items", {.Hover = true})};
         hoverStyle->Item = style->Item;
@@ -753,7 +755,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
         style->Item.Text.Size      = 50_pct;
         style->Item.Text.Alignment = {horizontal_alignment::Left, vertical_alignment::Middle};
-        style->Item.Border.Size    = 3_px;
+        style->Item.Border.Size    = 2_px;
 
         normal.apply(style);
     }
@@ -838,9 +840,12 @@ void color_theme::apply(std::shared_ptr<checkbox::style> const& style) const
 
 void color_theme::apply(std::shared_ptr<cycle_button::style> const& style) const
 {
-    style->Background        = Background;
-    style->Border.Background = Border;
-    style->DropShadow.Color  = DropShadow;
+    style->Background            = Background;
+    style->Border.Background     = Border;
+    style->DropShadow.Color      = DropShadow;
+    style->Bar.Border.Background = Border;
+    style->Bar.HigherBackground  = BarHigher;
+    style->Bar.LowerBackground   = BarLower;
 }
 
 void color_theme::apply(std::shared_ptr<drop_down_list::style> const& style) const

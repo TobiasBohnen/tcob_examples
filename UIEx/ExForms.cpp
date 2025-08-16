@@ -42,10 +42,12 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     auto cycleButton0 {panel0Layout.create_widget<cycle_button>({0, 260, 120, 100}, "CycleButton0")};
     cycleButton0->Items.mutate([&](auto& items) {
-        items.push_back({.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}});
+        items.push_back({"abc"});
         items.push_back({"def"});
         items.push_back({"ghi"});
+        items.push_back({"jkl"});
     });
+    cycleButton0->SelectedItemIndex = 0;
 
     auto progressBar0 {panel0Layout.create_widget<progress_bar>({130, 150, 75, 200}, "ProgressBar0")};
     progressBar0->Min   = 0;
@@ -350,20 +352,21 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
 auto create_form1(window* wnd) -> std::shared_ptr<form_base>
 {
-    auto retValue {std::make_shared<form<manual_layout>>(form_init {"form1", wnd->bounds()})};
+    auto retValue {std::make_shared<form<magnetic_snap_layout>>(
+        form_init {"form1", wnd->bounds()}, 25.f, true, true)};
 
     {
-        auto panel0 {retValue->create_container<panel>(rect_f {0, 0, 400, 400}, "Panel0")};
+        auto panel0 {retValue->create_container<panel>(rect_f {0, 0, 300, 300}, "Panel0")};
         panel0->Flex          = {100_pct, 100_pct};
         panel0->ScrollEnabled = true;
         panel0->Movable       = true;
         auto& panel0Layout {panel0->get_layout<panel::default_layout>()};
 
-        auto panel1 {panel0Layout.create_widget<panel>({50, 30, 400, 400}, "Panel1")};
+        auto panel1 {panel0Layout.create_widget<panel>({50, 30, 300, 300}, "Panel1")};
         panel1->ScrollEnabled = true;
         auto& panel1Layout {panel1->get_layout<panel::default_layout>()};
 
-        auto panel2 {panel1Layout.create_widget<panel>({50, 30, 400, 400}, "Panel2")};
+        auto panel2 {panel1Layout.create_widget<panel>({50, 30, 300, 300}, "Panel2")};
         panel2->ScrollEnabled = true;
         auto& panel2Layout {panel2->get_layout<panel::default_layout>()};
 
@@ -372,7 +375,23 @@ auto create_form1(window* wnd) -> std::shared_ptr<form_base>
     }
 
     {
-        auto panel0 {retValue->create_container<panel>(rect_f {800, 0, 400, 400}, "Panel3")};
+        auto panel0 {retValue->create_container<panel>(rect_f {800, 0, 300, 300}, "Panel3")};
+        panel0->Flex          = {.Width = 100_pct, .Height = 100_pct};
+        panel0->ScrollEnabled = true;
+        panel0->Movable       = true;
+        auto& panel0Layout {panel0->get_layout<panel::default_layout>()};
+    }
+
+    {
+        auto panel0 {retValue->create_container<panel>(rect_f {800, 350, 300, 300}, "Panel4")};
+        panel0->Flex          = {.Width = 100_pct, .Height = 100_pct};
+        panel0->ScrollEnabled = true;
+        panel0->Movable       = true;
+        auto& panel0Layout {panel0->get_layout<panel::default_layout>()};
+    }
+
+    {
+        auto panel0 {retValue->create_container<panel>(rect_f {0, 350, 300, 300}, "Panel5")};
         panel0->Flex          = {.Width = 100_pct, .Height = 100_pct};
         panel0->ScrollEnabled = true;
         panel0->Movable       = true;
