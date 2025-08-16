@@ -464,7 +464,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->DropShadow.Color              = color {0, 0, 0, 128};
         style->RowHeight                     = 20_pct;
         style->HeaderItemClass               = "header_items";
-        style->RowItemClass                  = "row_items";
+        style->RowItemClasses                = {"row_items_0", "row_items_1", "row_items_2"};
         style->VScrollBar.ThumbClass         = "scrollbar_thumb";
         style->VScrollBar.Bar.Size           = 5_pct;
         style->VScrollBar.Bar.Border.Size    = 3_px;
@@ -758,6 +758,11 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Item.Border.Size    = 2_px;
 
         normal.apply(style);
+
+        auto hoverStyle {retValue.create<item_style>("items", {.Hover = true})};
+        hoverStyle->Item = style->Item;
+
+        hover.apply(hoverStyle);
     }
     // GRID HEADER ITEMS
     {
@@ -786,8 +791,8 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         activeStyle->Item.Background = colors::BlanchedAlmond;
     }
     // GRID ROW ITEMS
-    {
-        auto style {retValue.create<item_style>("row_items", {}, {})};
+    auto const makeGridRowStyle {[&](std::string const& baseName, color normalBg, color hoverBg, color activeBg) {
+        auto style                 = retValue.create<item_style>(baseName, {}, {});
         style->Item.Padding        = {2_px};
         style->Item.Text.Style     = {false, font::weight::Normal};
         style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
@@ -797,24 +802,27 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Item.Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Middle};
         style->Item.Border.Size    = 2_px;
 
-        auto hoverStyle {retValue.create<item_style>("row_items", {.Hover = true})};
+        auto hoverStyle  = retValue.create<item_style>(baseName, {.Hover = true});
         hoverStyle->Item = style->Item;
 
-        auto activeStyle {retValue.create<item_style>("row_items", {.Active = true})};
+        auto activeStyle  = retValue.create<item_style>(baseName, {.Active = true});
         activeStyle->Item = style->Item;
 
         normal.apply(style);
-        style->Item.Background = colors::DarkGreen;
+        style->Item.Background = normalBg;
 
         hover.apply(hoverStyle);
-        hoverStyle->Item.Background = colors::LightGreen;
+        hoverStyle->Item.Background = hoverBg;
 
         active.apply(activeStyle);
-        activeStyle->Item.Border.Background = colors::SeaGreen;
-        activeStyle->Item.Background        = colors::SeaGreen;
+        activeStyle->Item.Border.Background = activeBg;
+        activeStyle->Item.Background        = activeBg;
         activeStyle->Item.Padding           = {10_px, 10_px, 20_px, 0_px};
-    }
+    }};
 
+    makeGridRowStyle("row_items_0", colors::LightGreen, colors::Khaki, colors::IndianRed);
+    makeGridRowStyle("row_items_1", colors::LightSteelBlue, colors::Khaki, colors::IndianRed);
+    makeGridRowStyle("row_items_2", colors::LightCyan, colors::Khaki, colors::IndianRed);
     return retValue;
 }
 

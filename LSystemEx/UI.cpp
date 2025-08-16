@@ -237,7 +237,7 @@ void lsystem_form::gen_styles()
         style->Margin            = {5_px};
         style->Padding           = {5_px};
         style->RowHeight         = 15_pct;
-        style->RowItemClass      = "row_items";
+        style->RowItemClasses    = {"row_items"};
         style->HeaderItemClass   = "header_items";
         style->AutoSizeColumns   = false;
     }
