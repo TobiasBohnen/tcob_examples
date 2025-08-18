@@ -236,7 +236,7 @@ void lsystem_form::gen_styles()
         style->Border.Background = colors::Black;
         style->Margin            = {5_px};
         style->Padding           = {5_px};
-        style->RowHeight         = 15_pct;
+        style->MaxVisibleRows    = 7;
         style->RowItemClasses    = {"row_items"};
         style->HeaderItemClass   = "header_items";
         style->AutoSizeColumns   = false;

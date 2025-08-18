@@ -250,7 +250,6 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->Margin                          = {5_px};
         style->Padding                         = {5_px};
         style->DropShadow.Color                = color {0, 0, 0, 128};
-        style->ItemHeight                      = 20_pct;
         style->ItemClass                       = "list_items";
         style->VScrollBar.ThumbClass           = "v_scrollbar_thumb";
         style->VScrollBar.Bar.Size             = 30_px;
@@ -292,7 +291,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->Margin                          = {5_px};
         style->Padding                         = {5_px};
         style->DropShadow.Color                = color {0, 0, 0, 128};
-        style->RowHeight                       = 20_pct;
+        style->MaxVisibleRows                  = 5;
         style->HeaderItemClass                 = "header_items";
         style->RowItemClasses                  = {"row_items"};
         style->VScrollBar.ThumbClass           = "v_scrollbar_thumb";

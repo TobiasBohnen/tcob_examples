@@ -88,46 +88,6 @@ void rng_form::gen_styles()
         style->Border.Background = colors::Black;
         style->Text.Color        = colors::Black;
     }
-    {
-        auto style {styles.create<list_box>("list_box", {})};
-        style->Border.Size   = 3_px;
-        style->Border.Radius = 5_px;
-        style->Margin        = {2_px};
-        style->Padding       = {5_px};
-        style->ItemHeight    = 8_pct;
-        style->ItemClass     = "list_items";
-
-        style->Background        = colors::LightGray;
-        style->Border.Background = colors::Black;
-    }
-    {
-        auto style {styles.create<item_style>("list_items", {}, {})};
-        style->Item.Padding        = {2_px};
-        style->Item.Text.Style     = {false, font::weight::Normal};
-        style->Item.Text.Font      = _font;
-        style->Item.Text.Size      = 50_pct;
-        style->Item.Text.Alignment = {horizontal_alignment::Left, vertical_alignment::Middle};
-        style->Item.Text.AutoSize  = auto_size_mode::OnlyShrink;
-        style->Item.Border.Size    = 3_px;
-
-        style->Item.Background        = colors::LightGray;
-        style->Item.Border.Background = colors::Black;
-        style->Item.Text.Color        = colors::Black;
-
-        auto hoverStyle {styles.create<item_style>("list_items", {.Hover = true})};
-        hoverStyle->Item = style->Item;
-
-        hoverStyle->Item.Background        = colors::Black;
-        hoverStyle->Item.Border.Background = colors::Black;
-        hoverStyle->Item.Text.Color        = colors::White;
-
-        auto activeStyle {styles.create<item_style>("list_items", {.Active = true})};
-        activeStyle->Item = style->Item;
-
-        activeStyle->Item.Background        = colors::LightBlue;
-        activeStyle->Item.Border.Background = colors::Black;
-        activeStyle->Item.Text.Color        = colors::Black;
-    }
 
     Styles = styles;
 }

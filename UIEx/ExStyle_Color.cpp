@@ -416,7 +416,6 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Margin                        = {5_px};
         style->Padding                       = {5_px};
         style->DropShadow.Color              = color {0, 0, 0, 128};
-        style->ItemHeight                    = 20_pct;
         style->ItemClass                     = "list_items";
         style->VScrollBar.ThumbClass         = "scrollbar_thumb";
         style->VScrollBar.Bar.Size           = 20_pct;
@@ -424,7 +423,8 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->VScrollBar.Bar.MotionDuration = 250ms;
 
         auto hoverStyle {retValue.create<list_box>("list_box", {.Hover = true})};
-        *hoverStyle = *style;
+        *hoverStyle                 = *style;
+        hoverStyle->MaxVisibleItems = 10;
 
         auto disabledStyle {retValue.create<list_box>("list_box", {.Disabled = true})};
 
@@ -470,7 +470,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Margin                        = {5_px};
         style->Padding                       = {5_px};
         style->DropShadow.Color              = color {0, 0, 0, 128};
-        style->RowHeight                     = 20_pct;
+        style->MaxVisibleRows                = 5;
         style->HeaderItemClass               = "header_items";
         style->RowItemClasses                = {"row_items_0", "row_items_1", "row_items_2"};
         style->VScrollBar.ThumbClass         = "scrollbar_thumb";
@@ -479,7 +479,8 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->VScrollBar.Bar.MotionDuration = 250ms;
 
         auto hoverStyle {retValue.create<grid_view>("grid_view", {.Hover = true})};
-        *hoverStyle = *style;
+        *hoverStyle                = *style;
+        hoverStyle->MaxVisibleRows = 10;
 
         auto disabledStyle {retValue.create<grid_view>("grid_view", {.Disabled = true})};
 
