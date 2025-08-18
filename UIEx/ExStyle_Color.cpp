@@ -339,21 +339,27 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<cycle_button>("cycle_button", {})};
-        style->Border.Size     = 3_px;
-        style->Border.Radius   = 5_px;
-        style->Margin          = {5_px};
-        style->Padding         = {5_px};
-        style->Bar.Border.Size = 1_px;
-        style->Bar.Size        = 50_pct;
+        style->Border.Size       = 3_px;
+        style->Border.Radius     = 5_px;
+        style->Margin            = {5_px};
+        style->Padding           = {5_px};
+        style->Bar.Size          = 50_pct;
+        style->Bar.Border.Size   = 1_px;
+        style->Bar.Border.Radius = 5_px;
+        style->GapRatio          = 1.0f;
+        style->EasingFunc        = easing_func::QuadIn;
 
         auto disabledStyle {retValue.create<cycle_button>("cycle_button", {.Disabled = true})};
 
         auto hoverStyle {retValue.create<cycle_button>("cycle_button", {.Hover = true})};
-        *hoverStyle = *style;
+        *hoverStyle          = *style;
+        hoverStyle->GapRatio = 0.5f;
 
         normal.apply(style);
         disabled.apply(disabledStyle);
         hover.apply(hoverStyle);
+        hoverStyle->Bar.LowerBackground  = colors::LightBlue;
+        hoverStyle->Bar.HigherBackground = colors::RoyalBlue;
     }
     {
         auto style {retValue.create<image_box>("image_box", {})};
@@ -445,9 +451,11 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->VScrollBar.Bar.Size           = 20_pct;
         style->VScrollBar.Bar.Border.Size    = 3_px;
         style->VScrollBar.Bar.MotionDuration = 250ms;
+        style->MaxVisibleItems               = 1;
 
         auto hoverStyle {retValue.create<drop_down_list>("drop_down_list", {.Hover = true})};
-        *hoverStyle = *style;
+        *hoverStyle                 = *style;
+        hoverStyle->MaxVisibleItems = 5;
 
         auto disabledStyle {retValue.create<drop_down_list>("drop_down_list", {.Disabled = true})};
 

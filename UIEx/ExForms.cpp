@@ -46,6 +46,11 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
         items.push_back({"def"});
         items.push_back({"ghi"});
         items.push_back({"jkl"});
+        items.push_back({"mno"});
+        items.push_back({"pqr"});
+        items.push_back({"stu"});
+        items.push_back({"vwx"});
+        items.push_back({"yz"});
     });
     cycleButton0->SelectedItemIndex = 0;
 
