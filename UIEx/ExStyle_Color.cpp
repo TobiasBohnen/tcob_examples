@@ -621,6 +621,16 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         hoverStyle->ActiveColor   = colors::Blue;
         hoverStyle->InactiveColor = colors::White;
     }
+    {
+        auto style {retValue.create<color_picker>("color_picker", {})};
+        style->MarkerColor    = colors::White;
+        style->MarkerSize     = 2_px;
+        style->HueSelectWidth = 10_pct;
+
+        auto hoverStyle {retValue.create<color_picker>("color_picker", {.Hover = true})};
+        hoverStyle->MarkerColor = colors::Silver;
+        hoverStyle->MarkerSize  = 10_px;
+    }
 
     // THUMBS
     {
