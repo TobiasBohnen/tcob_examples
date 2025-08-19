@@ -496,7 +496,7 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form<dock_layout>>
         auto& panel0Layout {panel0->create_layout<dock_layout>()};
 
         auto colorPicker00 {panel0Layout.create_widget<color_picker>(dock_style::Fill, "CP1")};
-        colorPicker00->SelectedColor.Changed.connect([wnd](auto val) { wnd->ClearColor = val; });
+        colorPicker00->SelectedColor.Changed.connect([wnd](auto val) { wnd->ClearColor = color::FromHSVA(val); });
     }
     {
         auto panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
