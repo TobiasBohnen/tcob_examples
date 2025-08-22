@@ -48,6 +48,8 @@ struct color_theme {
     void apply(std::shared_ptr<tab_container::style> const& style) const;
     void apply(std::shared_ptr<accordion::style> const& style) const;
 
+    void apply(std::shared_ptr<charts::chart::style> const& style) const;
+
     void apply(std::shared_ptr<thumb_style> const& style) const;
     void apply(std::shared_ptr<item_style> const& style) const;
     void apply(std::shared_ptr<nav_arrows_style> const& style) const;

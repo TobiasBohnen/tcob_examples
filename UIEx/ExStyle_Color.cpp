@@ -842,6 +842,69 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     makeGridRowStyle("row_items_0", colors::LightGreen, colors::Khaki, colors::IndianRed);
     makeGridRowStyle("row_items_1", colors::LightSteelBlue, colors::Khaki, colors::IndianRed);
     makeGridRowStyle("row_items_2", colors::LightCyan, colors::Khaki, colors::IndianRed);
+
+    // CHARTING
+    using namespace tcob::ui::charts;
+    {
+        auto style {retValue.create<line_chart>("line_chart", {}, {})};
+        style->Border.Size         = 3_px;
+        style->Margin              = {5_px};
+        style->Padding             = {20_px};
+        style->DropShadow.Color    = color {0, 0, 0, 128};
+        style->HorizontalGridLines = 10;
+        style->VerticalGridLines   = 4;
+        style->Colors              = {colors::SlateBlue, colors::Fuchsia, colors::NavajoWhite};
+
+        auto hoverStyle {retValue.create<line_chart>("line_chart", {.Hover = true})};
+        *hoverStyle = *style;
+
+        auto activeStyle {retValue.create<line_chart>("line_chart", {.Active = true})};
+        *activeStyle = *style;
+
+        normal.apply(style);
+        hover.apply(hoverStyle);
+        active.apply(activeStyle);
+    }
+    {
+        auto style {retValue.create<bar_chart>("bar_chart", {}, {})};
+        style->Border.Size         = 3_px;
+        style->Margin              = {5_px};
+        style->Padding             = {20_px};
+        style->DropShadow.Color    = color {0, 0, 0, 128};
+        style->HorizontalGridLines = 10;
+        style->VerticalGridLines   = 5;
+        style->Colors              = {colors::SlateBlue, colors::Fuchsia, colors::NavajoWhite};
+
+        auto hoverStyle {retValue.create<bar_chart>("bar_chart", {.Hover = true})};
+        *hoverStyle = *style;
+
+        auto activeStyle {retValue.create<bar_chart>("bar_chart", {.Active = true})};
+        *activeStyle = *style;
+
+        normal.apply(style);
+        hover.apply(hoverStyle);
+        active.apply(activeStyle);
+    }
+    {
+        auto style {retValue.create<pie_chart>("pie_chart", {}, {})};
+        style->Border.Size         = 3_px;
+        style->Margin              = {5_px};
+        style->Padding             = {20_px};
+        style->DropShadow.Color    = color {0, 0, 0, 128};
+        style->HorizontalGridLines = 10;
+        style->VerticalGridLines   = 5;
+        style->Colors              = {colors::PaleVioletRed, colors::SlateBlue, colors::Fuchsia, colors::NavajoWhite};
+
+        auto hoverStyle {retValue.create<pie_chart>("pie_chart", {.Hover = true})};
+        *hoverStyle = *style;
+
+        auto activeStyle {retValue.create<pie_chart>("pie_chart", {.Active = true})};
+        *activeStyle = *style;
+
+        normal.apply(style);
+        hover.apply(hoverStyle);
+        active.apply(activeStyle);
+    }
     return retValue;
 }
 
@@ -993,6 +1056,13 @@ void color_theme::apply(std::shared_ptr<tab_container::style> const& style) cons
 }
 
 void color_theme::apply(std::shared_ptr<accordion::style> const& style) const
+{
+    style->Background        = Container;
+    style->Border.Background = Border;
+    style->DropShadow.Color  = DropShadow;
+}
+
+void color_theme::apply(std::shared_ptr<charts::chart::style> const& style) const
 {
     style->Background        = Container;
     style->Border.Background = Border;

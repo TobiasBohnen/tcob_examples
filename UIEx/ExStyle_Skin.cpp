@@ -523,6 +523,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         activeStyle->Item            = style->Item;
         activeStyle->Item.Background = red.Button13;
     }
+
     return retValue;
 }
 
