@@ -189,14 +189,14 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<toggle>("toggle", {})};
-        style->Border.Size       = 3_px;
-        style->Border.Radius     = 25_px;
-        style->Margin            = {5_px};
-        style->Padding           = {2_px};
-        style->AnimationDuration = 1000ms;
-        style->Tick.Type         = tick_type::Circle;
-        style->Tick.Size         = 80_pct;
-        style->EasingFunc        = easing_func::SmootherStep;
+        style->Border.Size   = 3_px;
+        style->Border.Radius = 25_px;
+        style->Margin        = {5_px};
+        style->Padding       = {2_px};
+        style->Delay         = 1000ms;
+        style->Tick.Type     = tick_type::Circle;
+        style->Tick.Size     = 80_pct;
+        style->EasingFunc    = easing_func::SmootherStep;
 
         auto checkedStyle {retValue.create<toggle>("toggle", {.Checked = true})};
         *checkedStyle           = *style;
@@ -246,14 +246,14 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<slider>("slider", {})};
-        style->Margin             = {5_px};
-        style->Padding            = {2_px, 15_px};
-        style->ThumbClass         = "slider_thumb";
-        style->Bar.Size           = 50_pct;
-        style->Bar.MotionDuration = 250ms;
-        style->Bar.Border.Size    = 3_px;
-        style->Bar.Border.Radius  = 5_px;
-        style->EasingFunc         = easing_func::ExpoInOut;
+        style->Margin            = {5_px};
+        style->Padding           = {2_px, 15_px};
+        style->ThumbClass        = "slider_thumb";
+        style->Bar.Size          = 50_pct;
+        style->Bar.Delay         = 250ms;
+        style->Bar.Border.Size   = 3_px;
+        style->Bar.Border.Radius = 5_px;
+        style->EasingFunc        = easing_func::ExpoInOut;
 
         auto disabledStyle {retValue.create<slider>("slider", {.Disabled = true})};
 
@@ -262,13 +262,13 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<range_slider>("range_slider", {})};
-        style->Margin             = {5_px};
-        style->Padding            = {2_px, 15_px};
-        style->ThumbClass         = "range_slider_thumb";
-        style->Bar.Size           = 50_pct;
-        style->Bar.MotionDuration = 250ms;
-        style->Bar.Border.Size    = 3_px;
-        style->Bar.Border.Radius  = 5_px;
+        style->Margin            = {5_px};
+        style->Padding           = {2_px, 15_px};
+        style->ThumbClass        = "range_slider_thumb";
+        style->Bar.Size          = 50_pct;
+        style->Bar.Delay         = 250ms;
+        style->Bar.Border.Size   = 3_px;
+        style->Bar.Border.Radius = 5_px;
 
         auto disabledStyle {retValue.create<range_slider>("range_slider", {.Disabled = true})};
 
@@ -278,13 +278,13 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     {
         auto style {retValue.create<progress_bar>("progress_bar", {})};
 
-        style->Border.Size        = 3_px;
-        style->Border.Radius      = 5_px;
-        style->Margin             = {5_px};
-        style->Padding            = {5_px, 5_px};
-        style->Bar.Border.Size    = 1_px;
-        style->Bar.MotionDuration = 250ms;
-        style->EasingFunc         = easing_func::QuadInOut;
+        style->Border.Size     = 3_px;
+        style->Border.Radius   = 5_px;
+        style->Margin          = {5_px};
+        style->Padding         = {5_px, 5_px};
+        style->Bar.Border.Size = 1_px;
+        style->Bar.Delay       = 250ms;
+        style->EasingFunc      = easing_func::QuadInOut;
 
         auto disabledStyle {retValue.create<progress_bar>("progress_bar", {.Disabled = true})};
 
@@ -346,6 +346,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Bar.Size          = 50_pct;
         style->Bar.Border.Size   = 1_px;
         style->Bar.Border.Radius = 5_px;
+        style->Bar.Delay         = 500ms;
         style->GapRatio          = 1.0f;
         style->EasingFunc        = easing_func::QuadIn;
 
@@ -382,16 +383,16 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<panel>("panel", {})};
-        style->Border.Size                   = 3_px;
-        style->Border.Radius                 = 5_px;
-        style->Margin                        = {5_px};
-        style->Padding                       = {5_px};
-        style->DropShadow.Color              = color {0, 0, 0, 128};
-        style->VScrollBar.ThumbClass         = "scrollbar_thumb";
-        style->VScrollBar.Bar.Size           = 30_px;
-        style->VScrollBar.Bar.Border.Size    = 3_px;
-        style->VScrollBar.Bar.MotionDuration = 250ms;
-        style->HScrollBar                    = style->VScrollBar;
+        style->Border.Size                = 3_px;
+        style->Border.Radius              = 5_px;
+        style->Margin                     = {5_px};
+        style->Padding                    = {5_px};
+        style->DropShadow.Color           = color {0, 0, 0, 128};
+        style->VScrollBar.ThumbClass      = "scrollbar_thumb";
+        style->VScrollBar.Bar.Size        = 30_px;
+        style->VScrollBar.Bar.Border.Size = 3_px;
+        style->VScrollBar.Bar.Delay       = 250ms;
+        style->HScrollBar                 = style->VScrollBar;
 
         auto hoverStyle {retValue.create<panel>("panel", {.Hover = true})};
         *hoverStyle = *style;
@@ -411,16 +412,16 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<list_box>("list_box", {})};
-        style->Border.Size                   = 3_px;
-        style->Border.Radius                 = 5_px;
-        style->Margin                        = {5_px};
-        style->Padding                       = {5_px};
-        style->DropShadow.Color              = color {0, 0, 0, 128};
-        style->ItemClass                     = "list_items";
-        style->VScrollBar.ThumbClass         = "scrollbar_thumb";
-        style->VScrollBar.Bar.Size           = 20_pct;
-        style->VScrollBar.Bar.Border.Size    = 2_px;
-        style->VScrollBar.Bar.MotionDuration = 250ms;
+        style->Border.Size                = 3_px;
+        style->Border.Radius              = 5_px;
+        style->Margin                     = {5_px};
+        style->Padding                    = {5_px};
+        style->DropShadow.Color           = color {0, 0, 0, 128};
+        style->ItemClass                  = "list_items";
+        style->VScrollBar.ThumbClass      = "scrollbar_thumb";
+        style->VScrollBar.Bar.Size        = 20_pct;
+        style->VScrollBar.Bar.Border.Size = 2_px;
+        style->VScrollBar.Bar.Delay       = 250ms;
 
         auto hoverStyle {retValue.create<list_box>("list_box", {.Hover = true})};
         *hoverStyle                 = *style;
@@ -434,24 +435,24 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<drop_down_list>("drop_down_list", {})};
-        style->Border.Size                   = 3_px;
-        style->Border.Radius                 = 5_px;
-        style->Margin                        = {5_px};
-        style->Padding                       = {5_px};
-        style->DropShadow.Color              = color {0, 0, 0, 128};
-        style->Text.Style                    = {false, font::weight::Normal};
-        style->Text.Font                     = resGrp.get<font_family>("Poppins");
-        style->Text.Size                     = 50_pct;
-        style->Text.Shadow.OffsetX           = 0_px;
-        style->Text.Shadow.OffsetY           = 1_px;
-        style->Text.Alignment                = {horizontal_alignment::Centered, vertical_alignment::Middle};
-        style->ItemHeight                    = 150_pct;
-        style->ItemClass                     = "list_items";
-        style->VScrollBar.ThumbClass         = "scrollbar_thumb";
-        style->VScrollBar.Bar.Size           = 20_pct;
-        style->VScrollBar.Bar.Border.Size    = 3_px;
-        style->VScrollBar.Bar.MotionDuration = 250ms;
-        style->MaxVisibleItems               = 0;
+        style->Border.Size                = 3_px;
+        style->Border.Radius              = 5_px;
+        style->Margin                     = {5_px};
+        style->Padding                    = {5_px};
+        style->DropShadow.Color           = color {0, 0, 0, 128};
+        style->Text.Style                 = {false, font::weight::Normal};
+        style->Text.Font                  = resGrp.get<font_family>("Poppins");
+        style->Text.Size                  = 50_pct;
+        style->Text.Shadow.OffsetX        = 0_px;
+        style->Text.Shadow.OffsetY        = 1_px;
+        style->Text.Alignment             = {horizontal_alignment::Centered, vertical_alignment::Middle};
+        style->ItemHeight                 = 150_pct;
+        style->ItemClass                  = "list_items";
+        style->VScrollBar.ThumbClass      = "scrollbar_thumb";
+        style->VScrollBar.Bar.Size        = 20_pct;
+        style->VScrollBar.Bar.Border.Size = 3_px;
+        style->VScrollBar.Bar.Delay       = 250ms;
+        style->MaxVisibleItems            = 0;
 
         auto hoverStyle {retValue.create<drop_down_list>("drop_down_list", {.Hover = true})};
         *hoverStyle                 = *style;
@@ -465,18 +466,18 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<grid_view>("grid_view", {})};
-        style->Border.Size                   = 3_px;
-        style->Border.Radius                 = 5_px;
-        style->Margin                        = {5_px};
-        style->Padding                       = {5_px};
-        style->DropShadow.Color              = color {0, 0, 0, 128};
-        style->MaxVisibleRows                = 5;
-        style->HeaderItemClass               = "header_items";
-        style->RowItemClasses                = {"row_items_0", "row_items_1", "row_items_2"};
-        style->VScrollBar.ThumbClass         = "scrollbar_thumb";
-        style->VScrollBar.Bar.Size           = 5_pct;
-        style->VScrollBar.Bar.Border.Size    = 3_px;
-        style->VScrollBar.Bar.MotionDuration = 250ms;
+        style->Border.Size                = 3_px;
+        style->Border.Radius              = 5_px;
+        style->Margin                     = {5_px};
+        style->Padding                    = {5_px};
+        style->DropShadow.Color           = color {0, 0, 0, 128};
+        style->MaxVisibleRows             = 5;
+        style->HeaderItemClass            = "header_items";
+        style->RowItemClasses             = {"row_items_0", "row_items_1", "row_items_2"};
+        style->VScrollBar.ThumbClass      = "scrollbar_thumb";
+        style->VScrollBar.Bar.Size        = 5_pct;
+        style->VScrollBar.Bar.Border.Size = 3_px;
+        style->VScrollBar.Bar.Delay       = 250ms;
 
         auto hoverStyle {retValue.create<grid_view>("grid_view", {.Hover = true})};
         *hoverStyle                = *style;

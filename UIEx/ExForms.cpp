@@ -166,7 +166,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     textBox0->Selectable = true;
 
     auto toggle0 {panel0Layout.create_widget<toggle>({0, 550, 150, 75}, "Toggle0")};
-    toggle0->Checked = true;
+    toggle0->Checked = false;
 
     auto gridPanel {panel0Layout.create_widget<panel>({230, 20, 250, 250}, "SPanel0")};
     gridPanel->TabStop = {.Enabled = false};

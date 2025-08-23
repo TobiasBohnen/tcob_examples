@@ -29,13 +29,13 @@ void UIEx::on_start()
     window().Cursor           = defaultCursor;
     defaultCursor->ActiveMode = "default";
 
-    // _form0 = create_form0(&window(), *resGrp);
+    _form0 = create_form0(&window(), *resGrp);
     // _form0 = create_form1(&window());
     //_form0 = create_form_displays(&window());
-    // _form0 = create_form_tabcontainer(&window(), *resGrp);
+    //_form0 = create_form_tabcontainer(&window(), *resGrp);
     //_form0 = create_form_accordion(&window(), *resGrp);
     //_form0 = create_form_terminal(&window());
-    _form0 = create_form_charting(&window());
+    //_form0 = create_form_charting(&window());
 
     _form0->Styles = create_color_styles(*resGrp);
     // _form0->Bounds = rect_f {{300, 450}, size_f {*window().Size * 2}};
@@ -99,6 +99,7 @@ void UIEx::on_key_down(keyboard::event const& ev)
     } break;
     case scan_code::V: {
         window().VSync = !window().VSync;
+        locate_service<gfx::render_system>().statistics().reset();
     } break;
     case scan_code::T: {
         _switch = !_switch;

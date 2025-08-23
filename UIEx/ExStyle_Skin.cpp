@@ -110,12 +110,12 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<toggle>("toggle", {})};
-        style->Background        = blue.Button13;
-        style->Border.Size       = 3_px;
-        style->Margin            = {5_px};
-        style->Padding           = {2_px};
-        style->AnimationDuration = 500ms;
-        style->Tick.Foreground   = red.Cross;
+        style->Background      = blue.Button13;
+        style->Border.Size     = 3_px;
+        style->Margin          = {5_px};
+        style->Padding         = {2_px};
+        style->Delay           = 500ms;
+        style->Tick.Foreground = red.Cross;
 
         auto checkedStyle {retValue.create<toggle>("toggle", {.Checked = true})};
         *checkedStyle                 = *style;
@@ -133,7 +133,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         hstyle->Bar.LowerBackground  = blue.Panel;
         hstyle->Bar.HigherBackground = blue.Panel;
         hstyle->Bar.Border.Size      = 5_px;
-        hstyle->Bar.MotionDuration   = 200ms;
+        hstyle->Bar.Delay            = 200ms;
 
         auto vstyle {retValue.create<slider>("slider", {}, {{"orientation", {{op::Equal, orientation::Vertical}}}})};
         *vstyle            = *hstyle;
@@ -152,7 +152,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         hstyle->Bar.LowerBackground  = blue.Panel;
         hstyle->Bar.HigherBackground = blue.Panel;
         hstyle->Bar.Border.Size      = 5_px;
-        hstyle->Bar.MotionDuration   = 200ms;
+        hstyle->Bar.Delay            = 200ms;
 
         auto vstyle {retValue.create<range_slider>("range_slider", {}, {{"orientation", {{op::Equal, orientation::Vertical}}}})};
         *vstyle            = *hstyle;
@@ -171,7 +171,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->Bar.LowerBackground  = blue.Button00;
         style->Bar.HigherBackground = blue.Button13;
         style->Bar.Border           = style->Border;
-        style->Bar.MotionDuration   = 250ms;
+        style->Bar.Delay            = 250ms;
 
         auto disabledStyle {retValue.create<progress_bar>("progress_bar", {.Disabled = true})};
         disabledStyle->Background           = colors::FireBrick;
@@ -230,7 +230,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->VScrollBar.Bar.Size             = 30_px;
         style->VScrollBar.Bar.LowerBackground  = yellow.Panel;
         style->VScrollBar.Bar.HigherBackground = yellow.Panel;
-        style->VScrollBar.Bar.MotionDuration   = 250ms;
+        style->VScrollBar.Bar.Delay            = 250ms;
         style->VScrollBar.ThumbClass           = "v_scrollbar_thumb";
         style->HScrollBar                      = style->VScrollBar;
         style->HScrollBar.ThumbClass           = "h_scrollbar_thumb";
@@ -255,7 +255,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->VScrollBar.Bar.Size             = 30_px;
         style->VScrollBar.Bar.LowerBackground  = yellow.Panel;
         style->VScrollBar.Bar.HigherBackground = yellow.Panel;
-        style->VScrollBar.Bar.MotionDuration   = 250ms;
+        style->VScrollBar.Bar.Delay            = 250ms;
 
         auto disabledStyle {retValue.create<list_box>("list_box", {.Disabled = true})};
         disabledStyle->Background = colors::FireBrick;
@@ -279,7 +279,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->VScrollBar.Bar.Size             = 30_px;
         style->VScrollBar.Bar.LowerBackground  = yellow.Panel;
         style->VScrollBar.Bar.HigherBackground = yellow.Panel;
-        style->VScrollBar.Bar.MotionDuration   = 250ms;
+        style->VScrollBar.Bar.Delay            = 250ms;
 
         auto disabledStyle {retValue.create<drop_down_list>("drop_down_list", {.Disabled = true})};
         disabledStyle->Background = colors::FireBrick;
@@ -298,7 +298,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->VScrollBar.Bar.Size             = 30_px;
         style->VScrollBar.Bar.LowerBackground  = yellow.Panel;
         style->VScrollBar.Bar.HigherBackground = yellow.Panel;
-        style->VScrollBar.Bar.MotionDuration   = 250ms;
+        style->VScrollBar.Bar.Delay            = 250ms;
 
         auto disabledStyle {retValue.create<grid_view>("grid_view", {.Disabled = true})};
         disabledStyle->Background = colors::FireBrick;
