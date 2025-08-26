@@ -13,7 +13,6 @@ using namespace std::chrono_literals;
 
 ControllerEx::ControllerEx(game& game)
     : scene(game)
-    , _form0 {std::make_shared<crtl_form>(window())}
 {
 }
 
@@ -22,6 +21,7 @@ ControllerEx::~ControllerEx() = default;
 void ControllerEx::on_start()
 {
     if (locate_service<input::system>().controllers().empty()) { std::terminate(); }
+    _form0                    = std::make_shared<crtl_form>(window());
     _form0->Controller->Label = locate_service<input::system>().first_controller().name();
     root_node()->Entity       = _form0;
 }
