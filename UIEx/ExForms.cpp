@@ -12,7 +12,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     // TODO: remove shared_ptr self capture
     //
     auto bounds {wnd->bounds()};
-    // bounds.Position += point_i {40, 40};
+    bounds.Position += point_i {40, 40};
     auto retValue {std::make_shared<form<dock_layout>>(form_init {"form0", bounds})};
 
     auto  tooltip0 {retValue->create_tooltip<tooltip>("tooltip")};

@@ -43,6 +43,30 @@ void UIEx::on_start()
 
     _switch             = false;
     root_node()->Entity = _form0;
+
+    {
+        _dialog0         = _form0->create_modal_dialog("dialog0");
+        _dialog0->Bounds = {50, 50, 600, 300};
+        auto& layout {_dialog0->create_layout<grid_layout>(size_i {11, 5})};
+        auto  btnOk {layout.create_widget<button>({1, 1, 4, 2}, "ok")};
+        btnOk->Label = "Open second dialog";
+        btnOk->Click += [&] { _dialog1->open(); };
+        auto btnCancel {layout.create_widget<button>({6, 1, 4, 2}, "cancel")};
+        btnCancel->Label = "Close first dialog";
+        btnCancel->Click += [&] { _dialog0->close(); };
+    }
+
+    {
+        _dialog1         = _form0->create_modal_dialog("dialog1");
+        _dialog1->Bounds = {150, 150, 600, 300};
+        auto& layout {_dialog1->create_layout<grid_layout>(size_i {11, 5})};
+        auto  btnOk {layout.create_widget<button>({1, 1, 4, 2}, "ok")};
+        btnOk->Label = "Toggle first dialog";
+        btnOk->Click += [&] { _dialog0->is_open() ? _dialog0->close() : _dialog0->open(); };
+        auto btnCancel {layout.create_widget<button>({6, 1, 4, 2}, "cancel")};
+        btnCancel->Label = "Close second dialog";
+        btnCancel->Click += [&] { _dialog1->close(); };
+    }
 }
 
 void UIEx::on_draw_to(render_target& target)
@@ -83,7 +107,7 @@ void UIEx::on_key_down(keyboard::event const& ev)
         }
         {
             data::object obj;
-            std::dynamic_pointer_cast<panel>(_form0->find_widget_by_name("Panel0"))->submit(obj);
+            dynamic_cast<panel*>(_form0->find_widget_by_name("Panel0"))->submit(obj);
             obj.save("Panel0.json");
         }
     } break;
@@ -93,6 +117,13 @@ void UIEx::on_key_down(keyboard::event const& ev)
     } break;
     case scan_code::R: {
         locate_service<gfx::render_system>().statistics().reset();
+    } break;
+    case scan_code::D: {
+        if (_dialog0->is_open()) {
+            _dialog0->close();
+        } else {
+            _dialog0->open();
+        }
     } break;
     case scan_code::G: {
         _form0->Shader = library().get_group("ui")->get<shader>("sepia");

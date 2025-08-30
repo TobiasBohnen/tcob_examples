@@ -90,6 +90,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Text.Size           = 50_pct;
         style->Text.Shadow.OffsetX = 0_px;
         style->Text.Shadow.OffsetY = 1_px;
+        style->Text.AutoSize       = auto_size_mode::Always;
         style->Text.Alignment      = {horizontal_alignment::Centered, vertical_alignment::Middle};
         style->Margin              = {10_px};
         style->Padding             = {2_px};
@@ -398,6 +399,22 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         *hoverStyle = *style;
 
         auto disabledStyle {retValue.create<panel>("panel", {.Disabled = true})};
+
+        normal.apply(style);
+        disabled.apply(disabledStyle);
+        hover.apply(hoverStyle);
+    }
+    {
+        auto style {retValue.create<modal_dialog>("modal_dialog", {})};
+        style->Border.Size      = 3_px;
+        style->Border.Radius    = 5_px;
+        style->Padding          = {5_px};
+        style->DropShadow.Color = color {0, 0, 0, 128};
+
+        auto hoverStyle {retValue.create<modal_dialog>("modal_dialog", {.Hover = true})};
+        *hoverStyle = *style;
+
+        auto disabledStyle {retValue.create<modal_dialog>("modal_dialog", {.Disabled = true})};
 
         normal.apply(style);
         disabled.apply(disabledStyle);

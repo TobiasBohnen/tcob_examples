@@ -26,5 +26,9 @@ protected:
 
 private:
     std::shared_ptr<form_base> _form0;
-    bool                       _switch {false};
+
+    std::shared_ptr<modal_dialog> _dialog0;
+    std::shared_ptr<modal_dialog> _dialog1;
+
+    bool _switch {false};
 };
