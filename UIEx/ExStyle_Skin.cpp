@@ -239,7 +239,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         disabledStyle->Background = colors::Green;
     }
     {
-        auto style {retValue.create<popup>("popup", {})};
+        auto style {retValue.create<tooltip>("tooltip", {})};
         style->Background  = yellow.Panel;
         style->Border.Size = 5_px;
     }

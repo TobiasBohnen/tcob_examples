@@ -15,7 +15,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     // bounds.Position += point_i {40, 40};
     auto retValue {std::make_shared<form<dock_layout>>(form_init {"form0", bounds})};
 
-    auto  tooltip0 {retValue->create_popup<popup>("tooltip")};
+    auto  tooltip0 {retValue->create_tooltip<tooltip>("tooltip")};
     auto& tooltipLayout {tooltip0->get_layout<panel::default_layout>()};
     tooltip0->Bounds = {0, 0, 170, 50};
     auto tooltipLabel0 {tooltipLayout.create_widget<label>({5, 5, 160, 40}, "TTLabel0")};
