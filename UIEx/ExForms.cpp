@@ -9,10 +9,8 @@ i32 stackIdx {0};
 
 auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
 {
-    // TODO: remove shared_ptr self capture
-    //
     auto bounds {wnd->bounds()};
-    bounds.Position += point_i {40, 40};
+    // bounds.Position += point_i {40, 40};
     auto retValue {std::make_shared<form<dock_layout>>(form_init {"form0", bounds})};
 
     auto  tooltip0 {retValue->create_tooltip<tooltip>("tooltip")};
@@ -348,7 +346,7 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     retValue->NavMap = nm;
 
     for (auto* c : retValue->all_widgets()) {
-        c->TransitionDuration = 500ms;
+        c->TransitionDuration = 250ms;
     }
     return retValue;
 }

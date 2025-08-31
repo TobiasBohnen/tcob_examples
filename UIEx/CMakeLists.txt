@@ -4,6 +4,7 @@ target_sources(UIEx PRIVATE
     main.cpp
     UIEx.cpp
     ExStyle_Color.cpp
+    ExStyle_Gradient.cpp
     ExStyle_Skin.cpp
     ExForms.cpp
 )

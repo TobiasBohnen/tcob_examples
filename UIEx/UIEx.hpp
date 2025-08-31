@@ -30,5 +30,5 @@ private:
     std::shared_ptr<modal_dialog> _dialog0;
     std::shared_ptr<modal_dialog> _dialog1;
 
-    bool _switch {false};
+    i32 _switch {0};
 };

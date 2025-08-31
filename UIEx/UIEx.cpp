@@ -11,6 +11,7 @@
 #include "ExForms.hpp"
 
 #include "ExStyle_Color.hpp"
+#include "ExStyle_Gradient.hpp"
 #include "ExStyle_Skin.hpp"
 
 using namespace std::chrono_literals;
@@ -29,15 +30,15 @@ void UIEx::on_start()
     window().Cursor           = defaultCursor;
     defaultCursor->ActiveMode = "default";
 
-    // _form0 = create_form0(&window(), *resGrp);
+    _form0 = create_form0(&window(), *resGrp);
     //_form0 = create_form1(&window());
     //_form0 = create_form_displays(&window());
-    _form0 = create_form_tabcontainer(&window(), *resGrp);
+    //_form0 = create_form_tabcontainer(&window(), *resGrp);
     //_form0 = create_form_accordion(&window(), *resGrp);
     //_form0 = create_form_terminal(&window());
     //_form0 = create_form_charting(&window());
 
-    _form0->Styles = create_color_styles(*resGrp);
+    _form0->Styles = create_gradient_styles(*resGrp);
     // _form0->Bounds = rect_f {{300, 450}, size_f {*window().Size * 2}};
     //_form0->Scale  = {0.5f, 0.5f};
 
@@ -133,12 +134,18 @@ void UIEx::on_key_down(keyboard::event const& ev)
         locate_service<gfx::render_system>().statistics().reset();
     } break;
     case scan_code::T: {
-        _switch = !_switch;
-        if (_switch) {
+        switch (_switch) {
+        case 0:
             _form0->Styles = create_skinned_styles(*library().get_group("ui"));
-        } else {
+            break;
+        case 1:
+            _form0->Styles = create_gradient_styles(*library().get_group("ui"));
+            break;
+        case 2:
             _form0->Styles = create_color_styles(*library().get_group("ui"));
+            break;
         }
+        _switch = (_switch + 1) % 3;
     } break;
     default:
         break;
