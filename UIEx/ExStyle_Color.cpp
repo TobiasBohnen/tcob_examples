@@ -512,11 +512,11 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Margin           = {5_px};
         style->Padding          = {5_px};
         style->DropShadow.Color = color {0, 0, 0, 128};
-        style->HeaderSize       = 10_pct;
+        style->TabBarSize       = 10_pct;
         style->TabItemClass     = "tab_items";
-        style->HeaderPosition   = position::Top;
-        style->HeaderMode       = tab_container::header_mode::Fill;
-        style->HeaderLineCount  = 3;
+        style->TabBarPosition   = position::Top;
+        style->TabBarMode       = tab_container::header_mode::Fill;
+        style->TabBarRows       = 3;
 
         auto hoverStyle {retValue.create<tab_container>("tab_container", {.Hover = true})};
         *hoverStyle = *style;
