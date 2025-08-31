@@ -386,7 +386,6 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         auto style {retValue.create<panel>("panel", {})};
         style->Border.Size                = 3_px;
         style->Border.Radius              = 5_px;
-        style->Margin                     = {5_px};
         style->Padding                    = {5_px};
         style->DropShadow.Color           = color {0, 0, 0, 128};
         style->VScrollBar.ThumbClass      = "scrollbar_thumb";

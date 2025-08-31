@@ -371,12 +371,16 @@ auto create_form1(window* wnd) -> std::shared_ptr<form_base>
         panel1->ScrollEnabled = true;
         auto& panel1Layout {panel1->get_layout<panel::default_layout>()};
 
-        auto panel2 {panel1Layout.create_widget<panel>({50, 30, 300, 300}, "Panel2")};
+        auto panel2 {panel1Layout.create_widget<panel>({50, 30, 300, 300}, "Panel1")};
         panel2->ScrollEnabled = true;
         auto& panel2Layout {panel2->get_layout<panel::default_layout>()};
 
-        auto button0 {panel2Layout.create_widget<button>({-10, -10, 30, 30}, "Button0")};
-        auto button1 {panel2Layout.create_widget<button>({350, 350, 80, 50}, "Button1")};
+        auto panel3 {panel2Layout.create_widget<panel>({50, 30, 300, 300}, "Panel2")};
+        panel3->ScrollEnabled = true;
+        auto& panel3Layout {panel3->get_layout<panel::default_layout>()};
+
+        auto button0 {panel3Layout.create_widget<button>({-10, -10, 30, 30}, "Button0")};
+        auto button1 {panel3Layout.create_widget<button>({350, 350, 80, 50}, "Button1")};
     }
 
     {
@@ -665,7 +669,9 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
 
 auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form<dock_layout>>
 {
-    auto retValue {std::make_shared<form<dock_layout>>(form_init {.Name = "form4", .Bounds = wnd->bounds()})};
+    auto bounds {wnd->bounds()};
+    bounds.Position += point_i {40, 40};
+    auto retValue {std::make_shared<form<dock_layout>>(form_init {"form4", bounds})};
 
     auto const createSections {[](std::shared_ptr<accordion> const& accordion0) {
         auto boxVPanel0 {accordion0->create_section<panel>("TAB0")};
