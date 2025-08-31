@@ -54,7 +54,7 @@ public:
     }
 
 private:
-    void static set(u32* raw, color c, bool darken)
+    static void set(u32* raw, color c, bool darken)
     {
         if (darken) {
             c.R /= 2;
@@ -64,7 +64,7 @@ private:
         *raw = std::byteswap(c.value());
     }
 
-    auto static get(u8 const* img, usize idx) -> color
+    static auto get(u8 const* img, usize idx) -> color
     {
         u8 const r {img[idx + 0]};
         u8 const g {img[idx + 1]};

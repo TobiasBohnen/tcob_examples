@@ -9,7 +9,7 @@
 
 using namespace std::chrono_literals;
 
-auto static create_tileset() -> std::unordered_map<tile_index_t, orthogonal_tile>
+static auto create_tileset() -> std::unordered_map<tile_index_t, orthogonal_tile>
 {
     std::unordered_map<tile_index_t, orthogonal_tile> retValue;
 
