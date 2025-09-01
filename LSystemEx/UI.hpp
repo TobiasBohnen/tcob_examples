@@ -35,5 +35,5 @@ private:
     std::shared_ptr<spinner>   _spnStroke;
     std::shared_ptr<grid_view> _grdRules;
 
-    assets::asset_owner_ptr<font_family> _font;
+    asset_owner_ptr<font_family> _font;
 };

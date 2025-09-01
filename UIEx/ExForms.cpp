@@ -7,7 +7,7 @@ using namespace std::chrono_literals;
 
 i32 stackIdx {0};
 
-auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
+auto create_form0(window* wnd, group const& resGrp) -> std::shared_ptr<form_base>
 {
     auto bounds {wnd->bounds()};
     // bounds.Position += point_i {40, 40};

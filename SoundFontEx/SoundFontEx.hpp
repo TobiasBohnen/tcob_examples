@@ -28,7 +28,7 @@ protected:
 private:
     void play_note(milliseconds dur, i32 preset, midi_note note);
 
-    assets::asset_ptr<sound_font> _soundFont;
+    asset_ptr<sound_font> _soundFont;
 
     std::shared_ptr<sound> _sound;
 

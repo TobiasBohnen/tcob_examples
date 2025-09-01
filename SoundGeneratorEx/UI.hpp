@@ -80,5 +80,5 @@ private:
     std::shared_ptr<slider> _valHighPassFilterCutoff;      // 0 to 1
     std::shared_ptr<slider> _valHighPassFilterCutoffSweep; // -1 to 1
 
-    assets::asset_owner_ptr<font_family> _font;
+    asset_owner_ptr<font_family> _font;
 };
