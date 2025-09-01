@@ -7,7 +7,7 @@ auto create_gradient_styles(assets::group const& resGrp) -> style_collection
 {
     gradient_theme normal;
     normal.Background     = linear_gradient {0_deg, {colors::Red, colors::DarkRed}};
-    normal.Border         = linear_gradient {180_deg, {colors::Black, colors::DarkGray}};
+    normal.Border         = conic_gradient {{colors::SpringGreen, colors::SlateGray, colors::SpringGreen}};
     normal.DropShadow     = color {0, 0, 0, 128};
     normal.Text           = colors::Black;
     normal.BarLower       = linear_gradient {180_deg, {colors::LightBlue, colors::LightSteelBlue, colors::OliveDrab}};
@@ -20,18 +20,18 @@ auto create_gradient_styles(assets::group const& resGrp) -> style_collection
     normal.TextShadow     = colors::White;
     normal.TextDecoration = colors::Red;
     normal.Thumb          = colors::LightGreen;
-    normal.Tick           = radial_gradient {10_pct, 25_pct, {1, 1}, {colors::LightSkyBlue, colors::PowderBlue}};
+    normal.Tick           = linear_gradient {180_deg, {colors::Black, colors::DarkGray}};
     normal.Container      = box_gradient {30_pct, 45_pct, {colors::LightSteelBlue, colors::CadetBlue, colors::Snow}};
 
     gradient_theme hover {normal};
     hover.Background     = linear_gradient {180_deg, {colors::Red, colors::DarkGray}};
-    hover.Border         = linear_gradient {270_deg, {colors::White, colors::DarkGray}};
+    hover.Border         = conic_gradient {{colors::SlateGray, colors::SpringGreen, colors::SlateGray}};
     normal.DropShadow    = color {0, 0, 0, 32};
     hover.Item           = linear_gradient {90_deg, {colors::LightGray, colors::DarkGray}};
     hover.Thumb          = colors::DarkKhaki;
     hover.NavArrowInc    = linear_gradient {180_deg, {colors::DarkRed, colors::Red}};
     hover.NavArrowDec    = linear_gradient {0_deg, {colors::DarkGreen, colors::LightGreen}};
-    hover.Tick           = radial_gradient {10_pct, 50_pct, {1, 2}, {colors::PowderBlue, colors::LightSkyBlue}};
+    hover.Tick           = linear_gradient {270_deg, {colors::White, colors::DarkGray}};
     hover.TextDecoration = colors::Blue;
     hover.Container      = box_gradient {20_pct, 10_pct, {colors::Snow, colors::LightBlue, colors::LightSteelBlue}};
 
@@ -91,8 +91,7 @@ auto create_gradient_styles(assets::group const& resGrp) -> style_collection
         auto disabledStyle {retValue.create<button>("button", {.Disabled = true})};
 
         auto hoverStyle {retValue.create<button>("button", {.Hover = true})};
-        *hoverStyle        = *style;
-        hoverStyle->Margin = {5_px};
+        *hoverStyle = *style;
 
         auto focusStyle {retValue.create<button>("button", {.Focus = true})};
         *focusStyle = *style;
@@ -101,7 +100,8 @@ auto create_gradient_styles(assets::group const& resGrp) -> style_collection
         *focusHoverStyle = *focusStyle;
 
         auto activeStyle {retValue.create<button>("button", {.Focus = true, .Active = true})};
-        *activeStyle = *style;
+        *activeStyle        = *style;
+        activeStyle->Margin = {5_px};
 
         normal.apply(style);
         disabled.apply(disabledStyle);
@@ -128,7 +128,7 @@ auto create_gradient_styles(assets::group const& resGrp) -> style_collection
         style->Border.Radius     = 5_px;
         style->Margin            = {10_px};
         style->Padding           = {2_px};
-        style->Tick.Type         = tick_type::Triangle;
+        style->Tick.Type         = tick_type::Rect;
         style->Tick.Size         = 90_pct;
         style->EasingFunc        = easing_func::ExpoInOut;
 
@@ -152,7 +152,7 @@ auto create_gradient_styles(assets::group const& resGrp) -> style_collection
         style->Border.Radius = 5_px;
         style->Margin        = {5_px};
         style->Padding       = {5_px};
-        style->Tick.Type     = tick_type::Triangle;
+        style->Tick.Type     = tick_type::Disc;
         style->Tick.Size     = 80_pct;
 
         auto disabledStyle {retValue.create<radio_button>("radio_button", {.Disabled = true})};

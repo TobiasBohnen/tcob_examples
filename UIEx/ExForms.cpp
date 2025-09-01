@@ -205,16 +205,8 @@ auto create_form0(window* wnd, assets::group const& resGrp) -> std::shared_ptr<f
     for (i32 i {0}; i < 4; i++) {
         auto rb {boxHLayout2.create_widget<radio_button>("Radio" + std::to_string(i))};
         rb->Checked.Changed.connect([label0, rb](bool value) { label0->Label = (value ? "checked: " : "unchecked: ") + rb->name(); });
-        rb->Cursor = "cursor2";
+        rb->Cursor = cursor_mode::User1;
     }
-    retValue->CursorChanged.connect([wnd, form = retValue.get()](string const& cursor) {
-        if (wnd->SystemCursorEnabled) { return; }
-        if (!wnd->Cursor) { return; }
-        wnd->Cursor->ActiveMode = cursor;
-
-        size_f off {wnd->Cursor->bounds().Size};
-        form->TooltipOffset = point_f {off.Width, off.Height};
-    });
 
     auto masonryPanel0 {panel0Layout.create_widget<panel>({230, 390, 250, 550}, "SPanel4")};
     masonryPanel0->TabStop = {.Enabled = false};
