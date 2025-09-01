@@ -45,35 +45,7 @@ void UIEx::on_start()
     _switch             = false;
     root_node()->Entity = _form0;
 
-    _form0->CursorChanged.connect([&](cursor_mode cursor) {
-        auto& wnd {window()};
-        if (wnd.SystemCursorEnabled) { return; }
-        if (!wnd.Cursor) { return; }
-
-        string newMode;
-        switch (cursor) {
-        case tcob::ui::cursor_mode::Default:     newMode = "default"; break;
-        case tcob::ui::cursor_mode::Move:        newMode = "move"; break;
-        case tcob::ui::cursor_mode::EW_Resize:   newMode = "ew-resize"; break;
-        case tcob::ui::cursor_mode::NS_Resize:   newMode = "ns-resize"; break;
-        case tcob::ui::cursor_mode::NWSE_Resize: newMode = "nwse-resize"; break;
-        case tcob::ui::cursor_mode::NESW_Resize: newMode = "nesw-resize"; break;
-        case tcob::ui::cursor_mode::Grab:        newMode = "grab"; break;
-        case tcob::ui::cursor_mode::Grabbing:    newMode = "grabbing"; break;
-        case tcob::ui::cursor_mode::Text:        newMode = "text"; break;
-        case tcob::ui::cursor_mode::Cell:        newMode = "cell"; break;
-        case tcob::ui::cursor_mode::User1:
-        case tcob::ui::cursor_mode::User2:
-        case tcob::ui::cursor_mode::User3:
-        case tcob::ui::cursor_mode::User4:
-        case tcob::ui::cursor_mode::User5:       newMode = "cursor2"; break;
-        }
-        if (wnd.Cursor->ActiveMode == newMode) { return; }
-
-        wnd.Cursor->ActiveMode = newMode;
-        size_f off {wnd.Cursor->bounds().Size};
-        _form0->TooltipOffset = point_f {off.Width, off.Height};
-    });
+    _form0->Cursor = window().Cursor;
 
     {
         _dialog0         = _form0->create_modal_dialog("dialog0");
