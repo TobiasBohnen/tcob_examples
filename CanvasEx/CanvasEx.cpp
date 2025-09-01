@@ -16,11 +16,11 @@ CanvasEx::CanvasEx(game& game)
     font_family::SingleFont(_font, trim_ttf);
 
     _modes = {
+        &CanvasEx::canvas_gradient,
         &CanvasEx::canvas_clip,
         &CanvasEx::canvas_text,
         &CanvasEx::canvas_ring,
         &CanvasEx::canvas_ray_cast,
-        &CanvasEx::canvas_gradient,
         &CanvasEx::canvas_path2d,
         &CanvasEx::canvas_fancy_lines,
     };
@@ -207,6 +207,24 @@ void CanvasEx::canvas_gradient()
     _canvas.set_fill_style(linearGradient2);
     _canvas.begin_path();
     _canvas.rect({{500, 0}, {200, 200}});
+    _canvas.fill();
+
+    auto conicalGradient {_canvas.create_conic_gradient(
+        {350, 350},
+        color_gradient {
+            {0, colors::Green},
+            {0.2499, colors::Green},
+            {0.25, colors::Red},
+            {0.4999, colors::Red},
+            {0.50, colors::Blue},
+            {0.7499, colors::Blue},
+            {0.75, colors::Orange},
+            {1, colors::Orange},
+        })};
+
+    _canvas.set_fill_style(conicalGradient);
+    _canvas.begin_path();
+    _canvas.circle({350, 350}, 100);
     _canvas.fill();
 
     _canvas.end_frame();

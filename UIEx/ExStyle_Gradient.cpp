@@ -6,66 +6,66 @@ using namespace tcob::literals;
 auto create_gradient_styles(assets::group const& resGrp) -> style_collection
 {
     gradient_theme normal;
-    normal.Background     = radial_gradient {10_pct, 25_pct, {1, 1}, {colors::LightSkyBlue, colors::LightGreen}};
-    normal.Border         = colors::Gray;
+    normal.Background     = linear_gradient {0_deg, {colors::Red, colors::DarkRed}};
+    normal.Border         = linear_gradient {180_deg, {colors::Black, colors::DarkGray}};
     normal.DropShadow     = color {0, 0, 0, 128};
     normal.Text           = colors::Black;
-    normal.BarLower       = colors::LightGreen;
-    normal.BarHigher      = colors::DarkGreen;
+    normal.BarLower       = linear_gradient {180_deg, {colors::LightBlue, colors::LightSteelBlue, colors::OliveDrab}};
+    normal.BarHigher      = linear_gradient {0_deg, {colors::LightBlue, colors::LightSteelBlue, colors::OliveDrab}};
     normal.Caret          = colors::Black;
-    normal.Item           = box_gradient {10_pct, 5_pct, {colors::LightSteelBlue, colors::PaleVioletRed, colors::MediumOrchid}};
+    normal.Item           = linear_gradient {180_deg, {colors::LightBlue, colors::LightSteelBlue, colors::OliveDrab}};
     normal.NavArrowInc    = linear_gradient {180_deg, {colors::Red, colors::DarkRed}};
     normal.NavArrowDec    = linear_gradient {0_deg, {colors::LightGreen, colors::DarkGreen}};
     normal.NavArrow       = colors::Blue;
     normal.TextShadow     = colors::White;
     normal.TextDecoration = colors::Red;
     normal.Thumb          = colors::LightGreen;
-    normal.Tick           = colors::Black;
-    normal.Container      = linear_gradient {180_deg, {colors::LightBlue, colors::LightSteelBlue, colors::MediumOrchid}};
+    normal.Tick           = radial_gradient {10_pct, 25_pct, {1, 1}, {colors::LightSkyBlue, colors::PowderBlue}};
+    normal.Container      = box_gradient {30_pct, 45_pct, {colors::LightSteelBlue, colors::CadetBlue, colors::Snow}};
 
     gradient_theme hover {normal};
-    hover.Background     = radial_gradient {10_pct, 50_pct, {1, 2}, {colors::LightGreen, colors::LightSkyBlue}};
-    hover.Border         = colors::Black;
+    hover.Background     = linear_gradient {180_deg, {colors::Red, colors::DarkGray}};
+    hover.Border         = linear_gradient {270_deg, {colors::White, colors::DarkGray}};
     normal.DropShadow    = color {0, 0, 0, 32};
-    hover.Item           = box_gradient {20_pct, 10_pct, {colors::MediumOrchid, colors::LightBlue, colors::LightSteelBlue}};
+    hover.Item           = linear_gradient {90_deg, {colors::LightGray, colors::DarkGray}};
     hover.Thumb          = colors::DarkKhaki;
     hover.NavArrowInc    = linear_gradient {180_deg, {colors::DarkRed, colors::Red}};
     hover.NavArrowDec    = linear_gradient {0_deg, {colors::DarkGreen, colors::LightGreen}};
-    hover.Tick           = colors::White;
+    hover.Tick           = radial_gradient {10_pct, 50_pct, {1, 2}, {colors::PowderBlue, colors::LightSkyBlue}};
     hover.TextDecoration = colors::Blue;
-    hover.Container      = linear_gradient {90_deg, {colors::LightGray, colors::DarkGray}};
+    hover.Container      = box_gradient {20_pct, 10_pct, {colors::Snow, colors::LightBlue, colors::LightSteelBlue}};
 
     gradient_theme hoverCheck {hover};
-    hoverCheck.Tick = colors::Green;
+    hoverCheck.Tick = linear_gradient {180_deg, {colors::LightGreen, colors::Green}};
 
     gradient_theme focus {normal};
-    focus.Border = colors::IndianRed;
+    focus.Border = linear_gradient {270_deg, {colors::White, colors::IndianRed}};
 
     gradient_theme check {normal};
-    check.Tick = colors::Green;
+    check.Tick = linear_gradient {180_deg, {colors::LightGreen, colors::Green}};
 
     gradient_theme focusHover {focus};
-    focusHover.Background = colors::DarkKhaki;
+    focusHover.Background = radial_gradient {10_pct, 50_pct, {1, 2}, {colors::PowderBlue, colors::LightSkyBlue}};
 
     gradient_theme focusCheck {focus};
-    focusCheck.Background = colors::Orange;
-    focusCheck.Tick       = colors::Green;
+    focusCheck.Background = radial_gradient {10_pct, 25_pct, {1, 1}, {colors::LightSkyBlue, colors::Orange}};
+    focusCheck.Tick       = linear_gradient {180_deg, {colors::LightGreen, colors::Green}};
 
     gradient_theme focusHoverCheck {focusHover};
-    focusHoverCheck.Tick = colors::Green;
+    focusHoverCheck.Tick = linear_gradient {180_deg, {colors::LightGreen, colors::Green}};
 
     gradient_theme active {normal};
-    active.Background  = colors::LightCyan;
-    active.Border      = colors::Silver;
+    active.Background  = radial_gradient {10_pct, 50_pct, {1, 2}, {colors::PowderBlue, colors::LightSkyBlue}};
+    active.Border      = linear_gradient {270_deg, {colors::White, colors::DarkGray}};
     active.Text        = colors::White;
-    active.Tick        = colors::Blue;
-    active.Item        = colors::FireBrick;
+    active.Tick        = linear_gradient {180_deg, {colors::LightGreen, colors::Blue}};
+    active.Item        = linear_gradient {90_deg, {colors::LightGray, colors::FireBrick}};
     active.Thumb       = colors::Black;
-    active.NavArrowInc = colors::Green;
-    active.NavArrowDec = colors::Red;
+    active.NavArrowInc = linear_gradient {180_deg, {colors::DarkRed, colors::Red}};
+    active.NavArrowDec = linear_gradient {0_deg, {colors::DarkGreen, colors::LightGreen}};
 
     gradient_theme activeCheck {active};
-    activeCheck.Tick = colors::Green;
+    activeCheck.Tick = linear_gradient {180_deg, {colors::LightGreen, colors::Green}};
 
     gradient_theme disabled {normal};
     disabled.Background = colors::Gray;
@@ -101,8 +101,7 @@ auto create_gradient_styles(assets::group const& resGrp) -> style_collection
         *focusHoverStyle = *focusStyle;
 
         auto activeStyle {retValue.create<button>("button", {.Focus = true, .Active = true})};
-        *activeStyle        = *style;
-        activeStyle->Margin = {5_px, 5_px, 10_px, 0_px};
+        *activeStyle = *style;
 
         normal.apply(style);
         disabled.apply(disabledStyle);
