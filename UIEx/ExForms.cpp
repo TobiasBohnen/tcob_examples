@@ -400,7 +400,7 @@ auto create_form1(window* wnd) -> std::shared_ptr<form_base>
     return retValue;
 }
 
-auto create_form_terminal(window* wnd) -> std::shared_ptr<form<dock_layout>>
+auto create_form_terminal(window* wnd) -> std::shared_ptr<form_base>
 {
     auto retValue {std::make_shared<form<dock_layout>>(form_init {"form2", wnd->bounds()})};
 
@@ -454,14 +454,13 @@ auto create_form_terminal(window* wnd) -> std::shared_ptr<form<dock_layout>>
     return retValue;
 }
 
-auto create_form_charting(window* wnd) -> std::shared_ptr<form<dock_layout>>
+auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
 {
     using namespace tcob::ui::charts;
 
-    auto retValue {std::make_shared<form<dock_layout>>(form_init {"form5", wnd->bounds()})};
+    auto retValue {std::make_shared<form<vertical_layout>>(form_init {"form5", wnd->bounds()})};
 
-    auto panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
-    panel0->Flex = {.Width = 100_pct, .Height = 33_pct};
+    auto  panel0 {retValue->create_container<panel>("Panel0")};
     auto& panel0Layout {panel0->create_layout<horizontal_layout>()};
 
     {
@@ -490,16 +489,40 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form<dock_layout>>
         auto pieChart0 {panel0Layout.create_widget<pie_chart>("Pie")};
 
         pieChart0->Series.mutate([&](auto& val) {
-            val.push_back({.Name = "pie1", .Values = {0.4f, 0.3f, 0.2f, 0.1f}});
-            val.push_back({.Name = "pie2", .Values = {0.5f, 0.4f, 0.05f, 0.05f}});
-            val.push_back({.Name = "pie3", .Values = {0.6f, 0.2f, 0.1f, 0.1f}});
+            val.push_back({.Name = "pie1", .Values = {4, 3, 2, 1}});
+            val.push_back({.Name = "pie2", .Values = {5, 4, 6, 9}});
+            val.push_back({.Name = "pie3", .Values = {2, 4, 8, 16}});
         });
         pieChart0->TransitionDuration = 250ms;
+    }
+
+    auto  panel1 {retValue->create_container<panel>("Panel1")};
+    auto& panel1Layout {panel1->create_layout<horizontal_layout>()};
+
+    {
+        auto mekkoChart0 {panel1Layout.create_widget<marimekko_chart>("Mekko")};
+
+        mekkoChart0->Series.mutate([&](auto& val) {
+            val.push_back({.Name = "mekko1", .Values = {1, 1, 1, 1}});
+            val.push_back({.Name = "mekko2", .Values = {5, 4, 6, 9}});
+            val.push_back({.Name = "mekko3", .Values = {6, 2, 2, 6}});
+        });
+        mekkoChart0->TransitionDuration = 250ms;
+    }
+    {
+        auto scatterChart0 {panel1Layout.create_widget<scatter_chart>("Scatter")};
+        scatterChart0->XAxis = {.Min = 0, .Max = 10};
+        scatterChart0->YAxis = {.Min = 0, .Max = 12};
+        scatterChart0->Series.mutate([&](auto& val) {
+            val.push_back({.Name = "scatter1", .Values = {{0, 0}, {2, 3}, {3, 6}}});
+            val.push_back({.Name = "scatter2", .Values = {{3, 0}, {4, 2}, {10, 12}, {4, 3}}});
+        });
+        scatterChart0->TransitionDuration = 250ms;
     }
     return retValue;
 }
 
-auto create_form_displays(window* wnd) -> std::shared_ptr<form<dock_layout>>
+auto create_form_displays(window* wnd) -> std::shared_ptr<form_base>
 {
     auto retValue {std::make_shared<form<dock_layout>>(form_init {.Name = "form2", .Bounds = wnd->bounds()})};
 
@@ -582,7 +605,7 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form<dock_layout>>
     return retValue;
 }
 
-auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form<dock_layout>>
+auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
 {
     auto retValue {std::make_shared<form<dock_layout>>(form_init {.Name = "form3", .Bounds = wnd->bounds()})};
 
@@ -654,7 +677,7 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
     return retValue;
 }
 
-auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form<dock_layout>>
+auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
 {
     auto bounds {wnd->bounds()};
     bounds.Position += point_i {40, 40};

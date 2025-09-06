@@ -932,6 +932,54 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         hover.apply(hoverStyle);
         active.apply(activeStyle);
     }
+    {
+        auto style {retValue.create<marimekko_chart>("marimekko_chart", {}, {})};
+        style->Border.Size      = 3_px;
+        style->Margin           = {5_px};
+        style->Padding          = {20_px};
+        style->DropShadow.Color = color {0, 0, 0, 128};
+        style->Colors           = {colors::PaleVioletRed, colors::SlateBlue, colors::Fuchsia, colors::NavajoWhite};
+        style->BarRadius        = 10_pct;
+        style->BarSize          = {100_pct, 100_pct};
+
+        auto hoverStyle {retValue.create<marimekko_chart>("marimekko_chart", {.Hover = true})};
+        *hoverStyle           = *style;
+        hoverStyle->BarRadius = 0_pct;
+        hoverStyle->BarSize   = {80_pct, 80_pct};
+
+        auto activeStyle {retValue.create<marimekko_chart>("marimekko_chart", {.Active = true})};
+        *activeStyle = *style;
+
+        normal.apply(style);
+        hover.apply(hoverStyle);
+        active.apply(activeStyle);
+    }
+    {
+        auto style {retValue.create<scatter_chart>("scatter_chart", {}, {})};
+        style->Border.Size         = 3_px;
+        style->Margin              = {5_px};
+        style->Padding             = {20_px};
+        style->DropShadow.Color    = color {0, 0, 0, 128};
+        style->Colors              = {colors::PaleVioletRed, colors::SlateBlue, colors::Fuchsia, colors::NavajoWhite};
+        style->PointSize           = 10;
+        style->StrokeColor         = colors::Black;
+        style->HorizontalGridLines = grid_line_amount::Normal;
+        style->VerticalGridLines   = grid_line_amount::Normal;
+
+        auto hoverStyle {retValue.create<scatter_chart>("scatter_chart", {.Hover = true})};
+        *hoverStyle                     = *style;
+        hoverStyle->PointSize           = 25;
+        hoverStyle->StrokeColor         = colors::Red;
+        hoverStyle->HorizontalGridLines = grid_line_amount::Many;
+        hoverStyle->VerticalGridLines   = grid_line_amount::Many;
+
+        auto activeStyle {retValue.create<scatter_chart>("scatter_chart", {.Active = true})};
+        *activeStyle = *style;
+
+        normal.apply(style);
+        hover.apply(hoverStyle);
+        active.apply(activeStyle);
+    }
     return retValue;
 }
 
@@ -1089,7 +1137,7 @@ void color_theme::apply(std::shared_ptr<accordion::style> const& style) const
     style->DropShadow.Color  = DropShadow;
 }
 
-void color_theme::apply(std::shared_ptr<charts::chart::style> const& style) const
+void color_theme::apply(std::shared_ptr<charts::chart_style> const& style) const
 {
     style->Background        = Container;
     style->Border.Background = Border;

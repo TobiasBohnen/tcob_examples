@@ -1063,7 +1063,7 @@ void gradient_theme::apply(std::shared_ptr<accordion::style> const& style) const
     style->DropShadow.Color  = DropShadow;
 }
 
-void gradient_theme::apply(std::shared_ptr<charts::chart::style> const& style) const
+void gradient_theme::apply(std::shared_ptr<charts::chart_style> const& style) const
 {
     style->Background        = Container;
     style->Border.Background = Border;
