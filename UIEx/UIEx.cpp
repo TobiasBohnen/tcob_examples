@@ -110,7 +110,7 @@ void UIEx::on_key_down(keyboard::event const& ev)
         }
         {
             data::object obj;
-            dynamic_cast<panel*>(_form0->find_widget_by_name("Panel0").get())->submit(obj);
+            dynamic_cast<panel*>(_form0->find_widget_by_name("Panel0"))->submit(obj);
             obj.save("Panel0.json");
         }
     } break;
