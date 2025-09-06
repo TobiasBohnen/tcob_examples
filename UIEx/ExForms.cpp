@@ -460,88 +460,98 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
 
     auto retValue {std::make_shared<form<vertical_layout>>(form_init {"form5", wnd->bounds()})};
 
-    auto  panel0 {retValue->create_container<panel>("Panel0")};
-    auto& panel0Layout {panel0->create_layout<horizontal_layout>()};
-
-    auto barChart0 {panel0Layout.create_widget<bar_chart>("Bar")};
-    barChart0->YAxis = {.Min = 0, .Max = 1};
-
-    barChart0->Dataset.mutate([&](auto& val) {
-        val.push_back({.Name = "bar1", .Value = {0.1f, 0.4f, 0.3f, 0.1f}});
-        val.push_back({.Name = "bar2", .Value = {0.2f, 0.1f, 0.4f, 0.5f}});
-        val.push_back({.Name = "bar3", .Value = {0.5f, 0.4f, 0.2f, 0.1f}});
-    });
-    barChart0->TransitionDuration = 250ms;
-
-    auto lineChart0 {panel0Layout.create_widget<line_chart>("Line")};
-    lineChart0->YAxis = {.Min = 0, .Max = 1};
-
-    lineChart0->Dataset.mutate([&](auto& val) {
-        val.push_back({.Name = "line1", .Value = {0.1f, 0.4f, 0.8f, 0.1f, 0.8f, 0.1f, 0.8f}});
-        val.push_back({.Name = "line2", .Value = {0.2f, 0.75f, 0.75f, 0.15f, 0.15f, 0.85f, 0.97f}});
-        val.push_back({.Name = "line3", .Value = {0.3f, 0.15f, 0.5f, 0.25f, 0.5f, 0.25f, 0.83f}});
-    });
-    lineChart0->TransitionDuration = 250ms;
-
-    auto pieChart0 {panel0Layout.create_widget<pie_chart>("Pie")};
-
-    pieChart0->Dataset.mutate([&](auto& val) {
-        val.push_back({.Name = "pie1", .Value = 4});
-        val.push_back({.Name = "pie2", .Value = 6});
-        val.push_back({.Name = "pie3", .Value = 2});
-        val.push_back({.Name = "pie4", .Value = 2});
-    });
-    pieChart0->TransitionDuration = 250ms;
-
-    auto  panel1 {retValue->create_container<panel>("Panel1")};
-    auto& panel1Layout {panel1->create_layout<horizontal_layout>()};
-
-    auto mekkoChart0 {panel1Layout.create_widget<marimekko_chart>("Mekko")};
-
-    mekkoChart0->Dataset.mutate([&](auto& val) {
-        val.push_back({.Name = "mekko1", .Value = {1, 1, 1, 1}});
-        val.push_back({.Name = "mekko2", .Value = {5, 4, 6, 9}});
-        val.push_back({.Name = "mekko3", .Value = {6, 2, 2, 6}});
-    });
-    mekkoChart0->TransitionDuration = 250ms;
-
-    auto scatterChart0 {panel1Layout.create_widget<scatter_chart>("Scatter")};
-    scatterChart0->XAxis = {.Min = 0, .Max = 10};
-    scatterChart0->YAxis = {.Min = 0, .Max = 12};
-
-    scatterChart0->Dataset.mutate([&](auto& val) {
-        val.push_back({.Name = "scatter1", .Value = {{0, 0}, {2, 3}, {3, 6}}});
-        val.push_back({.Name = "scatter2", .Value = {{3, 0}, {4, 2}, {10, 12}, {4, 3}}});
-    });
-    scatterChart0->TransitionDuration = 250ms;
-
-    auto radarChart0 {panel1Layout.create_widget<radar_chart>("Radar")};
-    radarChart0->ValueAxis = {.Min = 0, .Max = 1};
-
-    radarChart0->Dataset.mutate([&](auto& val) {
-        val.push_back({.Name = "radar1", .Value = {0.8f, 0.6f, 0.9f, 0.5f, 0.7f, 0.65f}});
-        val.push_back({.Name = "radar2", .Value = {0.5f, 0.7f, 0.4f, 0.95f, 0.45f, 0.8f}});
-        val.push_back({.Name = "radar3", .Value = {0.3f, 0.9f, 0.6f, 0.7f, 0.2f, 0.55f}});
-        val.push_back({.Name = "radar4", .Value = {0.6f, 0.4f, 0.8f, 0.6f, 0.5f, 0.9f}});
-    });
-    radarChart0->TransitionDuration = 250ms;
-
-    auto  panel2 {retValue->create_container<panel>("Panel2")};
-    auto& panel2Layout {panel2->create_layout<horizontal_layout>()};
     {
-        auto legend0 {panel2Layout.create_widget<legend>("Legend")};
-        legend0->For = barChart0;
-        auto legend1 {panel2Layout.create_widget<legend>("Legend")};
-        legend1->For = lineChart0;
-        auto legend2 {panel2Layout.create_widget<legend>("Legend")};
-        legend2->For = pieChart0;
+        auto  panel0 {retValue->create_container<panel>("Panel0")};
+        auto& panel0Layout {panel0->create_layout<horizontal_layout>()};
 
-        auto legend4 {panel2Layout.create_widget<legend>("Legend")};
-        legend4->For = mekkoChart0;
-        auto legend5 {panel2Layout.create_widget<legend>("Legend")};
-        legend5->For = scatterChart0;
-        auto legend6 {panel2Layout.create_widget<legend>("Legend")};
-        legend6->For = radarChart0;
+        auto barChart0 {panel0Layout.create_widget<bar_chart>("Bar")};
+        barChart0->YAxis = {.Min = 0, .Max = 1};
+
+        barChart0->Dataset.mutate([&](auto& val) {
+            val.push_back({.Name = "bar1", .Value = {0.1f, 0.4f, 0.3f, 0.1f}});
+            val.push_back({.Name = "bar2", .Value = {0.2f, 0.1f, 0.4f, 0.5f}});
+            val.push_back({.Name = "bar3", .Value = {0.5f, 0.4f, 0.2f, 0.1f}});
+        });
+        barChart0->TransitionDuration = 250ms;
+
+        auto legend0 {panel0Layout.create_widget<legend>("Legend")};
+        legend0->For  = barChart0;
+        legend0->Flex = {50_pct, 100_pct};
+
+        auto lineChart0 {panel0Layout.create_widget<line_chart>("Line")};
+        lineChart0->YAxis = {.Min = 0, .Max = 1};
+
+        lineChart0->Dataset.mutate([&](auto& val) {
+            val.push_back({.Name = "line1", .Value = {0.1f, 0.4f, 0.8f, 0.1f, 0.8f, 0.1f, 0.8f}});
+            val.push_back({.Name = "line2", .Value = {0.2f, 0.75f, 0.75f, 0.15f, 0.15f, 0.85f, 0.97f}});
+            val.push_back({.Name = "line3", .Value = {0.3f, 0.15f, 0.5f, 0.25f, 0.5f, 0.25f, 0.83f}});
+        });
+        lineChart0->TransitionDuration = 250ms;
+
+        auto legend1 {panel0Layout.create_widget<legend>("Legend")};
+        legend1->For  = lineChart0;
+        legend1->Flex = {50_pct, 100_pct};
+
+        auto pieChart0 {panel0Layout.create_widget<pie_chart>("Pie")};
+
+        pieChart0->Dataset.mutate([&](auto& val) {
+            val.push_back({.Name = "pie1", .Value = 4});
+            val.push_back({.Name = "pie2", .Value = 6});
+            val.push_back({.Name = "pie3", .Value = 2});
+            val.push_back({.Name = "pie4", .Value = 2});
+        });
+        pieChart0->TransitionDuration = 250ms;
+
+        auto legend2 {panel0Layout.create_widget<legend>("Legend")};
+        legend2->For  = pieChart0;
+        legend2->Flex = {50_pct, 100_pct};
+    }
+
+    {
+        auto  panel1 {retValue->create_container<panel>("Panel1")};
+        auto& panel1Layout {panel1->create_layout<horizontal_layout>()};
+
+        auto mekkoChart0 {panel1Layout.create_widget<marimekko_chart>("Mekko")};
+
+        mekkoChart0->Dataset.mutate([&](auto& val) {
+            val.push_back({.Name = "mekko1", .Value = {1, 1, 1, 1}});
+            val.push_back({.Name = "mekko2", .Value = {5, 4, 6, 9}});
+            val.push_back({.Name = "mekko3", .Value = {6, 2, 2, 6}});
+        });
+        mekkoChart0->TransitionDuration = 250ms;
+
+        auto legend4 {panel1Layout.create_widget<legend>("Legend")};
+        legend4->For  = mekkoChart0;
+        legend4->Flex = {50_pct, 100_pct};
+
+        auto scatterChart0 {panel1Layout.create_widget<scatter_chart>("Scatter")};
+        scatterChart0->XAxis = {.Min = 0, .Max = 10};
+        scatterChart0->YAxis = {.Min = 0, .Max = 12};
+
+        scatterChart0->Dataset.mutate([&](auto& val) {
+            val.push_back({.Name = "scatter1", .Value = {{0, 0}, {2, 3}, {3, 6}}});
+            val.push_back({.Name = "scatter2", .Value = {{3, 0}, {4, 2}, {10, 12}, {4, 3}}});
+        });
+        scatterChart0->TransitionDuration = 250ms;
+
+        auto legend5 {panel1Layout.create_widget<legend>("Legend")};
+        legend5->For  = scatterChart0;
+        legend5->Flex = {50_pct, 100_pct};
+
+        auto radarChart0 {panel1Layout.create_widget<radar_chart>("Radar")};
+        radarChart0->ValueAxis = {.Min = 0, .Max = 1};
+
+        radarChart0->Dataset.mutate([&](auto& val) {
+            val.push_back({.Name = "radar1", .Value = {0.8f, 0.6f, 0.9f, 0.5f, 0.7f, 0.65f}});
+            val.push_back({.Name = "radar2", .Value = {0.5f, 0.7f, 0.4f, 0.95f, 0.45f, 0.8f}});
+            val.push_back({.Name = "radar3", .Value = {0.3f, 0.9f, 0.6f, 0.7f, 0.2f, 0.55f}});
+            val.push_back({.Name = "radar4", .Value = {0.6f, 0.4f, 0.8f, 0.6f, 0.5f, 0.9f}});
+        });
+        radarChart0->TransitionDuration = 250ms;
+
+        auto legend6 {panel1Layout.create_widget<legend>("Legend")};
+        legend6->For  = radarChart0;
+        legend6->Flex = {50_pct, 100_pct};
     }
 
     return retValue;
