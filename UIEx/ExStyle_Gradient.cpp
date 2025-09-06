@@ -854,13 +854,11 @@ auto create_gradient_styles(assets::group const& resGrp) -> style_collection
     using namespace tcob::ui::charts;
     {
         auto style {retValue.create<line_chart>("line_chart", {}, {})};
-        style->Border.Size         = 3_px;
-        style->Margin              = {5_px};
-        style->Padding             = {20_px};
-        style->DropShadow.Color    = color {0, 0, 0, 128};
-        style->HorizontalGridLines = 10;
-        style->VerticalGridLines   = 4;
-        style->Colors              = {colors::SlateBlue, colors::Fuchsia, colors::NavajoWhite};
+        style->Border.Size      = 3_px;
+        style->Margin           = {5_px};
+        style->Padding          = {20_px};
+        style->DropShadow.Color = color {0, 0, 0, 128};
+        style->Colors           = {colors::SlateBlue, colors::Fuchsia, colors::NavajoWhite};
 
         auto hoverStyle {retValue.create<line_chart>("line_chart", {.Hover = true})};
         *hoverStyle = *style;
@@ -874,13 +872,11 @@ auto create_gradient_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<bar_chart>("bar_chart", {}, {})};
-        style->Border.Size         = 3_px;
-        style->Margin              = {5_px};
-        style->Padding             = {20_px};
-        style->DropShadow.Color    = color {0, 0, 0, 128};
-        style->HorizontalGridLines = 10;
-        style->VerticalGridLines   = 5;
-        style->Colors              = {colors::SlateBlue, colors::Fuchsia, colors::NavajoWhite};
+        style->Border.Size      = 3_px;
+        style->Margin           = {5_px};
+        style->Padding          = {20_px};
+        style->DropShadow.Color = color {0, 0, 0, 128};
+        style->Colors           = {colors::SlateBlue, colors::Fuchsia, colors::NavajoWhite};
 
         auto hoverStyle {retValue.create<bar_chart>("bar_chart", {.Hover = true})};
         *hoverStyle = *style;
@@ -894,13 +890,11 @@ auto create_gradient_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<pie_chart>("pie_chart", {}, {})};
-        style->Border.Size         = 3_px;
-        style->Margin              = {5_px};
-        style->Padding             = {20_px};
-        style->DropShadow.Color    = color {0, 0, 0, 128};
-        style->HorizontalGridLines = 10;
-        style->VerticalGridLines   = 5;
-        style->Colors              = {colors::PaleVioletRed, colors::SlateBlue, colors::Fuchsia, colors::NavajoWhite};
+        style->Border.Size      = 3_px;
+        style->Margin           = {5_px};
+        style->Padding          = {20_px};
+        style->DropShadow.Color = color {0, 0, 0, 128};
+        style->Colors           = {colors::PaleVioletRed, colors::SlateBlue, colors::Fuchsia, colors::NavajoWhite};
 
         auto hoverStyle {retValue.create<pie_chart>("pie_chart", {.Hover = true})};
         *hoverStyle = *style;

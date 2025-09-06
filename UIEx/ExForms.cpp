@@ -461,36 +461,33 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form<dock_layout>>
     auto retValue {std::make_shared<form<dock_layout>>(form_init {"form5", wnd->bounds()})};
 
     auto panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
-    panel0->Flex = {.Width = 100_pct, .Height = 50_pct};
-    auto& panel0Layout {panel0->create_layout<dock_layout>()};
+    panel0->Flex = {.Width = 100_pct, .Height = 33_pct};
+    auto& panel0Layout {panel0->create_layout<horizontal_layout>()};
 
     {
-        auto barChart0 {panel0Layout.create_widget<bar_chart>(dock_style::Right, "Bar0")};
+        auto barChart0 {panel0Layout.create_widget<bar_chart>("Bar0")};
         barChart0->YAxis = {.Min = 0, .Max = 1};
-        barChart0->Flex  = {.Width = 33_pct, .Height = 100_pct};
 
         barChart0->Series.mutate([&](auto& val) {
-            val.push_back({.Name = "bar1", .Values = {0.1f, 0.4f, 0.8f, 0.1f}});
-            val.push_back({.Name = "bar2", .Values = {0.1f, 0.8f, 0.4f, 0.1f}});
-            val.push_back({.Name = "bar3", .Values = {0.1f, 0.4f, 0.8f, 0.1f}});
+            val.push_back({.Name = "bar1", .Values = {0.1f, 0.4f, 0.3f, 0.1f}});
+            val.push_back({.Name = "bar2", .Values = {0.2f, 0.1f, 0.4f, 0.5f}});
+            val.push_back({.Name = "bar3", .Values = {0.5f, 0.4f, 0.2f, 0.1f}});
         });
         barChart0->TransitionDuration = 250ms;
     }
     {
-        auto lineChart0 {panel0Layout.create_widget<line_chart>(dock_style::Right, "Line")};
+        auto lineChart0 {panel0Layout.create_widget<line_chart>("Line")};
         lineChart0->YAxis = {.Min = 0, .Max = 1};
-        lineChart0->Flex  = {.Width = 33_pct, .Height = 100_pct};
 
         lineChart0->Series.mutate([&](auto& val) {
-            val.push_back({.Name = "line1", .Values = {0.1f, 0.4f, 0.8f, 0.1f}});
-            val.push_back({.Name = "line2", .Values = {0.2f, 0.75f, 0.75f, 0.15f}});
-            val.push_back({.Name = "line3", .Values = {0.3f, 0.15f, 0.5f, 0.25f}});
+            val.push_back({.Name = "line1", .Values = {0.1f, 0.4f, 0.8f, 0.1f, 0.8f, 0.1f, 0.8f}});
+            val.push_back({.Name = "line2", .Values = {0.2f, 0.75f, 0.75f, 0.15f, 0.15f, 0.85f, 0.97f}});
+            val.push_back({.Name = "line3", .Values = {0.3f, 0.15f, 0.5f, 0.25f, 0.5f, 0.25f, 0.83f}});
         });
         lineChart0->TransitionDuration = 250ms;
     }
     {
-        auto pieChart0 {panel0Layout.create_widget<pie_chart>(dock_style::Right, "Pie")};
-        pieChart0->Flex = {.Width = 33_pct, .Height = 100_pct};
+        auto pieChart0 {panel0Layout.create_widget<pie_chart>("Pie")};
 
         pieChart0->Series.mutate([&](auto& val) {
             val.push_back({.Name = "pie1", .Values = {0.4f, 0.3f, 0.2f, 0.1f}});

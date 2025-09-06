@@ -868,12 +868,16 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Margin              = {5_px};
         style->Padding             = {20_px};
         style->DropShadow.Color    = color {0, 0, 0, 128};
-        style->HorizontalGridLines = 10;
-        style->VerticalGridLines   = 4;
+        style->HorizontalGridLines = grid_line_amount::Few;
+        style->VerticalGridLines   = grid_line_amount::Few;
         style->Colors              = {colors::SlateBlue, colors::Fuchsia, colors::NavajoWhite};
+        style->SmoothLines         = false;
 
         auto hoverStyle {retValue.create<line_chart>("line_chart", {.Hover = true})};
-        *hoverStyle = *style;
+        *hoverStyle                     = *style;
+        hoverStyle->HorizontalGridLines = grid_line_amount::Normal;
+        hoverStyle->VerticalGridLines   = grid_line_amount::Normal;
+        hoverStyle->SmoothLines         = true;
 
         auto activeStyle {retValue.create<line_chart>("line_chart", {.Active = true})};
         *activeStyle = *style;
@@ -888,12 +892,19 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Margin              = {5_px};
         style->Padding             = {20_px};
         style->DropShadow.Color    = color {0, 0, 0, 128};
-        style->HorizontalGridLines = 10;
-        style->VerticalGridLines   = 5;
+        style->HorizontalGridLines = grid_line_amount::Few;
+        style->VerticalGridLines   = grid_line_amount::Few;
+        style->BarSize             = 80_pct;
+        style->BarRadius           = 0_pct;
         style->Colors              = {colors::SlateBlue, colors::Fuchsia, colors::NavajoWhite};
 
         auto hoverStyle {retValue.create<bar_chart>("bar_chart", {.Hover = true})};
-        *hoverStyle = *style;
+        *hoverStyle                     = *style;
+        hoverStyle->HorizontalGridLines = grid_line_amount::Normal;
+        hoverStyle->VerticalGridLines   = grid_line_amount::Normal;
+        hoverStyle->BarSize             = 60_pct;
+        hoverStyle->BarRadius           = 10_pct;
+        hoverStyle->StackBars           = true;
 
         auto activeStyle {retValue.create<bar_chart>("bar_chart", {.Active = true})};
         *activeStyle = *style;
@@ -904,16 +915,15 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<pie_chart>("pie_chart", {}, {})};
-        style->Border.Size         = 3_px;
-        style->Margin              = {5_px};
-        style->Padding             = {20_px};
-        style->DropShadow.Color    = color {0, 0, 0, 128};
-        style->HorizontalGridLines = 10;
-        style->VerticalGridLines   = 5;
-        style->Colors              = {colors::PaleVioletRed, colors::SlateBlue, colors::Fuchsia, colors::NavajoWhite};
+        style->Border.Size      = 3_px;
+        style->Margin           = {5_px};
+        style->Padding          = {20_px};
+        style->DropShadow.Color = color {0, 0, 0, 128};
+        style->Colors           = {colors::PaleVioletRed, colors::SlateBlue, colors::Fuchsia, colors::NavajoWhite};
 
         auto hoverStyle {retValue.create<pie_chart>("pie_chart", {.Hover = true})};
-        *hoverStyle = *style;
+        *hoverStyle        = *style;
+        hoverStyle->Colors = {colors::Fuchsia, colors::NavajoWhite, colors::PaleVioletRed, colors::SlateBlue};
 
         auto activeStyle {retValue.create<pie_chart>("pie_chart", {.Active = true})};
         *activeStyle = *style;
