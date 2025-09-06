@@ -464,13 +464,13 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
     auto& panel0Layout {panel0->create_layout<horizontal_layout>()};
 
     {
-        auto barChart0 {panel0Layout.create_widget<bar_chart>("Bar0")};
+        auto barChart0 {panel0Layout.create_widget<bar_chart>("Bar")};
         barChart0->YAxis = {.Min = 0, .Max = 1};
 
-        barChart0->Series.mutate([&](auto& val) {
-            val.push_back({.Name = "bar1", .Values = {0.1f, 0.4f, 0.3f, 0.1f}});
-            val.push_back({.Name = "bar2", .Values = {0.2f, 0.1f, 0.4f, 0.5f}});
-            val.push_back({.Name = "bar3", .Values = {0.5f, 0.4f, 0.2f, 0.1f}});
+        barChart0->Dataset.mutate([&](auto& val) {
+            val.push_back({.Name = "bar1", .Value = {0.1f, 0.4f, 0.3f, 0.1f}});
+            val.push_back({.Name = "bar2", .Value = {0.2f, 0.1f, 0.4f, 0.5f}});
+            val.push_back({.Name = "bar3", .Value = {0.5f, 0.4f, 0.2f, 0.1f}});
         });
         barChart0->TransitionDuration = 250ms;
     }
@@ -478,20 +478,21 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
         auto lineChart0 {panel0Layout.create_widget<line_chart>("Line")};
         lineChart0->YAxis = {.Min = 0, .Max = 1};
 
-        lineChart0->Series.mutate([&](auto& val) {
-            val.push_back({.Name = "line1", .Values = {0.1f, 0.4f, 0.8f, 0.1f, 0.8f, 0.1f, 0.8f}});
-            val.push_back({.Name = "line2", .Values = {0.2f, 0.75f, 0.75f, 0.15f, 0.15f, 0.85f, 0.97f}});
-            val.push_back({.Name = "line3", .Values = {0.3f, 0.15f, 0.5f, 0.25f, 0.5f, 0.25f, 0.83f}});
+        lineChart0->Dataset.mutate([&](auto& val) {
+            val.push_back({.Name = "line1", .Value = {0.1f, 0.4f, 0.8f, 0.1f, 0.8f, 0.1f, 0.8f}});
+            val.push_back({.Name = "line2", .Value = {0.2f, 0.75f, 0.75f, 0.15f, 0.15f, 0.85f, 0.97f}});
+            val.push_back({.Name = "line3", .Value = {0.3f, 0.15f, 0.5f, 0.25f, 0.5f, 0.25f, 0.83f}});
         });
         lineChart0->TransitionDuration = 250ms;
     }
     {
         auto pieChart0 {panel0Layout.create_widget<pie_chart>("Pie")};
 
-        pieChart0->Series.mutate([&](auto& val) {
-            val.push_back({.Name = "pie1", .Values = {4, 3, 2, 1}});
-            val.push_back({.Name = "pie2", .Values = {5, 4, 6, 9}});
-            val.push_back({.Name = "pie3", .Values = {2, 4, 8, 16}});
+        pieChart0->Dataset.mutate([&](auto& val) {
+            val.push_back({.Name = "pie1", .Value = 4});
+            val.push_back({.Name = "pie2", .Value = 6});
+            val.push_back({.Name = "pie3", .Value = 2});
+            val.push_back({.Name = "pie4", .Value = 2});
         });
         pieChart0->TransitionDuration = 250ms;
     }
@@ -502,10 +503,10 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
     {
         auto mekkoChart0 {panel1Layout.create_widget<marimekko_chart>("Mekko")};
 
-        mekkoChart0->Series.mutate([&](auto& val) {
-            val.push_back({.Name = "mekko1", .Values = {1, 1, 1, 1}});
-            val.push_back({.Name = "mekko2", .Values = {5, 4, 6, 9}});
-            val.push_back({.Name = "mekko3", .Values = {6, 2, 2, 6}});
+        mekkoChart0->Dataset.mutate([&](auto& val) {
+            val.push_back({.Name = "mekko1", .Value = {1, 1, 1, 1}});
+            val.push_back({.Name = "mekko2", .Value = {5, 4, 6, 9}});
+            val.push_back({.Name = "mekko3", .Value = {6, 2, 2, 6}});
         });
         mekkoChart0->TransitionDuration = 250ms;
     }
@@ -514,9 +515,9 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
         scatterChart0->XAxis = {.Min = 0, .Max = 10};
         scatterChart0->YAxis = {.Min = 0, .Max = 12};
 
-        scatterChart0->Series.mutate([&](auto& val) {
-            val.push_back({.Name = "scatter1", .Values = {{0, 0}, {2, 3}, {3, 6}}});
-            val.push_back({.Name = "scatter2", .Values = {{3, 0}, {4, 2}, {10, 12}, {4, 3}}});
+        scatterChart0->Dataset.mutate([&](auto& val) {
+            val.push_back({.Name = "scatter1", .Value = {{0, 0}, {2, 3}, {3, 6}}});
+            val.push_back({.Name = "scatter2", .Value = {{3, 0}, {4, 2}, {10, 12}, {4, 3}}});
         });
         scatterChart0->TransitionDuration = 250ms;
     }
@@ -524,13 +525,31 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
         auto radarChart0 {panel1Layout.create_widget<radar_chart>("Radar")};
         radarChart0->ValueAxis = {.Min = 0, .Max = 1};
 
-        radarChart0->Series.mutate([&](auto& val) {
-            val.push_back({.Values = {0.8f, 0.6f, 0.9f, 0.5f, 0.7f, 0.65f}});
-            val.push_back({.Values = {0.5f, 0.7f, 0.4f, 0.95f, 0.45f, 0.8f}});
-            val.push_back({.Values = {0.3f, 0.9f, 0.6f, 0.7f, 0.2f, 0.55f}});
-            val.push_back({.Values = {0.6f, 0.4f, 0.8f, 0.6f, 0.5f, 0.9f}});
+        radarChart0->Dataset.mutate([&](auto& val) {
+            val.push_back({.Name = "radar1", .Value = {0.8f, 0.6f, 0.9f, 0.5f, 0.7f, 0.65f}});
+            val.push_back({.Name = "radar2", .Value = {0.5f, 0.7f, 0.4f, 0.95f, 0.45f, 0.8f}});
+            val.push_back({.Name = "radar3", .Value = {0.3f, 0.9f, 0.6f, 0.7f, 0.2f, 0.55f}});
+            val.push_back({.Name = "radar4", .Value = {0.6f, 0.4f, 0.8f, 0.6f, 0.5f, 0.9f}});
         });
         radarChart0->TransitionDuration = 250ms;
+    }
+
+    auto  panel2 {retValue->create_container<panel>("Panel2")};
+    auto& panel2Layout {panel2->create_layout<horizontal_layout>()};
+    {
+        auto legend0 {panel2Layout.create_widget<legend>("Legend")};
+        legend0->For = std::dynamic_pointer_cast<chart_base>(panel0->find_child_by_name("Bar"));
+        auto legend1 {panel2Layout.create_widget<legend>("Legend")};
+        legend1->For = std::dynamic_pointer_cast<chart_base>(panel0->find_child_by_name("Line"));
+        auto legend2 {panel2Layout.create_widget<legend>("Legend")};
+        legend2->For = std::dynamic_pointer_cast<chart_base>(panel0->find_child_by_name("Pie"));
+
+        auto legend4 {panel2Layout.create_widget<legend>("Legend")};
+        legend4->For = std::dynamic_pointer_cast<chart_base>(panel1->find_child_by_name("Mekko"));
+        auto legend5 {panel2Layout.create_widget<legend>("Legend")};
+        legend5->For = std::dynamic_pointer_cast<chart_base>(panel1->find_child_by_name("Scatter"));
+        auto legend6 {panel2Layout.create_widget<legend>("Legend")};
+        legend6->For = std::dynamic_pointer_cast<chart_base>(panel1->find_child_by_name("Radar"));
     }
 
     return retValue;

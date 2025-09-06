@@ -1008,6 +1008,16 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         hover.apply(hoverStyle);
         active.apply(activeStyle);
     }
+    {
+        auto style {retValue.create<legend>("legend", {})};
+        style->Text.Style     = {.IsItalic = false, .Weight = font::weight::Normal};
+        style->Text.Font      = resGrp.get<font_family>("Poppins");
+        style->Text.Size      = 25_pct;
+        style->Text.AutoSize  = auto_size_mode::OnlyShrink;
+        style->Text.Alignment = {.Horizontal = horizontal_alignment::Left, .Vertical = vertical_alignment::Middle};
+        style->Text.Color     = colors::Black;
+        style->Background     = colors::LightBlue;
+    }
     return retValue;
 }
 
