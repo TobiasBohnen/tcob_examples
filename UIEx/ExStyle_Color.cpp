@@ -980,6 +980,34 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         hover.apply(hoverStyle);
         active.apply(activeStyle);
     }
+    {
+        auto style {retValue.create<radar_chart>("radar_chart", {}, {})};
+        style->Border.Size      = 3_px;
+        style->Margin           = {5_px};
+        style->Padding          = {20_px};
+        style->DropShadow.Color = color {0, 0, 0, 128};
+        style->Colors           = {colors::PaleVioletRed, colors::SlateBlue, colors::Fuchsia, colors::NavajoWhite};
+        style->LineWidth        = 12;
+        style->FillAreaAlpha    = 255;
+        style->GridLineWidth    = 4;
+        style->GridColor        = colors::Black;
+        style->GridLines        = grid_line_amount::Few;
+
+        auto hoverStyle {retValue.create<radar_chart>("radar_chart", {.Hover = true})};
+        *hoverStyle          = *style;
+        style->LineWidth     = 16;
+        style->FillAreaAlpha = 0;
+        style->GridLineWidth = 2;
+        style->GridColor     = colors::Red;
+        style->GridLines     = grid_line_amount::Many;
+
+        auto activeStyle {retValue.create<radar_chart>("radar_chart", {.Active = true})};
+        *activeStyle = *style;
+
+        normal.apply(style);
+        hover.apply(hoverStyle);
+        active.apply(activeStyle);
+    }
     return retValue;
 }
 

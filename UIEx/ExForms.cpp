@@ -513,12 +513,26 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
         auto scatterChart0 {panel1Layout.create_widget<scatter_chart>("Scatter")};
         scatterChart0->XAxis = {.Min = 0, .Max = 10};
         scatterChart0->YAxis = {.Min = 0, .Max = 12};
+
         scatterChart0->Series.mutate([&](auto& val) {
             val.push_back({.Name = "scatter1", .Values = {{0, 0}, {2, 3}, {3, 6}}});
             val.push_back({.Name = "scatter2", .Values = {{3, 0}, {4, 2}, {10, 12}, {4, 3}}});
         });
         scatterChart0->TransitionDuration = 250ms;
     }
+    {
+        auto radarChart0 {panel1Layout.create_widget<radar_chart>("Radar")};
+        radarChart0->ValueAxis = {.Min = 0, .Max = 1};
+
+        radarChart0->Series.mutate([&](auto& val) {
+            val.push_back({.Values = {0.8f, 0.6f, 0.9f, 0.5f, 0.7f, 0.65f}});
+            val.push_back({.Values = {0.5f, 0.7f, 0.4f, 0.95f, 0.45f, 0.8f}});
+            val.push_back({.Values = {0.3f, 0.9f, 0.6f, 0.7f, 0.2f, 0.55f}});
+            val.push_back({.Values = {0.6f, 0.4f, 0.8f, 0.6f, 0.5f, 0.9f}});
+        });
+        radarChart0->TransitionDuration = 250ms;
+    }
+
     return retValue;
 }
 
