@@ -347,8 +347,8 @@ auto create_form0(window* wnd, group const& resGrp) -> std::shared_ptr<form_base
 
 auto create_form1(window* wnd) -> std::shared_ptr<form_base>
 {
-    auto retValue {std::make_shared<form<magnetic_snap_layout>>(
-        form_init {"form1", wnd->bounds()}, 25.f, true, true)};
+    auto retValue {std::make_shared<form<manual_layout>>(
+        form_init {"form1", wnd->bounds()})};
 
     {
         auto panel0 {retValue->create_container<panel>(rect_f {0, 0, 300, 300}, "Panel0")};
@@ -360,14 +360,20 @@ auto create_form1(window* wnd) -> std::shared_ptr<form_base>
 
         auto panel1 {panel0Layout.create_widget<panel>({50, 30, 300, 300}, "Panel1")};
         panel1->ScrollEnabled = true;
+        panel1->Movable       = true;
+        panel1->Resizable     = true;
         auto& panel1Layout {panel1->get_layout<panel::default_layout>()};
 
         auto panel2 {panel1Layout.create_widget<panel>({50, 30, 300, 300}, "Panel1")};
         panel2->ScrollEnabled = true;
+        panel2->Movable       = true;
+        panel2->Resizable     = true;
         auto& panel2Layout {panel2->get_layout<panel::default_layout>()};
 
         auto panel3 {panel2Layout.create_widget<panel>({50, 30, 300, 300}, "Panel2")};
         panel3->ScrollEnabled = true;
+        panel3->Movable       = true;
+        panel3->Resizable     = true;
         auto& panel3Layout {panel3->get_layout<panel::default_layout>()};
 
         auto button0 {panel3Layout.create_widget<button>({-10, -10, 30, 30}, "Button0")};
@@ -380,6 +386,8 @@ auto create_form1(window* wnd) -> std::shared_ptr<form_base>
         panel0->ScrollEnabled = true;
         panel0->Movable       = true;
         panel0->Resizable     = true;
+        panel0->MinSize       = {150, 150};
+        panel0->MaxSize       = {450, 450};
         auto& panel0Layout {panel0->get_layout<panel::default_layout>()};
     }
 
@@ -389,6 +397,8 @@ auto create_form1(window* wnd) -> std::shared_ptr<form_base>
         panel0->ScrollEnabled = true;
         panel0->Movable       = true;
         panel0->Resizable     = true;
+        panel0->MinSize       = {50, 150};
+        panel0->MaxSize       = {450, 450};
         auto& panel0Layout {panel0->get_layout<panel::default_layout>()};
     }
 
@@ -398,6 +408,8 @@ auto create_form1(window* wnd) -> std::shared_ptr<form_base>
         panel0->ScrollEnabled = true;
         panel0->Movable       = true;
         panel0->Resizable     = true;
+        panel0->MinSize       = {50, 50};
+        panel0->MaxSize       = {450, 450};
         auto& panel0Layout {panel0->get_layout<panel::default_layout>()};
     }
 
