@@ -355,6 +355,7 @@ auto create_form1(window* wnd) -> std::shared_ptr<form_base>
         panel0->Flex          = {100_pct, 100_pct};
         panel0->ScrollEnabled = true;
         panel0->Movable       = true;
+        panel0->Resizable     = true;
         auto& panel0Layout {panel0->get_layout<panel::default_layout>()};
 
         auto panel1 {panel0Layout.create_widget<panel>({50, 30, 300, 300}, "Panel1")};
@@ -378,6 +379,7 @@ auto create_form1(window* wnd) -> std::shared_ptr<form_base>
         panel0->Flex          = {.Width = 100_pct, .Height = 100_pct};
         panel0->ScrollEnabled = true;
         panel0->Movable       = true;
+        panel0->Resizable     = true;
         auto& panel0Layout {panel0->get_layout<panel::default_layout>()};
     }
 
@@ -386,6 +388,7 @@ auto create_form1(window* wnd) -> std::shared_ptr<form_base>
         panel0->Flex          = {.Width = 100_pct, .Height = 100_pct};
         panel0->ScrollEnabled = true;
         panel0->Movable       = true;
+        panel0->Resizable     = true;
         auto& panel0Layout {panel0->get_layout<panel::default_layout>()};
     }
 
@@ -394,6 +397,7 @@ auto create_form1(window* wnd) -> std::shared_ptr<form_base>
         panel0->Flex          = {.Width = 100_pct, .Height = 100_pct};
         panel0->ScrollEnabled = true;
         panel0->Movable       = true;
+        panel0->Resizable     = true;
         auto& panel0Layout {panel0->get_layout<panel::default_layout>()};
     }
 
