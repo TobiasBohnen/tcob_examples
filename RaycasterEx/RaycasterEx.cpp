@@ -325,11 +325,11 @@ auto RaycasterEx::move(milliseconds deltaTime) -> bool
 
         // both camera direction and camera plane must be rotated
         f64 const old_dirX {_dir.X};
-        _dir.X = _dir.X * std::cos(rotateAmount) - _dir.Y * std::sin(rotateAmount);
-        _dir.Y = old_dirX * std::sin(rotateAmount) + _dir.Y * std::cos(rotateAmount);
+        _dir.X = (_dir.X * std::cos(rotateAmount)) - (_dir.Y * std::sin(rotateAmount));
+        _dir.Y = (old_dirX * std::sin(rotateAmount)) + (_dir.Y * std::cos(rotateAmount));
         f64 const oldPlaneX {_plane.X};
-        _plane.X = _plane.X * std::cos(rotateAmount) - _plane.Y * std::sin(rotateAmount);
-        _plane.Y = oldPlaneX * std::sin(rotateAmount) + _plane.Y * std::cos(rotateAmount);
+        _plane.X = (_plane.X * std::cos(rotateAmount)) - (_plane.Y * std::sin(rotateAmount));
+        _plane.Y = (oldPlaneX * std::sin(rotateAmount)) + (_plane.Y * std::cos(rotateAmount));
         retValue = true;
     }
 
