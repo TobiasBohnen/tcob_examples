@@ -16,7 +16,7 @@ RaycasterEx::RaycasterEx(game& game)
     _material->Texture = _texture;
     _renderer.set_material(_material.ptr());
 
-    _texture->create(_cache->screen_size(), 1, texture::format::RGBA8);
+    _texture->resize(_cache->screen_size(), 1, texture::format::RGBA8);
     _texture->Filtering = texture::filtering::Linear;
 }
 
