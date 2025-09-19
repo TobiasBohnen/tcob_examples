@@ -35,11 +35,7 @@ crtl_form::crtl_form(window& window)
     btn2->Label = "wav";
     btn2->Click.connect([&] { Play("res/music0.wav"); });
 
-    auto btn3 {mainPanelLayout.create_widget<button>({7, 1, 2, 4}, "opus")};
-    btn3->Label = "opus";
-    btn3->Click.connect([&] { Play("res/music0.opus"); });
-
-    auto btn4 {mainPanelLayout.create_widget<button>({9, 1, 2, 4}, "flac")};
+    auto btn4 {mainPanelLayout.create_widget<button>({7, 1, 2, 4}, "flac")};
     btn4->Label = "flac";
     btn4->Click.connect([&] { Play("res/music0.flac"); });
 }
