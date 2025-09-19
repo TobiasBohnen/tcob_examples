@@ -51,7 +51,7 @@ void lsystem_form::create_rule(grid_layout& layout)
     _grdRules                   = layout.create_widget<grid_view>({1, 4, 38, 20}, "grdRules");
     _grdRules->Header           = {{"Variable"}, {"Rule"}, {"Probability"}};
     _grdRules->HeaderSelectable = false;
-    _grdRules->SelectMode       = grid_view::select_mode::Row;
+    _grdRules->SelectMode       = grid_select_mode::Row;
     _grdRules->SelectedCellIndex.Changed.connect([uxRules = _grdRules.get(), uxVar = txbVariable.get(), uxRule = txbRule.get(), uxProp = spnProp.get()] {
         if (uxRules->SelectedCellIndex->Y < 1) { return; }
         uxVar->Text   = uxRules->get_cell({0, uxRules->SelectedCellIndex->Y}).Text;

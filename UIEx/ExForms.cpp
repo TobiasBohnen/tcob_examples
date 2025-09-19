@@ -283,7 +283,7 @@ auto create_form0(window* wnd, group const& resGrp) -> std::shared_ptr<form_base
     });
 
     gridView0->HeaderSelectable = true;
-    gridView0->SelectMode       = grid_view::select_mode::Row;
+    gridView0->SelectMode       = grid_select_mode::Row;
     gridView0->SelectedCellIndex.Changed.connect([label0, gridView0] {
         if (*gridView0->SelectedCellIndex == point_i {-1, -1}) { return; }
         label0->Label = std::format("grid: {}", gridView0->get_cell(gridView0->SelectedCellIndex).Text);
