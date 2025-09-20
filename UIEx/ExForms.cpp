@@ -77,7 +77,7 @@ auto create_form0(window* wnd, group const& resGrp) -> std::shared_ptr<form_base
     auto rangeSlider0 {sliderPanelLayout.create_widget<range_slider>({0, 110, 250, 100}, "RangeSlider0")};
     rangeSlider0->Min    = 0;
     rangeSlider0->Max    = 100;
-    rangeSlider0->Values = {50, 75};
+    rangeSlider0->Values = {50.f, 75.f};
     rangeSlider0->Step   = 1;
     rangeSlider0->Values.Changed.connect([sliderLabel0](auto val) {
         sliderLabel0->Label = std::format("{:.2f}:{:.2f}", val.first, val.second);

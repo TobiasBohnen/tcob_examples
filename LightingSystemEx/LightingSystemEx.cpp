@@ -152,7 +152,7 @@ void LightingSystemEx::on_key_down(keyboard::event const& ev)
                 _lightSource0->Range = **_lightSource0->Range + 100.f;
             }
         } else {
-            _lightSource0->Range = 100;
+            _lightSource0->Range = 100.f;
         }
 
     } break;
