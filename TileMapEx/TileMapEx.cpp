@@ -194,22 +194,28 @@ void TileMapEx::on_key_down(keyboard::event const& ev)
     case scan_code::BACKSPACE:
         parent().pop_current_scene();
         break;
-    case scan_code::D1:
-        for (i32 i = 0; i < tmHeight; i++) { _tileMapOrtho.set_tile_index(_layerID, {0, i}, 2); }
-        break;
+    case scan_code::D1: {
+        grid<tile_index_t> tiles {size_i {tmWidth, tmHeight}};
+        for (i32 x {0}; x < tiles.width(); x++) {
+            for (i32 y {0}; y < tiles.height(); y++) {
+                tiles[x, y] = _rand(1, 12);
+            }
+        }
+        _tileMapOrtho.replace_layer(_layerID, {tiles});
+    } break;
     case scan_code::D2:
-        for (i32 i = 1; i <= 12; i++) { _tileMapOrtho.change_tileset(i, {"stone1"}); }
+        _tileMapOrtho.remove_layer(_layerID);
         break;
     case scan_code::D3: {
         grid<tile_index_t>       tiles {size_i {2, 5}, 1};
-        tcob::gfx::tilemap_layer layer {tiles};
-        _tileMapOrtho.add_layer(layer);
+        tcob::gfx::tilemap_layer layer {.Tiles = tiles, .Offset = {1, 1}};
+        _layerID = _tileMapOrtho.add_layer(layer);
     } break;
     case scan_code::D4: {
         grid<tile_index_t>       tiles {size_i {2, 5}, 2};
         tcob::gfx::tilemap_layer layer {.Tiles = tiles, .Offset = {4, 0}};
-        auto                     id {_tileMapOrtho.add_layer(layer)};
-        _tileMapOrtho.set_tile_index(id, {0, 20}, 5);
+        auto                     id {_tileMapIso.add_layer(layer)};
+        _tileMapIso.set_tile_index(id, {0, 20}, 5);
     } break;
     case scan_code::D5: {
         frame_animation ani {};
