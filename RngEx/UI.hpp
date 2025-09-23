@@ -29,7 +29,7 @@ private:
 
 inline void rng_form::draw_dice()
 {
-    auto* font {_font->get_font({}, 24).ptr()};
+    auto* font {_font->get_font({}, 12).ptr()};
 
     auto const bounds {_canvas->content_bounds()};
     _canvas->clear();
@@ -40,12 +40,12 @@ inline void rng_form::draw_dice()
     _canvas->fill();
 
     u64 const seed      = static_cast<u64>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
-    i32       rollCount = 100'000;
+    i32       rollCount = 400'000;
 
-    auto               dice {random::dice<6, random::split_mix_64> {seed}};
-    auto               rolls {dice.roll_n(rollCount)};
-    std::map<i32, i32> hist;
-    for (int n = 0; n < rollCount; ++n) { ++hist[rolls[n]]; }
+    random::dice<20, random::xoshiro_256_star_star> dice {seed};
+    auto                                            rolls {dice.roll_n(rollCount)};
+    std::map<i32, i32>                              hist;
+    for (i32 n {0}; n < rollCount; ++n) { ++hist[rolls[n]]; }
     i32 max {0};
     for (auto p : hist) { max = std::max(p.second, max); }
 
