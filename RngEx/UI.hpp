@@ -82,7 +82,7 @@ inline void rng_form::draw_noise()
 
     u64 const seed {static_cast<u64>(std::chrono::high_resolution_clock::now().time_since_epoch().count())};
 
-    auto rng {random::rng_split_mix_64 {seed}};
+    auto rng {random::prng_split_mix_64 {seed}};
 
     _tex = {"Noise", size_i {256, 256}, 1, texture::format::RGBA8};
     std::array<color, 256 * 256> data;
