@@ -121,16 +121,16 @@ auto create_gradient_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<checkbox>("checkbox", {})};
-        style->Border.Type       = border_type::Double;
-        style->Border.Dash       = std::vector {20_pct, 10_pct, 10_pct, 5_pct};
-        style->Border.DashOffset = 100;
-        style->Border.Size       = 3_px;
-        style->Border.Radius     = 5_px;
-        style->Margin            = {10_px};
-        style->Padding           = {2_px};
-        style->Tick.Type         = tick_type::Rect;
-        style->Tick.Size         = 90_pct;
-        style->EasingFunc        = easing_func::ExpoInOut;
+        style->Border.Type          = border_type::Double;
+        style->Border.Dash          = std::vector {20_pct, 10_pct, 10_pct, 5_pct};
+        style->Border.PatternOffset = 100;
+        style->Border.Size          = 3_px;
+        style->Border.Radius        = 5_px;
+        style->Margin               = {10_px};
+        style->Padding              = {2_px};
+        style->Tick.Type            = tick_type::Rect;
+        style->Tick.Size            = 90_pct;
+        style->EasingFunc           = easing_func::ExpoInOut;
 
         auto disabledStyle {retValue.create<checkbox>("checkbox", {.Disabled = true})};
 
@@ -142,7 +142,7 @@ auto create_gradient_styles(assets::group const& resGrp) -> style_collection
         normal.apply(style);
         disabled.apply(disabledStyle);
         hover.apply(hoverStyle);
-        // hoverStyle->Border.DashOffset = 0;
+        // hoverStyle->Border.Phase = 0;
         //  hoverStyle->Border.Dash = std::vector {15_pct, 15_pct};
     }
     {

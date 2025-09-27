@@ -82,26 +82,28 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     style_collection retValue;
     {
         auto style {retValue.create<button>("button", {})};
-        style->Border.Type         = border_type::Inset;
-        style->Border.Size         = 3_px;
-        style->Border.Radius       = 5_px;
-        style->Text.Style          = {false, font::weight::Normal};
-        style->Text.Font           = resGrp.get<font_family>("Poppins");
-        style->Text.Size           = 50_pct;
-        style->Text.Shadow.OffsetX = 0_px;
-        style->Text.Shadow.OffsetY = 1_px;
-        style->Text.AutoSize       = auto_size_mode::Always;
-        style->Text.Alignment      = {horizontal_alignment::Centered, vertical_alignment::Middle};
-        style->Margin              = {10_px};
-        style->Padding             = {2_px};
+        style->Border.Type          = border_type::Solid;
+        style->Border.PatternOffset = 20;
+        style->Border.Size          = 3_px;
+        style->Border.Radius        = 5_px;
+        style->Text.Style           = {false, font::weight::Normal};
+        style->Text.Font            = resGrp.get<font_family>("Poppins");
+        style->Text.Size            = 50_pct;
+        style->Text.Shadow.OffsetX  = 0_px;
+        style->Text.Shadow.OffsetY  = 1_px;
+        style->Text.AutoSize        = auto_size_mode::Always;
+        style->Text.Alignment       = {horizontal_alignment::Centered, vertical_alignment::Middle};
+        style->Margin               = {10_px};
+        style->Padding              = {2_px};
 
-        style->EasingFunc = easing_func::ExpoIn;
+        style->EasingFunc = easing_func::Linear;
 
         auto disabledStyle {retValue.create<button>("button", {.Disabled = true})};
 
         auto hoverStyle {retValue.create<button>("button", {.Hover = true})};
-        *hoverStyle        = *style;
-        hoverStyle->Margin = {5_px};
+        *hoverStyle                      = *style;
+        hoverStyle->Margin               = {5_px};
+        hoverStyle->Border.PatternOffset = 0;
 
         auto focusStyle {retValue.create<button>("button", {.Focus = true})};
         *focusStyle = *style;
@@ -131,16 +133,16 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<checkbox>("checkbox", {})};
-        style->Border.Type       = border_type::Double;
-        style->Border.Dash       = std::vector {20_pct, 10_pct, 10_pct, 5_pct};
-        style->Border.DashOffset = 100;
-        style->Border.Size       = 3_px;
-        style->Border.Radius     = 5_px;
-        style->Margin            = {10_px};
-        style->Padding           = {2_px};
-        style->Tick.Type         = tick_type::Triangle;
-        style->Tick.Size         = 90_pct;
-        style->EasingFunc        = easing_func::ExpoInOut;
+        style->Border.Type          = border_type::Wavy;
+        style->Border.Dash          = std::vector {20_pct, 10_pct, 10_pct, 5_pct};
+        style->Border.PatternOffset = 100;
+        style->Border.Size          = 3_px;
+        style->Border.Radius        = 5_px;
+        style->Margin               = {10_px};
+        style->Padding              = {2_px};
+        style->Tick.Type            = tick_type::Triangle;
+        style->Tick.Size            = 90_pct;
+        style->EasingFunc           = easing_func::ExpoInOut;
 
         auto disabledStyle {retValue.create<checkbox>("checkbox", {.Disabled = true})};
 
@@ -152,7 +154,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         normal.apply(style);
         disabled.apply(disabledStyle);
         hover.apply(hoverStyle);
-        // hoverStyle->Border.DashOffset = 0;
+        // hoverStyle->Border.Phase = 0;
         //  hoverStyle->Border.Dash = std::vector {15_pct, 15_pct};
     }
     {
