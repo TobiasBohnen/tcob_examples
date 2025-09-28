@@ -294,15 +294,15 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         normal.apply(style);
 
         auto style2 {retValue.create<progress_bar>("progress_bar", {},
-                                                   {{"value", {{op::GreaterEqual, 60}}},
-                                                    {"orientation", {{op::Equal, orientation::Horizontal}}}})};
+                                                   {{"value", {rule::GreaterEqual(60)}},
+                                                    {"orientation", {rule::Equal(orientation::Horizontal)}}})};
         *style2                      = *style;
         style2->Bar.HigherBackground = colors::Yellow;
         style2->Bar.LowerBackground  = colors::Orange;
 
         auto style3 {retValue.create<progress_bar>("progress_bar", {},
-                                                   {{"value", {{op::GreaterEqual, 40}}},
-                                                    {"orientation", {{op::Equal, orientation::Vertical}}}})};
+                                                   {{"value", {rule::GreaterEqual(40)}},
+                                                    {"orientation", {rule::Equal(orientation::Vertical)}}})};
         *style3                      = *style;
         style3->Bar.HigherBackground = colors::Transparent;
         style3->Bar.LowerBackground  = colors::Red;
@@ -310,7 +310,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         std::vector<style_attributes::rules> rules;
         rules.push_back({"value", {{op::GreaterEqual, 80}}});
         rules.push_back({"orientation", {{op::Equal, orientation::Vertical}}});
-        auto style4 {retValue.create<progress_bar>("progress_bar", {}, style_attributes {rules})};
+        auto style4 {retValue.create<progress_bar>("progress_bar", {}, {rules})};
         *style4                      = *style;
         style4->Bar.HigherBackground = colors::Yellow;
         style4->Bar.LowerBackground  = colors::Black;
@@ -404,6 +404,16 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         normal.apply(style);
         disabled.apply(disabledStyle);
         hover.apply(hoverStyle);
+
+        auto level1Style {retValue.create<panel>("panel", {}, {{"level", {rule::Equal(1)}}})};
+        *level1Style            = *style;
+        level1Style->Background = colors::Red;
+        auto level2Style {retValue.create<panel>("panel", {}, {{"level", {rule::Equal(2)}}})};
+        *level2Style            = *style;
+        level2Style->Background = colors::Green;
+        auto level3Style {retValue.create<panel>("panel", {}, {{"level", {rule::Equal(3)}}})};
+        *level3Style            = *style;
+        level3Style->Background = colors::Blue;
     }
     {
         auto style {retValue.create<modal_dialog>("modal_dialog", {})};
