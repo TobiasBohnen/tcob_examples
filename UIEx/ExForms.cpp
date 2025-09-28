@@ -358,19 +358,19 @@ auto create_form1(window* wnd) -> std::shared_ptr<form_base>
         panel0->Resizable     = true;
         auto& panel0Layout {panel0->get_layout<panel::default_layout>()};
 
-        auto panel1 {panel0Layout.create_widget<panel>({50, 30, 300, 300}, "Panel1")};
+        auto panel1 {panel0Layout.create_widget<panel>({50, 30, 300, 300}, "Panel0-1")};
         panel1->ScrollEnabled = true;
         panel1->Movable       = true;
         panel1->Resizable     = true;
         auto& panel1Layout {panel1->get_layout<panel::default_layout>()};
 
-        auto panel2 {panel1Layout.create_widget<panel>({50, 30, 300, 300}, "Panel1")};
+        auto panel2 {panel1Layout.create_widget<panel>({50, 30, 300, 300}, "Panel0-2")};
         panel2->ScrollEnabled = true;
         panel2->Movable       = true;
         panel2->Resizable     = true;
         auto& panel2Layout {panel2->get_layout<panel::default_layout>()};
 
-        auto panel3 {panel2Layout.create_widget<panel>({50, 30, 300, 300}, "Panel2")};
+        auto panel3 {panel2Layout.create_widget<panel>({50, 30, 300, 300}, "Panel0-3")};
         panel3->ScrollEnabled = true;
         panel3->Movable       = true;
         panel3->Resizable     = true;

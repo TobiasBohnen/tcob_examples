@@ -66,18 +66,23 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     activeCheck.Tick = colors::Green;
 
     color_theme disabled {normal};
-    disabled.Background = colors::Gray;
+    disabled.Background     = colors::Black;
+    disabled.Border         = colors::White;
+    disabled.Text           = colors::Black;
+    disabled.BarLower       = colors::Black;
+    disabled.BarHigher      = colors::Black;
+    disabled.Caret          = colors::Black;
+    disabled.Item           = colors::Black;
+    disabled.NavArrowInc    = colors::Black;
+    disabled.NavArrowDec    = colors::Black;
+    disabled.NavArrow       = colors::Black;
+    disabled.TextShadow     = colors::Black;
+    disabled.TextDecoration = colors::Black;
+    disabled.Thumb          = colors::Black;
+    disabled.Tick           = colors::Black;
+    disabled.Container      = colors::Black;
 
     using namespace tcob::literals;
-
-    linear_gradient           grad0;
-    std::array<color_stop, 2> colors0 {{{0.f, colors::Orange}, {1.f, colors::Teal}}};
-    grad0.Colors = color_gradient {colors0};
-    grad0.Angle  = degree_f {90};
-
-    radial_gradient           grad1;
-    std::array<color_stop, 2> colors1 {{{0.f, colors::Orange}, {1.f, colors::Teal}}};
-    grad1.Colors = color_gradient {colors1};
 
     style_collection retValue;
     {
@@ -389,7 +394,6 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Border.Size                = 3_px;
         style->Border.Radius              = 5_px;
         style->Padding                    = {5_px};
-        style->DropShadow.Color           = color {0, 0, 0, 128};
         style->VScrollBar.ThumbClass      = "scrollbar_thumb";
         style->VScrollBar.Bar.Size        = 30_px;
         style->VScrollBar.Bar.Border.Size = 3_px;
@@ -400,20 +404,11 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         *hoverStyle = *style;
 
         auto disabledStyle {retValue.create<panel>("panel", {.Disabled = true})};
+        *disabledStyle = *style;
 
         normal.apply(style);
         disabled.apply(disabledStyle);
         hover.apply(hoverStyle);
-
-        auto level1Style {retValue.create<panel>("panel", {}, {{"level", {rule::Equal(1)}}})};
-        *level1Style            = *style;
-        level1Style->Background = colors::Red;
-        auto level2Style {retValue.create<panel>("panel", {}, {{"level", {rule::Equal(2)}}})};
-        *level2Style            = *style;
-        level2Style->Background = colors::Green;
-        auto level3Style {retValue.create<panel>("panel", {}, {{"level", {rule::Equal(3)}}})};
-        *level3Style            = *style;
-        level3Style->Background = colors::Blue;
     }
     {
         auto style {retValue.create<modal_dialog>("modal_dialog", {})};
@@ -711,9 +706,13 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         auto activeStyle {retValue.create<thumb_style>("scrollbar_thumb", {.Active = true})};
         activeStyle->Thumb = style->Thumb;
 
+        auto disabledStyle {retValue.create<thumb_style>("scrollbar_thumb", {.Disabled = true})};
+        disabledStyle->Thumb = style->Thumb;
+
         normal.apply(style);
         hover.apply(hoverStyle);
         active.apply(activeStyle);
+        disabled.apply(disabledStyle);
     }
     // NAV ARROWS
     {
