@@ -731,7 +731,6 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
 auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
 {
     auto bounds {wnd->bounds()};
-    bounds.Position += point_i {40, 40};
     auto retValue {std::make_shared<form<dock_layout>>(form_init {"form4", bounds})};
 
     auto const createSections {[](std::shared_ptr<accordion> const& accordion0) {

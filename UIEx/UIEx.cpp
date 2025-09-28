@@ -36,7 +36,7 @@ void UIEx::on_start()
     //_form0 = create_form_tabcontainer(&window(), *resGrp);
     //_form0 = create_form_accordion(&window(), *resGrp);
     //_form0 = create_form_terminal(&window());
-    // _form0 = create_form_charting(&window());
+    //_form0 = create_form_charting(&window());
 
     _form0->Styles = create_color_styles(*resGrp);
     // _form0->Bounds = rect_f {{300, 450}, size_f {*window().Size * 2}};
