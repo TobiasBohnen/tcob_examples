@@ -259,7 +259,7 @@ auto RaycasterEx::move(milliseconds deltaTime) -> bool
         return (worldMap[tileX, tileY] == 0);
     }};
 
-    auto const& keyboard {*locate_service<input::system>().keyboard()};
+    auto const& keyboard {locate_service<input::system>().keyboard()};
     f64 const   margin {0.4}; // extra margin for checking
 
     // Forward/Backward
