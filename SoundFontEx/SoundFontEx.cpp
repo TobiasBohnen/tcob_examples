@@ -77,6 +77,6 @@ void SoundFontEx::play_note(milliseconds dur, i32 preset, midi_note note)
     commands.start_new_section(half);
     commands.add<sound_font::note_off_all>();
 
-    _sound = _soundFont->create_sound(commands);
+    _sound = std::make_shared<sound>(_soundFont->create_buffer(commands));
     _sound->play();
 }
