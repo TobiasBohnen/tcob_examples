@@ -6,6 +6,7 @@
 #pragma once
 
 #include "../_common/Common.hpp"
+#include "B2DebugDraw.hpp"
 
 ////////////////////////////////////////////////////////////
 
@@ -46,4 +47,8 @@ private:
     shape_batch _layer1;
     bool        _forceOn {false};
     bool        _colorizeContact {false};
+
+    debug_mode                    _debug {debug_mode::Off};
+    std::shared_ptr<B2DDebugDraw> _debugDraw;
+    font_family                   _font {""};
 };

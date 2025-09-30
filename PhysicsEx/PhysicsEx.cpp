@@ -5,11 +5,15 @@
 
 #include "PhysicsEx.hpp"
 
+#include "../_common/Trim.hpp"
+
 ////////////////////////////////////////////////////////////
 
 PhysicsEx::PhysicsEx(game& game)
     : scene(game)
 {
+    font_family::SingleFont(_font, trim_ttf);
+    _debugDraw     = std::make_shared<B2DDebugDraw>(_font.get_font({}, 16).ptr());
     _world.Gravity = {0, 50.f};
 }
 
@@ -30,6 +34,10 @@ void PhysicsEx::on_start()
 void PhysicsEx::on_draw_to(render_target& target)
 {
     _layer1.draw_to(target);
+
+    if (_debug != debug_mode::Off) {
+        _debugDraw->draw(_world, _debug == debug_mode::Transparent ? 0.5f : 1.0f, target);
+    }
 }
 
 void PhysicsEx::on_update(milliseconds deltaTime)
@@ -38,7 +46,7 @@ void PhysicsEx::on_update(milliseconds deltaTime)
         std::visit(
             overloaded {
                 [&](std::shared_ptr<gfx::rect_shape> const& rect) {
-                    auto const bounds {rect->Bounds->as_centered_at((*it->Body->Transform).Center * 12)};
+                    auto const bounds {rect->Bounds->as_centered_at((*it->Body->Transform).Center * physicsWorldSize)};
                     if (rect->Bounds != bounds) {
                         rect->Bounds   = bounds;
                         rect->Rotation = (*it->Body->Transform).Angle;
@@ -51,8 +59,8 @@ void PhysicsEx::on_update(milliseconds deltaTime)
                     }
                 },
                 [&](std::shared_ptr<gfx::circle_shape> const& circle) {
-                    if (circle->Center != (*it->Body->Transform).Center * 12) {
-                        circle->Center   = (*it->Body->Transform).Center * 12;
+                    if (circle->Center != (*it->Body->Transform).Center * physicsWorldSize) {
+                        circle->Center   = (*it->Body->Transform).Center * physicsWorldSize;
                         circle->Rotation = (*it->Body->Transform).Angle;
 
                         if (circle->Center->Y > 1000) {
@@ -91,6 +99,15 @@ void PhysicsEx::on_fixed_update(milliseconds deltaTime)
 void PhysicsEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) {
+    case scan_code::D:
+        switch (_debug) {
+        case debug_mode::Off:         _debug = debug_mode::Transparent; break;
+        case debug_mode::Transparent: _debug = debug_mode::On; break;
+        case debug_mode::On:          _debug = debug_mode::Off; break;
+        }
+
+        break;
+
     case scan_code::D1:
         _forceOn = !_forceOn;
         break;
@@ -143,7 +160,7 @@ void PhysicsEx::on_key_down(keyboard::event const& ev)
 void PhysicsEx::on_mouse_button_up(mouse::button_event const& ev)
 {
     point_f pos {ev.Position};
-    pos /= point_f {12.f, 12.f};
+    pos /= physicsWorldSize;
 
     if (ev.Button == mouse::button::Left) {
         create_box({pos});
@@ -169,7 +186,7 @@ void PhysicsEx::create_box(point_f pos)
 
     auto rectShape {_layer1.create_shape<gfx::rect_shape>()};
     rectShape->Material = _mat;
-    rectShape->Bounds   = rect * 12;
+    rectShape->Bounds   = rect * physicsWorldSize;
     rectShape->Color    = colors::Red;
     obj.Sprite          = rectShape;
 
@@ -192,7 +209,7 @@ void PhysicsEx::create_circle(point_f pos)
     auto circleShape {_layer1.create_shape<gfx::circle_shape>()};
     circleShape->Segments = 18;
     circleShape->Material = _mat;
-    circleShape->Radius   = rect.width() / 2 * 12;
+    circleShape->Radius   = rect.width() / 2 * physicsWorldSize;
     circleShape->Color    = colors::Yellow;
     obj.Sprite            = circleShape;
 
@@ -209,7 +226,7 @@ void PhysicsEx::create_obstacle(rect_f const& rect)
 
     auto spr {_layer1.create_shape<gfx::rect_shape>()};
     spr->Material = _mat;
-    spr->Bounds   = rect * 12;
+    spr->Bounds   = rect * physicsWorldSize;
     spr->Color    = colors::Green;
 }
 
@@ -223,6 +240,6 @@ void PhysicsEx::create_edge(point_f pos0, point_f pos1)
 
     auto spr {_layer1.create_shape<gfx::rect_shape>()};
     spr->Material = _mat;
-    spr->Bounds   = rect_f::FromLTRB(pos0.X, pos0.Y, pos1.X, pos1.Y + 5) * 12;
+    spr->Bounds   = rect_f::FromLTRB(pos0.X, pos0.Y, pos1.X, pos1.Y + 5) * physicsWorldSize;
     spr->Color    = colors::Blue;
 }

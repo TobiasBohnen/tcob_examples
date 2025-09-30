@@ -367,7 +367,6 @@ void CanvasEx::canvas_text()
     _canvas.set_font(_font.get_font({}, 128).ptr());
 
     _canvas.set_fill_style(colors::White);
-    _canvas.begin_path();
     _canvas.fill_text({10, 300}, "Lorem ipsum dolor sit amet");
 
     _canvas.set_fill_style(colors::Black);
@@ -375,7 +374,6 @@ void CanvasEx::canvas_text()
 
     _canvas.set_stroke_style(colors::Black);
     _canvas.set_stroke_width(2);
-    _canvas.begin_path();
     _canvas.stroke_text({10, 500}, "Lorem ipsum dolor sit amet");
 
     _canvas.end_frame();

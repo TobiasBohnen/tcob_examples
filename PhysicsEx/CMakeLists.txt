@@ -3,6 +3,7 @@ add_executable(PhysicsEx)
 target_sources(PhysicsEx PRIVATE
     main.cpp
     PhysicsEx.cpp
+    B2DebugDraw.cpp
 )
 
 set_target_properties(PhysicsEx PROPERTIES
