@@ -13,7 +13,7 @@ PhysicsEx::PhysicsEx(game& game)
     : scene(game)
 {
     font_family::SingleFont(_font, trim_ttf);
-    _debugDraw     = std::make_shared<B2DDebugDraw>(_font.get_font({}, 16).ptr());
+    _debugDraw     = std::make_shared<B2DDebugDraw>(_font.get_font({}, 10).ptr());
     _world.Gravity = {0, 50.f};
 }
 
@@ -52,6 +52,7 @@ void PhysicsEx::on_update(milliseconds deltaTime)
                         rect->Rotation = (*it->Body->Transform).Angle;
 
                         if (rect->Bounds->center().Y > 1000) {
+                            _world.remove_joints(*it->Body);
                             _layer1.remove_shape(*rect);
                             _world.remove_body(*it->Body);
                             it = _objects.erase(it);
@@ -64,6 +65,7 @@ void PhysicsEx::on_update(milliseconds deltaTime)
                         circle->Rotation = (*it->Body->Transform).Angle;
 
                         if (circle->Center->Y > 1000) {
+                            _world.remove_joints(*it->Body);
                             _layer1.remove_shape(*circle);
                             _world.remove_body(*it->Body);
                             it = _objects.erase(it);
