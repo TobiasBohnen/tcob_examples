@@ -23,7 +23,7 @@ void PhysicsEx::on_start()
 {
     // obstacles
     rng r;
-    _obstacles = _world.create_body({}, {});
+    _obstacles = &_world.create_body({}, {});
     for (i32 i {0}; i < 25; i++) {
         create_obstacle({r(0.f, 66.f), r(2.f, 35.f), r(1.f, 5.f), r(1.f, 5.f)});
     }
@@ -45,27 +45,25 @@ void PhysicsEx::on_update(milliseconds deltaTime)
     for (auto it {_objects.begin()}; it < _objects.end(); ++it) {
         std::visit(
             overloaded {
-                [&](std::shared_ptr<gfx::rect_shape> const& rect) {
+                [&](gfx::rect_shape* rect) {
                     auto const bounds {rect->Bounds->as_centered_at((*it->Body->Transform).Center * physicsWorldSize)};
                     if (rect->Bounds != bounds) {
                         rect->Bounds   = bounds;
                         rect->Rotation = (*it->Body->Transform).Angle;
 
                         if (rect->Bounds->center().Y > 1000) {
-                            _world.remove_joints(*it->Body);
                             _layer1.remove_shape(*rect);
                             _world.remove_body(*it->Body);
                             it = _objects.erase(it);
                         }
                     }
                 },
-                [&](std::shared_ptr<gfx::circle_shape> const& circle) {
+                [&](gfx::circle_shape* circle) {
                     if (circle->Center != (*it->Body->Transform).Center * physicsWorldSize) {
                         circle->Center   = (*it->Body->Transform).Center * physicsWorldSize;
                         circle->Rotation = (*it->Body->Transform).Angle;
 
                         if (circle->Center->Y > 1000) {
-                            _world.remove_joints(*it->Body);
                             _layer1.remove_shape(*circle);
                             _world.remove_body(*it->Body);
                             it = _objects.erase(it);
@@ -142,8 +140,8 @@ void PhysicsEx::on_key_down(keyboard::event const& ev)
         if (_objects.size() >= 2) {
 
             distance_joint::settings def;
-            def.BodyA        = _objects[_objects.size() - 2].Body.get();
-            def.BodyB        = _objects[_objects.size() - 1].Body.get();
+            def.BodyA        = _objects[_objects.size() - 2].Body;
+            def.BodyB        = _objects[_objects.size() - 1].Body;
             def.LocalAnchorA = def.BodyA->local_center_of_mass();
             def.LocalAnchorB = def.BodyB->local_center_of_mass();
             def.Length       = def.BodyA->world_center_of_mass().distance_to(def.BodyB->world_center_of_mass());
@@ -177,7 +175,7 @@ void PhysicsEx::create_box(point_f pos)
 {
     Box2DExObject obj {};
     rect_f        rect {pos, {3, 3}};
-    obj.Body = _world.create_body({.Center = rect.center()}, {.Type = body_type::Dynamic});
+    obj.Body = &_world.create_body({.Center = rect.center()}, {.Type = body_type::Dynamic});
 
     physics::rect_shape::settings shape;
     shape.Shape.Material.Friction = 0.3f;
@@ -190,7 +188,7 @@ void PhysicsEx::create_box(point_f pos)
     rectShape->Material = _mat;
     rectShape->Bounds   = rect * physicsWorldSize;
     rectShape->Color    = colors::Red;
-    obj.Sprite          = rectShape;
+    obj.Sprite          = rectShape.get();
 
     _objects.push_back(obj);
 }
@@ -199,7 +197,7 @@ void PhysicsEx::create_circle(point_f pos)
 {
     Box2DExObject obj {};
     rect_f        rect {pos, {3, 3}};
-    obj.Body = _world.create_body({.Center = rect.center()}, {.Type = body_type::Dynamic});
+    obj.Body = &_world.create_body({.Center = rect.center()}, {.Type = body_type::Dynamic});
 
     physics::circle_shape::settings shape;
     shape.Shape.Material.Friction = 0.3f;
@@ -213,7 +211,7 @@ void PhysicsEx::create_circle(point_f pos)
     circleShape->Material = _mat;
     circleShape->Radius   = rect.width() / 2 * physicsWorldSize;
     circleShape->Color    = colors::Yellow;
-    obj.Sprite            = circleShape;
+    obj.Sprite            = circleShape.get();
 
     _objects.push_back(obj);
 }

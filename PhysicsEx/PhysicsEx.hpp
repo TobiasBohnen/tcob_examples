@@ -28,8 +28,8 @@ protected:
 
 private:
     struct Box2DExObject {
-        std::variant<std::shared_ptr<gfx::rect_shape>, std::shared_ptr<gfx::circle_shape>> Sprite;
-        std::shared_ptr<physics::body>                                                     Body;
+        std::variant<gfx::rect_shape*, gfx::circle_shape*> Sprite;
+        physics::body*                                     Body {nullptr};
     };
 
     void create_box(point_f pos);
@@ -39,8 +39,8 @@ private:
 
     physics::world _world {};
 
-    std::shared_ptr<physics::body> _obstacles {};
-    std::vector<Box2DExObject>     _objects {};
+    physics::body*             _obstacles {nullptr};
+    std::vector<Box2DExObject> _objects {};
 
     asset_owner_ptr<material> _mat;
 
