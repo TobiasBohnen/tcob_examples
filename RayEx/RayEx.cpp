@@ -49,30 +49,30 @@ void RayEx::on_update(milliseconds deltaTime)
     // draw shape
     switch (_mode) {
     case 0: {
-        auto polyShape {_batch.create_shape<gfx::poly_shape>()};
-        polyShape->Color    = colors::Blue;
-        polyShape->Material = material::Empty();
+        auto& polyShape {_batch.create_shape<gfx::poly_shape>()};
+        polyShape.Color    = colors::Blue;
+        polyShape.Material = material::Empty();
         auto const [x, y] {_center - point_f {150, 50}};
         polygon poly {
             .Outline = {{x, y}, {80 + x, 40 + y}, {80 + x, 120 + y}, {x, 180 + y}, {180 + x, 180 + y}, {240 + x, 120 + y}, {240 + x, 40 + y}, {180 + x, y}},
             .Holes   = {{{200 + x, 40 + y}, {200 + x, 120 + y}, {120 + x, 120 + y}, {120 + x, 40 + y}}}};
-        polyShape->Polygons = {poly};
-        polyShape->Rotation = degree_f {_rotation};
+        polyShape.Polygons = {poly};
+        polyShape.Rotation = degree_f {_rotation};
     } break;
     case 1: {
-        auto circleShape {_batch.create_shape<gfx::circle_shape>()};
-        circleShape->Color    = colors::Blue;
-        circleShape->Material = material::Empty();
-        circleShape->Center   = _center;
-        circleShape->Radius   = 100;
+        auto& circleShape {_batch.create_shape<gfx::circle_shape>()};
+        circleShape.Color    = colors::Blue;
+        circleShape.Material = material::Empty();
+        circleShape.Center   = _center;
+        circleShape.Radius   = 100;
     } break;
     case 2: {
-        auto rectShape {_batch.create_shape<gfx::rect_shape>()};
-        rectShape->Color    = colors::Blue;
-        rectShape->Material = material::Empty();
+        auto& rectShape {_batch.create_shape<gfx::rect_shape>()};
+        rectShape.Color    = colors::Blue;
+        rectShape.Material = material::Empty();
         size_f const rectSize {250, 250};
-        rectShape->Bounds   = {_center - point_f {rectSize.Width / 2, rectSize.Height / 2}, rectSize};
-        rectShape->Rotation = degree_f {_rotation};
+        rectShape.Bounds   = {_center - point_f {rectSize.Width / 2, rectSize.Height / 2}, rectSize};
+        rectShape.Rotation = degree_f {_rotation};
     } break;
     }
 
@@ -88,14 +88,14 @@ void RayEx::on_update(milliseconds deltaTime)
             }
         }
 
-        auto       rayShape {batch->create_shape<gfx::rect_shape>()};
+        auto&      rayShape {batch->create_shape<gfx::rect_shape>()};
         auto const height {static_cast<f32>(ray.get_point(0).distance_to(ray.get_point(600)))};
-        rayShape->Bounds      = {{origin.X - 2, origin.Y}, {4, height}};
-        rayShape->Pivot       = rayShape->Bounds->top_left();
-        rayShape->Rotation    = deg - degree_f {180};
-        rayShape->Color       = colors::Red;
-        rayShape->Material    = material::Empty();
-        rayShape->RayCastMask = 0;
+        rayShape.Bounds      = {{origin.X - 2, origin.Y}, {4, height}};
+        rayShape.Pivot       = rayShape.Bounds->top_left();
+        rayShape.Rotation    = deg - degree_f {180};
+        rayShape.Color       = colors::Red;
+        rayShape.Material    = material::Empty();
+        rayShape.RayCastMask = 0;
     }};
     castRay({_tween0.Value, 50}, degree_f {135});
     castRay({1300 - _tween0.Value, 50}, degree_f {225});
@@ -108,11 +108,11 @@ void RayEx::on_update(milliseconds deltaTime)
 
     // draw intersections
     for (auto p : points) {
-        auto dotShape {_batch.create_shape<gfx::circle_shape>()};
-        dotShape->Center   = p.Point;
-        dotShape->Radius   = 10;
-        dotShape->Color    = colors::Green;
-        dotShape->Material = material::Empty();
+        auto& dotShape {_batch.create_shape<gfx::circle_shape>()};
+        dotShape.Center   = p.Point;
+        dotShape.Radius   = 10;
+        dotShape.Color    = colors::Green;
+        dotShape.Material = material::Empty();
     }
     _batch.update(deltaTime);
 }

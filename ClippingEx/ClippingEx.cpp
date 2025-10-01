@@ -71,10 +71,10 @@ void ClippingEx::on_mouse_button_down(mouse::button_event const& ev)
         std::array colors {colors::Red, colors::Blue, colors::Green, colors::Yellow, colors::Brown, colors::DodgerBlue};
         i32        i {0};
         for (auto const& poly : *_polyShape->Polygons) {
-            auto shape      = _layer0.create_shape<gfx::poly_shape>();
-            shape->Material = material::Empty();
-            shape->Color    = colors[i++ % colors.size()];
-            shape->Polygons = {poly};
+            auto& shape    = _layer0.create_shape<gfx::poly_shape>();
+            shape.Material = material::Empty();
+            shape.Color    = colors[i++ % colors.size()];
+            shape.Polygons = {poly};
         }
     }
     toggle = (toggle + 1) % 5;
@@ -91,7 +91,7 @@ void ClippingEx::create_shapes()
     auto& resMgr {library()};
     auto* resGrp {resMgr.get_group("res")};
 
-    _polyShape           = _layer0.create_shape<gfx::poly_shape>();
+    _polyShape           = &_layer0.create_shape<gfx::poly_shape>();
     _polyShape->Material = material::Empty();
     _polyShape->Color    = colors::Blue;
     _polyShape->Polygons = {{
@@ -99,7 +99,7 @@ void ClippingEx::create_shapes()
         .Holes   = {{{300, 100}, {500, 100}, {500, 300}, {300, 300}}},
     }};
 
-    _cutShape           = _layer0.create_shape<gfx::poly_shape>();
+    _cutShape           = &_layer0.create_shape<gfx::poly_shape>();
     _cutShape->Material = material::Empty();
     _cutShape->Color    = colors::Red;
     _cutShape->Polygons = {{

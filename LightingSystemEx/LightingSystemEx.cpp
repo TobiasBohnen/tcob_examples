@@ -28,20 +28,20 @@ void LightingSystemEx::on_start()
     _lightSource0->Color = {255, 255, 0, 128};
 
     auto const createSC {[&](std::vector<point_f> const& points) {
-        auto shape0 {_layer0.create_shape<gfx::poly_shape>()};
-        shape0->Material = _material;
-        shape0->Color    = colors::Blue;
-        shape0->Polygons = {{.Outline = points}};
+        auto& shape0 {_layer0.create_shape<gfx::poly_shape>()};
+        shape0.Material = _material;
+        shape0.Color    = colors::Blue;
+        shape0.Polygons = {{.Outline = points}};
 
         auto& sc0 {_lightingSystem0.create_shadow_caster()};
         sc0.Polygon = points;
-        sc0.Hit.connect([=](auto const& ev) {
+        sc0.Hit.connect([&](auto const& ev) {
             if (ev.Source->Falloff && *ev.Source->Range) {
                 if (ev.Distance < **ev.Source->Range / 2) {
-                    shape0->Color = colors::Green;
+                    shape0.Color = colors::Green;
                 }
             } else {
-                shape0->Color = colors::Red;
+                shape0.Color = colors::Red;
             }
         });
     }};

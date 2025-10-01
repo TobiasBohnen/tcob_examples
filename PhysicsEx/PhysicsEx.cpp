@@ -184,11 +184,11 @@ void PhysicsEx::create_box(point_f pos)
 
     obj.Body->create_shape<physics::rect_shape>(shape);
 
-    auto rectShape {_layer1.create_shape<gfx::rect_shape>()};
-    rectShape->Material = _mat;
-    rectShape->Bounds   = rect * physicsWorldSize;
-    rectShape->Color    = colors::Red;
-    obj.Sprite          = rectShape.get();
+    auto& rectShape {_layer1.create_shape<gfx::rect_shape>()};
+    rectShape.Material = _mat;
+    rectShape.Bounds   = rect * physicsWorldSize;
+    rectShape.Color    = colors::Red;
+    obj.Sprite         = &rectShape;
 
     _objects.push_back(obj);
 }
@@ -206,12 +206,12 @@ void PhysicsEx::create_circle(point_f pos)
 
     obj.Body->create_shape<physics::circle_shape>(shape);
 
-    auto circleShape {_layer1.create_shape<gfx::circle_shape>()};
-    circleShape->Segments = 18;
-    circleShape->Material = _mat;
-    circleShape->Radius   = rect.width() / 2 * physicsWorldSize;
-    circleShape->Color    = colors::Yellow;
-    obj.Sprite            = circleShape.get();
+    auto& circleShape {_layer1.create_shape<gfx::circle_shape>()};
+    circleShape.Segments = 18;
+    circleShape.Material = _mat;
+    circleShape.Radius   = rect.width() / 2 * physicsWorldSize;
+    circleShape.Color    = colors::Yellow;
+    obj.Sprite           = &circleShape;
 
     _objects.push_back(obj);
 }
@@ -224,10 +224,10 @@ void PhysicsEx::create_obstacle(rect_f const& rect)
 
     _obstacles->create_shape<physics::rect_shape>(shape);
 
-    auto spr {_layer1.create_shape<gfx::rect_shape>()};
-    spr->Material = _mat;
-    spr->Bounds   = rect * physicsWorldSize;
-    spr->Color    = colors::Green;
+    auto& spr {_layer1.create_shape<gfx::rect_shape>()};
+    spr.Material = _mat;
+    spr.Bounds   = rect * physicsWorldSize;
+    spr.Color    = colors::Green;
 }
 
 void PhysicsEx::create_edge(point_f pos0, point_f pos1)
@@ -238,8 +238,8 @@ void PhysicsEx::create_edge(point_f pos0, point_f pos1)
 
     _obstacles->create_shape<segment_shape>(shape);
 
-    auto spr {_layer1.create_shape<gfx::rect_shape>()};
-    spr->Material = _mat;
-    spr->Bounds   = rect_f::FromLTRB(pos0.X, pos0.Y, pos1.X, pos1.Y + 5) * physicsWorldSize;
-    spr->Color    = colors::Blue;
+    auto& spr {_layer1.create_shape<gfx::rect_shape>()};
+    spr.Material = _mat;
+    spr.Bounds   = rect_f::FromLTRB(pos0.X, pos0.Y, pos1.X, pos1.Y + 5) * physicsWorldSize;
+    spr.Color    = colors::Blue;
 }

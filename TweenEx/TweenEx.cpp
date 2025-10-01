@@ -18,14 +18,14 @@ milliseconds duration {5000};
 void TweenEx::on_start()
 {
     auto create_circle {[&](point_f position, color color, auto&& auto0) {
-        auto circle {_layer1.create_shape<gfx::circle_shape>()};
-        circle->Material = _material;
-        circle->Segments = 16;
-        circle->Center   = position + point_f {30, 30};
-        circle->Radius   = 30;
-        circle->Color    = color;
+        auto& circle {_layer1.create_shape<gfx::circle_shape>()};
+        circle.Material = _material;
+        circle.Segments = 16;
+        circle.Center   = position + point_f {30, 30};
+        circle.Radius   = 30;
+        circle.Color    = color;
 
-        auto0->Value.Changed.connect([circle](point_f point) { circle->Center = point + point_f {30, 30}; });
+        auto0->Value.Changed.connect([&circle](point_f point) { circle.Center = point + point_f {30, 30}; });
 
         _tweens.push_back(auto0);
     }};

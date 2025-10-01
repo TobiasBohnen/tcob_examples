@@ -27,7 +27,7 @@ protected:
 private:
     void create_shapes();
 
-    shape_batch                            _layer0;
-    std::shared_ptr<tcob::gfx::poly_shape> _polyShape;
-    std::shared_ptr<tcob::gfx::poly_shape> _cutShape;
+    shape_batch            _layer0;
+    tcob::gfx::poly_shape* _polyShape {nullptr};
+    tcob::gfx::poly_shape* _cutShape {nullptr};
 };

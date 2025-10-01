@@ -8,7 +8,6 @@
 #include "../_common/Image.hpp"
 
 #include <iomanip>
-#include <memory>
 
 ImageFilterEx::ImageFilterEx(game& game)
     : scene(game)
@@ -72,46 +71,46 @@ ImageFilterEx::~ImageFilterEx() = default;
 
 void ImageFilterEx::on_start()
 {
-    auto sprite0           = _layer1.create_shape<gfx::rect_shape>();
-    sprite0->Material      = _mat0;
-    sprite0->TextureRegion = "normal";
-    sprite0->Bounds        = {{400, 300}, {128, 128}};
+    auto& sprite0         = _layer1.create_shape<gfx::rect_shape>();
+    sprite0.Material      = _mat0;
+    sprite0.TextureRegion = "normal";
+    sprite0.Bounds        = {{400, 300}, {128, 128}};
 
     //////////
-    auto sprite1           = _layer1.create_shape<gfx::rect_shape>();
-    sprite1->Material      = _mat0;
-    sprite1->TextureRegion = "blur";
-    sprite1->Bounds        = {{0.f, 0.f}, {128, 128}};
+    auto& sprite1         = _layer1.create_shape<gfx::rect_shape>();
+    sprite1.Material      = _mat0;
+    sprite1.TextureRegion = "blur";
+    sprite1.Bounds        = {{0.f, 0.f}, {128, 128}};
 
     //////////
-    auto sprite2           = _layer1.create_shape<gfx::rect_shape>();
-    sprite2->Material      = _mat0;
-    sprite2->TextureRegion = "edgedetect";
-    sprite2->Bounds        = {{0.f, 200.f}, {128, 128}};
+    auto& sprite2         = _layer1.create_shape<gfx::rect_shape>();
+    sprite2.Material      = _mat0;
+    sprite2.TextureRegion = "edgedetect";
+    sprite2.Bounds        = {{0.f, 200.f}, {128, 128}};
 
     //////////
-    auto sprite3           = _layer1.create_shape<gfx::rect_shape>();
-    sprite3->Material      = _mat0;
-    sprite3->TextureRegion = "emboss";
-    sprite3->Bounds        = {{0.f, 400.f}, {128, 128}};
+    auto& sprite3         = _layer1.create_shape<gfx::rect_shape>();
+    sprite3.Material      = _mat0;
+    sprite3.TextureRegion = "emboss";
+    sprite3.Bounds        = {{0.f, 400.f}, {128, 128}};
 
     //////////
-    auto sprite4           = _layer1.create_shape<gfx::rect_shape>();
-    sprite4->Material      = _mat0;
-    sprite4->TextureRegion = "edgeenhance";
-    sprite4->Bounds        = {{600.f, 0.f}, {128, 128}};
+    auto& sprite4         = _layer1.create_shape<gfx::rect_shape>();
+    sprite4.Material      = _mat0;
+    sprite4.TextureRegion = "edgeenhance";
+    sprite4.Bounds        = {{600.f, 0.f}, {128, 128}};
 
     //////////
-    auto sprite5           = _layer1.create_shape<gfx::rect_shape>();
-    sprite5->Material      = _mat0;
-    sprite5->TextureRegion = "motionblur";
-    sprite5->Bounds        = {{600.f, 200.f}, {128, 128}};
+    auto& sprite5         = _layer1.create_shape<gfx::rect_shape>();
+    sprite5.Material      = _mat0;
+    sprite5.TextureRegion = "motionblur";
+    sprite5.Bounds        = {{600.f, 200.f}, {128, 128}};
 
     //////////
-    auto sprite6           = _layer1.create_shape<gfx::rect_shape>();
-    sprite6->Material      = _mat0;
-    sprite6->TextureRegion = "sharpen";
-    sprite6->Bounds        = {{600.f, 400.f}, {128, 128}};
+    auto& sprite6         = _layer1.create_shape<gfx::rect_shape>();
+    sprite6.Material      = _mat0;
+    sprite6.TextureRegion = "sharpen";
+    sprite6.Bounds        = {{600.f, 400.f}, {128, 128}};
 }
 
 void ImageFilterEx::on_draw_to(render_target& target)

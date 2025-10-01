@@ -50,9 +50,9 @@ void AniTexEx::on_start()
         mat->Texture = tex;
         tex->start(true);
 
-        auto shape0 {_layer0.create_shape<gfx::rect_shape>()};
-        shape0->Bounds   = bounds;
-        shape0->Material = mat;
+        auto& shape0 {_layer0.create_shape<gfx::rect_shape>()};
+        shape0.Bounds   = bounds;
+        shape0.Material = mat;
     }};
 
     createShape(_texGif, _matGif, ani_gif, ".gif", rect_f {10, 10, 500, 500});

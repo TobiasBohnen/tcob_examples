@@ -90,29 +90,27 @@ void TextEx::on_start()
         string               text {"Vertex"};
         std::vector<polygon> polys {polygonize_text(*font2, text, true)};
 
-        auto shapeOutline {std::make_shared<poly_shape>()};
-        shapeOutline->Color    = colors::Blue;
-        shapeOutline->Material = material::Empty();
-        shapeOutline->Polygons = polys;
-        shapeOutline->Polygons.mutate([&](auto& polys) { polygons::offset(polys, 5, offset_join::Square); });
+        auto& shapeOutline {_layer0.create_shape<poly_shape>()};
+        shapeOutline.Color    = colors::Blue;
+        shapeOutline.Material = material::Empty();
+        shapeOutline.Polygons = polys;
+        shapeOutline.Polygons.mutate([&](auto& polys) { polygons::offset(polys, 5, offset_join::Square); });
 
-        shapeOutline->move_by({10, 650});
-        _layer0.add_shape(shapeOutline);
+        shapeOutline.move_by({10, 650});
 
-        auto shapeText {std::make_shared<poly_shape>()};
-        shapeText->Color    = colors::Green;
-        shapeText->Material = material::Empty();
-        shapeText->Polygons = polys;
-        assert(polygons::check_winding(*shapeText->Polygons));
-        shapeText->move_by({10, 650});
-        _layer0.add_shape(shapeText);
+        auto& shapeText {_layer0.create_shape<poly_shape>()};
+        shapeText.Color    = colors::Green;
+        shapeText.Material = material::Empty();
+        shapeText.Polygons = polys;
+        assert(polygons::check_winding(*shapeText.Polygons));
+        shapeText.move_by({10, 650});
 
         transform xform0;
-        xform0.rotate_at(degree_f {45}, shapeText->Polygons->at(1).info().Centroid);
-        shapeText->Polygons.mutate([&](auto& poly) { poly[1].apply_transform(xform0); });
+        xform0.rotate_at(degree_f {45}, shapeText.Polygons->at(1).info().Centroid);
+        shapeText.Polygons.mutate([&](auto& poly) { poly[1].apply_transform(xform0); });
         transform xform1;
-        xform1.rotate_at(degree_f {45}, shapeText->Polygons->at(4).info().Centroid);
-        shapeText->Polygons.mutate([&](auto& poly) { poly[4].apply_transform(xform1); });
+        xform1.rotate_at(degree_f {45}, shapeText.Polygons->at(4).info().Centroid);
+        shapeText.Polygons.mutate([&](auto& poly) { poly[4].apply_transform(xform1); });
     }
 }
 

@@ -77,12 +77,12 @@ void StencilEx::create_shapes()
 {
     _layer0.clear();
 
-    _back           = _layer0.create_shape<gfx::rect_shape>();
+    _back           = &_layer0.create_shape<gfx::rect_shape>();
     _back->Material = _mat1;
     _back->Color    = colors::Blue;
     _back->Bounds   = {0, _tween.Value, 500, 300};
 
-    _wall                        = _layer0.create_shape<gfx::poly_shape>();
+    _wall                        = &_layer0.create_shape<gfx::poly_shape>();
     _wall->Material              = _mat0;
     _wall->Material->StencilFunc = stencil_func::Always;
     _wall->Material->StencilOp   = stencil_op::Replace;
@@ -93,7 +93,7 @@ void StencilEx::create_shapes()
                      .Holes   = {},
     }};
 
-    _front                        = _layer0.create_shape<gfx::rect_shape>();
+    _front                        = &_layer0.create_shape<gfx::rect_shape>();
     _front->Material              = _mat2;
     _front->Material->StencilFunc = stencil_func::Equal;
     _front->Material->StencilOp   = stencil_op::Keep;
