@@ -14,20 +14,20 @@ class piano_form : public form<dock_layout> {
 public:
     piano_form(window& window);
 
-    std::shared_ptr<button> C;
-    std::shared_ptr<button> CSharp;
-    std::shared_ptr<button> D;
-    std::shared_ptr<button> DSharp;
-    std::shared_ptr<button> E;
-    std::shared_ptr<button> F;
-    std::shared_ptr<button> FSharp;
-    std::shared_ptr<button> G;
-    std::shared_ptr<button> GSharp;
-    std::shared_ptr<button> A;
-    std::shared_ptr<button> ASharp;
-    std::shared_ptr<button> B;
+    button* C {nullptr};
+    button* CSharp {nullptr};
+    button* D {nullptr};
+    button* DSharp {nullptr};
+    button* E {nullptr};
+    button* F {nullptr};
+    button* FSharp {nullptr};
+    button* G {nullptr};
+    button* GSharp {nullptr};
+    button* A {nullptr};
+    button* ASharp {nullptr};
+    button* B {nullptr};
 
-    std::shared_ptr<slider> Octave;
+    slider* Octave {nullptr};
 
 private:
     void gen_styles();

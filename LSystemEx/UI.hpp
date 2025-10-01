@@ -28,12 +28,12 @@ private:
     void create_rule(grid_layout& layout);
     void create_settings(grid_layout& layout);
 
-    std::shared_ptr<text_box>  _txbAxiom;
-    std::shared_ptr<spinner>   _spnIterations;
-    std::shared_ptr<spinner>   _spnAngle;
-    std::shared_ptr<spinner>   _spnLine;
-    std::shared_ptr<spinner>   _spnStroke;
-    std::shared_ptr<grid_view> _grdRules;
+    text_box*  _txbAxiom {nullptr};
+    spinner*   _spnIterations {nullptr};
+    spinner*   _spnAngle {nullptr};
+    spinner*   _spnLine {nullptr};
+    spinner*   _spnStroke {nullptr};
+    grid_view* _grdRules {nullptr};
 
     asset_owner_ptr<font_family> _font;
 };

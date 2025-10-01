@@ -20,9 +20,9 @@ private:
     void draw_dice();
     void draw_noise();
 
-    std::shared_ptr<canvas_widget> _canvas;
-    asset_owner_ptr<font_family>   _font;
-    asset_owner_ptr<texture>       _tex;
+    canvas_widget*               _canvas;
+    asset_owner_ptr<font_family> _font;
+    asset_owner_ptr<texture>     _tex;
 };
 
 ////////////////////////////////////////////////////////////

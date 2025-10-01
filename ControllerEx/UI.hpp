@@ -14,7 +14,7 @@ class crtl_form : public form<dock_layout> {
 public:
     crtl_form(window& window);
 
-    std::shared_ptr<label> Controller;
+    label* Controller;
 
 private:
     void gen_styles();
@@ -25,14 +25,14 @@ private:
 
     asset_owner_ptr<font_family> _font;
 
-    std::shared_ptr<slider> _laxisx;
-    std::shared_ptr<slider> _laxisy;
-    std::shared_ptr<slider> _raxisx;
-    std::shared_ptr<slider> _raxisy;
-    std::shared_ptr<slider> _laxis;
-    std::shared_ptr<slider> _raxis;
+    slider* _laxisx {nullptr};
+    slider* _laxisy {nullptr};
+    slider* _raxisx {nullptr};
+    slider* _raxisy {nullptr};
+    slider* _laxis {nullptr};
+    slider* _raxis {nullptr};
 
-    std::shared_ptr<label> _button;
+    label* _button {nullptr};
 
     input::system& _input {locate_service<input::system>()};
 };

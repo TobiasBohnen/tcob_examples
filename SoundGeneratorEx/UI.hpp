@@ -14,25 +14,25 @@ class generator_form : public form<dock_layout> {
 public:
     generator_form(window& window);
 
-    std::shared_ptr<button> GenPickupCoin;
-    std::shared_ptr<button> GenLaserShot;
-    std::shared_ptr<button> GenExplosion;
-    std::shared_ptr<button> GenPowerup;
-    std::shared_ptr<button> GenHitHurt;
-    std::shared_ptr<button> GenJump;
-    std::shared_ptr<button> GenBlipSelect;
-    std::shared_ptr<button> GenRandom;
+    button* GenPickupCoin {nullptr};
+    button* GenLaserShot {nullptr};
+    button* GenExplosion {nullptr};
+    button* GenPowerup {nullptr};
+    button* GenHitHurt {nullptr};
+    button* GenJump {nullptr};
+    button* GenBlipSelect {nullptr};
+    button* GenRandom {nullptr};
 
-    std::shared_ptr<button> Play;
-    std::shared_ptr<button> Mutate;
+    button* Play {nullptr};
+    button* Mutate {nullptr};
 
-    std::shared_ptr<button> Load;
-    std::shared_ptr<button> Save;
-    std::shared_ptr<button> Export;
+    button* Load {nullptr};
+    button* Save {nullptr};
+    button* Export {nullptr};
 
-    std::shared_ptr<button> Exit;
+    button* Exit {nullptr};
 
-    std::shared_ptr<canvas_widget> Canvas;
+    canvas_widget* Canvas {nullptr};
 
     signal<> NewWave;
 
@@ -42,43 +42,43 @@ public:
 private:
     void gen_styles();
 
-    std::shared_ptr<drop_down_list> _valWaveType;
+    drop_down_list* _valWaveType {nullptr};
 
     // Wave envelope parameters
-    std::shared_ptr<slider> _valAttackTime;   // 0 to 1
-    std::shared_ptr<slider> _valSustainTime;  // 0 to 1
-    std::shared_ptr<slider> _valSustainPunch; // 0 to 1
-    std::shared_ptr<slider> _valDecayTime;    // 0 to 1
+    slider* _valAttackTime {nullptr};   // 0 to 1
+    slider* _valSustainTime {nullptr};  // 0 to 1
+    slider* _valSustainPunch {nullptr}; // 0 to 1
+    slider* _valDecayTime {nullptr};    // 0 to 1
 
-    // Frequency parameters
-    std::shared_ptr<slider> _valStartFrequency; // 0 to 1
-    std::shared_ptr<slider> _valMinFrequency;   // 0 to 1
-    std::shared_ptr<slider> _valSlide;          // -1 to 1
-    std::shared_ptr<slider> _valDeltaSlide;     // -1 to 1
-    std::shared_ptr<slider> _valVibratoDepth;   // 0 to 1
-    std::shared_ptr<slider> _valVibratoSpeed;   // 0 to 1
+                                        // Frequency parameters
+    slider* _valStartFrequency {nullptr}; // 0 to 1
+    slider* _valMinFrequency {nullptr};   // 0 to 1
+    slider* _valSlide {nullptr};          // -1 to 1
+    slider* _valDeltaSlide {nullptr};     // -1 to 1
+    slider* _valVibratoDepth {nullptr};   // 0 to 1
+    slider* _valVibratoSpeed {nullptr};   // 0 to 1
 
-    // Tone change parameters
-    std::shared_ptr<slider> _valChangeAmount; // -1 to 1
-    std::shared_ptr<slider> _valChangeSpeed;  // 0 to 1
+                                          // Tone change parameters
+    slider* _valChangeAmount {nullptr}; // -1 to 1
+    slider* _valChangeSpeed {nullptr};  // 0 to 1
 
-    // Square wave parameters
-    std::shared_ptr<slider> _valSquareDuty; // 0 to 1
-    std::shared_ptr<slider> _valDutySweep;  // -1 to 1
+                                        // Square wave parameters
+    slider* _valSquareDuty {nullptr}; // 0 to 1
+    slider* _valDutySweep {nullptr};  // -1 to 1
 
-    // Repeat parameters
-    std::shared_ptr<slider> _valRepeatSpeed; // 0 to 1
+                                      // Repeat parameters
+    slider* _valRepeatSpeed {nullptr}; // 0 to 1
 
-    // Phaser parameters
-    std::shared_ptr<slider> _valPhaserOffset; // -1 to 1
-    std::shared_ptr<slider> _valPhaserSweep;  // -1 to 1
+                                       // Phaser parameters
+    slider* _valPhaserOffset {nullptr}; // -1 to 1
+    slider* _valPhaserSweep {nullptr};  // -1 to 1
 
-    // Filter parameters
-    std::shared_ptr<slider> _valLowPassFilterCutoff;       // 0 to 1
-    std::shared_ptr<slider> _valLowPassFilterCutoffSweep;  // -1 to 1
-    std::shared_ptr<slider> _valLowPassFilterResonance;    // 0 to 1
-    std::shared_ptr<slider> _valHighPassFilterCutoff;      // 0 to 1
-    std::shared_ptr<slider> _valHighPassFilterCutoffSweep; // -1 to 1
+                                        // Filter parameters
+    slider* _valLowPassFilterCutoff {nullptr};       // 0 to 1
+    slider* _valLowPassFilterCutoffSweep {nullptr};  // -1 to 1
+    slider* _valLowPassFilterResonance {nullptr};    // 0 to 1
+    slider* _valHighPassFilterCutoff {nullptr};      // 0 to 1
+    slider* _valHighPassFilterCutoffSweep {nullptr}; // -1 to 1
 
     asset_owner_ptr<font_family> _font;
 };

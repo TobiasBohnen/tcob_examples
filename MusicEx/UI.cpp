@@ -20,24 +20,24 @@ crtl_form::crtl_form(window& window)
     font_family::SingleFont(*_font.ptr(), trim_ttf);
     gen_styles();
 
-    auto  mainPanel {create_container<glass>(dock_style::Fill, "main")};
-    auto& mainPanelLayout {mainPanel->create_layout<grid_layout>(size_i {12, 20})};
+    auto& mainPanel {create_container<glass>(dock_style::Fill, "main")};
+    auto& mainPanelLayout {mainPanel.create_layout<grid_layout>(size_i {12, 20})};
 
-    auto btn0 {mainPanelLayout.create_widget<button>({1, 1, 2, 4}, "mp3")};
-    btn0->Label = "mp3";
-    btn0->Click.connect([&] { Play("res/music0.mp3"); });
+    auto& btn0 {mainPanelLayout.create_widget<button>({1, 1, 2, 4}, "mp3")};
+    btn0.Label = "mp3";
+    btn0.Click.connect([&] { Play("res/music0.mp3"); });
 
-    auto btn1 {mainPanelLayout.create_widget<button>({3, 1, 2, 4}, "ogg")};
-    btn1->Label = "ogg";
-    btn1->Click.connect([&] { Play("res/music0.ogg"); });
+    auto& btn1 {mainPanelLayout.create_widget<button>({3, 1, 2, 4}, "ogg")};
+    btn1.Label = "ogg";
+    btn1.Click.connect([&] { Play("res/music0.ogg"); });
 
-    auto btn2 {mainPanelLayout.create_widget<button>({5, 1, 2, 4}, "wav")};
-    btn2->Label = "wav";
-    btn2->Click.connect([&] { Play("res/music0.wav"); });
+    auto& btn2 {mainPanelLayout.create_widget<button>({5, 1, 2, 4}, "wav")};
+    btn2.Label = "wav";
+    btn2.Click.connect([&] { Play("res/music0.wav"); });
 
-    auto btn4 {mainPanelLayout.create_widget<button>({7, 1, 2, 4}, "flac")};
-    btn4->Label = "flac";
-    btn4->Click.connect([&] { Play("res/music0.flac"); });
+    auto& btn4 {mainPanelLayout.create_widget<button>({7, 1, 2, 4}, "flac")};
+    btn4.Label = "flac";
+    btn4.Click.connect([&] { Play("res/music0.flac"); });
 }
 
 void crtl_form::gen_styles()

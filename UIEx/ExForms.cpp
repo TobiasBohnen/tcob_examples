@@ -16,30 +16,30 @@ auto create_form0(window* wnd, group const& resGrp) -> std::shared_ptr<form_base
     auto  tooltip0 {retValue->create_tooltip<tooltip>("tooltip")};
     auto& tooltipLayout {tooltip0->get_layout<panel::default_layout>()};
     tooltip0->Bounds = {0, 0, 170, 50};
-    auto tooltipLabel0 {tooltipLayout.create_widget<label>({5, 5, 160, 40}, "TTLabel0")};
-    tooltip0->Popup.connect([tooltipLabel0](auto const& event) { tooltipLabel0->Label = event.Widget->name(); });
+    auto& tooltipLabel0 {tooltipLayout.create_widget<label>({5, 5, 160, 40}, "TTLabel0")};
+    tooltip0->Popup.connect([&tooltipLabel0](auto const& event) { tooltipLabel0.Label = event.Widget->name(); });
 
-    auto panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
-    panel0->Flex = {.Width = 100_pct, .Height = 100_pct};
-    auto& panel0Layout {panel0->get_layout<panel::default_layout>()};
-    panel0->TabStop       = {.Enabled = false};
-    panel0->ScrollEnabled = true;
+    auto& panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
+    panel0.Flex = {.Width = 100_pct, .Height = 100_pct};
+    auto& panel0Layout {panel0.get_layout<panel::default_layout>()};
+    panel0.TabStop       = {.Enabled = false};
+    panel0.ScrollEnabled = true;
 
-    auto label0 {panel0Layout.create_widget<label>({0, 520, 200, 40}, "Label0")};
-    auto button0 {panel0Layout.create_widget<button>({0, 0, 200, 100}, "Button0")};
-    button0->Label = "äöü";
-    button0->Icon  = icon {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"};
+    auto& label0 {panel0Layout.create_widget<label>({0, 520, 200, 40}, "Label0")};
+    auto& button0 {panel0Layout.create_widget<button>({0, 0, 200, 100}, "Button0")};
+    button0.Label = "äöü";
+    button0.Icon  = icon {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"};
 
-    label0->For = button0;
+    label0.For = &button0;
 
-    auto spinner0 {panel0Layout.create_widget<spinner>({0, 150, 120, 100}, "Spinner0")};
-    spinner0->Min   = 0;
-    spinner0->Step  = 25;
-    spinner0->Max   = 100;
-    spinner0->Value = 0;
+    auto& spinner0 {panel0Layout.create_widget<spinner>({0, 150, 120, 100}, "Spinner0")};
+    spinner0.Min   = 0;
+    spinner0.Step  = 25;
+    spinner0.Max   = 100;
+    spinner0.Value = 0;
 
-    auto cycleButton0 {panel0Layout.create_widget<cycle_button>({0, 260, 120, 100}, "CycleButton0")};
-    cycleButton0->Items.mutate([&](auto& items) {
+    auto& cycleButton0 {panel0Layout.create_widget<cycle_button>({0, 260, 120, 100}, "CycleButton0")};
+    cycleButton0.Items.mutate([&](auto& items) {
         items.push_back({"abc"});
         items.push_back({"def"});
         items.push_back({"ghi"});
@@ -50,102 +50,102 @@ auto create_form0(window* wnd, group const& resGrp) -> std::shared_ptr<form_base
         items.push_back({"vwx"});
         items.push_back({"yz"});
     });
-    cycleButton0->SelectedItemIndex = 0;
+    cycleButton0.SelectedItemIndex = 0;
 
-    auto progressBar0 {panel0Layout.create_widget<progress_bar>({130, 150, 75, 200}, "ProgressBar0")};
-    progressBar0->Min   = 0;
-    progressBar0->Max   = 100;
-    progressBar0->Value = 50;
+    auto& progressBar0 {panel0Layout.create_widget<progress_bar>({130, 150, 75, 200}, "ProgressBar0")};
+    progressBar0.Min   = 0;
+    progressBar0.Max   = 100;
+    progressBar0.Value = 50;
 
-    auto progressBar1 {panel0Layout.create_widget<progress_bar>({10, 370, 200, 75}, "ProgressBar1")};
-    progressBar1->Min   = 0;
-    progressBar1->Max   = 100;
-    progressBar1->Value = 50;
+    auto& progressBar1 {panel0Layout.create_widget<progress_bar>({10, 370, 200, 75}, "ProgressBar1")};
+    progressBar1.Min   = 0;
+    progressBar1.Max   = 100;
+    progressBar1.Value = 50;
 
-    auto  sliderPanel {panel0Layout.create_widget<panel>({490, 390, 350, 550}, "SliderPanel")};
-    auto& sliderPanelLayout {sliderPanel->get_layout<panel::default_layout>()};
+    auto& sliderPanel {panel0Layout.create_widget<panel>({490, 390, 350, 550}, "SliderPanel")};
+    auto& sliderPanelLayout {sliderPanel.get_layout<panel::default_layout>()};
 
-    auto sliderLabel0 {sliderPanelLayout.create_widget<label>({180, 220, 150, 50}, "Label2")};
-    sliderLabel0->TabStop = {.Enabled = false};
+    auto& sliderLabel0 {sliderPanelLayout.create_widget<label>({180, 220, 150, 50}, "Label2")};
+    sliderLabel0.TabStop = {.Enabled = false};
 
-    auto slider0 {sliderPanelLayout.create_widget<slider>({0, 0, 250, 100}, "Slider0")};
-    slider0->Min   = 0;
-    slider0->Max   = 100;
-    slider0->Value = 0;
-    slider0->Step  = 1;
+    auto& slider0 {sliderPanelLayout.create_widget<slider>({0, 0, 250, 100}, "Slider0")};
+    slider0.Min   = 0;
+    slider0.Max   = 100;
+    slider0.Value = 0;
+    slider0.Step  = 1;
 
-    auto rangeSlider0 {sliderPanelLayout.create_widget<range_slider>({0, 110, 250, 100}, "RangeSlider0")};
-    rangeSlider0->Min    = 0;
-    rangeSlider0->Max    = 100;
-    rangeSlider0->Values = {50.f, 75.f};
-    rangeSlider0->Step   = 1;
-    rangeSlider0->Values.Changed.connect([sliderLabel0](auto val) {
-        sliderLabel0->Label = std::format("{:.2f}:{:.2f}", val.first, val.second);
+    auto& rangeSlider0 {sliderPanelLayout.create_widget<range_slider>({0, 110, 250, 100}, "RangeSlider0")};
+    rangeSlider0.Min    = 0;
+    rangeSlider0.Max    = 100;
+    rangeSlider0.Values = {50.f, 75.f};
+    rangeSlider0.Step   = 1;
+    rangeSlider0.Values.Changed.connect([&sliderLabel0](auto val) {
+        sliderLabel0.Label = std::format("{:.2f}:{:.2f}", val.first, val.second);
     });
-    slider0->Value.Changed.connect([sliderLabel0, slider0 = slider0.get(), rangeSlider0 = rangeSlider0.get()](auto val) {
-        sliderLabel0->Label = std::format("{:.2f}", val);
-        rangeSlider0->Alpha = slider0->Value / 100.f;
+    slider0.Value.Changed.connect([&sliderLabel0, &slider0, &rangeSlider0](auto val) {
+        sliderLabel0.Label = std::format("{:.2f}", val);
+        rangeSlider0.Alpha = slider0.Value / 100.f;
     });
-    //  rangeSlider0->MinRange = 10;
-    //  rangeSlider0->MaxRange = 50;
+    //  rangeSlider0.MinRange = 10;
+    //  rangeSlider0.MaxRange = 50;
 
-    auto slider1 {sliderPanelLayout.create_widget<slider>({0, 220, 75, 250}, "Slider1")};
-    slider1->Min   = 0;
-    slider1->Max   = 100;
-    slider1->Value = 100;
-    slider1->Step  = 5;
-    slider1->Value.Changed.connect([sliderLabel0](auto val) {
-        sliderLabel0->Label = std::format("{:.2f}", val);
+    auto& slider1 {sliderPanelLayout.create_widget<slider>({0, 220, 75, 250}, "Slider1")};
+    slider1.Min   = 0;
+    slider1.Max   = 100;
+    slider1.Value = 100;
+    slider1.Step  = 5;
+    slider1.Value.Changed.connect([&sliderLabel0](auto val) {
+        sliderLabel0.Label = std::format("{:.2f}", val);
     });
 
-    auto rangeSlider1 {sliderPanelLayout.create_widget<range_slider>({100, 220, 75, 250}, "RangeSlider1")};
-    rangeSlider1->Min    = 0;
-    rangeSlider1->Max    = 1;
-    rangeSlider1->Values = {0.01f, 0.15f};
-    rangeSlider1->Step   = 0.01f;
-    rangeSlider1->Values.Changed.connect([sliderLabel0](auto val) {
-        sliderLabel0->Label = std::format("{:.2f}:{:.2f}", val.first, val.second);
+    auto& rangeSlider1 {sliderPanelLayout.create_widget<range_slider>({100, 220, 75, 250}, "RangeSlider1")};
+    rangeSlider1.Min    = 0;
+    rangeSlider1.Max    = 1;
+    rangeSlider1.Values = {0.01f, 0.15f};
+    rangeSlider1.Step   = 0.01f;
+    rangeSlider1.Values.Changed.connect([&sliderLabel0](auto val) {
+        sliderLabel0.Label = std::format("{:.2f}:{:.2f}", val.first, val.second);
     });
-    rangeSlider1->MinRange = 0.05f;
-    rangeSlider1->MaxRange = 0.5f;
+    rangeSlider1.MinRange = 0.05f;
+    rangeSlider1.MaxRange = 0.5f;
 
-    auto  treePanel {panel0Layout.create_widget<panel>({850, 250, 200, 300}, "TreePanel")};
-    auto& treePanelLayout {treePanel->create_layout<tree_layout>()};
-    treePanelLayout.create_widget<button>(0, "")->Label = "I";
-    treePanelLayout.create_widget<button>(1, "")->Label = "I.I";
-    treePanelLayout.create_widget<button>(0, "")->Label = "II";
-    treePanelLayout.create_widget<button>(1, "")->Label = "II.I";
-    treePanelLayout.create_widget<button>(2, "")->Label = "II.I.I";
-    treePanelLayout.create_widget<button>(1, "")->Label = "II.II";
+    auto& treePanel {panel0Layout.create_widget<panel>({850, 250, 200, 300}, "TreePanel")};
+    auto& treePanelLayout {treePanel.create_layout<tree_layout>()};
+    treePanelLayout.create_widget<button>(0, "").Label = "I";
+    treePanelLayout.create_widget<button>(1, "").Label = "I.I";
+    treePanelLayout.create_widget<button>(0, "").Label = "II";
+    treePanelLayout.create_widget<button>(1, "").Label = "II.I";
+    treePanelLayout.create_widget<button>(2, "").Label = "II.I.I";
+    treePanelLayout.create_widget<button>(1, "").Label = "II.II";
 
-    auto  stackPanel {panel0Layout.create_widget<panel>({850, 560, 200, 300}, "StackPanel")};
-    auto& stackPanelLayout {stackPanel->create_layout<stack_layout>()};
-    auto  createStackPanel([stackPanel = stackPanel.get(), &stackPanelLayout](string const& lbl) {
-        auto  cp {stackPanelLayout.create_widget<panel>(lbl)};
-        auto& cpLayout {cp->create_layout<grid_layout>(size_i {3, 3})};
-        cpLayout.create_widget<label>({{0, 0}, {3, 1}}, lbl)->Label = lbl;
-        auto btn {cpLayout.create_widget<button>({{0, 2}, {3, 1}}, "next")};
-        btn->Label = "next";
+    auto& stackPanel {panel0Layout.create_widget<panel>({850, 560, 200, 300}, "StackPanel")};
+    auto& stackPanelLayout {stackPanel.create_layout<stack_layout>()};
+    auto  createStackPanel([&stackPanel, &stackPanelLayout](string const& lbl) -> panel& {
+        auto& cp {stackPanelLayout.create_widget<panel>(lbl)};
+        auto& cpLayout {cp.create_layout<grid_layout>(size_i {3, 3})};
+        cpLayout.create_widget<label>({{0, 0}, {3, 1}}, lbl).Label = lbl;
+        auto& btn {cpLayout.create_widget<button>({{0, 2}, {3, 1}}, "next")};
+        btn.Label = "next";
 
-        btn->Click.connect([stackPanel, &stackPanelLayout] {
+        btn.Click.connect([&stackPanel, &stackPanelLayout] {
             stackIdx = (stackIdx + 1) % 5;
-            stackPanelLayout.activate_widget(stackPanel->find_child_by_name(std::to_string(stackIdx)));
+            stackPanelLayout.activate_widget(stackPanel.find_child_by_name(std::to_string(stackIdx)));
         });
         return cp;
-    });
-    auto  cp1 {createStackPanel("0")};
-    auto  cp2 {createStackPanel("1")};
-    auto  cp3 {createStackPanel("2")};
-    auto  cp4 {createStackPanel("3")};
-    auto  cp5 {createStackPanel("4")};
-    stackPanelLayout.activate_widget(cp1.get());
+     });
+    auto& cp1 {createStackPanel("0")};
+    auto& cp2 {createStackPanel("1")};
+    auto& cp3 {createStackPanel("2")};
+    auto& cp4 {createStackPanel("3")};
+    auto& cp5 {createStackPanel("4")};
+    stackPanelLayout.activate_widget(&cp1);
 
-    auto  circlePanel {panel0Layout.create_widget<panel>({1050, 450, 200, 150}, "CirclePanel")};
-    auto& circlePanelLayout {circlePanel->create_layout<circle_layout>()};
+    auto& circlePanel {panel0Layout.create_widget<panel>({1050, 450, 200, 150}, "CirclePanel")};
+    auto& circlePanelLayout {circlePanel.create_layout<circle_layout>()};
     auto  createCircleButton([&circlePanelLayout](string const& lbl) {
-        auto btn {circlePanelLayout.create_widget<button>(lbl)};
-        btn->Flex  = {20_pct, 25_pct};
-        btn->Label = lbl;
+        auto& btn {circlePanelLayout.create_widget<button>(lbl)};
+        btn.Flex  = {20_pct, 25_pct};
+        btn.Label = lbl;
     });
     createCircleButton("1");
     createCircleButton("2");
@@ -158,22 +158,22 @@ auto create_form0(window* wnd, group const& resGrp) -> std::shared_ptr<form_base
     createCircleButton("9");
     createCircleButton("0");
 
-    auto textBox0 {panel0Layout.create_widget<text_box>({0, 650, 125, 50}, "TextBox0")};
-    textBox0->MaxLength = 9;
-    textBox0->Submit.connect([label0, textBox0](auto const&) { label0->Label = "submitted: " + *textBox0->Text; });
-    textBox0->Selectable = true;
+    auto& textBox0 {panel0Layout.create_widget<text_box>({0, 650, 125, 50}, "TextBox0")};
+    textBox0.MaxLength = 9;
+    textBox0.Submit.connect([&label0, &textBox0](auto const&) { label0.Label = "submitted: " + *textBox0.Text; });
+    textBox0.Selectable = true;
 
-    auto toggle0 {panel0Layout.create_widget<toggle>({0, 550, 150, 75}, "Toggle0")};
-    toggle0->Checked = false;
+    auto& toggle0 {panel0Layout.create_widget<toggle>({0, 550, 150, 75}, "Toggle0")};
+    toggle0.Checked = false;
 
-    auto gridPanel {panel0Layout.create_widget<panel>({230, 20, 250, 250}, "SPanel0")};
-    gridPanel->TabStop = {.Enabled = false};
-    auto& gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 3}, true)};
+    auto& gridPanel {panel0Layout.create_widget<panel>({230, 20, 250, 250}, "SPanel0")};
+    gridPanel.TabStop = {.Enabled = false};
+    auto& gridLayout {gridPanel.create_layout<grid_layout>(size_i {4, 3}, true)};
     auto  createGridWidget {
         [&](rect_i loc, std::string const& name) {
-            auto b {gridLayout.create_widget<button>(loc, "gridB" + name)};
-            b->Label   = name;
-            b->Tooltip = tooltip0;
+            auto& b {gridLayout.create_widget<button>(loc, "gridB" + name)};
+            b.Label   = name;
+            b.Tooltip = tooltip0;
         }};
     createGridWidget({0, 0, 2, 1}, "0");
     createGridWidget({2, 0, 2, 1}, "1");
@@ -183,89 +183,89 @@ auto create_form0(window* wnd, group const& resGrp) -> std::shared_ptr<form_base
     createGridWidget({2, 2, 1, 1}, "5");
     createGridWidget({3, 2, 1, 1}, "6");
 
-    auto boxVPanel0 {panel0Layout.create_widget<panel>({490, 20, 250, 250}, "SPanel1")};
-    boxVPanel0->TabStop = {.Enabled = false};
-    auto& boxVLayout0 {boxVPanel0->create_layout<vertical_layout>()};
+    auto& boxVPanel0 {panel0Layout.create_widget<panel>({490, 20, 250, 250}, "SPanel1")};
+    boxVPanel0.TabStop = {.Enabled = false};
+    auto& boxVLayout0 {boxVPanel0.create_layout<vertical_layout>()};
     for (i32 i {0}; i < 4; i++) {
-        auto bb {boxVLayout0.create_widget<button>("Button" + std::to_string(i))};
-        bb->Label = std::to_string(i);
+        auto& bb {boxVLayout0.create_widget<button>("Button" + std::to_string(i))};
+        bb.Label = std::to_string(i);
     }
 
-    auto boxHPanel1 {panel0Layout.create_widget<panel>({230, 280, 250, 100}, "SPanel2")};
-    boxHPanel1->TabStop = {.Enabled = false};
-    auto& boxHLayout1 {boxHPanel1->create_layout<horizontal_layout>()};
+    auto& boxHPanel1 {panel0Layout.create_widget<panel>({230, 280, 250, 100}, "SPanel2")};
+    boxHPanel1.TabStop = {.Enabled = false};
+    auto& boxHLayout1 {boxHPanel1.create_layout<horizontal_layout>()};
     for (i32 i {0}; i < 4; i++) {
-        auto chk {boxHLayout1.create_widget<checkbox>("Check" + std::to_string(i))};
-        chk->Checked.Changed.connect([label0, chk](bool value) { label0->Label = (value ? "checked: " : "unchecked: ") + chk->name(); });
+        auto& chk {boxHLayout1.create_widget<checkbox>("Check" + std::to_string(i))};
+        chk.Checked.Changed.connect([&label0, &chk](bool value) { label0.Label = (value ? "checked: " : "unchecked: ") + chk.name(); });
     }
 
-    auto boxHPanel2 {panel0Layout.create_widget<panel>({490, 280, 250, 100}, "SPanel3")};
-    boxHPanel2->TabStop = {.Enabled = false};
-    auto& boxHLayout2 {boxHPanel2->create_layout<horizontal_layout>()};
+    auto& boxHPanel2 {panel0Layout.create_widget<panel>({490, 280, 250, 100}, "SPanel3")};
+    boxHPanel2.TabStop = {.Enabled = false};
+    auto& boxHLayout2 {boxHPanel2.create_layout<horizontal_layout>()};
     for (i32 i {0}; i < 4; i++) {
-        auto rb {boxHLayout2.create_widget<radio_button>("Radio" + std::to_string(i))};
-        rb->Checked.Changed.connect([label0, rb](bool value) { label0->Label = (value ? "checked: " : "unchecked: ") + rb->name(); });
-        rb->Cursor = cursor_mode::User1;
+        auto& rb {boxHLayout2.create_widget<radio_button>("Radio" + std::to_string(i))};
+        rb.Checked.Changed.connect([&label0, &rb](bool value) { label0.Label = (value ? "checked: " : "unchecked: ") + rb.name(); });
+        rb.Cursor = cursor_mode::User1;
     }
 
-    auto masonryPanel0 {panel0Layout.create_widget<panel>({230, 390, 250, 550}, "SPanel4")};
-    masonryPanel0->TabStop = {.Enabled = false};
-    masonryPanel0->FocusGained.connect([](widget_event ev) {
+    auto& masonryPanel0 {panel0Layout.create_widget<panel>({230, 390, 250, 550}, "SPanel4")};
+    masonryPanel0.TabStop = {.Enabled = false};
+    masonryPanel0.FocusGained.connect([](widget_event ev) {
         ev.Sender->Bounds = {ev.Sender->Bounds->Position, {800, ev.Sender->Bounds->height()}};
     });
-    masonryPanel0->FocusLost.connect([](widget_event ev) {
+    masonryPanel0.FocusLost.connect([](widget_event ev) {
         ev.Sender->Bounds = {ev.Sender->Bounds->Position, {250, ev.Sender->Bounds->height()}};
     });
-    auto& masonryLayout0 {masonryPanel0->create_layout<masonry_layout>(6)};
+    auto& masonryLayout0 {masonryPanel0.create_layout<masonry_layout>(6)};
     for (i32 i {0}; i < 16; i++) {
-        auto fb {masonryLayout0.create_widget<button>("FButton" + std::to_string(i))};
+        auto& fb {masonryLayout0.create_widget<button>("FButton" + std::to_string(i))};
         if (i % 3 == 0) {
-            fb->Flex = {.Width = 100_pct, .Height = 40_pct};
+            fb.Flex = {.Width = 100_pct, .Height = 40_pct};
         } else if (i % 2 == 0) {
-            fb->Flex = {.Width = 100_pct, .Height = 30_pct};
+            fb.Flex = {.Width = 100_pct, .Height = 30_pct};
         } else {
-            fb->Flex = {.Width = 100_pct, .Height = 20_pct};
+            fb.Flex = {.Width = 100_pct, .Height = 20_pct};
         }
 
-        fb->Label = std::to_string(i);
+        fb.Label = std::to_string(i);
     }
-    masonryPanel0->ZOrder = 100;
+    masonryPanel0.ZOrder = 100;
 
-    auto dropDownList0 {panel0Layout.create_widget<drop_down_list>({1000, 50, 150, 50}, "DropDownList0")};
-    dropDownList0->Items.mutate([&](auto& items) {
+    auto& dropDownList0 {panel0Layout.create_widget<drop_down_list>({1000, 50, 150, 50}, "DropDownList0")};
+    dropDownList0.Items.mutate([&](auto& items) {
         for (i32 i {0}; i < 4; ++i) {
             items.push_back({"item " + std::to_string(i)});
         }
         items.push_back({.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}});
     });
-    dropDownList0->SelectedItemIndex.Changed.connect([label0, dropDownList0](isize value) { label0->Label = "selected: " + std::to_string(value); });
-    dropDownList0->HoveredItemIndex.Changed.connect([label0, dropDownList0](isize value) { label0->Label = "hovered: " + std::to_string(value); });
-    dropDownList0->ZOrder = 10000;
+    dropDownList0.SelectedItemIndex.Changed.connect([&label0, &dropDownList0](isize value) { label0.Label = "selected: " + std::to_string(value); });
+    dropDownList0.HoveredItemIndex.Changed.connect([&label0, &dropDownList0](isize value) { label0.Label = "hovered: " + std::to_string(value); });
+    dropDownList0.ZOrder = 10000;
 
-    auto              listbox0 {panel0Layout.create_widget<list_box>({1200, 80, 150, 300}, "Listbox0")};
+    auto&             listbox0 {panel0Layout.create_widget<list_box>({1200, 80, 150, 300}, "Listbox0")};
     std::vector<item> listboxtItems;
     listboxtItems.push_back({.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}});
     for (i32 i {0}; i < 40; ++i) {
         listboxtItems.push_back({.Text = "item " + std::to_string(i)});
     }
-    listbox0->Items = listboxtItems;
+    listbox0.Items = listboxtItems;
 
-    listbox0->SelectedItemIndex.Changed.connect([label0, listbox0](isize value) { label0->Label = "selected: " + std::to_string(value); });
-    listbox0->HoveredItemIndex.Changed.connect([label0, listbox0](isize value) { label0->Label = "hovered: " + std::to_string(value); });
+    listbox0.SelectedItemIndex.Changed.connect([&label0, &listbox0](isize value) { label0.Label = "selected: " + std::to_string(value); });
+    listbox0.HoveredItemIndex.Changed.connect([&label0, &listbox0](isize value) { label0.Label = "hovered: " + std::to_string(value); });
 
-    auto imgBox0 {panel0Layout.create_widget<image_box>({750, 20, 150, 200}, "ImageBox0")};
-    imgBox0->Image     = {.Texture       = resGrp.get<texture>("anim"),
-                          .TextureRegion = "l1"};
-    imgBox0->Draggable = true;
-    imgBox0->Dropped.connect([label0 = label0.get(), form = retValue.get()](auto&& ev) {
-        label0->Label = std::format("drop:{}", ev.Target ? ev.Target->name() : "");
+    auto& imgBox0 {panel0Layout.create_widget<image_box>({750, 20, 150, 200}, "ImageBox0")};
+    imgBox0.Image     = {.Texture       = resGrp.get<texture>("anim"),
+                         .TextureRegion = "l1"};
+    imgBox0.Draggable = true;
+    imgBox0.Dropped.connect([&label0, form = retValue.get()](auto&& ev) {
+        label0.Label = std::format("drop:{}", ev.Target ? ev.Target->name() : "");
     });
 
-    imgBox0->start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::AlternatedLooped);
+    imgBox0.start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::AlternatedLooped);
 
-    auto gridView0 {panel0Layout.create_widget<grid_view>({1280, 450, 450, 400}, "GridView0")};
-    gridView0->Header = {{"Last"}, {"First"}, {"Age"}, {"City"}};
-    gridView0->Grid.mutate([&](auto& grid) {
+    auto& gridView0 {panel0Layout.create_widget<grid_view>({1280, 450, 450, 400}, "GridView0")};
+    gridView0.Header = {{"Last"}, {"First"}, {"Age"}, {"City"}};
+    gridView0.Grid.mutate([&](auto& grid) {
         grid.resize({4, 5});
 
         std::array<item, 4> items;
@@ -282,35 +282,35 @@ auto create_form0(window* wnd, group const& resGrp) -> std::shared_ptr<form_base
         grid.assign({0, 4}, {{"Patel"}, {"Raj"}, {"32"}, {"San Francisco"}});
     });
 
-    gridView0->HeaderSelectable = true;
-    gridView0->SelectMode       = grid_select_mode::Row;
-    gridView0->SelectedCellIndex.Changed.connect([label0, gridView0] {
-        if (*gridView0->SelectedCellIndex == point_i {-1, -1}) { return; }
-        label0->Label = std::format("grid: {}", gridView0->get_cell(gridView0->SelectedCellIndex).Text);
+    gridView0.HeaderSelectable = true;
+    gridView0.SelectMode       = grid_select_mode::Row;
+    gridView0.SelectedCellIndex.Changed.connect([&label0, &gridView0] {
+        if (*gridView0.SelectedCellIndex == point_i {-1, -1}) { return; }
+        label0.Label = std::format("grid: {}", gridView0.get_cell(gridView0.SelectedCellIndex).Text);
     });
 
-    button0->Click.connect([=, &resGrp] {
-        progressBar0->Value = progressBar0->Value == 100
+    button0.Click.connect([&] {
+        progressBar0.Value = progressBar0.Value == 100
             ? 0
-            : progressBar0->Value + 10;
-        progressBar1->Value = progressBar1->Value == 100
+            : progressBar0.Value + 10;
+        progressBar1.Value = progressBar1.Value == 100
             ? 0
-            : progressBar1->Value + 10;
-        listbox0->Items.mutate([&](auto& items) {
-            items.push_back({.Text = std::to_string(progressBar0->Value), .Icon = {.Texture = resGrp.get<texture>("blue_boxCheckmark")}, .UserData = {}});
+            : progressBar1.Value + 10;
+        listbox0.Items.mutate([&](auto& items) {
+            items.push_back({.Text = std::to_string(progressBar0.Value), .Icon = {.Texture = resGrp.get<texture>("blue_boxCheckmark")}, .UserData = {}});
         });
 
-        dropDownList0->Items.mutate([&](auto& items) {
-            items.push_back({std::to_string(progressBar0->Value)});
+        dropDownList0.Items.mutate([&](auto& items) {
+            items.push_back({std::to_string(progressBar0.Value)});
         });
 
-        gridView0->Grid.mutate([&](auto& grid) {
+        gridView0.Grid.mutate([&](auto& grid) {
             grid.resize({grid.width(), grid.height() + 1});
-            grid.assign({0, grid.height() - 1}, {{"XXX"}, {"XX"}, {std::to_string(progressBar0->Value * 10)}, {"XXXXX"}});
+            grid.assign({0, grid.height() - 1}, {{"XXX"}, {"XX"}, {std::to_string(progressBar0.Value * 10)}, {"XXXXX"}});
         });
     });
 
-    locate_service<input::system>().InputMode.Changed.connect([retValue, wnd, &resGrp](input::mode mode) {
+    locate_service<input::system>().InputMode.Changed.connect([&](input::mode mode) {
         if (mode == input::mode::Controller) {
             retValue->find_widget_by_name("gridB0")->focus();
             wnd->Cursor              = nullptr;
@@ -351,66 +351,66 @@ auto create_form1(window* wnd) -> std::shared_ptr<form_base>
         form_init {"form1", wnd->bounds()})};
 
     {
-        auto panel0 {retValue->create_container<panel>(rect_f {0, 0, 300, 300}, "Panel0")};
-        panel0->Flex          = {100_pct, 100_pct};
-        panel0->ScrollEnabled = true;
-        panel0->Movable       = true;
-        panel0->Resizable     = true;
-        auto& panel0Layout {panel0->get_layout<panel::default_layout>()};
+        auto& panel0 {retValue->create_container<panel>(rect_f {0, 0, 300, 300}, "Panel0")};
+        panel0.Flex          = {100_pct, 100_pct};
+        panel0.ScrollEnabled = true;
+        panel0.Movable       = true;
+        panel0.Resizable     = true;
+        auto& panel0Layout {panel0.get_layout<panel::default_layout>()};
 
-        auto panel1 {panel0Layout.create_widget<panel>({50, 30, 300, 300}, "Panel0-1")};
-        panel1->ScrollEnabled = true;
-        panel1->Movable       = true;
-        panel1->Resizable     = true;
-        auto& panel1Layout {panel1->get_layout<panel::default_layout>()};
+        auto& panel1 {panel0Layout.create_widget<panel>({50, 30, 300, 300}, "Panel0-1")};
+        panel1.ScrollEnabled = true;
+        panel1.Movable       = true;
+        panel1.Resizable     = true;
+        auto& panel1Layout {panel1.get_layout<panel::default_layout>()};
 
-        auto panel2 {panel1Layout.create_widget<panel>({50, 30, 300, 300}, "Panel0-2")};
-        panel2->ScrollEnabled = true;
-        panel2->Movable       = true;
-        panel2->Resizable     = true;
-        auto& panel2Layout {panel2->get_layout<panel::default_layout>()};
+        auto& panel2 {panel1Layout.create_widget<panel>({50, 30, 300, 300}, "Panel0-2")};
+        panel2.ScrollEnabled = true;
+        panel2.Movable       = true;
+        panel2.Resizable     = true;
+        auto& panel2Layout {panel2.get_layout<panel::default_layout>()};
 
-        auto panel3 {panel2Layout.create_widget<panel>({50, 30, 300, 300}, "Panel0-3")};
-        panel3->ScrollEnabled = true;
-        panel3->Movable       = true;
-        panel3->Resizable     = true;
-        auto& panel3Layout {panel3->get_layout<panel::default_layout>()};
+        auto& panel3 {panel2Layout.create_widget<panel>({50, 30, 300, 300}, "Panel0-3")};
+        panel3.ScrollEnabled = true;
+        panel3.Movable       = true;
+        panel3.Resizable     = true;
+        auto& panel3Layout {panel3.get_layout<panel::default_layout>()};
 
-        auto button0 {panel3Layout.create_widget<button>({-10, -10, 30, 30}, "Button0")};
-        auto button1 {panel3Layout.create_widget<button>({350, 350, 80, 50}, "Button1")};
+        auto& button0 {panel3Layout.create_widget<button>({-10, -10, 30, 30}, "Button0")};
+        auto& button1 {panel3Layout.create_widget<button>({350, 350, 80, 50}, "Button1")};
     }
 
     {
-        auto panel0 {retValue->create_container<panel>(rect_f {800, 0, 300, 300}, "Panel3")};
-        panel0->Flex          = {.Width = 100_pct, .Height = 100_pct};
-        panel0->ScrollEnabled = true;
-        panel0->Movable       = true;
-        panel0->Resizable     = true;
-        panel0->MinSize       = {150, 150};
-        panel0->MaxSize       = {450, 450};
-        auto& panel0Layout {panel0->get_layout<panel::default_layout>()};
+        auto& panel0 {retValue->create_container<panel>(rect_f {800, 0, 300, 300}, "Panel3")};
+        panel0.Flex          = {.Width = 100_pct, .Height = 100_pct};
+        panel0.ScrollEnabled = true;
+        panel0.Movable       = true;
+        panel0.Resizable     = true;
+        panel0.MinSize       = {150, 150};
+        panel0.MaxSize       = {450, 450};
+        auto& panel0Layout {panel0.get_layout<panel::default_layout>()};
     }
 
     {
-        auto panel0 {retValue->create_container<panel>(rect_f {800, 350, 300, 300}, "Panel4")};
-        panel0->Flex          = {.Width = 100_pct, .Height = 100_pct};
-        panel0->ScrollEnabled = true;
-        panel0->Movable       = true;
-        panel0->Resizable     = true;
-        panel0->MinSize       = {50, 150};
-        panel0->MaxSize       = {450, 450};
-        auto& panel0Layout {panel0->get_layout<panel::default_layout>()};
+        auto& panel0 {retValue->create_container<panel>(rect_f {800, 350, 300, 300}, "Panel4")};
+        panel0.Flex          = {.Width = 100_pct, .Height = 100_pct};
+        panel0.ScrollEnabled = true;
+        panel0.Movable       = true;
+        panel0.Resizable     = true;
+        panel0.MinSize       = {50, 150};
+        panel0.MaxSize       = {450, 450};
+        auto& panel0Layout {panel0.get_layout<panel::default_layout>()};
     }
 
     {
-        auto panel0 {retValue->create_container<panel>(rect_f {0, 350, 300, 300}, "Panel5")};
-        panel0->Flex          = {.Width = 100_pct, .Height = 100_pct};
-        panel0->ScrollEnabled = true;
-        panel0->Movable       = true;
-        panel0->Resizable     = true;
-        panel0->MinSize       = {50, 50};
-        panel0->MaxSize       = {450, 450};
-        auto& panel0Layout {panel0->get_layout<panel::default_layout>()};
+        auto& panel0 {retValue->create_container<panel>(rect_f {0, 350, 300, 300}, "Panel5")};
+        panel0.Flex          = {.Width = 100_pct, .Height = 100_pct};
+        panel0.ScrollEnabled = true;
+        panel0.Movable       = true;
+        panel0.Resizable     = true;
+        panel0.MinSize       = {50, 50};
+        panel0.MaxSize       = {450, 450};
+        auto& panel0Layout {panel0.get_layout<panel::default_layout>()};
     }
 
     return retValue;
@@ -420,50 +420,50 @@ auto create_form_terminal(window* wnd) -> std::shared_ptr<form_base>
 {
     auto retValue {std::make_shared<form<dock_layout>>(form_init {"form2", wnd->bounds()})};
 
-    auto panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
-    panel0->Flex = {.Width = 100_pct, .Height = 100_pct};
-    auto& panel0Layout {panel0->get_layout<panel::default_layout>()};
-    panel0->TabStop = {.Enabled = false};
+    auto& panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
+    panel0.Flex = {.Width = 100_pct, .Height = 100_pct};
+    auto& panel0Layout {panel0.get_layout<panel::default_layout>()};
+    panel0.TabStop = {.Enabled = false};
 
     {
         size_i const termSize {80, 24};
-        auto         terminal0 {panel0Layout.create_widget<terminal>({5, 5, termSize.Width * 14.f, termSize.Height * 28.f}, "Term1")};
-        terminal0->Size = termSize;
-        terminal0->clear();
+        auto&        terminal0 {panel0Layout.create_widget<terminal>({5, 5, termSize.Width * 14.f, termSize.Height * 28.f}, "Term1")};
+        terminal0.Size = termSize;
+        terminal0.clear();
 
-        terminal0->add_str("\033[106;34mC\033[105;33mo\033[104;32ml\033[103;31mo\033[102;31mr\033[0m Te\033[31;40mst ");
-        terminal0->color_set(color::FromString("#008f11"), colors::White);
-        terminal0->add_str("\nThis is line 2");
-        terminal0->add_str({79, 23}, "x");
-        terminal0->move({20, 10});
-        terminal0->add_str("st\033[4CTe");
-        terminal0->move({40, 10});
-        terminal0->add_str("st\033[4CTe");
+        terminal0.add_str("\033[106;34mC\033[105;33mo\033[104;32ml\033[103;31mo\033[102;31mr\033[0m Te\033[31;40mst ");
+        terminal0.color_set(color::FromString("#008f11"), colors::White);
+        terminal0.add_str("\nThis is line 2");
+        terminal0.add_str({79, 23}, "x");
+        terminal0.move({20, 10});
+        terminal0.add_str("st\033[4CTe");
+        terminal0.move({40, 10});
+        terminal0.add_str("st\033[4CTe");
 
-        terminal0->curs_set(true);
-        terminal0->mouse_set(true);
-        terminal0->echo(false);
+        terminal0.curs_set(true);
+        terminal0.mouse_set(true);
+        terminal0.echo(false);
 
-        auto button0 {panel0Layout.create_widget<button>({1150, 600, 200, 100}, "Button0")};
-        button0->Label = "Button0";
-        auto button1 {panel0Layout.create_widget<button>({1150, 750, 200, 100}, "Button1")};
-        button1->Label = "Button1";
-        auto label0 {panel0Layout.create_widget<label>({1150, 500, 400, 100}, "Label0")};
+        auto& button0 {panel0Layout.create_widget<button>({1150, 600, 200, 100}, "Button0")};
+        button0.Label = "Button0";
+        auto& button1 {panel0Layout.create_widget<button>({1150, 750, 200, 100}, "Button1")};
+        button1.Label = "Button1";
+        auto& label0 {panel0Layout.create_widget<label>({1150, 500, 400, 100}, "Label0")};
 
-        button0->Click.connect([terminal0, label0](auto&& ex) {
-            terminal0->rectangle({terminal0->get_xy(), {10, 5}});
+        button0.Click.connect([&terminal0, &label0](auto&& ex) {
+            terminal0.rectangle({terminal0.get_xy(), {10, 5}});
         });
-        button1->Click.connect([terminal0](auto const&) {
+        button1.Click.connect([&terminal0](auto const&) {
             {
                 io::ifstream str {"term.dump"};
-                auto         _ = terminal0->restore(str);
+                auto         _ = terminal0.restore(str);
             }
-            terminal0->flash();
+            terminal0.flash();
             locate_service<render_system>().statistics().reset();
         });
-        terminal0->Submit.connect([label0, ptr = terminal0.get()] {
-            label0->Label = ptr->get_str({ptr->get_xy().X, ptr->get_xy().Y - 1});
-            ptr->move({0, ptr->get_xy().Y + 1});
+        terminal0.Submit.connect([&label0, &terminal0] {
+            label0.Label = terminal0.get_str({terminal0.get_xy().X, terminal0.get_xy().Y - 1});
+            terminal0.move({0, terminal0.get_xy().Y + 1});
         });
     }
 
@@ -477,97 +477,97 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
     auto retValue {std::make_shared<form<vertical_layout>>(form_init {"form5", wnd->bounds()})};
 
     {
-        auto  panel0 {retValue->create_container<panel>("Panel0")};
-        auto& panel0Layout {panel0->create_layout<horizontal_layout>()};
+        auto& panel0 {retValue->create_container<panel>("Panel0")};
+        auto& panel0Layout {panel0.create_layout<horizontal_layout>()};
 
-        auto barChart0 {panel0Layout.create_widget<bar_chart>("Bar")};
-        barChart0->YAxis = {.Min = 0, .Max = 1};
+        auto& barChart0 {panel0Layout.create_widget<bar_chart>("Bar")};
+        barChart0.YAxis = {.Min = 0, .Max = 1};
 
-        barChart0->Dataset.mutate([&](auto& val) {
+        barChart0.Dataset.mutate([&](auto& val) {
             val.push_back({.Name = "bar1", .Value = {0.1f, 0.4f, 0.3f, 0.1f}});
             val.push_back({.Name = "bar2", .Value = {0.2f, 0.1f, 0.4f, 0.5f}});
             val.push_back({.Name = "bar3", .Value = {0.5f, 0.4f, 0.2f, 0.1f}});
         });
-        barChart0->TransitionDuration = 250ms;
+        barChart0.TransitionDuration = 250ms;
 
-        auto legend0 {panel0Layout.create_widget<legend>("Legend")};
-        legend0->For  = barChart0;
-        legend0->Flex = {50_pct, 100_pct};
+        auto& legend0 {panel0Layout.create_widget<legend>("Legend")};
+        legend0.For  = &barChart0;
+        legend0.Flex = {50_pct, 100_pct};
 
-        auto lineChart0 {panel0Layout.create_widget<line_chart>("Line")};
-        lineChart0->YAxis = {.Min = 0, .Max = 1};
+        auto& lineChart0 {panel0Layout.create_widget<line_chart>("Line")};
+        lineChart0.YAxis = {.Min = 0, .Max = 1};
 
-        lineChart0->Dataset.mutate([&](auto& val) {
+        lineChart0.Dataset.mutate([&](auto& val) {
             val.push_back({.Name = "line1", .Value = {0.1f, 0.4f, 0.8f, 0.1f, 0.8f, 0.1f, 0.8f}});
             val.push_back({.Name = "line2", .Value = {0.2f, 0.75f, 0.75f, 0.15f, 0.15f, 0.85f, 0.97f}});
             val.push_back({.Name = "line3", .Value = {0.3f, 0.15f, 0.5f, 0.25f, 0.5f, 0.25f, 0.83f}});
         });
-        lineChart0->TransitionDuration = 250ms;
+        lineChart0.TransitionDuration = 250ms;
 
-        auto legend1 {panel0Layout.create_widget<legend>("Legend")};
-        legend1->For  = lineChart0;
-        legend1->Flex = {50_pct, 100_pct};
+        auto& legend1 {panel0Layout.create_widget<legend>("Legend")};
+        legend1.For  = &lineChart0;
+        legend1.Flex = {50_pct, 100_pct};
 
-        auto pieChart0 {panel0Layout.create_widget<pie_chart>("Pie")};
+        auto& pieChart0 {panel0Layout.create_widget<pie_chart>("Pie")};
 
-        pieChart0->Dataset.mutate([&](auto& val) {
+        pieChart0.Dataset.mutate([&](auto& val) {
             val.push_back({.Name = "pie1", .Value = 4});
             val.push_back({.Name = "pie2", .Value = 6});
             val.push_back({.Name = "pie3", .Value = 2});
             val.push_back({.Name = "pie4", .Value = 2});
         });
-        pieChart0->TransitionDuration = 250ms;
+        pieChart0.TransitionDuration = 250ms;
 
-        auto legend2 {panel0Layout.create_widget<legend>("Legend")};
-        legend2->For  = pieChart0;
-        legend2->Flex = {50_pct, 100_pct};
+        auto& legend2 {panel0Layout.create_widget<legend>("Legend")};
+        legend2.For  = &pieChart0;
+        legend2.Flex = {50_pct, 100_pct};
     }
 
     {
-        auto  panel1 {retValue->create_container<panel>("Panel1")};
-        auto& panel1Layout {panel1->create_layout<horizontal_layout>()};
+        auto& panel1 {retValue->create_container<panel>("Panel1")};
+        auto& panel1Layout {panel1.create_layout<horizontal_layout>()};
 
-        auto mekkoChart0 {panel1Layout.create_widget<marimekko_chart>("Mekko")};
+        auto& mekkoChart0 {panel1Layout.create_widget<marimekko_chart>("Mekko")};
 
-        mekkoChart0->Dataset.mutate([&](auto& val) {
+        mekkoChart0.Dataset.mutate([&](auto& val) {
             val.push_back({.Name = "mekko1", .Value = {1, 1, 1, 1}});
             val.push_back({.Name = "mekko2", .Value = {5, 4, 6, 9}});
             val.push_back({.Name = "mekko3", .Value = {6, 2, 2, 6}});
         });
-        mekkoChart0->TransitionDuration = 250ms;
+        mekkoChart0.TransitionDuration = 250ms;
 
-        auto legend4 {panel1Layout.create_widget<legend>("Legend")};
-        legend4->For  = mekkoChart0;
-        legend4->Flex = {50_pct, 100_pct};
+        auto& legend4 {panel1Layout.create_widget<legend>("Legend")};
+        legend4.For  = &mekkoChart0;
+        legend4.Flex = {50_pct, 100_pct};
 
-        auto scatterChart0 {panel1Layout.create_widget<scatter_chart>("Scatter")};
-        scatterChart0->XAxis = {.Min = 0, .Max = 10};
-        scatterChart0->YAxis = {.Min = 0, .Max = 12};
+        auto& scatterChart0 {panel1Layout.create_widget<scatter_chart>("Scatter")};
+        scatterChart0.XAxis = {.Min = 0, .Max = 10};
+        scatterChart0.YAxis = {.Min = 0, .Max = 12};
 
-        scatterChart0->Dataset.mutate([&](auto& val) {
+        scatterChart0.Dataset.mutate([&](auto& val) {
             val.push_back({.Name = "scatter1", .Value = {{0, 0}, {2, 3}, {3, 6}}});
             val.push_back({.Name = "scatter2", .Value = {{3, 0}, {4, 2}, {10, 12}, {4, 3}}});
         });
-        scatterChart0->TransitionDuration = 250ms;
+        scatterChart0.TransitionDuration = 250ms;
 
-        auto legend5 {panel1Layout.create_widget<legend>("Legend")};
-        legend5->For  = scatterChart0;
-        legend5->Flex = {50_pct, 100_pct};
+        auto& legend5 {panel1Layout.create_widget<legend>("Legend")};
+        legend5.For  = &scatterChart0;
+        legend5.Flex = {50_pct, 100_pct};
 
-        auto radarChart0 {panel1Layout.create_widget<radar_chart>("Radar")};
-        radarChart0->ValueAxis = {.Min = 0, .Max = 1};
+        auto& radarChart0 {panel1Layout.create_widget<radar_chart>("Radar")};
+        radarChart0.ValueAxis = {.Min = 0, .Max = 1};
 
-        radarChart0->Dataset.mutate([&](auto& val) {
+        radarChart0.Dataset.mutate([&](auto& val) {
             val.push_back({.Name = "radar1", .Value = {0.8f, 0.6f, 0.9f, 0.5f, 0.7f, 0.65f}});
             val.push_back({.Name = "radar2", .Value = {0.5f, 0.7f, 0.4f, 0.95f, 0.45f, 0.8f}});
             val.push_back({.Name = "radar3", .Value = {0.3f, 0.9f, 0.6f, 0.7f, 0.2f, 0.55f}});
             val.push_back({.Name = "radar4", .Value = {0.6f, 0.4f, 0.8f, 0.6f, 0.5f, 0.9f}});
         });
-        radarChart0->TransitionDuration = 250ms;
+        radarChart0.TransitionDuration = 250ms;
 
-        auto legend6 {panel1Layout.create_widget<legend>("Legend")};
-        legend6->For  = radarChart0;
-        legend6->Flex = {50_pct, 100_pct};
+        auto& legend6 {panel1Layout.create_widget<legend>("Legend")};
+        legend6.For  = &radarChart0;
+        legend6.Flex = {50_pct, 100_pct};
     }
 
     return retValue;
@@ -580,44 +580,44 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form_base>
     retValue->Bounds = rect_f {0, 0, (*wnd->Size).Width * 0.8f, static_cast<f32>((*wnd->Size).Height)};
 
     {
-        auto panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
-        panel0->Flex = {.Width = 100_pct, .Height = 25_pct};
-        auto& panel0Layout {panel0->create_layout<dock_layout>()};
+        auto& panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
+        panel0.Flex = {.Width = 100_pct, .Height = 25_pct};
+        auto& panel0Layout {panel0.create_layout<dock_layout>()};
 
-        auto canvas {panel0Layout.create_widget<canvas_widget>(dock_style::Fill, "Canvas1")};
-        canvas->Bounds.Changed.connect([canvas = canvas.get()](rect_f const& bounds) {
+        auto& canvas {panel0Layout.create_widget<canvas_widget>(dock_style::Fill, "Canvas1")};
+        canvas.Bounds.Changed.connect([&canvas](rect_f const& bounds) {
             size_f s {bounds.Size / 3};
-            canvas->set_fill_style(colors::Blue);
-            canvas->begin_path();
-            canvas->rect({0, 0, s.Width, s.Height});
-            canvas->fill();
+            canvas.set_fill_style(colors::Blue);
+            canvas.begin_path();
+            canvas.rect({0, 0, s.Width, s.Height});
+            canvas.fill();
 
-            canvas->set_fill_style(colors::Red);
-            canvas->begin_path();
-            canvas->rect({s.Width / 2, s.Height / 2, s.Width, s.Height});
-            canvas->fill();
+            canvas.set_fill_style(colors::Red);
+            canvas.begin_path();
+            canvas.rect({s.Width / 2, s.Height / 2, s.Width, s.Height});
+            canvas.fill();
 
-            canvas->set_fill_style(colors::Green);
-            canvas->begin_path();
-            canvas->rect({s.Width, s.Height, s.Width, s.Height});
-            canvas->fill();
+            canvas.set_fill_style(colors::Green);
+            canvas.begin_path();
+            canvas.rect({s.Width, s.Height, s.Width, s.Height});
+            canvas.fill();
         });
     }
     {
-        auto panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
-        panel0->Flex = {.Width = 100_pct, .Height = 25_pct};
-        auto& panel0Layout {panel0->create_layout<dock_layout>()};
+        auto& panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
+        panel0.Flex = {.Width = 100_pct, .Height = 25_pct};
+        auto& panel0Layout {panel0.create_layout<dock_layout>()};
 
-        auto colorPicker00 {panel0Layout.create_widget<color_picker>(dock_style::Fill, "CP1")};
-        colorPicker00->SelectedColor.Changed.connect([wnd](auto val) { wnd->ClearColor = color::FromHSVA(val); });
-        colorPicker00->TransitionDuration = 550ms;
+        auto& colorPicker00 {panel0Layout.create_widget<color_picker>(dock_style::Fill, "CP1")};
+        colorPicker00.SelectedColor.Changed.connect([wnd](auto val) { wnd->ClearColor = color::FromHSVA(val); });
+        colorPicker00.TransitionDuration = 550ms;
     }
     {
-        auto panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
-        panel0->Flex = {.Width = 100_pct, .Height = 25_pct};
-        auto& panel0Layout {panel0->create_layout<dock_layout>()};
+        auto& panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
+        panel0.Flex = {.Width = 100_pct, .Height = 25_pct};
+        auto& panel0Layout {panel0.create_layout<dock_layout>()};
 
-        auto     dotMatrix {panel0Layout.create_widget<dot_matrix_display>(dock_style::Fill, "DM1")};
+        auto&    dotMatrix {panel0Layout.create_widget<dot_matrix_display>(dock_style::Fill, "DM1")};
         rng      rand;
         grid<u8> dots {{50, 10}};
         string   str {"00000000000036666666666660000000000003666666666666"
@@ -635,22 +635,22 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form_base>
         // for (i32 i {0}; i < dots.size(); ++i) { dots[i] = (i / 64 * 4); }
         //  for (i32 i {0}; i < dots.capacity(); ++i) { dots.push_back(rand(0, 255)); }
 
-        dotMatrix->Dots               = dots;
-        dotMatrix->TransitionDuration = 500ms;
+        dotMatrix.Dots               = dots;
+        dotMatrix.TransitionDuration = 500ms;
     }
 
     {
-        auto panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
-        panel0->Flex = {.Width = 100_pct, .Height = 25_pct};
-        auto& panel0Layout {panel0->create_layout<grid_layout>(size_i {200, 200})};
+        auto& panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
+        panel0.Flex = {.Width = 100_pct, .Height = 25_pct};
+        auto& panel0Layout {panel0.create_layout<grid_layout>(size_i {200, 200})};
 
-        auto lcdDisplay0 {panel0Layout.create_widget<seven_segment_display>({0, 0, 100, 100}, "LCD0")};
-        lcdDisplay0->draw_text("0123456789 -=\"',");
-        lcdDisplay0->TransitionDuration = 500ms;
-        auto lcdDisplay1 {panel0Layout.create_widget<seven_segment_display>({100, 0, 100, 100}, "LCD1")};
-        // lcdDisplay1->draw_text("ABCDEFGHIJLOPSUZ");
-        lcdDisplay1->draw_segments(std::array<seven_segment_display::segment, 1> {{{.A = true, .B = true, .C = true, .D = true, .E = true, .F = true, .G = false}}});
-        lcdDisplay1->TransitionDuration = 500ms;
+        auto& lcdDisplay0 {panel0Layout.create_widget<seven_segment_display>({0, 0, 100, 100}, "LCD0")};
+        lcdDisplay0.draw_text("0123456789 -=\"',");
+        lcdDisplay0.TransitionDuration = 500ms;
+        auto& lcdDisplay1 {panel0Layout.create_widget<seven_segment_display>({100, 0, 100, 100}, "LCD1")};
+        // lcdDisplay1.draw_text("ABCDEFGHIJLOPSUZ");
+        lcdDisplay1.draw_segments(std::array<seven_segment_display::segment, 1> {{{.A = true, .B = true, .C = true, .D = true, .E = true, .F = true, .G = false}}});
+        lcdDisplay1.TransitionDuration = 500ms;
     }
 
     return retValue;
@@ -660,22 +660,22 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
 {
     auto retValue {std::make_shared<form<dock_layout>>(form_init {.Name = "form3", .Bounds = wnd->bounds()})};
 
-    auto createTabs {[](std::shared_ptr<tab_container> const& tabContainer0) {
-        auto boxVPanel0 {tabContainer0->create_tab<panel>("TAB0")};
-        boxVPanel0->TabStop = {.Enabled = false};
-        auto& boxVLayout0 {boxVPanel0->create_layout<vertical_layout>()};
+    auto createTabs {[](tab_container& tabContainer0) {
+        auto& boxVPanel0 {tabContainer0.create_tab<panel>("TAB0")};
+        boxVPanel0.TabStop = {.Enabled = false};
+        auto& boxVLayout0 {boxVPanel0.create_layout<vertical_layout>()};
         for (i32 i {0}; i < 4; i++) {
-            auto bb {boxVLayout0.create_widget<button>("Button" + std::to_string(i))};
-            bb->Label = std::to_string(i);
+            auto& bb {boxVLayout0.create_widget<button>("Button" + std::to_string(i))};
+            bb.Label = std::to_string(i);
         }
 
-        auto gridPanel {tabContainer0->create_tab<panel>("TAB1")};
-        gridPanel->TabStop = {.Enabled = false};
-        auto& gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 3}, true)};
+        auto& gridPanel {tabContainer0.create_tab<panel>("TAB1")};
+        gridPanel.TabStop = {.Enabled = false};
+        auto& gridLayout {gridPanel.create_layout<grid_layout>(size_i {4, 3}, true)};
 
         auto createGridWidget {[&](rect_i loc, std::string const& name) {
-            auto b {gridLayout.create_widget<button>(loc, "gridB" + name)};
-            b->Label = name;
+            auto& b {gridLayout.create_widget<button>(loc, "gridB" + name)};
+            b.Label = name;
         }};
         createGridWidget({0, 0, 2, 1}, "0");
         createGridWidget({2, 0, 2, 1}, "1");
@@ -685,40 +685,40 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
         createGridWidget({2, 2, 1, 1}, "5");
         createGridWidget({3, 2, 1, 1}, "6");
 
-        auto boxHPanel1 {tabContainer0->create_tab<panel>("TAB2")};
-        boxHPanel1->TabStop = {.Enabled = false};
-        auto& boxHLayout1 {boxHPanel1->create_layout<horizontal_layout>()};
+        auto& boxHPanel1 {tabContainer0.create_tab<panel>("TAB2")};
+        boxHPanel1.TabStop = {.Enabled = false};
+        auto& boxHLayout1 {boxHPanel1.create_layout<horizontal_layout>()};
         for (i32 i {0}; i < 4; i++) {
             boxHLayout1.create_widget<checkbox>("Check" + std::to_string(i));
         }
     }};
 
     {
-        auto tabContainer0 {retValue->create_container<tab_container>(dock_style::Left, "TabContainer0")};
-        tabContainer0->Flex = {.Width = 50_pct, .Height = 100_pct};
+        auto& tabContainer0 {retValue->create_container<tab_container>(dock_style::Left, "TabContainer0")};
+        tabContainer0.Flex = {.Width = 50_pct, .Height = 100_pct};
         createTabs(tabContainer0);
     }
 
     {
-        auto tabContainer0 {retValue->create_container<tab_container>(dock_style::Left, "TabContainer1")};
-        tabContainer0->Flex = {.Width = 50_pct, .Height = 100_pct};
+        auto& tabContainer0 {retValue->create_container<tab_container>(dock_style::Left, "TabContainer1")};
+        tabContainer0.Flex = {.Width = 50_pct, .Height = 100_pct};
 
-        auto tabContainer1 {tabContainer0->create_tab<tab_container>("TabContainer11", {.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
+        auto& tabContainer1 {tabContainer0.create_tab<tab_container>("TabContainer11", {.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
         createTabs(tabContainer1);
 
-        auto tabContainer2 {tabContainer0->create_tab<tab_container>("TabContainer12", {.Text = "def"})};
+        auto& tabContainer2 {tabContainer0.create_tab<tab_container>("TabContainer12", {.Text = "def"})};
         createTabs(tabContainer2);
 
-        auto tabContainer3 {tabContainer0->create_tab<tab_container>("TabContainer13", {.Text = "ghi"})};
+        auto& tabContainer3 {tabContainer0.create_tab<tab_container>("TabContainer13", {.Text = "ghi"})};
         createTabs(tabContainer3);
 
-        auto tabContainer4 {tabContainer0->create_tab<tab_container>("TabContainer14", {.Text = "jkl"})};
+        auto& tabContainer4 {tabContainer0.create_tab<tab_container>("TabContainer14", {.Text = "jkl"})};
         createTabs(tabContainer4);
 
-        auto tabContainer5 {tabContainer0->create_tab<tab_container>("TabContainer15", {.Text = "mno"})};
+        auto& tabContainer5 {tabContainer0.create_tab<tab_container>("TabContainer15", {.Text = "mno"})};
         createTabs(tabContainer5);
 
-        auto tabContainer6 {tabContainer0->create_tab<tab_container>("TabContainer16", {.Text = "pqr"})};
+        auto& tabContainer6 {tabContainer0.create_tab<tab_container>("TabContainer16", {.Text = "pqr"})};
         createTabs(tabContainer6);
     }
 
@@ -733,22 +733,22 @@ auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::sha
     auto bounds {wnd->bounds()};
     auto retValue {std::make_shared<form<dock_layout>>(form_init {"form4", bounds})};
 
-    auto const createSections {[](std::shared_ptr<accordion> const& accordion0) {
-        auto boxVPanel0 {accordion0->create_section<panel>("TAB0")};
-        boxVPanel0->TabStop = {.Enabled = false};
-        auto& boxVLayout0 {boxVPanel0->create_layout<vertical_layout>()};
+    auto const createSections {[](accordion& accordion0) {
+        auto& boxVPanel0 {accordion0.create_section<panel>("TAB0")};
+        boxVPanel0.TabStop = {.Enabled = false};
+        auto& boxVLayout0 {boxVPanel0.create_layout<vertical_layout>()};
         for (i32 i {0}; i < 4; i++) {
-            auto bb {boxVLayout0.create_widget<button>("Button" + std::to_string(i))};
-            bb->Label = std::to_string(i);
+            auto& bb {boxVLayout0.create_widget<button>("Button" + std::to_string(i))};
+            bb.Label = std::to_string(i);
         }
 
-        auto gridPanel {accordion0->create_section<panel>("TAB1")};
-        gridPanel->TabStop = {.Enabled = false};
-        auto& gridLayout {gridPanel->create_layout<grid_layout>(size_i {4, 3}, true)};
+        auto& gridPanel {accordion0.create_section<panel>("TAB1")};
+        gridPanel.TabStop = {.Enabled = false};
+        auto& gridLayout {gridPanel.create_layout<grid_layout>(size_i {4, 3}, true)};
 
         auto const createGridWidget {[&](rect_i loc, std::string const& name) {
-            auto b {gridLayout.create_widget<button>(loc, "gridB" + name)};
-            b->Label = name;
+            auto& b {gridLayout.create_widget<button>(loc, "gridB" + name)};
+            b.Label = name;
         }};
         createGridWidget({0, 0, 2, 1}, "0");
         createGridWidget({2, 0, 2, 1}, "1");
@@ -758,42 +758,42 @@ auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::sha
         createGridWidget({2, 2, 1, 1}, "5");
         createGridWidget({3, 2, 1, 1}, "6");
 
-        auto boxHPanel1 {accordion0->create_section<panel>("TAB2")};
-        boxHPanel1->TabStop = {.Enabled = false};
-        auto& boxHLayout1 {boxHPanel1->create_layout<horizontal_layout>()};
+        auto& boxHPanel1 {accordion0.create_section<panel>("TAB2")};
+        boxHPanel1.TabStop = {.Enabled = false};
+        auto& boxHLayout1 {boxHPanel1.create_layout<horizontal_layout>()};
         for (i32 i {0}; i < 4; i++) {
             boxHLayout1.create_widget<checkbox>("Check" + std::to_string(i));
         }
     }};
 
     {
-        auto accordion0 {retValue->create_container<accordion>(dock_style::Left, "Accordion0")};
-        accordion0->Flex = {.Width = 30_pct, .Height = 100_pct};
+        auto& accordion0 {retValue->create_container<accordion>(dock_style::Left, "Accordion0")};
+        accordion0.Flex = {.Width = 30_pct, .Height = 100_pct};
         createSections(accordion0);
     }
 
     {
-        auto panel0 {retValue->create_container<panel>(dock_style::Left, "Panel0")};
-        panel0->Flex          = {.Width = 30_pct, .Height = 100_pct};
-        panel0->ScrollEnabled = true;
-        auto& panel0Layout {panel0->get_layout<panel::default_layout>()};
+        auto& panel0 {retValue->create_container<panel>(dock_style::Left, "Panel0")};
+        panel0.Flex          = {.Width = 30_pct, .Height = 100_pct};
+        panel0.ScrollEnabled = true;
+        auto& panel0Layout {panel0.get_layout<panel::default_layout>()};
 
-        auto accordion0 {panel0Layout.create_widget<accordion>({0, 0, 500, 500}, "Accordion0")};
+        auto& accordion0 {panel0Layout.create_widget<accordion>({0, 0, 500, 500}, "Accordion0")};
         createSections(accordion0);
     }
 
     {
-        auto accordion0 {retValue->create_container<accordion>(dock_style::Left, "Accordion0")};
-        accordion0->Flex                  = {.Width = 30_pct, .Height = 100_pct};
-        accordion0->MaximizeActiveSection = true;
+        auto& accordion0 {retValue->create_container<accordion>(dock_style::Left, "Accordion0")};
+        accordion0.Flex                  = {.Width = 30_pct, .Height = 100_pct};
+        accordion0.MaximizeActiveSection = true;
 
-        auto accordion1 {accordion0->create_section<accordion>("Accordion1", {.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
+        auto& accordion1 {accordion0.create_section<accordion>("Accordion1", {.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
         createSections(accordion1);
 
-        auto accordion2 {accordion0->create_section<accordion>("Accordion2", {.Text = "def", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
+        auto& accordion2 {accordion0.create_section<accordion>("Accordion2", {.Text = "def", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
         createSections(accordion2);
 
-        auto accordion3 {accordion0->create_section<accordion>("Accordion3", {.Text = "ghi", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
+        auto& accordion3 {accordion0.create_section<accordion>("Accordion3", {.Text = "ghi", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
         createSections(accordion3);
     }
 

@@ -19,43 +19,43 @@ generator_form::generator_form(window& window)
     font_family::SingleFont(*_font.ptr(), trim_ttf);
     gen_styles();
 
-    auto  mainPanel {create_container<glass>(dock_style::Fill, "main")};
-    auto& mainPanelLayout {mainPanel->create_layout<grid_layout>(size_i {40, 40})};
+    auto& mainPanel {create_container<glass>(dock_style::Fill, "main")};
+    auto& mainPanelLayout {mainPanel.create_layout<grid_layout>(size_i {40, 40})};
 
-    GenPickupCoin        = mainPanelLayout.create_widget<button>({1, 1, 4, 2}, "GenPickupCoin");
+    GenPickupCoin        = &mainPanelLayout.create_widget<button>({1, 1, 4, 2}, "GenPickupCoin");
     GenPickupCoin->Label = "Pickup Coin";
-    GenLaserShot         = mainPanelLayout.create_widget<button>({1, 3, 4, 2}, "GenLaserShot");
+    GenLaserShot         = &mainPanelLayout.create_widget<button>({1, 3, 4, 2}, "GenLaserShot");
     GenLaserShot->Label  = "Laser Shot";
-    GenExplosion         = mainPanelLayout.create_widget<button>({1, 5, 4, 2}, "GenExplosion");
+    GenExplosion         = &mainPanelLayout.create_widget<button>({1, 5, 4, 2}, "GenExplosion");
     GenExplosion->Label  = "Explosion";
-    GenPowerup           = mainPanelLayout.create_widget<button>({1, 7, 4, 2}, "GenPowerup");
+    GenPowerup           = &mainPanelLayout.create_widget<button>({1, 7, 4, 2}, "GenPowerup");
     GenPowerup->Label    = "Powerup";
-    GenHitHurt           = mainPanelLayout.create_widget<button>({1, 9, 4, 2}, "GenHitHurt");
+    GenHitHurt           = &mainPanelLayout.create_widget<button>({1, 9, 4, 2}, "GenHitHurt");
     GenHitHurt->Label    = "Hit/Hurt";
-    GenJump              = mainPanelLayout.create_widget<button>({1, 11, 4, 2}, "GenJump");
+    GenJump              = &mainPanelLayout.create_widget<button>({1, 11, 4, 2}, "GenJump");
     GenJump->Label       = "Jump";
-    GenBlipSelect        = mainPanelLayout.create_widget<button>({1, 13, 4, 2}, "GenBlipSelect");
+    GenBlipSelect        = &mainPanelLayout.create_widget<button>({1, 13, 4, 2}, "GenBlipSelect");
     GenBlipSelect->Label = "Blip Select";
-    GenRandom            = mainPanelLayout.create_widget<button>({1, 15, 4, 2}, "GenRandom");
+    GenRandom            = &mainPanelLayout.create_widget<button>({1, 15, 4, 2}, "GenRandom");
     GenRandom->Label     = "Random";
 
     auto genSlider {[&](rect_i const& bounds, string const& name, f32 min, f32 max) {
-        auto retValue {mainPanelLayout.create_widget<slider>(bounds, name)};
-        retValue->Min  = min;
-        retValue->Max  = max;
-        retValue->Step = 0.01f;
-        auto lblText {mainPanelLayout.create_widget<label>({bounds.left() - 4, bounds.top(), bounds.width(), bounds.height()}, "lbl" + name)};
-        lblText->Label = name;
-        auto lblValue {mainPanelLayout.create_widget<label>({bounds.left() + 4, bounds.top(), bounds.width() / 2, bounds.height()}, "lbl" + name + "Val")};
-        lblValue->Label = "0";
-        retValue->Value.Changed.connect([this, lbl = lblValue.get()](auto val) {
+        auto& retValue {mainPanelLayout.create_widget<slider>(bounds, name)};
+        retValue.Min  = min;
+        retValue.Max  = max;
+        retValue.Step = 0.01f;
+        auto& lblText {mainPanelLayout.create_widget<label>({bounds.left() - 4, bounds.top(), bounds.width(), bounds.height()}, "lbl" + name)};
+        lblText.Label = name;
+        auto& lblValue {mainPanelLayout.create_widget<label>({bounds.left() + 4, bounds.top(), bounds.width() / 2, bounds.height()}, "lbl" + name + "Val")};
+        lblValue.Label = "0";
+        retValue.Value.Changed.connect([&](auto val) {
             std::string str {std::to_string(std::ceil(val * 100) / 100)};
             str.erase(str.find_last_not_of('0') + 1, std::string::npos);
             str.erase(str.find_last_not_of('.') + 1, std::string::npos);
-            lbl->Label = str;
+            lblValue.Label = str;
             NewWave();
         });
-        return retValue;
+        return &retValue;
     }};
 
     _valAttackTime   = genSlider({10, 18, 4, 2}, "Attack Time", 0, 1.0f);
@@ -86,7 +86,7 @@ generator_form::generator_form(window& window)
     _valHighPassFilterCutoff      = genSlider({32, 24, 4, 2}, "HPF Cutoff", 0, 1.0f);
     _valHighPassFilterCutoffSweep = genSlider({32, 26, 4, 2}, "HPF Cutoff Sweep", -1.0f, 1.0f);
 
-    _valWaveType = mainPanelLayout.create_widget<drop_down_list>({32, 30, 4, 2}, "Wave Type");
+    _valWaveType = &mainPanelLayout.create_widget<drop_down_list>({32, 30, 4, 2}, "Wave Type");
     _valWaveType->Items.mutate([](auto& items) {
         items.push_back({"Square", {}, sound_wave::type::Square});
         items.push_back({"Sawtooth", {}, sound_wave::type::Sawtooth});
@@ -96,25 +96,25 @@ generator_form::generator_form(window& window)
     });
     _valWaveType->SelectedItemIndex = 0;
     _valWaveType->SelectedItemIndex.Changed.connect([&] { NewWave(); });
-    auto lblText {mainPanelLayout.create_widget<label>({32 - 4, 30, 4, 2}, "lblWave Type")};
-    lblText->Label = "Wave Type";
+    auto& lblText {mainPanelLayout.create_widget<label>({32 - 4, 30, 4, 2}, "lblWave Type")};
+    lblText.Label = "Wave Type";
 
-    Play          = mainPanelLayout.create_widget<button>({1, 25, 4, 2}, "Play");
+    Play          = &mainPanelLayout.create_widget<button>({1, 25, 4, 2}, "Play");
     Play->Label   = "Play";
-    Mutate        = mainPanelLayout.create_widget<button>({1, 27, 4, 2}, "Mutate");
+    Mutate        = &mainPanelLayout.create_widget<button>({1, 27, 4, 2}, "Mutate");
     Mutate->Label = "Mutate";
 
-    Load          = mainPanelLayout.create_widget<button>({1, 30, 4, 2}, "Load");
+    Load          = &mainPanelLayout.create_widget<button>({1, 30, 4, 2}, "Load");
     Load->Label   = "Load";
-    Save          = mainPanelLayout.create_widget<button>({1, 32, 4, 2}, "Save");
+    Save          = &mainPanelLayout.create_widget<button>({1, 32, 4, 2}, "Save");
     Save->Label   = "Save";
-    Export        = mainPanelLayout.create_widget<button>({1, 34, 4, 2}, "Export");
+    Export        = &mainPanelLayout.create_widget<button>({1, 34, 4, 2}, "Export");
     Export->Label = "Export";
 
-    Exit        = mainPanelLayout.create_widget<button>({1, 37, 4, 2}, "Exit");
+    Exit        = &mainPanelLayout.create_widget<button>({1, 37, 4, 2}, "Exit");
     Exit->Label = "Exit";
 
-    Canvas = mainPanelLayout.create_widget<canvas_widget>({6, 1, 33, 16}, "Canvas");
+    Canvas = &mainPanelLayout.create_widget<canvas_widget>({6, 1, 33, 16}, "Canvas");
 }
 
 void generator_form::gen_styles()
