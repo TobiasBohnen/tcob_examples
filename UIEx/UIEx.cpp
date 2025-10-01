@@ -42,8 +42,8 @@ void UIEx::on_start()
     // _form0->Bounds = rect_f {{300, 450}, size_f {*window().Size * 2}};
     //_form0->Scale  = {0.5f, 0.5f};
 
-    _switch             = false;
-    root_node()->Entity = _form0;
+    _switch            = false;
+    root_node().Entity = _form0;
 
     _form0->Cursor = window().Cursor;
 

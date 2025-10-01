@@ -57,7 +57,7 @@ void LSystemEx::on_start()
         _canvas.begin_frame(windowSize, 1);
         _canvas.end_frame();
     });
-    root_node()->Entity = _mainForm;
+    root_node().Entity = _mainForm;
 
     _canvas.begin_frame(windowSize, 1);
     _canvas.end_frame();

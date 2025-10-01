@@ -23,8 +23,8 @@ void SoundFontEx::on_start()
     auto& resMgr {library()};
     auto* resGrp {resMgr.get_group("res")};
 
-    _soundFont          = resGrp->get<sound_font>("font0");
-    root_node()->Entity = _form0;
+    _soundFont         = resGrp->get<sound_font>("font0");
+    root_node().Entity = _form0;
 
     auto mouseDown {[&](auto&& btn, midi_note baseNote) {
         btn->MouseButtonDown.connect([&, baseNote] {

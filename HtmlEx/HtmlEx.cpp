@@ -69,8 +69,8 @@ void HtmlEx::on_start()
     _contentHtml->Bounds = {{0, winSize.Height / 5.f}, {winSize.Width * 1.f, winSize.Height / 5.f * 4.f}};
     _contentHtml->from_string(home_html, style_css);
 
-    root_node()->create_child()->Entity = _navHtml;
-    root_node()->create_child()->Entity = _contentHtml;
+    root_node().create_child().Entity = _navHtml;
+    root_node().create_child().Entity = _contentHtml;
 }
 
 void HtmlEx::on_draw_to(render_target& target)

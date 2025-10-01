@@ -22,7 +22,7 @@ SoundGeneratorEx::~SoundGeneratorEx() = default;
 
 void SoundGeneratorEx::on_start()
 {
-    root_node()->Entity = _form0;
+    root_node().Entity = _form0;
     _form0->NewWave.connect([&] {
         if (_waveState == wave_state::Clean) {
             _waveState = wave_state::Dirty;
