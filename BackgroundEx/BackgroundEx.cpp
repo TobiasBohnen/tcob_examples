@@ -25,9 +25,19 @@ void BackgroundEx::on_start()
     _back0               = std::make_shared<parallax_background>();
     _back0->Material     = resGrp.get<material>("parallax");
     _back0->TextureScale = {6, 6};
-    _back0->add_layer({"back", {0.50f, 0.0f}});
-    _back0->add_layer({"middle", {1.00f, 0.0f}});
-    _back0->add_layer({"front", {4.00f, 0.0f}, {0.25f, 0.f}});
+
+    auto& back {_back0->create_layer()};
+    back.TextureRegion = "back";
+    back.ScrollScale   = {0.50f, 0.0f};
+
+    auto& mid {_back0->create_layer()};
+    mid.TextureRegion = "middle";
+    mid.ScrollScale   = {1.00f, 0.0f};
+
+    auto& front {_back0->create_layer()};
+    front.TextureRegion = "front";
+    front.ScrollScale   = {4.00f, 0.0f};
+    front.Offset        = {0.25, 0.0f};
 
     _cam.LimitBounds = {point_f::Zero, size_f {_back0->Material->Texture->info().Size.Width * _back0->TextureScale.Width * 10, 1}};
 }
