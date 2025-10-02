@@ -5,20 +5,26 @@
 
 #include "PointCloudEx.hpp"
 
-size_i numPoints {500, 500};
+size_i numPoints {512, 512};
+size_i frameSize {256, 256};
 f32    pointSize {5.0f};
 
 PointCloudEx::PointCloudEx(game& game)
     : scene {game}
     , _quadtree {{{-100, -100}, {numPoints.Width * pointSize * 1.25f, numPoints.Height * pointSize * 1.25f}}}
 {
-    _canvas.begin_frame({256, 256}, 1);
+    _canvas.begin_frame(frameSize, 1);
 
     // Background rectangle
-    _canvas.begin_path();
-    _canvas.rect({0, 0, 256, 256});
-    _canvas.set_fill_style(colors::GoldenRod);
-    _canvas.fill();
+    i32 const cellSize {32};
+    for (i32 y {0}; y < frameSize.Height; y += cellSize) {
+        for (i32 x {0}; x < frameSize.Width; x += cellSize) {
+            _canvas.begin_path();
+            _canvas.rect({static_cast<f32>(x), static_cast<f32>(y), cellSize, cellSize});
+            _canvas.set_fill_style(((x / cellSize) + (y / cellSize)) % 2 == 0 ? colors::GoldenRod : colors::DarkTurquoise);
+            _canvas.fill();
+        }
+    }
 
     // Outer circle with stroke
     _canvas.begin_path();
