@@ -104,8 +104,8 @@ void TileMapEx::on_start()
         _tileMapOrtho.Material = resGrp->get<material>("ortho");
         _tileMapOrtho.Grid     = {.TileSize = {64, 64}};
 
-        tcob::gfx::tilemap_layer layer {tiles};
-        _layerID = _tileMapOrtho.add_layer(layer);
+        _layer        = &_tileMapOrtho.create_layer();
+        _layer->Tiles = tiles;
     }
     ////////////////////////////////////////////////////////////
     {
@@ -114,8 +114,8 @@ void TileMapEx::on_start()
 
         _tileMapIso.Position = {6800, 30};
 
-        tcob::gfx::tilemap_layer layer {tiles};
-        _tileMapIso.add_layer(layer);
+        auto* layer  = &_tileMapIso.create_layer();
+        layer->Tiles = tiles;
     }
     ////////////////////////////////////////////////////////////
     {
@@ -124,8 +124,8 @@ void TileMapEx::on_start()
 
         _tileMapIsoStaggered.Position = {1500, 0};
 
-        tcob::gfx::tilemap_layer layer {tiles};
-        _tileMapIsoStaggered.add_layer(layer);
+        auto* layer  = &_tileMapIsoStaggered.create_layer();
+        layer->Tiles = tiles;
     }
     ////////////////////////////////////////////////////////////
     {
@@ -134,8 +134,8 @@ void TileMapEx::on_start()
 
         _tileMapHexPointy.Position = {0, 2800};
 
-        tcob::gfx::tilemap_layer layer {tiles};
-        _tileMapHexPointy.add_layer(layer);
+        auto* layer  = &_tileMapHexPointy.create_layer();
+        layer->Tiles = tiles;
     }
 
     ////////////////////////////////////////////////////////////
@@ -145,8 +145,8 @@ void TileMapEx::on_start()
 
         _tileMapHexFlat.Position = {2000, 2800};
 
-        tcob::gfx::tilemap_layer layer {tiles};
-        _tileMapHexFlat.add_layer(layer);
+        auto* layer  = &_tileMapHexFlat.create_layer();
+        layer->Tiles = tiles;
     }
 
     ////////////////////////////////////////////////////////////
@@ -195,27 +195,31 @@ void TileMapEx::on_key_down(keyboard::event const& ev)
         parent().pop_current_scene();
         break;
     case scan_code::D1: {
-        grid<tile_index_t> tiles {size_i {tmWidth, tmHeight}};
-        for (i32 x {0}; x < tiles.width(); x++) {
-            for (i32 y {0}; y < tiles.height(); y++) {
-                tiles[x, y] = _rand(1, 12);
+        _layer->Tiles.mutate([&](auto& tiles) {
+            for (i32 x {0}; x < tiles.width(); x++) {
+                for (i32 y {0}; y < tiles.height(); y++) {
+                    tiles[x, y] = _rand(1, 12);
+                }
             }
-        }
-        _tileMapOrtho.replace_layer(_layerID, {tiles});
+        });
     } break;
     case scan_code::D2:
-        _tileMapOrtho.remove_layer(_layerID);
+        _tileMapOrtho.clear();
         break;
     case scan_code::D3: {
-        grid<tile_index_t>       tiles {size_i {2, 5}, 1};
-        tcob::gfx::tilemap_layer layer {.Tiles = tiles, .Offset = {1, 1}};
-        _layerID = _tileMapOrtho.add_layer(layer);
+        grid<tile_index_t> tiles {size_i {2, 5}, 1};
+        _layer         = &_tileMapOrtho.create_layer();
+        _layer->Tiles  = tiles;
+        _layer->Offset = {1, 1};
     } break;
     case scan_code::D4: {
-        grid<tile_index_t>       tiles {size_i {2, 5}, 2};
-        tcob::gfx::tilemap_layer layer {.Tiles = tiles, .Offset = {4, 0}};
-        auto                     id {_tileMapIso.add_layer(layer)};
-        _tileMapIso.set_tile_index(id, {0, 20}, 5);
+        grid<tile_index_t> tiles {size_i {2, 5}, 2};
+        auto*              layer {&_tileMapIso.create_layer()};
+        _layer->Tiles  = tiles;
+        _layer->Offset = {4, 0};
+        _layer->Tiles.mutate([&](auto& tiles) {
+            tiles[0, 20] = 5;
+        });
     } break;
     case scan_code::D5: {
         frame_animation ani {};
@@ -227,7 +231,9 @@ void TileMapEx::on_key_down(keyboard::event const& ev)
             for (i32 i {0}; i < 100; ++i) {
                 i32 const x {_rand(0, tmWidth - 1)};
                 i32 const y {_rand(0, tmHeight - 1)};
-                _tileMapOrtho.set_tile_index(_layerID, {x, y}, map[str]);
+                _layer->Tiles.mutate([&](auto& tiles) {
+                    tiles[x, y] = map[str];
+                });
             }
         });
         _tween->start(playback_mode::Looped);

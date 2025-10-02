@@ -60,8 +60,8 @@ void PathfindingEx::on_start()
     _tileSize          = {size, size};
     _tileMapOrtho.Grid = {.TileSize = _tileSize};
 
-    tcob::gfx::tilemap_layer layer {.Tiles = _tiles};
-    _tileMapOrtho.add_layer(layer);
+    auto& layer {_tileMapOrtho.create_layer()};
+    layer.Tiles            = _tiles;
     _tileMapOrtho.Material = material::Empty();
 }
 

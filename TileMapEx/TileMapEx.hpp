@@ -35,7 +35,7 @@ private:
     hexagonal_tilemap  _tileMapHexPointy;
     hexagonal_tilemap  _tileMapHexFlat;
 
-    uid _layerID {INVALID_ID};
+    tilemap_layer* _layer {nullptr};
 
     basic_cam _cam;
 
