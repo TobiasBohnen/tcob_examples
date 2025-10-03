@@ -10,7 +10,7 @@ using namespace std::chrono_literals;
 
 TileMapEx::TileMapEx(game& game)
     : scene(game)
-    , _tileMapOrtho {orthogonal_tileset {
+    , _tileMapOrtho {orthogonal_tilemap::set {
           {1, {"stone1"}},
           {2, {"stone2"}},
           {3, {"stone3"}},
@@ -24,7 +24,7 @@ TileMapEx::TileMapEx(game& game)
           {11, {"grass3"}},
           {12, {"grass4"}},
       }}
-    , _tileMapIso {isometric_tileset {
+    , _tileMapIso {isometric_tilemap::set {
           {1, {"stone1"}},
           {2, {"stone2"}},
           {3, {"stone3"}},
@@ -38,7 +38,7 @@ TileMapEx::TileMapEx(game& game)
           {11, {"grass3"}},
           {12, {"grass4"}},
       }}
-    , _tileMapIsoStaggered {isometric_tileset {
+    , _tileMapIsoStaggered {isometric_tilemap::set {
           {1, {"stone1"}},
           {2, {"stone2"}},
           {3, {"stone3"}},
@@ -52,7 +52,7 @@ TileMapEx::TileMapEx(game& game)
           {11, {"grass3"}},
           {12, {"grass4"}},
       }}
-    , _tileMapHexPointy {hexagonal_tileset {
+    , _tileMapHexPointy {hexagonal_tilemap::set {
           {1, {"stone1"}},
           {2, {"stone2"}},
           {3, {"stone3"}},
@@ -66,7 +66,7 @@ TileMapEx::TileMapEx(game& game)
           {11, {"grass3"}},
           {12, {"grass4"}},
       }}
-    , _tileMapHexFlat {hexagonal_tileset {
+    , _tileMapHexFlat {hexagonal_tilemap::set {
           {1, {"stone1"}},
           {2, {"stone2"}},
           {3, {"stone3"}},
