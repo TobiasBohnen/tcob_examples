@@ -219,7 +219,7 @@ void TileMapEx::on_key_down(keyboard::event const& ev)
         _layer->Tiles  = tiles;
         _layer->Offset = {4, 0};
         _layer->Tiles.mutate([&](auto& tiles) {
-            tiles[0, 20] = 5;
+            tiles[0, 2] = 5;
         });
     } break;
     case scan_code::D5: {
@@ -229,13 +229,13 @@ void TileMapEx::on_key_down(keyboard::event const& ev)
         _tween->Value.Changed.connect([this](auto const& str) {
             std::unordered_map<string, tile_index_t> static map {{"stone1", 1}, {"stone2", 2}, {"stone3", 3}, {"stone4", 4}, {"dirt1", 5}, {"dirt2", 6}, {"dirt3", 7}, {"dirt4", 8}, {"grass1", 9}, {"grass2", 10}, {"grass3", 11}, {"grass4", 12}};
 
-            for (i32 i {0}; i < 100; ++i) {
-                i32 const x {_rand(0, tmWidth - 1)};
-                i32 const y {_rand(0, tmHeight - 1)};
-                _layer->Tiles.mutate([&](auto& tiles) {
+            _layer->Tiles.mutate([&](auto& tiles) {
+                for (i32 i {0}; i < 100; ++i) {
+                    i32 const x {_rand(0, tiles.width() - 1)};
+                    i32 const y {_rand(0, tiles.height() - 1)};
                     tiles[x, y] = map[str];
-                });
-            }
+                }
+            });
         });
         _tween->start(playback_mode::Looped);
     } break;
