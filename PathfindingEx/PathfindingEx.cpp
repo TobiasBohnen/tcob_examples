@@ -9,7 +9,7 @@
 
 using namespace std::chrono_literals;
 
-static auto create_tileset() -> std::unordered_map<tile_index_t, orthogonal_tile>
+static auto create_tileset() -> orthogonal_tilemap::set
 {
     std::unordered_map<tile_index_t, orthogonal_tile> retValue;
 
@@ -23,14 +23,14 @@ static auto create_tileset() -> std::unordered_map<tile_index_t, orthogonal_tile
         }
     }
 
-    return retValue;
+    return orthogonal_tilemap::set {retValue};
 }
 
 PathfindingEx::PathfindingEx(game& game)
-    : scene(game)
-    , _tileMapOrtho {tileset<orthogonal_tile> {create_tileset()}}
+    : scene {game}
 {
-    window().ClearColor = colors::DarkRed;
+    _tileMapOrtho.TileSet = create_tileset();
+    window().ClearColor   = colors::DarkRed;
 }
 
 PathfindingEx::~PathfindingEx() = default;

@@ -9,78 +9,79 @@
 using namespace std::chrono_literals;
 
 TileMapEx::TileMapEx(game& game)
-    : scene(game)
-    , _tileMapOrtho {orthogonal_tilemap::set {
-          {1, {"stone1"}},
-          {2, {"stone2"}},
-          {3, {"stone3"}},
-          {4, {"stone4"}},
-          {5, {"dirt1"}},
-          {6, {"dirt2"}},
-          {7, {"dirt3"}},
-          {8, {"dirt4"}},
-          {9, {"grass1"}},
-          {10, {"grass2"}},
-          {11, {"grass3"}},
-          {12, {"grass4"}},
-      }}
-    , _tileMapIso {isometric_tilemap::set {
-          {1, {"stone1"}},
-          {2, {"stone2"}},
-          {3, {"stone3"}},
-          {4, {"stone4"}},
-          {5, {"dirt1"}},
-          {6, {"dirt2"}},
-          {7, {"dirt3"}},
-          {8, {"dirt4"}},
-          {9, {"grass1"}},
-          {10, {"grass2"}},
-          {11, {"grass3"}},
-          {12, {"grass4"}},
-      }}
-    , _tileMapIsoStaggered {isometric_tilemap::set {
-          {1, {"stone1"}},
-          {2, {"stone2"}},
-          {3, {"stone3"}},
-          {4, {"stone4"}},
-          {5, {"dirt1"}},
-          {6, {"dirt2"}},
-          {7, {"dirt3"}},
-          {8, {"dirt4"}},
-          {9, {"grass1"}},
-          {10, {"grass2"}},
-          {11, {"grass3"}},
-          {12, {"grass4"}},
-      }}
-    , _tileMapHexPointy {hexagonal_tilemap::set {
-          {1, {"stone1"}},
-          {2, {"stone2"}},
-          {3, {"stone3"}},
-          {4, {"stone4"}},
-          {5, {"dirt1"}},
-          {6, {"dirt2"}},
-          {7, {"dirt3"}},
-          {8, {"dirt4"}},
-          {9, {"grass1"}},
-          {10, {"grass2"}},
-          {11, {"grass3"}},
-          {12, {"grass4"}},
-      }}
-    , _tileMapHexFlat {hexagonal_tilemap::set {
-          {1, {"stone1"}},
-          {2, {"stone2"}},
-          {3, {"stone3"}},
-          {4, {"stone4"}},
-          {5, {"dirt1"}},
-          {6, {"dirt2"}},
-          {7, {"dirt3"}},
-          {8, {"dirt4"}},
-          {9, {"grass1"}},
-          {10, {"grass2"}},
-          {11, {"grass3"}},
-          {12, {"grass4"}},
-      }}
+    : scene {game}
 {
+    _tileMapOrtho.TileSet = orthogonal_tilemap::set {
+        {1, {"stone1"}},
+        {2, {"stone2"}},
+        {3, {"stone3"}},
+        {4, {"stone4"}},
+        {5, {"dirt1"}},
+        {6, {"dirt2"}},
+        {7, {"dirt3"}},
+        {8, {"dirt4"}},
+        {9, {"grass1"}},
+        {10, {"grass2"}},
+        {11, {"grass3"}},
+        {12, {"grass4"}},
+    };
+    _tileMapIso.TileSet = isometric_tilemap::set {
+        {1, {"stone1"}},
+        {2, {"stone2"}},
+        {3, {"stone3"}},
+        {4, {"stone4"}},
+        {5, {"dirt1"}},
+        {6, {"dirt2"}},
+        {7, {"dirt3"}},
+        {8, {"dirt4"}},
+        {9, {"grass1"}},
+        {10, {"grass2"}},
+        {11, {"grass3"}},
+        {12, {"grass4"}},
+    };
+    _tileMapIsoStaggered.TileSet = isometric_tilemap::set {
+        {1, {"stone1"}},
+        {2, {"stone2"}},
+        {3, {"stone3"}},
+        {4, {"stone4"}},
+        {5, {"dirt1"}},
+        {6, {"dirt2"}},
+        {7, {"dirt3"}},
+        {8, {"dirt4"}},
+        {9, {"grass1"}},
+        {10, {"grass2"}},
+        {11, {"grass3"}},
+        {12, {"grass4"}},
+    };
+    _tileMapHexPointy.TileSet = hexagonal_tilemap::set {
+        {1, {"stone1"}},
+        {2, {"stone2"}},
+        {3, {"stone3"}},
+        {4, {"stone4"}},
+        {5, {"dirt1"}},
+        {6, {"dirt2"}},
+        {7, {"dirt3"}},
+        {8, {"dirt4"}},
+        {9, {"grass1"}},
+        {10, {"grass2"}},
+        {11, {"grass3"}},
+        {12, {"grass4"}},
+    };
+    _tileMapHexFlat.TileSet = hexagonal_tilemap::set {
+        {1, {"stone1"}},
+        {2, {"stone2"}},
+        {3, {"stone3"}},
+        {4, {"stone4"}},
+        {5, {"dirt1"}},
+        {6, {"dirt2"}},
+        {7, {"dirt3"}},
+        {8, {"dirt4"}},
+        {9, {"grass1"}},
+        {10, {"grass2"}},
+        {11, {"grass3"}},
+        {12, {"grass4"}},
+    };
+
     window().ClearColor = colors::Cornsilk;
 }
 
