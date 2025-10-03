@@ -29,7 +29,7 @@ static auto create_tileset() -> orthogonal_tilemap::set
 PathfindingEx::PathfindingEx(game& game)
     : scene {game}
 {
-    _tileMapOrtho.TileSet = create_tileset();
+    _tileMapOrtho.Tileset = create_tileset();
     window().ClearColor   = colors::DarkRed;
 }
 
