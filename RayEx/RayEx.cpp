@@ -90,12 +90,12 @@ void RayEx::on_update(milliseconds deltaTime)
 
         auto&      rayShape {batch->create_shape<gfx::rect_shape>()};
         auto const height {static_cast<f32>(ray.get_point(0).distance_to(ray.get_point(600)))};
-        rayShape.Bounds      = {{origin.X - 2, origin.Y}, {4, height}};
-        rayShape.Pivot       = rayShape.Bounds->top_left();
-        rayShape.Rotation    = deg - degree_f {180};
-        rayShape.Color       = colors::Red;
-        rayShape.Material    = material::Empty();
-        rayShape.RayCastMask = 0;
+        rayShape.Bounds        = {{origin.X - 2, origin.Y}, {4, height}};
+        rayShape.Pivot         = rayShape.Bounds->top_left();
+        rayShape.Rotation      = deg - degree_f {180};
+        rayShape.Color         = colors::Red;
+        rayShape.Material      = material::Empty();
+        rayShape.IntersectMask = 0;
     }};
     castRay({_tween0.Value, 50}, degree_f {135});
     castRay({1300 - _tween0.Value, 50}, degree_f {225});
