@@ -7,7 +7,7 @@
 #include <iomanip>
 
 TweenEx::TweenEx(game& game)
-    : scene(game)
+    : scene {game}
 {
 }
 

@@ -28,7 +28,7 @@ static char const* style_css {
 };
 
 HtmlEx::HtmlEx(game& game)
-    : scene(game)
+    : scene {game}
 {
 }
 

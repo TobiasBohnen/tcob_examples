@@ -12,7 +12,7 @@
 using namespace std::chrono_literals;
 
 ControllerEx::ControllerEx(game& game)
-    : scene(game)
+    : scene {game}
 {
 }
 

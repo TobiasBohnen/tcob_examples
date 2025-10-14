@@ -9,7 +9,7 @@
 using namespace std::chrono_literals;
 
 LightingSystemEx::LightingSystemEx(game& game)
-    : scene(game)
+    : scene {game}
 {
 }
 

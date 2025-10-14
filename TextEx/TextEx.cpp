@@ -10,7 +10,7 @@
 using namespace std::chrono_literals;
 
 TextEx::TextEx(game& game)
-    : scene(game)
+    : scene {game}
 {
 }
 

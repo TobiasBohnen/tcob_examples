@@ -12,7 +12,7 @@ using namespace std::chrono_literals;
 using namespace tcob::literals;
 
 MiscScene::MiscScene(game& game)
-    : scene(game)
+    : scene {game}
 {
 }
 

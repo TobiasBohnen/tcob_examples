@@ -9,7 +9,7 @@
 using namespace std::chrono_literals;
 
 BackgroundEx::BackgroundEx(game& game)
-    : scene(game)
+    : scene {game}
 {
 }
 
@@ -20,7 +20,7 @@ void BackgroundEx::on_start()
     auto& resMgr {library()};
     auto& resGrp {resMgr.create_or_get_group("res")};
 
-    _material->Color = colors::Gray;
+    _material->first_pass().Color = colors::Gray;
 
     _back0               = std::make_shared<parallax_background>();
     _back0->Material     = resGrp.get<material>("parallax");
@@ -39,7 +39,7 @@ void BackgroundEx::on_start()
     front.ScrollScale   = {4.00f, 0.0f};
     front.Offset        = {0.25, 0.0f};
 
-    _cam.LimitBounds = {point_f::Zero, size_f {_back0->Material->Texture->info().Size.Width * _back0->TextureScale.Width * 10, 1}};
+    _cam.LimitBounds = {point_f::Zero, size_f {_back0->Material->first_pass().Texture->info().Size.Width * _back0->TextureScale.Width * 10, 1}};
 }
 
 void BackgroundEx::on_draw_to(render_target& target)

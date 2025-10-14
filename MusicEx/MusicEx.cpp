@@ -9,7 +9,7 @@
 using namespace std::chrono_literals;
 
 MusicEx::MusicEx(game& game)
-    : scene(game)
+    : scene {game}
     , _form0 {std::make_shared<crtl_form>(window())}
 {
 }

@@ -92,9 +92,9 @@ void PointCloudEx::on_start()
         }
     }
 
-    _cloud0->Material            = _mat;
-    _cloud0->Material->Texture   = _canvas.get_texture(0);
-    _cloud0->Material->PointSize = pointSize;
+    _cloud0->Material                         = _mat;
+    _cloud0->Material->first_pass().Texture   = _canvas.get_texture(0);
+    _cloud0->Material->first_pass().PointSize = pointSize;
 }
 
 void PointCloudEx::on_draw_to(render_target& target)

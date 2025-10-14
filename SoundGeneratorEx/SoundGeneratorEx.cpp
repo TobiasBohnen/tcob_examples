@@ -13,7 +13,7 @@ using namespace std::chrono_literals;
 ////////////////////////////////////////////////////////////
 
 SoundGeneratorEx::SoundGeneratorEx(game& game)
-    : scene(game)
+    : scene {game}
     , _form0 {std::make_shared<generator_form>(window())}
 {
 }

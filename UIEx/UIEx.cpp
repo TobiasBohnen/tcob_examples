@@ -17,7 +17,7 @@
 using namespace std::chrono_literals;
 
 UIEx::UIEx(game& game)
-    : scene(game)
+    : scene {game}
 {
 }
 

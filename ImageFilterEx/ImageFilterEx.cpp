@@ -10,9 +10,9 @@
 #include <iomanip>
 
 ImageFilterEx::ImageFilterEx(game& game)
-    : scene(game)
+    : scene {game}
 {
-    _mat0->Texture = _tex0;
+    _mat0->first_pass().Texture = _tex0;
     image img0 {image::Create({64, 64}, image::format::RGBA, smile)};
     auto  imgSize {img0.info().Size};
     _tex0->resize(imgSize, 7, texture::format::RGBA8);

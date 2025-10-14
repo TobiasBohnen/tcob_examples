@@ -9,7 +9,7 @@
 using namespace std::chrono_literals;
 
 ParticleSystemEx::ParticleSystemEx(game& game)
-    : scene(game)
+    : scene {game}
     , _system0 {true, 50000}
     , _system1 {true, 50000}
 {
@@ -68,8 +68,8 @@ void ParticleSystemEx::on_start()
         _system0.start();
     }
     {
-        _system1.Material            = resGrp->get<material>("PointParticleMat");
-        _system1.Material->PointSize = 10;
+        _system1.Material                         = resGrp->get<material>("PointParticleMat");
+        _system1.Material->first_pass().PointSize = 10;
 
         auto& emi0 {_system1.create_emitter()};
         emi0.Settings.Template = {

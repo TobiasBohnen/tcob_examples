@@ -10,7 +10,7 @@
 ////////////////////////////////////////////////////////////
 
 PhysicsEx::PhysicsEx(game& game)
-    : scene(game)
+    : scene {game}
 {
     font_family::SingleFont(_font, trim_ttf);
     _debugDraw     = std::make_shared<B2DDebugDraw>(_font.get_font({}, 10).ptr());

@@ -82,24 +82,24 @@ void StencilEx::create_shapes()
     _back->Color    = colors::Blue;
     _back->Bounds   = {0, _tween.Value, 500, 300};
 
-    _wall                        = &_layer0.create_shape<gfx::poly_shape>();
-    _wall->Material              = _mat0;
-    _wall->Material->StencilFunc = stencil_func::Always;
-    _wall->Material->StencilOp   = stencil_op::Replace;
-    _wall->Material->StencilRef  = 1;
-    _wall->Color                 = colors::Green;
-    _wall->Polygons              = {{
-                     .Outline = {{350, 60}, {420, 200}, {580, 200}, {460, 280}, {500, 420}, {350, 340}, {200, 420}, {240, 280}, {120, 200}, {280, 200}},
-                     .Holes   = {},
+    _wall                                     = &_layer0.create_shape<gfx::poly_shape>();
+    _wall->Material                           = _mat0;
+    _wall->Material->first_pass().StencilFunc = stencil_func::Always;
+    _wall->Material->first_pass().StencilOp   = stencil_op::Replace;
+    _wall->Material->first_pass().StencilRef  = 1;
+    _wall->Color                              = colors::Green;
+    _wall->Polygons                           = {{
+                                  .Outline = {{350, 60}, {420, 200}, {580, 200}, {460, 280}, {500, 420}, {350, 340}, {200, 420}, {240, 280}, {120, 200}, {280, 200}},
+                                  .Holes   = {},
     }};
 
-    _front                        = &_layer0.create_shape<gfx::rect_shape>();
-    _front->Material              = _mat2;
-    _front->Material->StencilFunc = stencil_func::Equal;
-    _front->Material->StencilOp   = stencil_op::Keep;
-    _front->Material->StencilRef  = 1;
-    _front->Color                 = colors::Red;
-    _front->Bounds                = {0, _tween.Value, 500, 300};
+    _front                                     = &_layer0.create_shape<gfx::rect_shape>();
+    _front->Material                           = _mat2;
+    _front->Material->first_pass().StencilFunc = stencil_func::Equal;
+    _front->Material->first_pass().StencilOp   = stencil_op::Keep;
+    _front->Material->first_pass().StencilRef  = 1;
+    _front->Color                              = colors::Red;
+    _front->Bounds                             = {0, _tween.Value, 500, 300};
 }
 
 void StencilEx::update_shapes()

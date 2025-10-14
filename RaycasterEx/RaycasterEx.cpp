@@ -13,7 +13,7 @@ RaycasterEx::RaycasterEx(game& game)
     : scene {game}
     , _cache {std::make_unique<gfx_cache>()}
 {
-    _material->Texture = _texture;
+    _material->first_pass().Texture = _texture;
     _renderer.set_material(_material.ptr());
 
     _texture->resize(_cache->screen_size(), 1, texture::format::RGBA8);
