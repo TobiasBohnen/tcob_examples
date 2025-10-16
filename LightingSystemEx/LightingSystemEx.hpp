@@ -33,6 +33,6 @@ private:
     light_source*   _lightSourceSec1 {nullptr};
     basic_cam       _cam;
 
-    asset_owner_ptr<material> _material;
+    asset_owner_ptr<material> _material {material::Empty()};
     shape_batch               _layer0;
 };
