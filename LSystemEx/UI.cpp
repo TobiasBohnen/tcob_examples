@@ -68,7 +68,7 @@ void lsystem_form::create_rule(grid_layout& layout)
         if (ev.Event.KeyCode == key_code::DEL) {
             if (_grdRules->SelectedCellIndex->Y < 1) { return; }
             _grdRules->Grid.mutate([&](auto& grid) {
-                grid.erase(_grdRules->SelectedCellIndex->Y - 1);
+                grid.erase_row(_grdRules->SelectedCellIndex->Y - 1);
             });
             btnAdd.enable();
         }
@@ -81,12 +81,12 @@ void lsystem_form::create_rule(grid_layout& layout)
             for (i32 i {0}; i < grid.height(); ++i) {
                 auto const row {grid.row(i)};
                 if (row[0].Text == txbVariable.Text && row[2].Text == std::to_string(spnProp.Value)) { // remove duplicate row
-                    grid.erase(i);
+                    grid.erase_row(i);
                     break;
                 }
             }
 
-            grid.append({{txbVariable.Text}, {txbRule.Text}, {std::to_string(spnProp.Value)}});
+            grid.append_row({{txbVariable.Text}, {txbRule.Text}, {std::to_string(spnProp.Value)}});
         });
 
         if (_grdRules->Grid->height() == 5) {
