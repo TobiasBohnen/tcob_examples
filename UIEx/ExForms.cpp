@@ -614,7 +614,7 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form_base>
     }
     {
         auto& panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
-        panel0.Flex = {.Width = 100_pct, .Height = 25_pct};
+        panel0.Flex = {.Width = 100_pct, .Height = 30_pct};
         auto& panel0Layout {panel0.create_layout<dock_layout>()};
 
         auto&    dotMatrix {panel0Layout.create_widget<dot_matrix_display>(dock_style::Fill, "DM1")};
@@ -641,7 +641,7 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form_base>
 
     {
         auto& panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
-        panel0.Flex = {.Width = 100_pct, .Height = 25_pct};
+        panel0.Flex = {.Width = 100_pct, .Height = 20_pct};
         auto& panel0Layout {panel0.create_layout<grid_layout>(size_i {200, 200})};
 
         auto& lcdDisplay0 {panel0Layout.create_widget<seven_segment_display>({0, 0, 100, 100}, "LCD0")};
