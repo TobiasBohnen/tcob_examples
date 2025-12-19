@@ -125,9 +125,6 @@ void RayEx::on_draw_to(render_target& target)
 void RayEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) { // NOLINT
-    case scan_code::R: {
-        auto _ = window().copy_to_image().save("screen01.webp");
-    } break;
     case scan_code::BACKSPACE:
         parent().pop_current_scene();
         break;

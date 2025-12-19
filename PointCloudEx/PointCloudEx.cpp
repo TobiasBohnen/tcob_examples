@@ -122,9 +122,6 @@ void PointCloudEx::on_key_down(keyboard::event const& ev)
 {
     _cam.on_key_down(ev);
     switch (ev.ScanCode) { // NOLINT
-    case scan_code::R: {
-        auto _ = window().copy_to_image().save("screen01.webp");
-    } break;
     case scan_code::BACKSPACE:
         parent().pop_current_scene();
         break;

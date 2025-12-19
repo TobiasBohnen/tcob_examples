@@ -21,6 +21,8 @@ MiscScene::~MiscScene() = default;
 void MiscScene::on_start()
 {
     auto& resMgr {library()};
+    auto& resGrp {resMgr.create_or_get_group("res")};
+    resGrp.mount("resources");
     resMgr.load_all_groups();
 }
 
@@ -54,10 +56,20 @@ void MiscScene::on_key_down(keyboard::event const& ev)
     auto& resMgr {library()};
     auto* resGrp {resMgr.get_group("res")};
 
-    if (ev.ScanCode == scan_code::D2) {
-
-    } else if (ev.ScanCode == scan_code::BACKSPACE) {
+    switch (ev.ScanCode) { // NOLINT
+    case scan_code::BACKSPACE:
         parent().pop_current_scene();
+        break;
+
+    case input::scan_code::S: {
+        auto const fileName {[]() {
+            for (i32 i {0};; ++i) {
+                auto const name {std::format("screen{:02}.webp", i)};
+                if (!io::exists(name)) { return name; }
+            }
+        }()};
+        std::ignore = window().copy_to_image().save(fileName);
+    } break;
     }
 }
 
