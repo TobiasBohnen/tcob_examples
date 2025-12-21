@@ -70,6 +70,8 @@ void MiscScene::on_key_down(keyboard::event const& ev)
         }()};
         std::ignore = window().copy_to_image().save(fileName);
     } break;
+
+    default: break;
     }
 }
 

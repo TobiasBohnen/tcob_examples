@@ -28,16 +28,16 @@ void SoundGeneratorEx::on_start()
             _waveState = wave_state::Dirty;
         }
     });
-    _form0->GenPickupCoin->MouseButtonDown.connect([&] { _form0->set_values(_gen1.generate_pickup_coin()); });
-    _form0->GenLaserShot->MouseButtonDown.connect([&] { _form0->set_values(_gen1.generate_laser_shoot()); });
-    _form0->GenExplosion->MouseButtonDown.connect([&] { _form0->set_values(_gen1.generate_explosion()); });
-    _form0->GenPowerup->MouseButtonDown.connect([&] { _form0->set_values(_gen1.generate_powerup()); });
-    _form0->GenHitHurt->MouseButtonDown.connect([&] { _form0->set_values(_gen1.generate_hit_hurt()); });
-    _form0->GenJump->MouseButtonDown.connect([&] { _form0->set_values(_gen1.generate_jump()); });
-    _form0->GenBlipSelect->MouseButtonDown.connect([&] { _form0->set_values(_gen1.generate_blip_select()); });
-    _form0->GenRandom->MouseButtonDown.connect([&] { _form0->set_values(_gen1.generate_random()); });
+    _form0->GenPickupCoin->MouseButtonDown.connect([&] { _form0->set_values(_gen1.generate_pickup_coin(clock::now().time_since_epoch().count())); });
+    _form0->GenLaserShot->MouseButtonDown.connect([&] { _form0->set_values(_gen1.generate_laser_shoot(clock::now().time_since_epoch().count())); });
+    _form0->GenExplosion->MouseButtonDown.connect([&] { _form0->set_values(_gen1.generate_explosion(clock::now().time_since_epoch().count())); });
+    _form0->GenPowerup->MouseButtonDown.connect([&] { _form0->set_values(_gen1.generate_powerup(clock::now().time_since_epoch().count())); });
+    _form0->GenHitHurt->MouseButtonDown.connect([&] { _form0->set_values(_gen1.generate_hit_hurt(clock::now().time_since_epoch().count())); });
+    _form0->GenJump->MouseButtonDown.connect([&] { _form0->set_values(_gen1.generate_jump(clock::now().time_since_epoch().count())); });
+    _form0->GenBlipSelect->MouseButtonDown.connect([&] { _form0->set_values(_gen1.generate_blip_select(clock::now().time_since_epoch().count())); });
+    _form0->GenRandom->MouseButtonDown.connect([&] { _form0->set_values(_gen1.generate_random(clock::now().time_since_epoch().count())); });
     _form0->Play->MouseButtonDown.connect([&] { create_data(); play_wave(); });
-    _form0->Mutate->MouseButtonDown.connect([&] { _form0->set_values(_gen1.mutate_wave(_wave1)); });
+    _form0->Mutate->MouseButtonDown.connect([&] { _form0->set_values(_gen1.mutate_wave(clock::now().time_since_epoch().count(), _wave1)); });
     _form0->Load->MouseButtonDown.connect([&] {
         object loadFile;
         if (loadFile.load("sound_wave0.ini")) {
