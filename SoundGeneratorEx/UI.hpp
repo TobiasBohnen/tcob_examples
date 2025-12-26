@@ -26,8 +26,8 @@ public:
     button* Play {nullptr};
     button* Mutate {nullptr};
 
-    button* Load {nullptr};
-    button* Save {nullptr};
+    button* ToClipboard {nullptr};
+    button* FromClipboard {nullptr};
     button* Export {nullptr};
 
     button* Exit {nullptr};

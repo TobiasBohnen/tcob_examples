@@ -38,25 +38,29 @@ void SoundGeneratorEx::on_start()
     _form0->GenRandom->MouseButtonDown.connect([&] { _form0->set_values(_gen1.generate_random(clock::now().time_since_epoch().count())); });
     _form0->Play->MouseButtonDown.connect([&] { create_data(); play_wave(); });
     _form0->Mutate->MouseButtonDown.connect([&] { _form0->set_values(_gen1.mutate_wave(clock::now().time_since_epoch().count(), _wave1)); });
-    _form0->Load->MouseButtonDown.connect([&] {
+    _form0->FromClipboard->MouseButtonDown.connect([&] {
         object loadFile;
-        if (loadFile.load("sound_wave0.ini")) {
+        if (loadFile.parse(locate_service<input::system>().clipboard().get_text(), ".ini")) {
             _wave1 = loadFile["wave"].as<sound_wave>();
             _form0->set_values(_wave1);
         }
     });
-    _form0->Save->MouseButtonDown.connect([&] {
+    _form0->ToClipboard->MouseButtonDown.connect([&] {
         object saveFile;
         saveFile["wave"] = _wave1;
-        saveFile.save("sound_wave0.ini");
+        io::iomstream str;
+        saveFile.save(str, ".ini");
+        str.seek(0, io::seek_dir::Begin);
+        locate_service<input::system>().clipboard().set_text(str.read_string(str.size_in_bytes()));
     });
     _form0->Export->MouseButtonDown.connect([&] {
-        string name {};
-        i32    i {0};
-        do {
-            name = "sound" + std::to_string(i++) + ".wav";
-        } while (io::is_file(name));
-        auto _ = _audioData.save(name);
+        auto const fileName {[]() {
+            for (i32 i {0};; ++i) {
+                auto const name {std::format("sound{:02}.wav", i)};
+                if (!io::exists(name)) { return name; }
+            }
+        }()};
+        auto       _ = _audioData.save(fileName);
     });
     _form0->Exit->MouseButtonDown.connect([&] {
         parent().pop_current_scene();

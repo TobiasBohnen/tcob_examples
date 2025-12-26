@@ -104,12 +104,12 @@ generator_form::generator_form(window& window)
     Mutate        = &mainPanelLayout.create_widget<button>({1, 27, 4, 2}, "Mutate");
     Mutate->Label = "Mutate";
 
-    Load          = &mainPanelLayout.create_widget<button>({1, 30, 4, 2}, "Load");
-    Load->Label   = "Load";
-    Save          = &mainPanelLayout.create_widget<button>({1, 32, 4, 2}, "Save");
-    Save->Label   = "Save";
-    Export        = &mainPanelLayout.create_widget<button>({1, 34, 4, 2}, "Export");
-    Export->Label = "Export";
+    ToClipboard          = &mainPanelLayout.create_widget<button>({1, 30, 4, 2}, "Save");
+    ToClipboard->Label   = "To Clipboard";
+    FromClipboard        = &mainPanelLayout.create_widget<button>({1, 32, 4, 2}, "Load");
+    FromClipboard->Label = "From Clipboard";
+    Export               = &mainPanelLayout.create_widget<button>({1, 34, 4, 2}, "Export");
+    Export->Label        = "Export";
 
     Exit        = &mainPanelLayout.create_widget<button>({1, 37, 4, 2}, "Exit");
     Exit->Label = "Exit";
