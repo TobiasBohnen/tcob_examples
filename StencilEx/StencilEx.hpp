@@ -30,7 +30,7 @@ private:
 
     shape_batch _layer0;
 
-    gfx::poly_shape*          _wall {nullptr};
+    gfx::poly_shape*          _star {nullptr};
     asset_owner_ptr<material> _mat0;
 
     gfx::rect_shape*          _back {nullptr};
