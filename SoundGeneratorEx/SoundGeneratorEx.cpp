@@ -41,17 +41,16 @@ void SoundGeneratorEx::on_start()
     _form0->FromClipboard->MouseButtonDown.connect([&] {
         object loadFile;
         if (loadFile.parse(locate_service<input::system>().clipboard().get_text(), ".ini")) {
-            _wave1 = loadFile["wave"].as<sound_wave>();
-            _form0->set_values(_wave1);
+            if (loadFile.try_get(_wave1, "wave")) {
+                _form0->set_values(_wave1);
+            }
         }
     });
     _form0->ToClipboard->MouseButtonDown.connect([&] {
         object saveFile;
         saveFile["wave"] = _wave1;
-        io::iomstream str;
-        saveFile.save(str, ".ini");
-        str.seek(0, io::seek_dir::Begin);
-        locate_service<input::system>().clipboard().set_text(str.read_string(str.size_in_bytes()));
+        string str {saveFile.str()};
+        locate_service<input::system>().clipboard().set_text(str.substr(1, str.size() - 2));
     });
     _form0->Export->MouseButtonDown.connect([&] {
         auto const fileName {[]() {
