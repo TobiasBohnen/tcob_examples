@@ -360,7 +360,6 @@ auto create_gradient_styles(assets::group const& resGrp) -> style_collection
         style->Margin           = {5_px};
         style->Padding          = {5_px};
         style->DropShadow.Color = color {0, 0, 0, 128};
-        style->Alignment        = alignments {horizontal_alignment::Right, vertical_alignment::Bottom};
         style->DragAlpha        = 0.75f;
 
         auto hoverStyle {retValue.create<image_box>("image_box", {.Hover = true})};
