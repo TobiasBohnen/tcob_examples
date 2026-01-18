@@ -5,9 +5,6 @@
 
 #include "Misc.hpp"
 
-#include <iomanip>
-#include <iostream>
-
 using namespace std::chrono_literals;
 using namespace tcob::literals;
 
@@ -40,14 +37,11 @@ void MiscScene::on_update(milliseconds deltaTime)
 
 void MiscScene::on_fixed_update(milliseconds deltaTime)
 {
-    std::stringstream stream;
-    stream << std::fixed << std::setprecision(2);
     auto const& stats {locate_service<gfx::render_system>().statistics()};
-    stream << "avg FPS:" << stats.average_FPS();
-    stream << " best FPS:" << stats.best_FPS();
-    stream << " worst FPS:" << stats.worst_FPS();
-
-    window().Title = "TestGame " + stream.str();
+    auto const& mouse {locate_service<input::system>().mouse().get_position()};
+    window().Title = std::format("TestGame | FPS avg:{:.2f} best:{:.2f} worst:{:.2f} | x:{} y:{} ",
+                                 stats.average_FPS(), stats.best_FPS(), stats.worst_FPS(),
+                                 mouse.X, mouse.Y);
 }
 
 void MiscScene::on_key_down(keyboard::event const& ev)
