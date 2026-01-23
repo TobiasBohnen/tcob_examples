@@ -28,7 +28,7 @@ void B2DDebugDraw::draw_solid_polygon(physics::body_transform xform, std::span<p
 {
     _canvas.set_fill_style(color);
 
-    gfx::transform xform2;
+    transform xform2;
     xform2.rotate_at(xform.Angle, xform.Center);
 
     std::vector<point_f> verts;
