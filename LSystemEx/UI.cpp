@@ -144,7 +144,7 @@ auto lsystem_form::get_settings() const -> settings
             {.Replacement = _grdRules->get_cell({1, i + 1}).Text,
              .Probability = *helper::to_number<f32>(_grdRules->get_cell({2, i + 1}).Text) / 100.f});
     }
-    retValue.String = system.generate(_txbAxiom->Text, _spnIterations->Value);
+    retValue.String = system.generate(*_txbAxiom->Text, _spnIterations->Value);
 
     retValue.TurningAngle = degree_f {static_cast<f32>(_spnAngle->Value)};
 
