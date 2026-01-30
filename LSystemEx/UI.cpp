@@ -17,7 +17,7 @@ lsystem_form::lsystem_form(rect_i const& bounds)
     : form {{"lsystem", bounds}}
     , _font {"trim", "trim"}
 {
-    font_family::SingleFont(*_font.ptr(), trim_ttf);
+    font_family::SingleFont(*_font.ptr(), std::as_bytes(std::span {trim_ttf}));
     gen_styles();
 
     auto& mainPanel {create_container<glass>(dock_style::Fill, "main")};

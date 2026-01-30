@@ -11,7 +11,7 @@
 CanvasEx::CanvasEx(game& game)
     : scene {game}
 {
-    font_family::SingleFont(_font, trim_ttf);
+    font_family::SingleFont(_font, std::as_bytes(std::span {trim_ttf}));
 
     _modes = {
         &CanvasEx::canvas_gradient,

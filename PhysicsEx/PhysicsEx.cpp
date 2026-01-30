@@ -13,7 +13,7 @@ PhysicsEx::PhysicsEx(game& game)
     : scene {game}
     , _mat {material::Empty()}
 {
-    font_family::SingleFont(_font, trim_ttf);
+    font_family::SingleFont(_font, std::as_bytes(std::span {trim_ttf}));
     _debugDraw     = std::make_shared<B2DDebugDraw>(_font.get_font({}, 10).ptr());
     _world.Gravity = {0, 50.f};
 }

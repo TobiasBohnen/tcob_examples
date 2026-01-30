@@ -16,7 +16,7 @@ generator_form::generator_form(window& window)
     : form {{"generator", window.bounds()}}
     , _font {"trim", "trim"}
 {
-    font_family::SingleFont(*_font.ptr(), trim_ttf);
+    font_family::SingleFont(*_font.ptr(), std::as_bytes(std::span {trim_ttf}));
     gen_styles();
 
     auto& mainPanel {create_container<glass>(dock_style::Fill, "main")};
