@@ -40,7 +40,7 @@ void AniTexEx::on_start()
         std::ignore = save_animation("test-ani.png", frames);
     */
     auto createShape {[&](auto&& tex, auto&& mat, auto&& img, auto&& ext, auto&& bounds) {
-        std::ignore               = tex->load(std::make_shared<io::isstream>(img), ext);
+        std::ignore               = tex->load(std::make_shared<io::isstream>(std::as_bytes(std::span {img})), ext);
         mat->first_pass().Texture = tex;
         tex->start(true);
 
