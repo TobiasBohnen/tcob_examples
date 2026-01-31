@@ -66,7 +66,7 @@ void RaycasterEx::on_draw_to(render_target& target)
     geometry::set_color(q, colors::White);
     geometry::set_position(q, {0, 0, static_cast<f32>(size.Width), static_cast<f32>(size.Height)});
     geometry::set_texcoords(q, {.UVRect = render_texture::UVRect(), .Level = 0});
-    _renderer.set_geometry(q, &_material->first_pass());
+    _renderer.set_geometry({.Vertices = q, .Indices = QuadIndicies, .Type = primitive_type::Triangles}, &_material->first_pass());
 
     _renderer.render_to_target(target);
 }
