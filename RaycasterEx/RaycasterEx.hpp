@@ -42,7 +42,7 @@ private:
 
     asset_owner_ptr<material> _material;
     asset_owner_ptr<texture>  _texture;
-    polygon_renderer          _renderer {buffer_usage_hint::StaticDraw};
+    renderer                  _renderer {buffer_usage_hint::StaticDraw};
 
     std::unique_ptr<cache_base> _cache;
 
