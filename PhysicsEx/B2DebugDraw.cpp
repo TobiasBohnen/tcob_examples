@@ -135,6 +135,6 @@ void B2DDebugDraw::draw(physics::world const& world, f32 alpha, gfx::render_targ
     _canvas.end_frame();
 
     _debugRenderer.set_bounds(bounds);
-    _debugRenderer.add_layer(0);
+    _debugRenderer.queue_layer(0);
     _debugRenderer.render_to_target(target);
 }

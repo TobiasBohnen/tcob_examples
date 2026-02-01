@@ -46,7 +46,7 @@ void CanvasEx::on_update(milliseconds /* deltaTime */)
 
 void CanvasEx::on_draw_to(render_target& target)
 {
-    _renderer.add_layer(0);
+    _renderer.queue_layer(0);
     _renderer.set_bounds({point_f::Zero, size_f {*window().Size}});
     _renderer.render_to_target(target);
 }
