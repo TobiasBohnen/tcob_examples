@@ -166,12 +166,12 @@ void ParticleSystemEx::on_mouse_wheel(mouse::wheel_event const& ev)
     _cam.on_mouse_wheel(ev);
 }
 
-void ParticleSystemEx::load_emitter(quad_particle_emitter& emi)
+void ParticleSystemEx::load_emitter(particle_emitter<quad_particle>& emi)
 {
     data::object obj;
     obj["emi"]                    = emi.Settings;
     obj["emi"]["spawn_area"]["x"] = 1200;
     obj["emi"]["lifetime"]        = 3000;
     auto& emi1 {_system0.create_emitter()};
-    emi1.Settings = obj["emi"].as<quad_particle_emitter::settings>();
+    emi1.Settings = obj["emi"].as<particle_emitter<quad_particle>::settings>();
 }
