@@ -5,6 +5,48 @@
 
 #include "RayEx.hpp"
 
+string const obj_mesh {R"(
+# Blender 5.0.1
+# www.blender.org
+o Cube
+v 200.510468 119.321335 35.717751
+v 138.740906 122.617752 35.717747
+v 67.040382 116.998550 35.717751
+v 83.633736 66.252197 35.717747
+v 148.407623 29.316662 35.717739
+v 175.891663 62.406006 35.717743
+v 8.609720 127.638878 35.717751
+v 10.029209 26.900352 35.717743
+v 118.183525 41.500885 35.717743
+v 114.085945 217.355652 35.717762
+v 168.128174 196.295654 35.717762
+v 69.729431 178.244202 35.717754
+v 250.675354 164.594910 35.717758
+v 257.261230 41.674732 35.717743
+v 184.656586 9.586830 35.717739
+v 97.837059 5.873154 35.717739
+v 59.448414 16.569122 35.717739
+s 0
+f 3 8 4
+f 2 12 3
+f 2 11 10
+f 5 9 16
+f 14 13 1
+f 3 7 8
+f 2 1 11
+f 2 10 12
+f 9 4 17
+f 4 8 17
+f 17 16 9
+f 16 15 5
+f 14 6 15
+f 6 5 15
+f 1 6 14
+f 13 11 1
+f 12 7 3
+
+)"};
+
 RayEx::RayEx(game& game)
     : scene {game}
 {
@@ -68,6 +110,18 @@ void RayEx::on_update(milliseconds deltaTime)
         rectShape.Bounds   = {_center - point_f {rectSize.Width / 2, rectSize.Height / 2}, rectSize};
         rectShape.Rotation = degree_f {_rotation};
     } break;
+    case 3: {
+        auto&                      meshShape {_batch.create_shape<gfx::mesh_shape>()};
+        std::span<std::byte const> bytes {reinterpret_cast<std::byte const*>(obj_mesh.data()), obj_mesh.size()};
+
+        io::isstream str {bytes};
+        auto         _     = meshShape.load(str, ".obj");
+        meshShape.Material = material::Empty();
+        meshShape.Color    = colors::Blue;
+        meshShape.Rotation = degree_f {_rotation};
+
+        meshShape.move_by(_center - point_i {100, 100});
+    }
     }
 
     _batch.update(deltaTime);
@@ -135,7 +189,7 @@ void RayEx::on_mouse_motion(mouse::motion_event const& ev)
 
 void RayEx::on_mouse_button_down(mouse::button_event const& ev)
 {
-    _mode  = (_mode + 1) % 3;
+    _mode  = (_mode + 1) % 4;
     _dirty = true;
 }
 
