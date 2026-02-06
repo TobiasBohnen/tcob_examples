@@ -104,6 +104,12 @@ void TweenEx::on_start()
         create_circle(position, colors::LimeGreen, auto0);
     }
 
+    {
+        position += posOffset;
+        auto auto0 {make_shared_tween<circular_tween<point_f>>(duration, position, point_f {endX, position.Y})};
+        create_circle(position, colors::MediumTurquoise, auto0);
+    }
+
     ////////////////////////////////////////////////////////////
     for (auto& tween : _tweens) {
         tween->start(playback_mode::Looped);
