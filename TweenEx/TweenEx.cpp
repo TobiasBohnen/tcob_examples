@@ -64,7 +64,7 @@ void TweenEx::on_start()
 
     {
         position += posOffset;
-        auto auto0 {make_shared_tween<power_tween<point_f>>(duration, position, point_f {endX, position.Y}, 2.f, easing::mode::Out)};
+        auto auto0 {make_shared_tween<power_tween<point_f>>(duration, position, point_f {endX, position.Y}, 2.f, tween_func::ease_mode::Out)};
         create_circle(position, colors::Brown, auto0);
     }
 
@@ -76,7 +76,7 @@ void TweenEx::on_start()
 
     {
         position += posOffset;
-        auto auto0 {make_shared_tween<power_tween<point_f>>(duration, position, point_f {endX, position.Y}, 0.5f, easing::mode::Out)};
+        auto auto0 {make_shared_tween<power_tween<point_f>>(duration, position, point_f {endX, position.Y}, 0.5f, tween_func::ease_mode::Out)};
         create_circle(position, colors::Orchid, auto0);
     }
 
@@ -88,7 +88,7 @@ void TweenEx::on_start()
 
     {
         position += posOffset;
-        auto auto0 {make_shared_tween<bounce_tween<point_f>>(duration, position, point_f {endX, position.Y})};
+        auto auto0 {make_shared_tween<bounce_tween<point_f>>(duration, position, point_f {endX, position.Y}, tween_func::ease_mode::In)};
         create_circle(position, colors::DarkRed, auto0);
     }
 
@@ -96,6 +96,12 @@ void TweenEx::on_start()
         position += posOffset;
         auto auto0 {make_shared_tween<elastic_tween<point_f>>(duration, position, point_f {endX, position.Y})};
         create_circle(position, colors::GhostWhite, auto0);
+    }
+
+    {
+        position += posOffset;
+        auto auto0 {make_shared_tween<back_tween<point_f>>(duration, position, point_f {endX, position.Y})};
+        create_circle(position, colors::LimeGreen, auto0);
     }
 
     ////////////////////////////////////////////////////////////

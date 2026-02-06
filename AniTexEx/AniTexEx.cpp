@@ -25,20 +25,7 @@ void AniTexEx::on_fixed_update(milliseconds /* deltaTime */)
 
 void AniTexEx::on_start()
 {
-    /*
-        std::vector<image_frame>  frames;
-        easing::quad_bezier_curve curv;
-        curv.StartPoint   = {196, 40};
-        curv.ControlPoint = {0, 256};
-        curv.EndPoint     = {196, 216};
 
-        for (i32 i {0}; i < 1500; ++i) {
-            image img {image::CreateEmpty({256, 256}, image::format::RGBA)};
-            img.fill({point_i {curv(i / 1500.)}, size_i {25, 25}}, colors::Red);
-            frames.push_back(image_frame {img, milliseconds {5}});
-        }
-        std::ignore = save_animation("test-ani.png", frames);
-    */
     auto createShape {[&](auto&& tex, auto&& mat, auto&& img, auto&& ext, auto&& bounds) {
         std::ignore               = tex->load(std::make_shared<io::isstream>(std::as_bytes(std::span {img})), ext);
         mat->first_pass().Texture = tex;
