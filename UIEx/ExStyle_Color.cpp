@@ -101,7 +101,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Margin               = {10_px};
         style->Padding              = {2_px};
 
-        style->EasingFunc = easing_func::Linear;
+        style->EasingFunc = easing_func::ElasticOut;
 
         auto disabledStyle {retValue.create<button>("button", {.Disabled = true})};
 
