@@ -58,25 +58,25 @@ void TweenEx::on_start()
 
     {
         position += posOffset;
-        auto auto0 {make_shared_tween<power_tween<point_f>>(duration, position, point_f {endX, position.Y}, 0.75f)};
+        auto auto0 {make_shared_tween<polynomial_tween<point_f>>(duration, position, point_f {endX, position.Y}, 0.75f)};
         create_circle(position, colors::LawnGreen, auto0);
     }
 
     {
         position += posOffset;
-        auto auto0 {make_shared_tween<power_tween<point_f>>(duration, position, point_f {endX, position.Y}, 2.f, tween_func::ease_mode::Out)};
+        auto auto0 {make_shared_tween<polynomial_tween<point_f>>(duration, position, point_f {endX, position.Y}, 2.f, tween_func::ease_mode::Out)};
         create_circle(position, colors::Brown, auto0);
     }
 
     {
         position += posOffset;
-        auto auto0 {make_shared_tween<power_tween<point_f>>(duration, position, point_f {endX, position.Y}, 2.f)};
+        auto auto0 {make_shared_tween<polynomial_tween<point_f>>(duration, position, point_f {endX, position.Y}, 2.f)};
         create_circle(position, colors::Green, auto0);
     }
 
     {
         position += posOffset;
-        auto auto0 {make_shared_tween<power_tween<point_f>>(duration, position, point_f {endX, position.Y}, 0.5f, tween_func::ease_mode::Out)};
+        auto auto0 {make_shared_tween<polynomial_tween<point_f>>(duration, position, point_f {endX, position.Y}, 0.5f, tween_func::ease_mode::Out)};
         create_circle(position, colors::Orchid, auto0);
     }
 
