@@ -25,7 +25,7 @@ protected:
     void on_mouse_wheel(mouse::wheel_event const& ev) override;
 
 private:
-    metaball _metaball;
+    metaball_image _metaball;
 
     renderer                  _renderer {buffer_usage_hint::StaticDraw};
     asset_owner_ptr<material> _material;

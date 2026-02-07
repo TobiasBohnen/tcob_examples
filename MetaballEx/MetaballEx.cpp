@@ -5,7 +5,7 @@
 
 #include "MetaballEx.hpp"
 
-constexpr i32    scale {2};
+constexpr i32    scale {1};
 constexpr size_f msize {800, 600};
 
 MetaballEx::MetaballEx(game& game)
