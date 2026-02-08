@@ -5,7 +5,7 @@
 
 #include "MetaballEx.hpp"
 
-constexpr i32    scale {1};
+constexpr i32    scale {2};
 constexpr size_f msize {800, 600};
 
 MetaballEx::MetaballEx(game& game)
@@ -13,11 +13,17 @@ MetaballEx::MetaballEx(game& game)
     , _metaball {size_i {msize / scale},
                  color_gradient {{0, colors::DarkRed}, {0.25, colors::Red}, {0.75, colors::Orange}, {0.95, colors::Yellow}, {1, colors::Yellow}}}
 {
-    _metaball.Balls = {
-        {.Position = point_f {200, 300} / scale, .Radius = 80 / scale, .Velocity = point_f {100, 50} / scale},
-        {.Position = point_f {400, 200} / scale, .Radius = 70 / scale, .Velocity = point_f {-60, 80} / scale},
-        {.Position = point_f {600, 400} / scale, .Radius = 90 / scale, .Velocity = point_f {-80, -60} / scale},
-        {.Position = point_f {300, 450} / scale, .Radius = 75 / scale, .Velocity = point_f {50, -70} / scale}};
+    rng                         rng;
+    std::vector<metaball::ball> balls;
+    for (i32 i {0}; i < 10; ++i) {
+        auto& ball {balls.emplace_back()};
+        ball.Position.X = rng(0.0f, msize.Width / scale);
+        ball.Position.Y = rng(0.0f, msize.Height / scale);
+        ball.Radius     = rng(10.0f / scale, 70.0f / scale);
+        ball.Velocity.X = rng(-100.0f / scale, 100.0f / scale);
+        ball.Velocity.Y = rng(-100.0f / scale, 100.0f / scale);
+    }
+    _metaball.Balls = balls;
 
     _texture->resize(size_i {msize / scale}, 1, texture::format::RGBA8);
     _material->first_pass().Texture = _texture;
