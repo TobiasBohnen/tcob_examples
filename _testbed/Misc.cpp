@@ -58,7 +58,7 @@ void MiscScene::on_key_down(keyboard::event const& ev)
     case input::scan_code::S: {
         auto const fileName {[]() {
             for (i32 i {0};; ++i) {
-                auto const name {std::format("screen{:02}.webp", i)};
+                auto const name {std::format("screen{:02}.png", i)};
                 if (!io::exists(name)) { return name; }
             }
         }()};

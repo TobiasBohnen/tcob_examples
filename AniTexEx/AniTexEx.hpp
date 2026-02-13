@@ -31,9 +31,6 @@ private:
     asset_owner_ptr<animated_texture> _texGif;
     asset_owner_ptr<material>         _matGif;
 
-    asset_owner_ptr<animated_texture> _texWebp;
-    asset_owner_ptr<material>         _matWebp;
-
     asset_owner_ptr<animated_texture> _texPng;
     asset_owner_ptr<material>         _matPng;
 
