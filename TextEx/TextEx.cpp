@@ -32,52 +32,43 @@ void TextEx::on_start()
 
     {
         auto& text0 {_texts.emplace_back(std::make_unique<text>(font))};
-        text0->Text  = "{EFFECT:1} Typing\n"
-                       "{EFFECT:2} FadeIn\n"
-                       "{EFFECT:3} FadeOut\n"
-                       "{EFFECT:4} Blink\n"
-                       "{EFFECT:9} Gradient\n"
-                       "{EFFECT:7} Shrink\n"
-                       "{EFFECT:8} Rotate\n"
-                       "{EFFECT:5} Shake\n"
-                       "{EFFECT:6} WaveWave\n\n";
-        text0->Style = text::style {.Color = colors::White, .Alignment = {}, .KerningEnabled = false};
-
-        text0->Bounds = {{420, 6}, {500, 1000}};
-
+        text0->Text   = "{EFFECT:1}The quick brown fox{EFFECT:0} jumps over {EFFECT:2}the lazy dog{EFFECT:0}.\n"
+                        "{EFFECT:3}PACK MY BOX{EFFECT:0} with {EFFECT:4}five dozen liquor jugs{EFFECT:0}!\n"
+                        "{EFFECT:5}Sphinx of black quartz{EFFECT:0}, judge my vow.\n"
+                        "{EFFECT:6}How vexingly quick{EFFECT:0} daft zebras jump!\n"
+                        "{EFFECT:7}Jackdaws love{EFFECT:0} my {EFFECT:8}big sphinx{EFFECT:0} of quartz.\n"
+                        "{EFFECT:9}The five boxing wizards jump quickly{EFFECT:0}.\n\n";
+        text0->Style  = text::style {.Color = colors::White, .Alignment = {}, .KerningEnabled = false};
+        text0->Bounds = {{420, 6}, {900, 1000}};
         auto& effects {text0->Effects};
         effects.create(1, duration, effect::typing {});
         effects.create(2, duration, effect::fade_in {3});
         effects.create(3, duration, effect::fade_out {2});
         effects.create(4, duration, effect::blink {.Color0 = colors::Orange, .Color1 = colors::Teal, .Frequency = 5.f});
-        effects.create(5, duration, effect::shake {.Intensity = 3.f, .RNG = rng {12345}})->Interval = 25ms;
-        effects.create(6, duration, effect::wave {.Height = 30.f, .Amplitude = 4.f});
+        effects.create(5, duration, effect::shake {.Intensity = 3.f, .RNG = rng {12345}});
+        effects.create(6, duration, effect::wave {.Height = 15.f, .Amplitude = 4.f});
         effects.create(7, duration, effect::size {.WidthStart = 1.0f, .WidthEnd = 0.0f, .HeightStart = 1.0f, .HeightEnd = 0.0f, .Anchor = {.Horizontal = horizontal_alignment::Centered, .Vertical = vertical_alignment::Middle}});
-        effects.create(8, duration, effect::rotate {1.0f});
-        effects.create(9, duration, effect::gradient {color_gradient {colors::Orange, colors::LightBlue}.colors()});
-
+        effects.create(8, duration, effect::rotate {.Speed = 5.0f});
+        effects.create(9, duration, effect::gradient {color_gradient {colors::Orange, colors::DarkGreen, colors::BlueViolet, colors::LightBlue}.colors()});
         effects.start_all(playback_mode::Looped);
     }
 
     {
         auto& text0 {_texts.emplace_back(std::make_unique<text>(font))};
-        text0->Text = "{EFFECT:1} TypingShake\n"
-                      "{EFFECT:2} BlinkWave\n\n"
-                      "{EFFECT:3} GrowWave\n\n"
-                      "{EFFECT:4} RotateWave\n";
-
+        text0->Text   = "{EFFECT:1}Earthquake detected...{EFFECT:0}\n"
+                        "{EFFECT:2}Ocean waves rolling in{EFFECT:0}\n\n"
+                        "{EFFECT:3}{COLOR:Purple}Balloon inflating{EFFECT:0}\n\n"
+                        "{EFFECT:4}{COLOR:Green}Spinning tornado{EFFECT:0}\n";
         text0->Bounds = {{30, 206}, {500, 1000}};
-
         auto& effects {text0->Effects};
         effects.create(1, duration, effect::typing {}, effect::shake {.Intensity = 3.f, .RNG = rng {12345}})->Interval = 100ms;
         effects.create(2, duration,
-                       effect::blink {.Color0 = colors::Red, .Color1 = colors::Green, .Frequency = 5.f},
+                       effect::blink {.Color0 = colors::Blue, .Color1 = colors::LightBlue, .Frequency = 5.f},
                        effect::wave {.Height = 15.f, .Amplitude = 10.f});
         effects.create(3, duration,
                        effect::size {.WidthStart = 0.0f, .WidthEnd = 1.0f, .HeightStart = 0.0f, .HeightEnd = 1.0f, .Anchor = {.Horizontal = horizontal_alignment::Left, .Vertical = vertical_alignment::Middle}},
                        effect::wave {.Height = 15.f, .Amplitude = 10.f});
         effects.create(4, duration, effect::rotate {2.0f}, effect::wave {.Height = 30.f, .Amplitude = 10.f});
-
         effects.start_all(playback_mode::Looped);
     }
 
