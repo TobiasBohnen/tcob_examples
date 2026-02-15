@@ -67,8 +67,7 @@ void ParticleSystemEx::on_start()
         _system0.start();
     }
     {
-        _system1.Material                         = resGrp->get<material>("PointParticleMat");
-        _system1.Material->first_pass().PointSize = 10;
+        _system1.Material = resGrp->get<material>("QuadParticleMat");
 
         auto& emi0 {_system1.create_emitter()};
         emi0.Settings.Template = {
@@ -82,6 +81,9 @@ void ParticleSystemEx::on_start()
             .Transparency  = std::minmax(0.0f, 0.0f),
 
             .Lifetime = std::minmax(5000ms, 25000ms),
+
+            .Scale = std::minmax(0.75f, 1.5f),
+            .Size  = {10, 10},
         };
         emi0.Settings.SpawnArea = {1200, 450, 120, 75};
         emi0.Settings.SpawnRate = 100;
@@ -166,12 +168,12 @@ void ParticleSystemEx::on_mouse_wheel(mouse::wheel_event const& ev)
     _cam.on_mouse_wheel(ev);
 }
 
-void ParticleSystemEx::load_emitter(particle_emitter<quad_particle>& emi)
+void ParticleSystemEx::load_emitter(particle_emitter& emi)
 {
     data::object obj;
     obj["emi"]                    = emi.Settings;
     obj["emi"]["spawn_area"]["x"] = 1200;
     obj["emi"]["lifetime"]        = 3000;
     auto& emi1 {_system0.create_emitter()};
-    emi1.Settings = obj["emi"].as<particle_emitter<quad_particle>::settings>();
+    emi1.Settings = obj["emi"].as<particle_emitter::settings>();
 }

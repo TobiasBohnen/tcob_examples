@@ -27,10 +27,10 @@ protected:
     void on_mouse_wheel(mouse::wheel_event const& ev) override;
 
 private:
-    void load_emitter(particle_emitter<quad_particle>& emi);
+    void load_emitter(particle_emitter& emi);
 
-    quad_particle_system  _system0;
-    point_particle_system _system1;
+    particle_system _system0;
+    particle_system _system1;
 
     basic_cam          _cam;
     bool               _reverse {false};
