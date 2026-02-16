@@ -478,7 +478,7 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
 
     {
         auto& panel0 {retValue->create_container<panel>("Panel0")};
-        auto& panel0Layout {panel0.create_layout<horizontal_layout>()};
+        auto& panel0Layout {panel0.create_layout<box_layout>(size_i {3, 2})};
 
         auto& barChart0 {panel0Layout.create_widget<bar_chart>("Bar")};
         barChart0.YAxis = {.Min = 0, .Max = 1};
@@ -490,10 +490,6 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
         });
         barChart0.TransitionDuration = 250ms;
 
-        auto& legend0 {panel0Layout.create_widget<legend>("Legend")};
-        legend0.For  = &barChart0;
-        legend0.Flex = {50_pct, 100_pct};
-
         auto& lineChart0 {panel0Layout.create_widget<line_chart>("Line")};
         lineChart0.YAxis = {.Min = 0, .Max = 1};
 
@@ -504,10 +500,6 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
         });
         lineChart0.TransitionDuration = 250ms;
 
-        auto& legend1 {panel0Layout.create_widget<legend>("Legend")};
-        legend1.For  = &lineChart0;
-        legend1.Flex = {50_pct, 100_pct};
-
         auto& pieChart0 {panel0Layout.create_widget<pie_chart>("Pie")};
 
         pieChart0.Dataset.mutate([&](auto& val) {
@@ -516,11 +508,19 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
             val.push_back({.Name = "pie3", .Value = 2});
             val.push_back({.Name = "pie4", .Value = 2});
         });
-        pieChart0.TransitionDuration = 250ms;
+        pieChart0.TransitionDuration = 2500ms;
+
+        auto& legend0 {panel0Layout.create_widget<legend>("Legend")};
+        legend0.For  = &barChart0;
+        legend0.Flex = {100_pct, 50_pct};
+
+        auto& legend1 {panel0Layout.create_widget<legend>("Legend")};
+        legend1.For  = &lineChart0;
+        legend1.Flex = {100_pct, 50_pct};
 
         auto& legend2 {panel0Layout.create_widget<legend>("Legend")};
         legend2.For  = &pieChart0;
-        legend2.Flex = {50_pct, 100_pct};
+        legend2.Flex = {100_pct, 50_pct};
     }
 
     {
@@ -767,7 +767,7 @@ auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::sha
     }};
 
     {
-        auto& accordion0 {retValue->create_container<accordion>(dock_style::Left, "Accordion0")};
+        auto& accordion0 {retValue->create_container<accordion>(dock_style::Left, "Accordion1")};
         accordion0.Flex = {.Width = 30_pct, .Height = 100_pct};
         createSections(accordion0);
     }
@@ -778,22 +778,22 @@ auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::sha
         panel0.ScrollEnabled = true;
         auto& panel0Layout {panel0.get_layout<panel::default_layout>()};
 
-        auto& accordion0 {panel0Layout.create_widget<accordion>({0, 0, 500, 500}, "Accordion0")};
+        auto& accordion0 {panel0Layout.create_widget<accordion>({0, 0, 500, 500}, "Accordion2")};
         createSections(accordion0);
     }
 
     {
-        auto& accordion0 {retValue->create_container<accordion>(dock_style::Left, "Accordion0")};
+        auto& accordion0 {retValue->create_container<accordion>(dock_style::Left, "Accordion3")};
         accordion0.Flex                  = {.Width = 30_pct, .Height = 100_pct};
         accordion0.MaximizeActiveSection = true;
 
-        auto& accordion1 {accordion0.create_section<accordion>("Accordion1", {.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
+        auto& accordion1 {accordion0.create_section<accordion>("Accordion31", {.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
         createSections(accordion1);
 
-        auto& accordion2 {accordion0.create_section<accordion>("Accordion2", {.Text = "def", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
+        auto& accordion2 {accordion0.create_section<accordion>("Accordion32", {.Text = "def", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
         createSections(accordion2);
 
-        auto& accordion3 {accordion0.create_section<accordion>("Accordion3", {.Text = "ghi", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
+        auto& accordion3 {accordion0.create_section<accordion>("Accordion33", {.Text = "ghi", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
         createSections(accordion3);
     }
 

@@ -444,10 +444,10 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->VScrollBar.Bar.Size        = 20_pct;
         style->VScrollBar.Bar.Border.Size = 2_px;
         style->VScrollBar.Bar.Delay       = 250ms;
+        style->MaxVisibleItems            = 10;
 
         auto hoverStyle {retValue.create<list_box>("list_box", {.Hover = true})};
-        *hoverStyle                 = *style;
-        hoverStyle->MaxVisibleItems = 10;
+        *hoverStyle = *style;
 
         auto disabledStyle {retValue.create<list_box>("list_box", {.Disabled = true})};
 
@@ -474,7 +474,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->VScrollBar.Bar.Size        = 20_pct;
         style->VScrollBar.Bar.Border.Size = 3_px;
         style->VScrollBar.Bar.Delay       = 250ms;
-        style->MaxVisibleItems            = 0;
+        style->MaxVisibleItems            = 1;
 
         auto hoverStyle {retValue.create<drop_down_list>("drop_down_list", {.Hover = true})};
         *hoverStyle                 = *style;
@@ -880,7 +880,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->DropShadow.Color    = color {0, 0, 0, 128};
         style->HorizontalGridLines = grid_line_amount::Few;
         style->VerticalGridLines   = grid_line_amount::Few;
-        style->Colors              = {colors::SlateBlue, colors::Fuchsia, colors::NavajoWhite};
+        style->Colors              = {colors::SlateBlue, colors::SeaGreen, colors::DarkSeaGreen};
         style->SmoothLines         = false;
 
         auto hoverStyle {retValue.create<line_chart>("line_chart", {.Hover = true})};
@@ -906,7 +906,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->VerticalGridLines   = grid_line_amount::Few;
         style->BarSize             = 80_pct;
         style->BarRadius           = 0_pct;
-        style->Colors              = {colors::SlateBlue, colors::Fuchsia, colors::NavajoWhite};
+        style->Colors              = {colors::SlateBlue, colors::SeaGreen, colors::DarkSeaGreen};
 
         auto hoverStyle {retValue.create<bar_chart>("bar_chart", {.Hover = true})};
         *hoverStyle                     = *style;
@@ -929,11 +929,10 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Margin           = {5_px};
         style->Padding          = {20_px};
         style->DropShadow.Color = color {0, 0, 0, 128};
-        style->Colors           = {colors::PaleVioletRed, colors::SlateBlue, colors::Fuchsia, colors::NavajoWhite};
+        style->Colors           = {colors::Tan, colors::SlateBlue, colors::SeaGreen, colors::DarkSeaGreen};
 
         auto hoverStyle {retValue.create<pie_chart>("pie_chart", {.Hover = true})};
-        *hoverStyle        = *style;
-        hoverStyle->Colors = {colors::Fuchsia, colors::NavajoWhite, colors::PaleVioletRed, colors::SlateBlue};
+        *hoverStyle = *style;
 
         auto activeStyle {retValue.create<pie_chart>("pie_chart", {.Active = true})};
         *activeStyle = *style;
@@ -948,7 +947,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Margin           = {5_px};
         style->Padding          = {20_px};
         style->DropShadow.Color = color {0, 0, 0, 128};
-        style->Colors           = {colors::PaleVioletRed, colors::SlateBlue, colors::Fuchsia, colors::NavajoWhite};
+        style->Colors           = {colors::Tan, colors::SlateBlue, colors::SeaGreen, colors::NavajoWhite};
         style->BarRadius        = 10_pct;
         style->BarSize          = {100_pct, 100_pct};
 
@@ -970,7 +969,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Margin              = {5_px};
         style->Padding             = {20_px};
         style->DropShadow.Color    = color {0, 0, 0, 128};
-        style->Colors              = {colors::PaleVioletRed, colors::SlateBlue, colors::Fuchsia, colors::NavajoWhite};
+        style->Colors              = {colors::Tan, colors::SlateBlue, colors::SeaGreen, colors::NavajoWhite};
         style->PointSize           = 10;
         style->StrokeColor         = colors::Black;
         style->HorizontalGridLines = grid_line_amount::Normal;
@@ -996,7 +995,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Margin           = {5_px};
         style->Padding          = {20_px};
         style->DropShadow.Color = color {0, 0, 0, 128};
-        style->Colors           = {colors::PaleVioletRed, colors::SlateBlue, colors::Fuchsia, colors::NavajoWhite};
+        style->Colors           = {colors::Tan, colors::SlateBlue, colors::SeaGreen, colors::DarkSeaGreen};
         style->LineWidth        = 12;
         style->FillAreaAlpha    = 255;
         style->GridLineWidth    = 4;
@@ -1020,13 +1019,17 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<legend>("legend", {})};
-        style->Text.Style     = {.IsItalic = false, .Weight = font::weight::Normal};
-        style->Text.Font      = resGrp.get<font_family>("Poppins");
-        style->Text.Size      = 25_pct;
-        style->Text.AutoSize  = auto_size_mode::OnlyShrink;
-        style->Text.Alignment = {.Horizontal = horizontal_alignment::Left, .Vertical = vertical_alignment::Middle};
-        style->Text.Color     = colors::Black;
-        style->Background     = colors::LightBlue;
+        style->Margin            = 10_px;
+        style->Padding           = 5_px;
+        style->Border.Size       = 5_px;
+        style->Text.Style        = {.IsItalic = false, .Weight = font::weight::Normal};
+        style->Text.Font         = resGrp.get<font_family>("Poppins");
+        style->Text.Size         = 25_pct;
+        style->Text.AutoSize     = auto_size_mode::OnlyShrink;
+        style->Text.Alignment    = {.Horizontal = horizontal_alignment::Left, .Vertical = vertical_alignment::Middle};
+        style->Text.Color        = colors::Black;
+        style->Background        = colors::LightBlue;
+        style->Border.Background = colors::Black;
     }
     return retValue;
 }
