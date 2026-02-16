@@ -261,7 +261,7 @@ auto create_form0(window* wnd, group const& resGrp) -> std::shared_ptr<form_base
         label0.Label = std::format("drop:{}", ev.Target ? ev.Target->name() : "");
     });
 
-    imgBox0.start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::AlternatedLooped);
+    imgBox0.start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::Looped);
 
     auto& gridView0 {panel0Layout.create_widget<grid_view>({1280, 450, 450, 400}, "GridView0")};
     gridView0.Header = {{"Last"}, {"First"}, {"Age"}, {"City"}};

@@ -227,7 +227,7 @@ void TileMapEx::on_key_down(keyboard::event const& ev)
                 for (i32 i {0}; i < 100; ++i) {
                     i32 const x {_rand(0, tiles.width() - 1)};
                     i32 const y {_rand(0, tiles.height() - 1)};
-                    tiles[x, y] = map[str];
+                    tiles[x, y] = map[string {str}];
                 }
             });
         });
