@@ -27,7 +27,7 @@ void MiscScene::on_finish()
 {
 }
 
-void MiscScene::on_draw_to(render_target& target)
+void MiscScene::on_draw_to(render_target& target, transform& xform)
 {
 }
 

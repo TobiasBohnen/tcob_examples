@@ -65,9 +65,9 @@ void PathfindingEx::on_start()
     _tileMapOrtho.Material = material::Empty();
 }
 
-void PathfindingEx::on_draw_to(render_target& target)
+void PathfindingEx::on_draw_to(render_target& target, transform& xform)
 {
-    _tileMapOrtho.draw_to(target);
+    _tileMapOrtho.draw_to(target, xform);
 
     auto const size {*target.Size};
 

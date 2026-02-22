@@ -26,7 +26,7 @@ void MusicEx::on_start()
     });
 }
 
-void MusicEx::on_draw_to(render_target& target)
+void MusicEx::on_draw_to(render_target& target, transform& xform)
 {
 }
 

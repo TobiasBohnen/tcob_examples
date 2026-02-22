@@ -31,9 +31,9 @@ void ClippingEx::on_update(milliseconds deltaTime)
     _layer0.update(deltaTime);
 }
 
-void ClippingEx::on_draw_to(render_target& target)
+void ClippingEx::on_draw_to(render_target& target, transform& xform)
 {
-    _layer0.draw_to(target);
+    _layer0.draw_to(target, xform);
 }
 
 void ClippingEx::on_key_down(keyboard::event const& ev)

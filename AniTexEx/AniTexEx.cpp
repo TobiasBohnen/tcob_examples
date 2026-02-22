@@ -50,9 +50,9 @@ void AniTexEx::on_update(milliseconds deltaTime)
     _layer0.update(deltaTime);
 }
 
-void AniTexEx::on_draw_to(render_target& target)
+void AniTexEx::on_draw_to(render_target& target, transform& xform)
 {
-    _layer0.draw_to(target);
+    _layer0.draw_to(target, xform);
 }
 
 void AniTexEx::on_key_down(keyboard::event const& ev)

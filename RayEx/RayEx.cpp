@@ -144,9 +144,9 @@ void RayEx::on_update(milliseconds deltaTime)
     _batch.update(deltaTime);
 }
 
-void RayEx::on_draw_to(render_target& target)
+void RayEx::on_draw_to(render_target& target, transform& xform)
 {
-    _batch.draw_to(target);
+    _batch.draw_to(target, xform);
 }
 
 void RayEx::on_key_down(keyboard::event const& ev)

@@ -46,7 +46,7 @@ void SoundFontEx::on_start()
     mouseDown(_form0->B, midi_note::BNeg1);
 }
 
-void SoundFontEx::on_draw_to(render_target& target)
+void SoundFontEx::on_draw_to(render_target& target, transform& xform)
 {
 }
 

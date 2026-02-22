@@ -152,13 +152,13 @@ void TileMapEx::on_start()
     ////////////////////////////////////////////////////////////
 }
 
-void TileMapEx::on_draw_to(render_target& target)
+void TileMapEx::on_draw_to(render_target& target, transform& xform)
 {
-    _tileMapOrtho.draw_to(target);
-    _tileMapIso.draw_to(target);
-    _tileMapIsoStaggered.draw_to(target);
-    _tileMapHexPointy.draw_to(target);
-    _tileMapHexFlat.draw_to(target);
+    _tileMapOrtho.draw_to(target, xform);
+    _tileMapIso.draw_to(target, xform);
+    _tileMapIsoStaggered.draw_to(target, xform);
+    _tileMapHexPointy.draw_to(target, xform);
+    _tileMapHexFlat.draw_to(target, xform);
 }
 
 void TileMapEx::on_update(milliseconds deltaTime)

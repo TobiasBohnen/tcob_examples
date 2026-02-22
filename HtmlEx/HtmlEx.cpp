@@ -72,7 +72,7 @@ void HtmlEx::on_start()
     root_node().create_child().Entity = _contentHtml;
 }
 
-void HtmlEx::on_draw_to(render_target& target)
+void HtmlEx::on_draw_to(render_target& target, transform& xform)
 {
 }
 

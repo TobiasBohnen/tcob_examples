@@ -92,10 +92,10 @@ void ParticleSystemEx::on_start()
     }
 }
 
-void ParticleSystemEx::on_draw_to(render_target& target)
+void ParticleSystemEx::on_draw_to(render_target& target, transform& xform)
 {
-    _system0.draw_to(target);
-    _system1.draw_to(target);
+    _system0.draw_to(target, xform);
+    _system1.draw_to(target, xform);
 }
 
 void ParticleSystemEx::on_update(milliseconds deltaTime)

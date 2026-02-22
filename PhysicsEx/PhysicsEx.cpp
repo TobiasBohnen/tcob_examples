@@ -32,9 +32,9 @@ void PhysicsEx::on_start()
     create_edge({0, 45}, {70, 45});
 }
 
-void PhysicsEx::on_draw_to(render_target& target)
+void PhysicsEx::on_draw_to(render_target& target, transform& xform)
 {
-    _layer1.draw_to(target);
+    _layer1.draw_to(target, xform);
 
     if (_debug != debug_mode::Off) {
         _debugDraw->draw(_world, _debug == debug_mode::Transparent ? 0.5f : 1.0f, target);

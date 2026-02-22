@@ -41,10 +41,10 @@ void BackgroundEx::on_start()
     _cam.LimitBounds = {point_f::Zero, size_f {_back0->Material->first_pass().Texture->info().Size.Width * _back0->TextureScale.Width * 10, 1}};
 }
 
-void BackgroundEx::on_draw_to(render_target& target)
+void BackgroundEx::on_draw_to(render_target& target, transform& xform)
 {
-    _back0->draw_to(target);
-    _layer0.draw_to(target);
+    _back0->draw_to(target, xform);
+    _layer0.draw_to(target, xform);
 }
 
 void BackgroundEx::on_update(milliseconds deltaTime)

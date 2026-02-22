@@ -111,9 +111,9 @@ void ImageFilterEx::on_start()
     sprite6.Bounds        = {{600.f, 400.f}, {128, 128}};
 }
 
-void ImageFilterEx::on_draw_to(render_target& target)
+void ImageFilterEx::on_draw_to(render_target& target, transform& xform)
 {
-    _layer1.draw_to(target);
+    _layer1.draw_to(target, xform);
 }
 
 void ImageFilterEx::on_update(milliseconds deltaTime)

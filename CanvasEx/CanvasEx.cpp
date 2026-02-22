@@ -44,7 +44,7 @@ void CanvasEx::on_update(milliseconds /* deltaTime */)
     (this->*_modes[_mode])();
 }
 
-void CanvasEx::on_draw_to(render_target& target)
+void CanvasEx::on_draw_to(render_target& target, transform& xform)
 {
     _renderer.queue_layer(0);
     _renderer.set_bounds({point_f::Zero, size_f {*window().Size}});

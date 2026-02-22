@@ -103,15 +103,15 @@ void TextEx::on_start()
     }
 }
 
-void TextEx::on_draw_to(render_target& target)
+void TextEx::on_draw_to(render_target& target, transform& xform)
 {
     target.clear(color::FromRGBA(0x2a2a2aff));
 
     for (auto& text : _texts) {
-        text->draw_to(target);
+        text->draw_to(target, xform);
     }
 
-    _layer0.draw_to(target);
+    _layer0.draw_to(target, xform);
 }
 
 void TextEx::on_update(milliseconds deltaTime)

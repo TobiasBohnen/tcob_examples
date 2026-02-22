@@ -116,9 +116,9 @@ void TweenEx::on_start()
     }
 }
 
-void TweenEx::on_draw_to(render_target& target)
+void TweenEx::on_draw_to(render_target& target, transform& xform)
 {
-    _layer1.draw_to(target);
+    _layer1.draw_to(target, xform);
 }
 
 void TweenEx::on_update(milliseconds deltaTime)
