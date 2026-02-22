@@ -57,7 +57,7 @@ void MetaballEx::on_update(milliseconds deltaTime)
 void MetaballEx::on_draw_to(render_target& target)
 {
     _texture->update_data(_metaball.image(), 0);
-    _renderer.render_to_target(target);
+    _renderer.render_to_target(target, transform::Identity);
 }
 
 void MetaballEx::on_key_down(keyboard::event const& ev)

@@ -97,7 +97,7 @@ void PathfindingEx::on_draw_to(render_target& target)
 
     _renderer.queue_layer(0);
     _renderer.set_bounds({point_f::Zero, size_f {*window().Size}});
-    _renderer.render_to_target(target);
+    _renderer.render_to_target(target, transform::Identity);
 }
 
 void PathfindingEx::on_update(milliseconds deltaTime)

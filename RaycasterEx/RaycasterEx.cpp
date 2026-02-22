@@ -68,7 +68,7 @@ void RaycasterEx::on_draw_to(render_target& target)
     geometry::set_texcoords(q, {.UVRect = render_texture::UVRect(), .Level = 0});
     _renderer.set_geometry({.Vertices = q, .Indices = QuadIndicies, .Type = primitive_type::Triangles}, &_material->first_pass());
 
-    _renderer.render_to_target(target);
+    _renderer.render_to_target(target, transform::Identity);
 }
 
 void RaycasterEx::on_fixed_update(milliseconds deltaTime)
