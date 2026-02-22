@@ -52,7 +52,7 @@ void MultiPassEx::on_start()
     sprite0.Bounds   = {{400, 300}, {512, 512}};
 }
 
-void MultiPassEx::on_draw_to(render_target& target, transform& xform)
+void MultiPassEx::on_draw_to(render_target& target, transform const& xform)
 {
     _layer1.draw_to(target, xform);
 }

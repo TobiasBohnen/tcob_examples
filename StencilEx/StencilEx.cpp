@@ -36,7 +36,7 @@ void StencilEx::on_update(milliseconds deltaTime)
     _layer0.update(deltaTime);
 }
 
-void StencilEx::on_draw_to(render_target& target, transform& xform)
+void StencilEx::on_draw_to(render_target& target, transform const& xform)
 {
     _layer0.draw_to(target, xform);
 }

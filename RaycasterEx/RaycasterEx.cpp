@@ -58,7 +58,7 @@ void RaycasterEx::on_start()
     _cache->load();
 }
 
-void RaycasterEx::on_draw_to(render_target& target, transform& xform)
+void RaycasterEx::on_draw_to(render_target& target, transform const& xform)
 {
     size_i const size {*target.Size};
 

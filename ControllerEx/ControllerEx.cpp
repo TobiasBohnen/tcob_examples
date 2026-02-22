@@ -24,7 +24,7 @@ void ControllerEx::on_start()
     root_node().Entity        = _form0;
 }
 
-void ControllerEx::on_draw_to(render_target& target, transform& xform)
+void ControllerEx::on_draw_to(render_target& target, transform const& xform)
 {
 }
 

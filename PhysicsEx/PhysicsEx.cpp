@@ -32,7 +32,7 @@ void PhysicsEx::on_start()
     create_edge({0, 45}, {70, 45});
 }
 
-void PhysicsEx::on_draw_to(render_target& target, transform& xform)
+void PhysicsEx::on_draw_to(render_target& target, transform const& xform)
 {
     _layer1.draw_to(target, xform);
 

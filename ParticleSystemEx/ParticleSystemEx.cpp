@@ -92,7 +92,7 @@ void ParticleSystemEx::on_start()
     }
 }
 
-void ParticleSystemEx::on_draw_to(render_target& target, transform& xform)
+void ParticleSystemEx::on_draw_to(render_target& target, transform const& xform)
 {
     _system0.draw_to(target, xform);
     _system1.draw_to(target, xform);

@@ -152,7 +152,7 @@ void TileMapEx::on_start()
     ////////////////////////////////////////////////////////////
 }
 
-void TileMapEx::on_draw_to(render_target& target, transform& xform)
+void TileMapEx::on_draw_to(render_target& target, transform const& xform)
 {
     _tileMapOrtho.draw_to(target, xform);
     _tileMapIso.draw_to(target, xform);

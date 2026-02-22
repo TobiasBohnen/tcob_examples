@@ -103,7 +103,7 @@ void TextEx::on_start()
     }
 }
 
-void TextEx::on_draw_to(render_target& target, transform& xform)
+void TextEx::on_draw_to(render_target& target, transform const& xform)
 {
     target.clear(color::FromRGBA(0x2a2a2aff));
 

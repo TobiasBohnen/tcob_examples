@@ -66,7 +66,7 @@ void LSystemEx::on_update(milliseconds deltaTime)
     }
 }
 
-void LSystemEx::on_draw_to(render_target& target, transform& xform)
+void LSystemEx::on_draw_to(render_target& target, transform const& xform)
 {
     _renderer.queue_layer(0);
     _renderer.set_bounds({point_f::Zero, size_f {*window().Size}});

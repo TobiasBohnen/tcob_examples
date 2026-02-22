@@ -69,7 +69,7 @@ void UIEx::on_start()
     }
 }
 
-void UIEx::on_draw_to(render_target& target, transform& xform)
+void UIEx::on_draw_to(render_target& target, transform const& xform)
 {
 }
 

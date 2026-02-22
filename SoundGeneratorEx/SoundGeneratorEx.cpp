@@ -66,7 +66,7 @@ void SoundGeneratorEx::on_start()
     draw_wave();
 }
 
-void SoundGeneratorEx::on_draw_to(render_target& target, transform& xform)
+void SoundGeneratorEx::on_draw_to(render_target& target, transform const& xform)
 {
 }
 

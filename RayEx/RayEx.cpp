@@ -144,7 +144,7 @@ void RayEx::on_update(milliseconds deltaTime)
     _batch.update(deltaTime);
 }
 
-void RayEx::on_draw_to(render_target& target, transform& xform)
+void RayEx::on_draw_to(render_target& target, transform const& xform)
 {
     _batch.draw_to(target, xform);
 }

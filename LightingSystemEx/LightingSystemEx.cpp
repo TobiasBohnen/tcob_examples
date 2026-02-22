@@ -70,7 +70,7 @@ void LightingSystemEx::on_start()
     createSC({{400.0f, 550.0f}, {430.0f, 590.0f}, {470.0f, 580.0f}, {480.0f, 530.0f}, {440.0f, 510.0f}, {410.0f, 530.0f}});
 }
 
-void LightingSystemEx::on_draw_to(render_target& target, transform& xform)
+void LightingSystemEx::on_draw_to(render_target& target, transform const& xform)
 {
     _layer0.draw_to(target, xform);
     _lightingSystem0.draw_to(target, xform);

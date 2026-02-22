@@ -16,7 +16,7 @@ public:
 protected:
     void on_start() override;
 
-    void on_draw_to(render_target& target, transform& xform) override;
+    void on_draw_to(render_target& target, transform const& xform) override;
 
     void on_update(milliseconds deltaTime) override;
 

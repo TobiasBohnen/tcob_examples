@@ -18,7 +18,7 @@ void RngEx::on_start()
     root_node().Entity = _form0;
 }
 
-void RngEx::on_draw_to(render_target& target, transform& xform)
+void RngEx::on_draw_to(render_target& target, transform const& xform)
 {
 }
 

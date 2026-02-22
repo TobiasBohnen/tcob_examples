@@ -116,7 +116,7 @@ void TweenEx::on_start()
     }
 }
 
-void TweenEx::on_draw_to(render_target& target, transform& xform)
+void TweenEx::on_draw_to(render_target& target, transform const& xform)
 {
     _layer1.draw_to(target, xform);
 }

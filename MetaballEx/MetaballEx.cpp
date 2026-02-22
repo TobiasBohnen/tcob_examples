@@ -54,7 +54,7 @@ void MetaballEx::on_update(milliseconds deltaTime)
     _metaball.update(deltaTime);
 }
 
-void MetaballEx::on_draw_to(render_target& target, transform& xform)
+void MetaballEx::on_draw_to(render_target& target, transform const& xform)
 {
     _texture->update_data(_metaball.image(), 0);
     _renderer.render_to_target(target, transform::Identity);
