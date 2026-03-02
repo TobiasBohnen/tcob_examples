@@ -55,6 +55,11 @@ physics_form::physics_form(rect_i const& bounds)
     auto& btnObstacles {mainPanelLayout.create_widget<button>({0, 17, 12, 2}, "btnObstacles")};
     btnObstacles.Click.connect([&]() { CreateObstacles(); });
     btnObstacles.Label = "create obstacles";
+
+    // clear
+    auto& btnClear {mainPanelLayout.create_widget<button>({0, 20, 12, 2}, "btnClear")};
+    btnClear.Click.connect([&]() { ClearObjects(); });
+    btnClear.Label = "clear objects";
 }
 
 void physics_form::gen_styles()

@@ -27,6 +27,7 @@ public:
 
     prop<point_f> Gravity {{0, 50.f}};
     signal<>      CreateObstacles;
+    signal<>      ClearObjects;
 
 private:
     void gen_styles();

@@ -36,7 +36,14 @@ void PhysicsEx::on_start()
         _world.Gravity = val;
     });
     _mainForm->CreateObstacles.connect([&]() { create_obstacles(); });
-
+    _mainForm->ClearObjects.connect([&]() {
+        for (auto& obj : _objects) {
+            _objectLayer.remove_shape(*get_shape(obj.Shape));
+            _world.remove_body(*obj.Body);
+        }
+        _objects.clear();
+        _selectedObject = nullptr;
+    });
     root_node().Entity = _mainForm;
 
     create_obstacles();
@@ -44,7 +51,8 @@ void PhysicsEx::on_start()
 
 void PhysicsEx::on_draw_to(render_target& target, transform const& xform)
 {
-    _layer1.draw_to(target, xform);
+    _objectLayer.draw_to(target, xform);
+    _obstacleLayer.draw_to(target, xform);
 
     if (_mainForm->DebugMode) {
         _debugDraw->draw(_world, 0.5f, target);
@@ -55,9 +63,9 @@ void PhysicsEx::on_update(milliseconds deltaTime)
 {
     // Hold-to-spawn: fire immediately on first tick, then every 500ms.
     if (_mouseDown) {
-        _mouseDownTimer -= deltaTime;
-        if (_mouseDownTimer <= 0ms) {
-            _mouseDownTimer = 500ms;
+        _spawnTimer -= deltaTime;
+        if (_spawnTimer <= 0ms) {
+            _spawnTimer = 500ms;
             switch (_mainForm->SpawnObject) {
             case spawn_object::Circle:    create_circle(_mousePos); break;
             case spawn_object::Box:       create_box(_mousePos); break;
@@ -69,7 +77,7 @@ void PhysicsEx::on_update(milliseconds deltaTime)
     }
 
     // Sync gfx to physics; cull objects that have fallen off-screen.
-    for (auto it {_objects.begin()}; it < _objects.end();) {
+    for (auto it {_objects.begin()}; it != _objects.end();) {
         auto const& tf {*it->Body->Transform};
 
         auto const [shapeY, shape] {std::visit(
@@ -101,18 +109,24 @@ void PhysicsEx::on_update(milliseconds deltaTime)
                     return {it->LastCenter.Y, poly};
                 },
             },
-            it->Sprite)};
-
+            it->Shape)};
+        shape->Color = it->DefaultColor;
         if (shapeY > 1000) {
-            _layer1.remove_shape(*shape);
+            _objectLayer.remove_shape(*shape);
             _world.remove_body(*it->Body);
-            it = _objects.erase(it);
+            it              = _objects.erase(it);
+            _selectedObject = nullptr;
         } else {
             ++it;
         }
     }
 
-    _layer1.update(deltaTime);
+    if (_selectedObject) {
+        get_shape(_selectedObject->Shape)->Color = colors::WhiteSmoke;
+    }
+
+    _objectLayer.update(deltaTime);
+    _obstacleLayer.update(deltaTime);
 }
 
 void PhysicsEx::on_fixed_update(milliseconds deltaTime)
@@ -124,16 +138,14 @@ void PhysicsEx::on_fixed_update(milliseconds deltaTime)
                                  mouse.X, mouse.Y);
 
     _world.update(deltaTime);
+    hit_test();
 }
 
 void PhysicsEx::on_key_down(keyboard::event const& ev)
 {
     switch (ev.ScanCode) {
-    case scan_code::BACKSPACE:
-        parent().pop_current_scene();
-        break;
-    default:
-        break;
+    case scan_code::BACKSPACE: parent().pop_current_scene(); break;
+    default:                   break;
     }
 }
 
@@ -144,13 +156,37 @@ void PhysicsEx::on_mouse_motion(mouse::motion_event const& ev)
 
 void PhysicsEx::on_mouse_button_down(mouse::button_event const& ev)
 {
-    _mouseDownTimer = 0ms;
-    _mouseDown      = true;
+    if (!_selectedObject) {
+        _spawnTimer = 0ms;
+        _mouseDown  = true;
+    }
 }
 
 void PhysicsEx::on_mouse_button_up(mouse::button_event const& ev)
 {
     _mouseDown = false;
+}
+
+auto PhysicsEx::get_shape(gfx_shape const& shape) const -> gfx::shape*
+{
+    return std::visit(
+        overloaded {
+            [&](gfx::rect_shape* v) -> gfx::shape* { return v; },
+            [&](gfx::circle_shape* v) -> gfx::shape* { return v; },
+            [&](gfx::poly_shape* v) -> gfx::shape* { return v; },
+        },
+        shape);
+}
+
+void PhysicsEx::hit_test()
+{
+    _selectedObject = nullptr;
+    for (auto& obj : _objects) {
+        if (obj.Body->test_point(_mousePos)) {
+            _selectedObject = &obj;
+            break;
+        }
+    }
 }
 
 void PhysicsEx::create_box(point_f pos)
@@ -165,12 +201,12 @@ void PhysicsEx::create_box(point_f pos)
     shape.Extents                 = {point_f::Zero, rect.Size};
     body.create_shape<physics::rect_shape>(shape);
 
-    auto& gfx {_layer1.create_shape<gfx::rect_shape>()};
+    auto& gfx {_objectLayer.create_shape<gfx::rect_shape>()};
     gfx.Material = material::Empty();
     gfx.Bounds   = rect * physicsWorldSize;
     gfx.Color    = colors::Red;
 
-    _objects.push_back({&body, &gfx});
+    _objects.emplace_back(&body, &gfx, colors::Red);
 }
 
 void PhysicsEx::create_circle(point_f pos)
@@ -185,13 +221,13 @@ void PhysicsEx::create_circle(point_f pos)
     shape.Radius                  = rect.width() / 2;
     body.create_shape<physics::circle_shape>(shape);
 
-    auto& gfx {_layer1.create_shape<gfx::circle_shape>()};
+    auto& gfx {_objectLayer.create_shape<gfx::circle_shape>()};
     gfx.Segments = 18;
     gfx.Material = material::Empty();
     gfx.Radius   = rect.width() / 2 * physicsWorldSize;
     gfx.Color    = colors::Yellow;
 
-    _objects.push_back({&body, &gfx});
+    _objects.emplace_back(&body, &gfx, colors::Yellow);
 }
 
 void PhysicsEx::create_polygon(point_f pos)
@@ -222,12 +258,12 @@ void PhysicsEx::create_polygon(point_f pos)
         gfxPoly.Outline.push_back(gfxOrigin + v * physicsWorldSize);
     }
 
-    auto& gfx {_layer1.create_shape<gfx::poly_shape>()};
+    auto& gfx {_objectLayer.create_shape<gfx::poly_shape>()};
     gfx.Material = material::Empty();
     gfx.Color    = colors::Cyan;
     gfx.Polygons.mutate([&](auto& polys) { polys.push_back(gfxPoly); });
 
-    _objects.push_back({&body, &gfx, gfxOrigin});
+    _objects.emplace_back(&body, &gfx, colors::Cyan, gfxOrigin);
 }
 
 void PhysicsEx::create_capsule(point_f pos)
@@ -261,12 +297,12 @@ void PhysicsEx::create_capsule(point_f pos)
         gfxPoly.Outline.push_back(gfxOrigin + point_f {gr * std::cos(a), gl + (gr * std::sin(a))});
     }
 
-    auto& gfx {_layer1.create_shape<gfx::poly_shape>()};
+    auto& gfx {_objectLayer.create_shape<gfx::poly_shape>()};
     gfx.Material = material::Empty();
     gfx.Color    = colors::Magenta;
     gfx.Polygons.mutate([&](auto& polys) { polys.push_back(gfxPoly); });
 
-    _objects.push_back({&body, &gfx, gfxOrigin});
+    _objects.emplace_back(&body, &gfx, colors::Magenta, gfxOrigin);
 }
 
 void PhysicsEx::create_obstacles()
@@ -274,7 +310,7 @@ void PhysicsEx::create_obstacles()
     // Remove existing obstacle body and all its gfx shapes before recreating.
     if (_obstacles.Body) {
         for (auto* spr : _obstacles.Sprites) {
-            _layer1.remove_shape(*spr);
+            _obstacleLayer.remove_shape(*spr);
         }
         _world.remove_body(*_obstacles.Body);
         _obstacles.Sprites.clear();
@@ -286,17 +322,17 @@ void PhysicsEx::create_obstacles()
         create_obstacle({_rng(0.f, 66.f), _rng(2.f, 35.f), _rng(1.f, 5.f), _rng(1.f, 5.f)});
     }
 
-    create_edge({0, 45}, {70, 45});
+    create_edge({5, 45}, {75, 45});
 }
 
 void PhysicsEx::create_obstacle(rect_f const& rect)
 {
     physics::rect_shape::settings shape;
     shape.Extents                    = {rect.center(), rect.Size};
-    shape.Shape.Material.Restitution = 0.5f;
+    shape.Shape.Material.Restitution = 0.9f;
     _obstacles.Body->create_shape<physics::rect_shape>(shape);
 
-    auto& gfx {_layer1.create_shape<gfx::rect_shape>()};
+    auto& gfx {_obstacleLayer.create_shape<gfx::rect_shape>()};
     gfx.Material = material::Empty();
     gfx.Bounds   = rect * physicsWorldSize;
     gfx.Color    = colors::Green;
@@ -306,11 +342,12 @@ void PhysicsEx::create_obstacle(rect_f const& rect)
 void PhysicsEx::create_edge(point_f pos0, point_f pos1)
 {
     segment_shape::settings shape;
-    shape.Point1 = pos0;
-    shape.Point2 = pos1;
+    shape.Point1                     = pos0;
+    shape.Point2                     = pos1;
+    shape.Shape.Material.Restitution = 0.1f;
     _obstacles.Body->create_shape<segment_shape>(shape);
 
-    auto& gfx {_layer1.create_shape<gfx::rect_shape>()};
+    auto& gfx {_obstacleLayer.create_shape<gfx::rect_shape>()};
     gfx.Material = material::Empty();
     gfx.Bounds   = rect_f::FromLTRB(pos0.X, pos0.Y, pos1.X, pos1.Y + 5) * physicsWorldSize;
     gfx.Color    = colors::Blue;

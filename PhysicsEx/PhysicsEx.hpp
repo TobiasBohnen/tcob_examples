@@ -11,6 +11,8 @@
 
 ////////////////////////////////////////////////////////////
 
+using gfx_shape = std::variant<gfx::rect_shape*, gfx::circle_shape*, gfx::poly_shape*>;
+
 class PhysicsEx : public scene {
 public:
     PhysicsEx(game& game);
@@ -32,10 +34,9 @@ protected:
 private:
     struct object {
         physics::body* Body {nullptr};
-        std::variant<gfx::rect_shape*,
-                     gfx::circle_shape*,
-                     gfx::poly_shape*>
-            Sprite;
+        gfx_shape      Shape;
+
+        color DefaultColor;
 
         point_f LastCenter;
     };
@@ -44,6 +45,9 @@ private:
         physics::body*           Body {nullptr};
         std::vector<gfx::shape*> Sprites;
     };
+
+    auto get_shape(gfx_shape const& shape) const -> gfx::shape*;
+    void hit_test();
 
     void create_box(point_f pos);
     void create_circle(point_f pos);
@@ -57,14 +61,16 @@ private:
     world     _world {};
     obstacles _obstacles {};
 
-    std::vector<object> _objects {};
+    std::deque<object> _objects {};
+    object*            _selectedObject {};
 
-    shape_batch _layer1 {};
+    shape_batch _objectLayer {};
+    shape_batch _obstacleLayer {};
 
     font_family                   _font {""};
     std::shared_ptr<B2DDebugDraw> _debugDraw {};
 
-    milliseconds _mouseDownTimer {0};
+    milliseconds _spawnTimer {0};
     bool         _mouseDown {false};
     point_f      _mousePos;
 
