@@ -11,12 +11,6 @@
 
 constexpr f32 physicsWorldSize {14.4};
 
-enum class debug_mode : u8 {
-    Off,
-    Transparent,
-    On
-};
-
 class B2DDebugDraw : public physics::debug_draw {
 public:
     B2DDebugDraw(gfx::font* font);

@@ -33,7 +33,7 @@ void B2DDebugDraw::draw_solid_polygon(physics::body_transform xform, std::span<p
 
     std::vector<point_f> verts;
     for (auto const vert : vertices) {
-        verts.push_back((xform2 * (vert + xform.Center)) * physicsWorldSize);
+        verts.push_back(xform2 * (vert + xform.Center) * physicsWorldSize);
     }
     _canvas.fill_polyline(verts);
 }
@@ -51,11 +51,7 @@ void B2DDebugDraw::draw_solid_circle(physics::body_transform xform, f32 radius, 
 {
     _canvas.set_fill_style(color);
     _canvas.begin_path();
-
-    _canvas.rotate_at(xform.Angle, xform.Center * physicsWorldSize);
     _canvas.circle(xform.Center * physicsWorldSize, radius * physicsWorldSize);
-    _canvas.reset_transform();
-
     _canvas.fill();
 }
 
@@ -114,7 +110,7 @@ void B2DDebugDraw::draw_point(point_f p, f32 size, color color)
     _canvas.fill();
 }
 
-void B2DDebugDraw::draw_string(point_f p, string const& text, color color)
+void B2DDebugDraw::draw_string(point_f p, string const& text, color /* color */)
 {
     _canvas.set_font(_font);
     _canvas.set_fill_style(colors::Black);

@@ -7,6 +7,7 @@
 
 #include "../_common/Common.hpp"
 #include "B2DebugDraw.hpp"
+#include "UI.hpp"
 
 ////////////////////////////////////////////////////////////
 
@@ -24,31 +25,41 @@ protected:
     void on_fixed_update(milliseconds deltaTime) override;
 
     void on_key_down(keyboard::event const& ev) override;
+    void on_mouse_motion(mouse::motion_event const& ev) override;
+    void on_mouse_button_down(mouse::button_event const& ev) override;
     void on_mouse_button_up(mouse::button_event const& ev) override;
 
 private:
-    struct Box2DExObject {
+    struct object {
         std::variant<gfx::rect_shape*, gfx::circle_shape*> Sprite;
         physics::body*                                     Body {nullptr};
     };
+    struct obstacles {
+        std::vector<gfx::rect_shape*> Sprites;
+        physics::body*                Body {nullptr};
+    };
 
     void create_box(point_f pos);
-    void create_edge(point_f pos0, point_f pos1);
     void create_circle(point_f pos);
+
+    void create_obstacles();
     void create_obstacle(rect_f const& rect);
+    void create_edge(point_f pos0, point_f pos1);
 
-    physics::world _world {};
-
-    physics::body*             _obstacles {nullptr};
-    std::vector<Box2DExObject> _objects {};
+    physics::world      _world {};
+    obstacles           _obstacles {};
+    std::vector<object> _objects {};
 
     asset_owner_ptr<material> _mat;
 
     shape_batch _layer1;
-    bool        _forceOn {false};
-    bool        _colorizeContact {false};
 
-    debug_mode                    _debug {debug_mode::Off};
     std::shared_ptr<B2DDebugDraw> _debugDraw;
     font_family                   _font {""};
+
+    milliseconds _mouseDownTimer {0};
+    bool         _mouseDown {false};
+    point_f      _mousePos;
+
+    std::shared_ptr<physics_form> _mainForm;
 };
