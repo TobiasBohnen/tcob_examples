@@ -13,6 +13,8 @@ using namespace tcob::ui;
 enum class spawn_object : u8 {
     Circle,
     Box,
+    Polygon,
+    Capsule,
     Explosion
 };
 

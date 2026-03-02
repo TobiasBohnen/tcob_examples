@@ -31,35 +31,44 @@ protected:
 
 private:
     struct object {
-        std::variant<gfx::rect_shape*, gfx::circle_shape*> Sprite;
-        physics::body*                                     Body {nullptr};
+        physics::body* Body {nullptr};
+        std::variant<gfx::rect_shape*,
+                     gfx::circle_shape*,
+                     gfx::poly_shape*>
+            Sprite;
+
+        point_f LastCenter;
     };
+
     struct obstacles {
-        std::vector<gfx::rect_shape*> Sprites;
-        physics::body*                Body {nullptr};
+        physics::body*           Body {nullptr};
+        std::vector<gfx::shape*> Sprites;
     };
 
     void create_box(point_f pos);
     void create_circle(point_f pos);
+    void create_polygon(point_f pos);
+    void create_capsule(point_f pos);
 
     void create_obstacles();
     void create_obstacle(rect_f const& rect);
     void create_edge(point_f pos0, point_f pos1);
 
-    physics::world      _world {};
-    obstacles           _obstacles {};
+    world     _world {};
+    obstacles _obstacles {};
+
     std::vector<object> _objects {};
 
-    asset_owner_ptr<material> _mat;
+    shape_batch _layer1 {};
 
-    shape_batch _layer1;
-
-    std::shared_ptr<B2DDebugDraw> _debugDraw;
     font_family                   _font {""};
+    std::shared_ptr<B2DDebugDraw> _debugDraw {};
 
     milliseconds _mouseDownTimer {0};
     bool         _mouseDown {false};
     point_f      _mousePos;
 
     std::shared_ptr<physics_form> _mainForm;
+
+    rng _rng;
 };

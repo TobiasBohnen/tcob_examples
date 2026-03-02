@@ -35,7 +35,9 @@ physics_form::physics_form(rect_i const& bounds)
     auto& rbSpawnBox {addRadioButton({0, 0, 4, 2}, {4, 0, 6, 2}, "rbSpawnBox", "box", [&]() { SpawnObject = spawn_object::Box; })};
     rbSpawnBox.Checked = true;
     auto& rbSpawnCircle {addRadioButton({0, 2, 4, 2}, {4, 2, 6, 2}, "rbSpawnCircle", "circle", [&]() { SpawnObject = spawn_object::Circle; })};
-    auto& rbSpawnExplosion {addRadioButton({0, 4, 4, 2}, {4, 4, 6, 2}, "rbSpawnExplosion", "explosion", [&]() { SpawnObject = spawn_object::Explosion; })};
+    auto& rbSpawnPolygon {addRadioButton({0, 4, 4, 2}, {4, 4, 6, 2}, "rbSpawnPolygon", "polygon", [&]() { SpawnObject = spawn_object::Polygon; })};
+    auto& rbSpawnCapsule {addRadioButton({0, 6, 4, 2}, {4, 6, 6, 2}, "rbSpawnCapsule", "capsule", [&]() { SpawnObject = spawn_object::Capsule; })};
+    auto& rbSpawnExplosion {addRadioButton({0, 8, 4, 2}, {4, 8, 6, 2}, "rbSpawnExplosion", "explosion", [&]() { SpawnObject = spawn_object::Explosion; })};
 
     // debug
     auto& tglDbg {mainPanelLayout.create_widget<toggle>({24, 35, 10, 2}, "tglDbg")};
@@ -45,12 +47,12 @@ physics_form::physics_form(rect_i const& bounds)
     lblDbg.For   = &tglDbg;
 
     // gravity
-    auto& btnGravity {mainPanelLayout.create_widget<button>({0, 10, 12, 2}, "btnGravity")};
+    auto& btnGravity {mainPanelLayout.create_widget<button>({0, 14, 12, 2}, "btnGravity")};
     btnGravity.Click.connect([&]() { Gravity = *Gravity * -1; });
     btnGravity.Label = "reverse gravity";
 
     // obstacles
-    auto& btnObstacles {mainPanelLayout.create_widget<button>({0, 13, 12, 2}, "btnObstacles")};
+    auto& btnObstacles {mainPanelLayout.create_widget<button>({0, 17, 12, 2}, "btnObstacles")};
     btnObstacles.Click.connect([&]() { CreateObstacles(); });
     btnObstacles.Label = "create obstacles";
 }
