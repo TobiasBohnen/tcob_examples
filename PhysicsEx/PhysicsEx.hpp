@@ -39,6 +39,8 @@ private:
         color DefaultColor;
 
         point_f LastCenter;
+
+        auto operator==(object const& other) const -> bool = default;
     };
 
     struct obstacles {
@@ -57,6 +59,8 @@ private:
     void create_obstacles();
     void create_obstacle(rect_f const& rect);
     void create_edge(point_f pos0, point_f pos1);
+
+    void create_explosion(point_f pos);
 
     world     _world {};
     obstacles _obstacles {};

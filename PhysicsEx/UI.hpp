@@ -10,24 +10,37 @@ using namespace tcob::ui;
 
 ////////////////////////////////////////////////////////////
 
-enum class spawn_object : u8 {
+// spawn
+enum class left_button_mode : u8 {
     Circle,
     Box,
     Polygon,
-    Capsule,
-    Explosion
+    Capsule
+};
+// world
+enum class middle_button_mode : u8 {
+    Explosion,
+    ReverseGravity
+};
+// modify
+enum class right_button_mode : u8 {
+    Remove,
+    AngularImpulse,
+    LinearImpulse
 };
 
 class physics_form : public form<dock_layout> {
 public:
     physics_form(rect_i const& bounds);
 
-    spawn_object SpawnObject {spawn_object::Box};
-    bool         DebugMode {false};
+    left_button_mode   LeftMode {left_button_mode::Box};
+    middle_button_mode MiddleMode {middle_button_mode::Explosion};
+    right_button_mode  RightMode {right_button_mode::Remove};
 
-    prop<point_f> Gravity {{0, 50.f}};
-    signal<>      CreateObstacles;
-    signal<>      ClearObjects;
+    bool DebugMode {false};
+
+    signal<> CreateObstacles;
+    signal<> ClearObjects;
 
 private:
     void gen_styles();

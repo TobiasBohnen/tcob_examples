@@ -21,35 +21,52 @@ physics_form::physics_form(rect_i const& bounds)
     gen_styles();
 
     auto& mainPanel {create_container<panel>(dock_style::Fill, "main")};
-    auto& mainPanelLayout {mainPanel.create_layout<grid_layout>(size_i {40, 40})};
+    auto& mainPanelLayout {mainPanel.create_layout<grid_layout>(size_i {45, 40})};
 
-    // spawn
-    auto addRadioButton = [&](rect_i bounds, rect_i labelBounds, string const& name, string const& labelText, auto&& func) -> radio_button& {
-        auto& rb {mainPanelLayout.create_widget<radio_button>(bounds, name)};
+    auto addRadioButton {[&](auto&& layout, rect_i const& bounds, rect_i const& labelBounds, string const& labelText, auto&& func) -> radio_button& {
+        auto& rb {layout.template create_widget<radio_button>(bounds, labelText + "rb")};
         rb.Checked.Changed.connect(func);
-        auto& lbl {mainPanelLayout.create_widget<label>(labelBounds, std::string {name} + "lbl")};
+        auto& lbl {layout.template create_widget<label>(labelBounds, labelText + "lbl")};
         lbl.Label = labelText;
         lbl.For   = &rb;
         return rb;
-    };
-    auto& rbSpawnBox {addRadioButton({0, 0, 4, 2}, {4, 0, 6, 2}, "rbSpawnBox", "box", [&]() { SpawnObject = spawn_object::Box; })};
-    rbSpawnBox.Checked = true;
-    auto& rbSpawnCircle {addRadioButton({0, 2, 4, 2}, {4, 2, 6, 2}, "rbSpawnCircle", "circle", [&]() { SpawnObject = spawn_object::Circle; })};
-    auto& rbSpawnPolygon {addRadioButton({0, 4, 4, 2}, {4, 4, 6, 2}, "rbSpawnPolygon", "polygon", [&]() { SpawnObject = spawn_object::Polygon; })};
-    auto& rbSpawnCapsule {addRadioButton({0, 6, 4, 2}, {4, 6, 6, 2}, "rbSpawnCapsule", "capsule", [&]() { SpawnObject = spawn_object::Capsule; })};
-    auto& rbSpawnExplosion {addRadioButton({0, 8, 4, 2}, {4, 8, 6, 2}, "rbSpawnExplosion", "explosion", [&]() { SpawnObject = spawn_object::Explosion; })};
+    }};
+
+    auto createPanel {[&](rect_i labelRect, rect_i panelRect, string const& labelText, string const& panelName) -> grid_layout& {
+        auto& lbl {mainPanelLayout.create_widget<label>(labelRect, labelText + "lbl")};
+        lbl.Label = labelText;
+        auto& pnl {mainPanelLayout.create_widget<panel>(panelRect, panelName)};
+        auto& layout {pnl.create_layout<grid_layout>(size_i {10, 10})};
+        return layout;
+    }};
+
+    // left
+    auto& leftPanelLayout {createPanel({0, 0, 15, 2}, {0, 2, 15, 10}, "left mouse button", "left")};
+    auto& rbBox {addRadioButton(leftPanelLayout, {0, 0, 3, 2}, {3, 0, 6, 2}, "box", [&]() { LeftMode = left_button_mode::Box; })};
+    rbBox.Checked = true;
+    addRadioButton(leftPanelLayout, {0, 2, 3, 2}, {3, 2, 6, 2}, "circle", [&]() { LeftMode = left_button_mode::Circle; });
+    addRadioButton(leftPanelLayout, {0, 4, 3, 2}, {3, 4, 6, 2}, "polygon", [&]() { LeftMode = left_button_mode::Polygon; });
+    addRadioButton(leftPanelLayout, {0, 6, 3, 2}, {3, 6, 6, 2}, "capsule", [&]() { LeftMode = left_button_mode::Capsule; });
+
+    // middle
+    auto& middlePanelLayout {createPanel({15, 0, 15, 2}, {15, 2, 15, 10}, "middle mouse button", "middle")};
+    auto& rbExplosion {addRadioButton(middlePanelLayout, {0, 0, 3, 2}, {3, 0, 6, 2}, "explosion", [&]() { MiddleMode = middle_button_mode::Explosion; })};
+    rbExplosion.Checked = true;
+    addRadioButton(middlePanelLayout, {0, 2, 3, 2}, {3, 2, 6, 2}, "reverse gravity", [&]() { MiddleMode = middle_button_mode::ReverseGravity; });
+
+    // right
+    auto& rightPanelLayout {createPanel({30, 0, 15, 2}, {30, 2, 15, 10}, "right mouse button", "right")};
+    auto& rbRemove {addRadioButton(rightPanelLayout, {0, 0, 3, 2}, {3, 0, 6, 2}, "remove", [&]() { RightMode = right_button_mode::Remove; })};
+    rbRemove.Checked = true;
+    addRadioButton(rightPanelLayout, {0, 2, 3, 2}, {3, 2, 6, 2}, "angular imp.", [&]() { RightMode = right_button_mode::AngularImpulse; });
+    addRadioButton(rightPanelLayout, {0, 4, 3, 2}, {3, 4, 6, 2}, "linear imp.", [&]() { RightMode = right_button_mode::LinearImpulse; });
 
     // debug
-    auto& tglDbg {mainPanelLayout.create_widget<toggle>({24, 35, 10, 2}, "tglDbg")};
+    auto& tglDbg {mainPanelLayout.create_widget<toggle>({29, 35, 10, 2}, "tglDbg")};
     tglDbg.Checked.Changed.connect([&](bool val) { DebugMode = val; });
-    auto& lblDbg {mainPanelLayout.create_widget<label>({34, 35, 6, 2}, "lblDbg")};
+    auto& lblDbg {mainPanelLayout.create_widget<label>({39, 35, 6, 2}, "lblDbg")};
     lblDbg.Label = "debug";
     lblDbg.For   = &tglDbg;
-
-    // gravity
-    auto& btnGravity {mainPanelLayout.create_widget<button>({0, 14, 12, 2}, "btnGravity")};
-    btnGravity.Click.connect([&]() { Gravity = *Gravity * -1; });
-    btnGravity.Label = "reverse gravity";
 
     // obstacles
     auto& btnObstacles {mainPanelLayout.create_widget<button>({0, 17, 12, 2}, "btnObstacles")};

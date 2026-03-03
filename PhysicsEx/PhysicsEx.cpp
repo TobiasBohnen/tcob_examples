@@ -29,12 +29,8 @@ void PhysicsEx::on_start()
 
     rect_i const menuBounds {windowSize.Width - uiWidth, 0, uiWidth, windowSize.Height};
     _mainForm      = std::make_shared<physics_form>(menuBounds);
-    _world.Gravity = _mainForm->Gravity;
+    _world.Gravity = {0, 50.f};
 
-    _mainForm->Gravity.Changed.connect([&](point_f val) {
-        for (auto& obj : _objects) { obj.Body->wake_up(); }
-        _world.Gravity = val;
-    });
     _mainForm->CreateObstacles.connect([&]() { create_obstacles(); });
     _mainForm->ClearObjects.connect([&]() {
         for (auto& obj : _objects) {
@@ -66,12 +62,11 @@ void PhysicsEx::on_update(milliseconds deltaTime)
         _spawnTimer -= deltaTime;
         if (_spawnTimer <= 0ms) {
             _spawnTimer = 500ms;
-            switch (_mainForm->SpawnObject) {
-            case spawn_object::Circle:    create_circle(_mousePos); break;
-            case spawn_object::Box:       create_box(_mousePos); break;
-            case spawn_object::Polygon:   create_polygon(_mousePos); break;
-            case spawn_object::Capsule:   create_capsule(_mousePos); break;
-            case spawn_object::Explosion: _world.explode({.Position = _mousePos, .Radius = 120, .Falloff = 10, .ImpulsePerLength = 60}); break;
+            switch (_mainForm->LeftMode) {
+            case left_button_mode::Circle:  create_circle(_mousePos); break;
+            case left_button_mode::Box:     create_box(_mousePos); break;
+            case left_button_mode::Polygon: create_polygon(_mousePos); break;
+            case left_button_mode::Capsule: create_capsule(_mousePos); break;
             }
         }
     }
@@ -156,9 +151,44 @@ void PhysicsEx::on_mouse_motion(mouse::motion_event const& ev)
 
 void PhysicsEx::on_mouse_button_down(mouse::button_event const& ev)
 {
-    if (!_selectedObject) {
-        _spawnTimer = 0ms;
-        _mouseDown  = true;
+    switch (ev.Button) {
+    case tcob::input::mouse::button::Left:
+        if (!_selectedObject) {
+            _spawnTimer = 0ms;
+            _mouseDown  = true;
+        }
+        break;
+    case tcob::input::mouse::button::Middle:
+        switch (_mainForm->MiddleMode) {
+        case middle_button_mode::Explosion:
+            create_explosion(_mousePos);
+            break;
+        case middle_button_mode::ReverseGravity:
+            for (auto& obj : _objects) { obj.Body->wake_up(); }
+            auto const g {*_world.Gravity};
+            _world.Gravity = {g.X, -g.Y};
+            break;
+        }
+        break;
+    case tcob::input::mouse::button::Right:
+        if (_selectedObject) {
+            switch (_mainForm->RightMode) {
+            case right_button_mode::Remove:
+                _objectLayer.remove_shape(*get_shape(_selectedObject->Shape));
+                _world.remove_body(*_selectedObject->Body);
+                std::erase(_objects, *_selectedObject);
+                _selectedObject = nullptr;
+                break;
+            case right_button_mode::AngularImpulse:
+                _selectedObject->Body->apply_angular_impulse(70);
+                break;
+            case right_button_mode::LinearImpulse:
+                _selectedObject->Body->apply_linear_impulse_to_center({10, -70});
+                break;
+            }
+        }
+        break;
+    default: break;
     }
 }
 
@@ -352,4 +382,9 @@ void PhysicsEx::create_edge(point_f pos0, point_f pos1)
     gfx.Bounds   = rect_f::FromLTRB(pos0.X, pos0.Y, pos1.X, pos1.Y + 5) * physicsWorldSize;
     gfx.Color    = colors::Blue;
     _obstacles.Sprites.push_back(&gfx);
+}
+
+void PhysicsEx::create_explosion(point_f pos)
+{
+    _world.explode({.Position = pos, .Radius = 120, .Falloff = 10, .ImpulsePerLength = 60});
 }
