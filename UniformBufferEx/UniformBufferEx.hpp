@@ -94,7 +94,7 @@ private:
     asset_owner_ptr<texture>        _tex0 {};
     asset_owner_ptr<material>       _mat0 {material::Empty()};
     asset_owner_ptr<shader>         _shader0 {"", VERT_SRC, FRAG0_SRC};
-    asset_owner_ptr<uniform_buffer> _ubo0 {"", sizeof(f32) * 4};
+    std::shared_ptr<uniform_buffer> _ubo0 {std::make_shared<uniform_buffer>(sizeof(f32) * 4)};
 
     milliseconds _elapsed {0};
 };
