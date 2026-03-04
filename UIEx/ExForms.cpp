@@ -489,6 +489,7 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
             val.push_back({.Name = "bar3", .Value = {0.5f, 0.4f, 0.2f, 0.1f}});
         });
         barChart0.TransitionDuration = 250ms;
+        barChart0.XLabels            = {"Q1", "Q2", "Q3", "Q4"};
 
         auto& lineChart0 {panel0Layout.create_widget<line_chart>("Line")};
         lineChart0.YAxis = {.Min = 0, .Max = 1};
@@ -499,6 +500,7 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
             val.push_back({.Name = "line3", .Value = {0.3f, 0.15f, 0.5f, 0.25f, 0.5f, 0.25f, 0.83f}});
         });
         lineChart0.TransitionDuration = 250ms;
+        lineChart0.XLabels            = {"M1", "M2", "M3", "M4", "M5", "M6", "M7"};
 
         auto& pieChart0 {panel0Layout.create_widget<pie_chart>("Pie")};
 

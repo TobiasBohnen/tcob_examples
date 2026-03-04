@@ -876,18 +876,27 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         auto style {retValue.create<line_chart>("line_chart", {}, {})};
         style->Border.Size         = 3_px;
         style->Margin              = {5_px};
-        style->Padding             = {20_px};
+        style->Padding             = {5_px};
         style->DropShadow.Color    = color {0, 0, 0, 128};
-        style->HorizontalGridLines = grid_line_amount::Few;
-        style->VerticalGridLines   = grid_line_amount::Few;
+        style->HorizontalGridLines = grid_line_amount::Normal;
+        style->VerticalGridLines   = grid_line_amount::Normal;
         style->Colors              = {colors::SlateBlue, colors::SeaGreen, colors::DarkSeaGreen};
         style->SmoothLines         = false;
+        style->Text.Style          = {.IsItalic = false, .Weight = font::weight::Normal};
+        style->Text.Font           = resGrp.get<font_family>("Poppins");
+        style->Text.Size           = 100_pct;
+        style->Text.AutoSize       = auto_size_mode::OnlyShrink;
+        style->Text.Alignment      = {.Horizontal = horizontal_alignment::Centered, .Vertical = vertical_alignment::Middle};
+        style->Text.Color          = colors::Black;
+        style->LabelHeight         = 10_pct;
+        style->OutlineSize         = 1_px;
 
         auto hoverStyle {retValue.create<line_chart>("line_chart", {.Hover = true})};
         *hoverStyle                     = *style;
         hoverStyle->HorizontalGridLines = grid_line_amount::Normal;
         hoverStyle->VerticalGridLines   = grid_line_amount::Normal;
         hoverStyle->SmoothLines         = true;
+        hoverStyle->OutlineSize         = 5_px;
 
         auto activeStyle {retValue.create<line_chart>("line_chart", {.Active = true})};
         *activeStyle = *style;
@@ -900,13 +909,21 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         auto style {retValue.create<bar_chart>("bar_chart", {}, {})};
         style->Border.Size         = 3_px;
         style->Margin              = {5_px};
-        style->Padding             = {20_px};
+        style->Padding             = {5_px};
         style->DropShadow.Color    = color {0, 0, 0, 128};
         style->HorizontalGridLines = grid_line_amount::Few;
         style->VerticalGridLines   = grid_line_amount::Few;
         style->BarSize             = 80_pct;
         style->BarRadius           = 0_pct;
         style->Colors              = {colors::SlateBlue, colors::SeaGreen, colors::DarkSeaGreen};
+        style->Text.Style          = {.IsItalic = false, .Weight = font::weight::Normal};
+        style->Text.Font           = resGrp.get<font_family>("Poppins");
+        style->Text.Size           = 100_pct;
+        style->Text.AutoSize       = auto_size_mode::OnlyShrink;
+        style->Text.Alignment      = {.Horizontal = horizontal_alignment::Centered, .Vertical = vertical_alignment::Middle};
+        style->Text.Color          = colors::Black;
+        style->LabelHeight         = 10_pct;
+        style->OutlineSize         = 1_px;
 
         auto hoverStyle {retValue.create<bar_chart>("bar_chart", {.Hover = true})};
         *hoverStyle                     = *style;
@@ -915,6 +932,8 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         hoverStyle->BarSize             = 60_pct;
         hoverStyle->BarRadius           = 10_pct;
         hoverStyle->StackBars           = true;
+        hoverStyle->LabelHeight         = 5_pct;
+        hoverStyle->OutlineSize         = 4_px;
 
         auto activeStyle {retValue.create<bar_chart>("bar_chart", {.Active = true})};
         *activeStyle = *style;
@@ -927,7 +946,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         auto style {retValue.create<pie_chart>("pie_chart", {}, {})};
         style->Border.Size      = 3_px;
         style->Margin           = {5_px};
-        style->Padding          = {20_px};
+        style->Padding          = {5_px};
         style->DropShadow.Color = color {0, 0, 0, 128};
         style->Colors           = {colors::Tan, colors::SlateBlue, colors::SeaGreen, colors::DarkSeaGreen};
 
@@ -935,6 +954,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         *hoverStyle             = *style;
         hoverStyle->InnerRadius = 50_pct;
         hoverStyle->PadAngle    = 15_deg;
+        hoverStyle->OutlineSize = 4_px;
 
         auto activeStyle {retValue.create<pie_chart>("pie_chart", {.Active = true})};
         *activeStyle = *style;
@@ -947,16 +967,17 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         auto style {retValue.create<marimekko_chart>("marimekko_chart", {}, {})};
         style->Border.Size      = 3_px;
         style->Margin           = {5_px};
-        style->Padding          = {20_px};
+        style->Padding          = {5_px};
         style->DropShadow.Color = color {0, 0, 0, 128};
         style->Colors           = {colors::Tan, colors::SlateBlue, colors::SeaGreen, colors::NavajoWhite};
         style->BarRadius        = 10_pct;
         style->BarSize          = {100_pct, 100_pct};
 
         auto hoverStyle {retValue.create<marimekko_chart>("marimekko_chart", {.Hover = true})};
-        *hoverStyle           = *style;
-        hoverStyle->BarRadius = 0_pct;
-        hoverStyle->BarSize   = {80_pct, 80_pct};
+        *hoverStyle             = *style;
+        hoverStyle->BarRadius   = 0_pct;
+        hoverStyle->BarSize     = {80_pct, 80_pct};
+        hoverStyle->OutlineSize = 4_px;
 
         auto activeStyle {retValue.create<marimekko_chart>("marimekko_chart", {.Active = true})};
         *activeStyle = *style;
@@ -969,18 +990,19 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         auto style {retValue.create<scatter_chart>("scatter_chart", {}, {})};
         style->Border.Size         = 3_px;
         style->Margin              = {5_px};
-        style->Padding             = {20_px};
+        style->Padding             = {5_px};
         style->DropShadow.Color    = color {0, 0, 0, 128};
         style->Colors              = {colors::Tan, colors::SlateBlue, colors::SeaGreen, colors::NavajoWhite};
         style->PointSize           = 10;
-        style->StrokeColor         = colors::Black;
+        style->OutlineColor        = colors::Black;
         style->HorizontalGridLines = grid_line_amount::Normal;
         style->VerticalGridLines   = grid_line_amount::Normal;
 
         auto hoverStyle {retValue.create<scatter_chart>("scatter_chart", {.Hover = true})};
         *hoverStyle                     = *style;
         hoverStyle->PointSize           = 25;
-        hoverStyle->StrokeColor         = colors::Red;
+        hoverStyle->OutlineColor        = colors::Red;
+        hoverStyle->OutlineSize         = 4_px;
         hoverStyle->HorizontalGridLines = grid_line_amount::Many;
         hoverStyle->VerticalGridLines   = grid_line_amount::Many;
 
@@ -995,20 +1017,20 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         auto style {retValue.create<radar_chart>("radar_chart", {}, {})};
         style->Border.Size      = 3_px;
         style->Margin           = {5_px};
-        style->Padding          = {20_px};
+        style->Padding          = {5_px};
         style->DropShadow.Color = color {0, 0, 0, 128};
         style->Colors           = {colors::Tan, colors::SlateBlue, colors::SeaGreen, colors::DarkSeaGreen};
-        style->LineWidth        = 12_px;
+        style->OutlineSize      = 12_px;
         style->FillAreaAlpha    = 255;
-        style->GridLineWidth    = 4_px;
+        style->GridLineSize     = 4_px;
         style->GridColor        = colors::Black;
         style->GridLines        = grid_line_amount::Few;
 
         auto hoverStyle {retValue.create<radar_chart>("radar_chart", {.Hover = true})};
         *hoverStyle          = *style;
-        style->LineWidth     = 16_px;
+        style->OutlineSize   = 16_px;
         style->FillAreaAlpha = 0;
-        style->GridLineWidth = 2_px;
+        style->GridLineSize  = 2_px;
         style->GridColor     = colors::Red;
         style->GridLines     = grid_line_amount::Many;
 
