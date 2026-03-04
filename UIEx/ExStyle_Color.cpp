@@ -1020,19 +1020,20 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Padding          = {5_px};
         style->DropShadow.Color = color {0, 0, 0, 128};
         style->Colors           = {colors::Tan, colors::SlateBlue, colors::SeaGreen, colors::DarkSeaGreen};
-        style->OutlineSize      = 12_px;
+        style->OutlineSize      = 4_px;
+        style->LineSize         = 2_px;
+        style->GridLineSize     = 2_px;
         style->FillAreaAlpha    = 255;
-        style->GridLineSize     = 4_px;
         style->GridColor        = colors::Black;
         style->GridLines        = grid_line_amount::Few;
 
         auto hoverStyle {retValue.create<radar_chart>("radar_chart", {.Hover = true})};
-        *hoverStyle          = *style;
-        style->OutlineSize   = 16_px;
-        style->FillAreaAlpha = 0;
-        style->GridLineSize  = 2_px;
-        style->GridColor     = colors::Red;
-        style->GridLines     = grid_line_amount::Many;
+        *hoverStyle               = *style;
+        hoverStyle->FillAreaAlpha = 0;
+        hoverStyle->LineSize      = 5_px;
+        hoverStyle->GridLineSize  = 1_px;
+        hoverStyle->GridColor     = colors::Red;
+        hoverStyle->GridLines     = grid_line_amount::Many;
 
         auto activeStyle {retValue.create<radar_chart>("radar_chart", {.Active = true})};
         *activeStyle = *style;
