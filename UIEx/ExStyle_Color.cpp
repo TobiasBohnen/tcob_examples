@@ -932,7 +932,9 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Colors           = {colors::Tan, colors::SlateBlue, colors::SeaGreen, colors::DarkSeaGreen};
 
         auto hoverStyle {retValue.create<pie_chart>("pie_chart", {.Hover = true})};
-        *hoverStyle = *style;
+        *hoverStyle             = *style;
+        hoverStyle->InnerRadius = 50_pct;
+        hoverStyle->PadAngle    = 15_deg;
 
         auto activeStyle {retValue.create<pie_chart>("pie_chart", {.Active = true})};
         *activeStyle = *style;
@@ -996,17 +998,17 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Padding          = {20_px};
         style->DropShadow.Color = color {0, 0, 0, 128};
         style->Colors           = {colors::Tan, colors::SlateBlue, colors::SeaGreen, colors::DarkSeaGreen};
-        style->LineWidth        = 12;
+        style->LineWidth        = 12_px;
         style->FillAreaAlpha    = 255;
-        style->GridLineWidth    = 4;
+        style->GridLineWidth    = 4_px;
         style->GridColor        = colors::Black;
         style->GridLines        = grid_line_amount::Few;
 
         auto hoverStyle {retValue.create<radar_chart>("radar_chart", {.Hover = true})};
         *hoverStyle          = *style;
-        style->LineWidth     = 16;
+        style->LineWidth     = 16_px;
         style->FillAreaAlpha = 0;
-        style->GridLineWidth = 2;
+        style->GridLineWidth = 2_px;
         style->GridColor     = colors::Red;
         style->GridLines     = grid_line_amount::Many;
 

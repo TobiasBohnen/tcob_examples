@@ -132,7 +132,7 @@ auto create_form0(window* wnd, group const& resGrp) -> std::shared_ptr<form_base
             stackPanelLayout.activate_widget(stackPanel.find_child_by_name(std::to_string(stackIdx)));
         });
         return cp;
-     });
+    });
     auto& cp1 {createStackPanel("0")};
     auto& cp2 {createStackPanel("1")};
     auto& cp3 {createStackPanel("2")};
@@ -508,7 +508,7 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
             val.push_back({.Name = "pie3", .Value = 2});
             val.push_back({.Name = "pie4", .Value = 2});
         });
-        pieChart0.TransitionDuration = 2500ms;
+        pieChart0.TransitionDuration = 250ms;
 
         auto& legend0 {panel0Layout.create_widget<legend>("Legend")};
         legend0.For  = &barChart0;
