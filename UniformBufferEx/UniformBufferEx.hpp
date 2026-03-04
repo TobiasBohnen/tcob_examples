@@ -23,13 +23,6 @@ layout(std140, binding = 0)uniform Globals
 	float time;
 	bool debug; 
 } global;
-
-layout(std140, binding = 1)uniform Material
-{
-	vec4 color;
-	float point_size;
-} material;
-
 layout(location = 0)out VS_OUT
 {
 	vec4 color;
@@ -47,30 +40,76 @@ void main()
 
 string_view FRAG0_SRC = R"(
 #version 450 core
+layout(std140, binding = 0)uniform Globals {
+    mat4  camera;
+    mat4  model;
+    uvec2 view_size;
+    ivec2 mouse_pos;
+    float time;
+    bool  debug;
+} global;
 
-layout(std140, binding = 1) uniform MaterialBlock {
+layout(std140, binding = 1)uniform Pass {
     vec4  color;
-    float pointSize;
+    float point_size;
 };
-
-layout(binding = 2) uniform PassData {
-    vec4 u_tint;
-};
-
+layout(std140, binding = 2)uniform UserPass {
+    float speed;
+} user;
 layout(binding = 0)uniform sampler2DArray texture0;
-
-layout(location = 0)in VS_OUT
+layout(location = 0)in VS_OUT {
+    vec4 color;
+    vec3 tex_coords;
+} fs_in;
+out vec4 frag_color;
+void main()
 {
-   vec4 color;
-   vec3 tex_coords;
+    float t     = (global.time / 1000.0) * user.speed;
+    vec3  pulse = vec3(
+        0.5 + 0.5 * sin(t),
+        0.5 + 0.5 * sin(t + 2.094395),
+        0.5 + 0.5 * sin(t + 4.188790));
+    vec4 tex   = texture(texture0, fs_in.tex_coords);
+    frag_color = tex * color * fs_in.color * vec4(pulse, 1.0);
+}
+)";
+
+// pass 1: vignette following mouse, radius/softness configured via UBO
+string_view FRAG1_SRC = R"(
+#version 450 core
+layout(std140, binding = 0)uniform Globals {
+    mat4  camera;
+    mat4  model;
+    uvec2 view_size;
+    ivec2 mouse_pos;
+    float time;
+    bool  debug;
+} global;
+
+layout(std140, binding = 1)uniform Pass {
+    vec4  color;
+    float point_size;
+};
+
+layout(std140, binding = 2)uniform UserPass {
+    float radius;
+    float softness;
+} user;
+
+layout(location = 0)in VS_OUT {
+    vec4 color;
+    vec3 tex_coords;
 } fs_in;
 
 out vec4 frag_color;
 
 void main()
 {
-    vec4 tex   = texture(texture0, fs_in.tex_coords);
-    frag_color = tex * color * fs_in.color * vec4(u_tint.rgb, 1.0);
+    vec2  mouse_uv = vec2(global.mouse_pos) / vec2(global.view_size);
+    vec2  centered = fs_in.tex_coords.xy - mouse_uv;
+    float dist     = length(centered);
+    float vignette = smoothstep(user.radius, user.radius - user.softness, dist);
+    frag_color     = vec4(0.0, 0.0, 0.0, 1.0 - vignette);
 }
 )";
 
@@ -92,9 +131,9 @@ private:
     gfx::shape_batch _layer1;
 
     asset_owner_ptr<texture>        _tex0 {};
-    asset_owner_ptr<material>       _mat0 {material::Empty()};
+    asset_owner_ptr<material>       _mat {material::Empty()};
     asset_owner_ptr<shader>         _shader0 {"", VERT_SRC, FRAG0_SRC};
-    std::shared_ptr<uniform_buffer> _ubo0 {std::make_shared<uniform_buffer>(sizeof(f32) * 4)};
-
-    milliseconds _elapsed {0};
+    asset_owner_ptr<shader>         _shader1 {"", VERT_SRC, FRAG1_SRC};
+    std::shared_ptr<uniform_buffer> _ubo0 {std::make_shared<uniform_buffer>(sizeof(f32))};
+    std::shared_ptr<uniform_buffer> _ubo1 {std::make_shared<uniform_buffer>(sizeof(f32) * 2)};
 };
