@@ -51,7 +51,6 @@ layout(std140, binding = 0)uniform Globals {
 
 layout(std140, binding = 1)uniform Pass {
     vec4  color;
-    float point_size;
 };
 layout(std140, binding = 2)uniform UserPass {
     float speed;
@@ -88,7 +87,6 @@ layout(std140, binding = 0)uniform Globals {
 
 layout(std140, binding = 1)uniform Pass {
     vec4  color;
-    float point_size;
 };
 
 layout(std140, binding = 2)uniform UserPass {
