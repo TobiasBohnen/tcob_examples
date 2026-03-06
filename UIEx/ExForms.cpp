@@ -489,7 +489,7 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
             val.push_back({.Name = "bar3", .Value = {0.5f, 0.4f, 0.2f, 0.1f}});
         });
         barChart0.TransitionDuration = 250ms;
-        barChart0.XLabels            = {"Q1", "Q2", "Q3", "Q4"};
+        barChart0.XAxis              = {.Labels = {"Q1", "Q2", "Q3", "Q4"}};
 
         auto& lineChart0 {panel0Layout.create_widget<line_chart>("Line")};
         lineChart0.YAxis = {.Min = 0, .Max = 1};
@@ -500,7 +500,7 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
             val.push_back({.Name = "line3", .Value = {0.3f, 0.15f, 0.5f, 0.25f, 0.5f, 0.25f, 0.83f}});
         });
         lineChart0.TransitionDuration = 250ms;
-        lineChart0.XLabels            = {"M1", "M2", "M3", "M4", "M5", "M6", "M7"};
+        lineChart0.XAxis              = {.Labels = {"M1", "M2", "M3", "M4", "M5", "M6", "M7"}};
 
         auto& pieChart0 {panel0Layout.create_widget<pie_chart>("Pie")};
 
@@ -537,20 +537,20 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
             val.push_back({.Name = "mekko3", .Value = {6, 2, 2, 6}});
         });
         mekkoChart0.TransitionDuration = 250ms;
+        mekkoChart0.XAxis              = {.Labels = {"Q1", "Q2", "Q3", "Q4"}};
 
         auto& legend4 {panel1Layout.create_widget<legend>("Legend")};
         legend4.For  = &mekkoChart0;
         legend4.Flex = {50_pct, 100_pct};
 
         auto& scatterChart0 {panel1Layout.create_widget<scatter_chart>("Scatter")};
-        scatterChart0.XAxis = {.Min = 0, .Max = 10};
-        scatterChart0.YAxis = {.Min = 0, .Max = 12};
-
         scatterChart0.Dataset.mutate([&](auto& val) {
             val.push_back({.Name = "scatter1", .Value = {{0, 0}, {2, 3}, {3, 6}}});
             val.push_back({.Name = "scatter2", .Value = {{3, 0}, {4, 2}, {10, 12}, {4, 3}}});
         });
         scatterChart0.TransitionDuration = 250ms;
+        scatterChart0.XAxis              = {.Min = 0, .Max = 10, .Labels = {"0", "2", "4", "6", "8", "10"}};
+        scatterChart0.YAxis              = {.Min = 0, .Max = 12, .Labels = {"00", "60", "120"}};
 
         auto& legend5 {panel1Layout.create_widget<legend>("Legend")};
         legend5.For  = &scatterChart0;

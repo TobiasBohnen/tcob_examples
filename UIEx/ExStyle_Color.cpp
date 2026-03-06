@@ -886,7 +886,6 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Text.Font           = resGrp.get<font_family>("Poppins");
         style->Text.Size           = 100_pct;
         style->Text.AutoSize       = auto_size_mode::OnlyShrink;
-        style->Text.Alignment      = {.Horizontal = horizontal_alignment::Centered, .Vertical = vertical_alignment::Middle};
         style->Text.Color          = colors::Black;
         style->LabelHeight         = 10_pct;
         style->OutlineSize         = 1_px;
@@ -920,7 +919,6 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Text.Font           = resGrp.get<font_family>("Poppins");
         style->Text.Size           = 100_pct;
         style->Text.AutoSize       = auto_size_mode::OnlyShrink;
-        style->Text.Alignment      = {.Horizontal = horizontal_alignment::Centered, .Vertical = vertical_alignment::Middle};
         style->Text.Color          = colors::Black;
         style->LabelHeight         = 10_pct;
         style->OutlineSize         = 1_px;
@@ -972,6 +970,12 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Colors           = {colors::Tan, colors::SlateBlue, colors::SeaGreen, colors::NavajoWhite};
         style->BarRadius        = 10_pct;
         style->BarSize          = {100_pct, 100_pct};
+        style->LabelHeight      = 10_pct;
+        style->Text.Font        = resGrp.get<font_family>("Poppins");
+        style->Text.Size        = 100_pct;
+        style->Text.AutoSize    = auto_size_mode::OnlyShrink;
+        style->Text.Color       = colors::Black;
+        style->LabelHeight      = 10_pct;
 
         auto hoverStyle {retValue.create<marimekko_chart>("marimekko_chart", {.Hover = true})};
         *hoverStyle             = *style;
@@ -997,6 +1001,11 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->OutlineColor        = colors::Black;
         style->HorizontalGridLines = grid_line_amount::Normal;
         style->VerticalGridLines   = grid_line_amount::Normal;
+        style->Text.Font           = resGrp.get<font_family>("Poppins");
+        style->Text.Size           = 100_pct;
+        style->Text.AutoSize       = auto_size_mode::OnlyShrink;
+        style->Text.Color          = colors::Black;
+        style->LabelHeight         = 5_pct;
 
         auto hoverStyle {retValue.create<scatter_chart>("scatter_chart", {.Hover = true})};
         *hoverStyle                     = *style;
