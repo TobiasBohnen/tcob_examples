@@ -481,30 +481,28 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
         auto& panel0Layout {panel0.create_layout<box_layout>(size_i {3, 2})};
 
         auto& barChart0 {panel0Layout.create_widget<bar_chart>("Bar")};
-        barChart0.YAxis = {.Min = 0, .Max = 1};
-
-        barChart0.Dataset.mutate([&](auto& val) {
+        barChart0.Dataset.mutate([](auto& val) {
             val.push_back({.Name = "bar1", .Value = {0.1f, 0.4f, 0.3f, 0.1f}});
             val.push_back({.Name = "bar2", .Value = {0.2f, 0.1f, 0.4f, 0.5f}});
             val.push_back({.Name = "bar3", .Value = {0.5f, 0.4f, 0.2f, 0.1f}});
         });
         barChart0.TransitionDuration = 250ms;
         barChart0.XAxis              = {.Labels = {"Q1", "Q2", "Q3", "Q4"}};
+        barChart0.YAxis              = {.Min = 0, .Max = 1};
 
         auto& lineChart0 {panel0Layout.create_widget<line_chart>("Line")};
-        lineChart0.YAxis = {.Min = 0, .Max = 1};
-
-        lineChart0.Dataset.mutate([&](auto& val) {
+        lineChart0.Dataset.mutate([](auto& val) {
             val.push_back({.Name = "line1", .Value = {0.1f, 0.4f, 0.8f, 0.1f, 0.8f, 0.1f, 0.8f}});
             val.push_back({.Name = "line2", .Value = {0.2f, 0.75f, 0.75f, 0.15f, 0.15f, 0.85f, 0.97f}});
             val.push_back({.Name = "line3", .Value = {0.3f, 0.15f, 0.5f, 0.25f, 0.5f, 0.25f, 0.83f}});
         });
         lineChart0.TransitionDuration = 250ms;
         lineChart0.XAxis              = {.Labels = {"M1", "M2", "M3", "M4", "M5", "M6", "M7"}};
+        lineChart0.YAxis              = {.Min = 0, .Max = 1};
 
         auto& pieChart0 {panel0Layout.create_widget<pie_chart>("Pie")};
 
-        pieChart0.Dataset.mutate([&](auto& val) {
+        pieChart0.Dataset.mutate([](auto& val) {
             val.push_back({.Name = "pie1", .Value = 4});
             val.push_back({.Name = "pie2", .Value = 6});
             val.push_back({.Name = "pie3", .Value = 2});
@@ -531,7 +529,7 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
 
         auto& mekkoChart0 {panel1Layout.create_widget<marimekko_chart>("Mekko")};
 
-        mekkoChart0.Dataset.mutate([&](auto& val) {
+        mekkoChart0.Dataset.mutate([](auto& val) {
             val.push_back({.Name = "mekko1", .Value = {1, 1, 1, 1}});
             val.push_back({.Name = "mekko2", .Value = {5, 4, 6, 9}});
             val.push_back({.Name = "mekko3", .Value = {6, 2, 2, 6}});
@@ -544,7 +542,7 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
         legend4.Flex = {50_pct, 100_pct};
 
         auto& scatterChart0 {panel1Layout.create_widget<scatter_chart>("Scatter")};
-        scatterChart0.Dataset.mutate([&](auto& val) {
+        scatterChart0.Dataset.mutate([](auto& val) {
             val.push_back({.Name = "scatter1", .Value = {{0, 0}, {2, 3}, {3, 6}}});
             val.push_back({.Name = "scatter2", .Value = {{3, 0}, {4, 2}, {10, 12}, {4, 3}}});
         });
@@ -557,15 +555,14 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
         legend5.Flex = {50_pct, 100_pct};
 
         auto& radarChart0 {panel1Layout.create_widget<radar_chart>("Radar")};
-        radarChart0.ValueAxis = {.Min = 0, .Max = 1};
-
-        radarChart0.Dataset.mutate([&](auto& val) {
+        radarChart0.Dataset.mutate([](auto& val) {
             val.push_back({.Name = "radar1", .Value = {0.8f, 0.6f, 0.9f, 0.5f, 0.7f, 0.65f}});
             val.push_back({.Name = "radar2", .Value = {0.5f, 0.7f, 0.4f, 0.95f, 0.45f, 0.8f}});
             val.push_back({.Name = "radar3", .Value = {0.3f, 0.9f, 0.6f, 0.7f, 0.2f, 0.55f}});
             val.push_back({.Name = "radar4", .Value = {0.6f, 0.4f, 0.8f, 0.6f, 0.5f, 0.9f}});
         });
         radarChart0.TransitionDuration = 250ms;
+        radarChart0.YAxis              = {.Min = 0, .Max = 1};
 
         auto& legend6 {panel1Layout.create_widget<legend>("Legend")};
         legend6.For  = &radarChart0;
