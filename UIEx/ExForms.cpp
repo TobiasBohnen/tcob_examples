@@ -488,7 +488,7 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
         });
         barChart0.TransitionDuration = 250ms;
         barChart0.XAxis              = {.CustomLabels = {"Q1", "Q2", "Q3", "Q4"}};
-        barChart0.YAxis              = {.Min = 0, .Max = 1, .LabelCount = 3};
+        barChart0.YAxis              = {.Min = 0, .Max = 1, .SmallStep = 0.05f, .LargeStep = 0.20f};
 
         auto& lineChart0 {panel0Layout.create_widget<line_chart>("Line")};
         lineChart0.Dataset.mutate([](auto& val) {
@@ -497,8 +497,8 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
             val.push_back({.Name = "line3", .Value = {0.3f, 0.15f, 0.5f, 0.25f, 0.5f, 0.25f, 0.83f}});
         });
         lineChart0.TransitionDuration = 250ms;
-        lineChart0.XAxis              = {.Min = 1, .Max = 10, .LabelCount = 10};
-        lineChart0.YAxis              = {.Min = 0, .Max = 1, .LabelCount = 3};
+        lineChart0.XAxis              = {.Min = 1, .Max = 10, .SmallStep = 0.2f, .LargeStep = 1, .LabelPrecision = 2};
+        lineChart0.YAxis              = {.Min = 0, .Max = 1, .SmallStep = 0.1f, .LargeStep = 0.5f};
 
         auto& pieChart0 {panel0Layout.create_widget<pie_chart>("Pie")};
 
@@ -547,8 +547,8 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
             val.push_back({.Name = "scatter2", .Value = {{3, 0}, {4, 2}, {10, 12}, {4, 3}}});
         });
         scatterChart0.TransitionDuration = 250ms;
-        scatterChart0.XAxis              = {.Min = 0, .Max = 10, .LabelCount = 6};
-        scatterChart0.YAxis              = {.Min = 0, .Max = 12, .LabelCount = 6};
+        scatterChart0.XAxis              = {.Min = 0, .Max = 10, .SmallStep = 1, .LargeStep = 2};
+        scatterChart0.YAxis              = {.Min = 0, .Max = 12, .SmallStep = 1, .LargeStep = 3};
 
         auto& legend5 {panel1Layout.create_widget<legend>("Legend")};
         legend5.For  = &scatterChart0;

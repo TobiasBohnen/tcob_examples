@@ -894,6 +894,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->YLabelWidth         = 5_pct;
         style->OutlineSize         = 1_px;
         style->LineSize            = 1_pct;
+        style->GridLineSize        = 2_px;
 
         auto hoverStyle {retValue.create<line_chart>("line_chart", {.Hover = true})};
         *hoverStyle                     = *style;
@@ -926,7 +927,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->XAxisText.AutoSize  = auto_size_mode::OnlyShrink;
         style->XAxisText.Color     = colors::Black;
         style->YAxisText.Font      = resGrp.get<font_family>("Poppins");
-        style->YAxisText.Size      = 75_pct;
+        style->YAxisText.Size      = 100_pct;
         style->YAxisText.AutoSize  = auto_size_mode::OnlyShrink;
         style->YAxisText.Color     = colors::Black;
         style->XLabelHeight        = 10_pct;
