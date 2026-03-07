@@ -886,7 +886,6 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->XAxisText.Size      = 100_pct;
         style->XAxisText.AutoSize  = auto_size_mode::OnlyShrink;
         style->XAxisText.Color     = colors::Black;
-        style->XAxisText.Alignment = {horizontal_alignment::Centered, vertical_alignment::Bottom};
         style->YAxisText.Font      = resGrp.get<font_family>("Poppins");
         style->YAxisText.Size      = 75_pct;
         style->YAxisText.AutoSize  = auto_size_mode::OnlyShrink;
@@ -894,6 +893,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->XLabelHeight        = 10_pct;
         style->YLabelWidth         = 5_pct;
         style->OutlineSize         = 1_px;
+        style->LineSize            = 1_pct;
 
         auto hoverStyle {retValue.create<line_chart>("line_chart", {.Hover = true})};
         *hoverStyle                     = *style;
@@ -901,6 +901,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         hoverStyle->VerticalGridLines   = grid_line_amount::Many;
         hoverStyle->SmoothLines         = true;
         hoverStyle->OutlineSize         = 5_px;
+        hoverStyle->LineSize            = 5_pct;
 
         auto activeStyle {retValue.create<line_chart>("line_chart", {.Active = true})};
         *activeStyle = *style;
@@ -960,7 +961,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         *hoverStyle             = *style;
         hoverStyle->InnerRadius = 50_pct;
         hoverStyle->PadAngle    = 15_deg;
-        hoverStyle->OutlineSize = 4_px;
+        hoverStyle->OutlineSize = 10_px;
 
         auto activeStyle {retValue.create<pie_chart>("pie_chart", {.Active = true})};
         *activeStyle = *style;

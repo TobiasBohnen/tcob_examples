@@ -497,7 +497,7 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
             val.push_back({.Name = "line3", .Value = {0.3f, 0.15f, 0.5f, 0.25f, 0.5f, 0.25f, 0.83f}});
         });
         lineChart0.TransitionDuration = 250ms;
-        lineChart0.XAxis              = {.Min = 0, .Max = 1, .LabelCount = 11};
+        lineChart0.XAxis              = {.Min = 1, .Max = 10, .LabelCount = 10};
         lineChart0.YAxis              = {.Min = 0, .Max = 1, .LabelCount = 3};
 
         auto& pieChart0 {panel0Layout.create_widget<pie_chart>("Pie")};
