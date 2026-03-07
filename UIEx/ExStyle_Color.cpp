@@ -882,18 +882,23 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->VerticalGridLines   = grid_line_amount::Normal;
         style->Colors              = {colors::SlateBlue, colors::SeaGreen, colors::DarkSeaGreen};
         style->SmoothLines         = false;
-        style->XAxisText.Style     = {.IsItalic = false, .Weight = font::weight::Normal};
         style->XAxisText.Font      = resGrp.get<font_family>("Poppins");
         style->XAxisText.Size      = 100_pct;
         style->XAxisText.AutoSize  = auto_size_mode::OnlyShrink;
         style->XAxisText.Color     = colors::Black;
-        style->LabelHeight         = 10_pct;
+        style->XAxisText.Alignment = {horizontal_alignment::Centered, vertical_alignment::Bottom};
+        style->YAxisText.Font      = resGrp.get<font_family>("Poppins");
+        style->YAxisText.Size      = 75_pct;
+        style->YAxisText.AutoSize  = auto_size_mode::OnlyShrink;
+        style->YAxisText.Color     = colors::Black;
+        style->XLabelHeight        = 10_pct;
+        style->YLabelWidth         = 5_pct;
         style->OutlineSize         = 1_px;
 
         auto hoverStyle {retValue.create<line_chart>("line_chart", {.Hover = true})};
         *hoverStyle                     = *style;
-        hoverStyle->HorizontalGridLines = grid_line_amount::Normal;
-        hoverStyle->VerticalGridLines   = grid_line_amount::Normal;
+        hoverStyle->HorizontalGridLines = grid_line_amount::Many;
+        hoverStyle->VerticalGridLines   = grid_line_amount::Many;
         hoverStyle->SmoothLines         = true;
         hoverStyle->OutlineSize         = 5_px;
 
@@ -910,17 +915,21 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Margin              = {5_px};
         style->Padding             = {5_px};
         style->DropShadow.Color    = color {0, 0, 0, 128};
-        style->HorizontalGridLines = grid_line_amount::Few;
-        style->VerticalGridLines   = grid_line_amount::Few;
+        style->HorizontalGridLines = grid_line_amount::Many;
+        style->VerticalGridLines   = grid_line_amount::Many;
         style->BarSize             = 80_pct;
         style->BarRadius           = 0_pct;
         style->Colors              = {colors::SlateBlue, colors::SeaGreen, colors::DarkSeaGreen};
-        style->XAxisText.Style     = {.IsItalic = false, .Weight = font::weight::Normal};
         style->XAxisText.Font      = resGrp.get<font_family>("Poppins");
         style->XAxisText.Size      = 100_pct;
         style->XAxisText.AutoSize  = auto_size_mode::OnlyShrink;
         style->XAxisText.Color     = colors::Black;
-        style->LabelHeight         = 10_pct;
+        style->YAxisText.Font      = resGrp.get<font_family>("Poppins");
+        style->YAxisText.Size      = 75_pct;
+        style->YAxisText.AutoSize  = auto_size_mode::OnlyShrink;
+        style->YAxisText.Color     = colors::Black;
+        style->XLabelHeight        = 10_pct;
+        style->YLabelWidth         = 5_pct;
         style->OutlineSize         = 1_px;
 
         auto hoverStyle {retValue.create<bar_chart>("bar_chart", {.Hover = true})};
@@ -930,7 +939,6 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         hoverStyle->BarSize             = 60_pct;
         hoverStyle->BarRadius           = 10_pct;
         hoverStyle->StackBars           = true;
-        hoverStyle->LabelHeight         = 5_pct;
         hoverStyle->OutlineSize         = 4_px;
 
         auto activeStyle {retValue.create<bar_chart>("bar_chart", {.Active = true})};
@@ -970,12 +978,12 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Colors             = {colors::Tan, colors::SlateBlue, colors::SeaGreen, colors::NavajoWhite};
         style->BarRadius          = 10_pct;
         style->BarSize            = {100_pct, 100_pct};
-        style->LabelHeight        = 10_pct;
         style->XAxisText.Font     = resGrp.get<font_family>("Poppins");
         style->XAxisText.Size     = 100_pct;
         style->XAxisText.AutoSize = auto_size_mode::OnlyShrink;
         style->XAxisText.Color    = colors::Black;
-        style->LabelHeight        = 10_pct;
+        style->XLabelHeight       = 10_pct;
+        style->YLabelWidth        = 5_pct;
 
         auto hoverStyle {retValue.create<marimekko_chart>("marimekko_chart", {.Hover = true})};
         *hoverStyle             = *style;
@@ -1003,21 +1011,18 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->VerticalGridLines   = grid_line_amount::Normal;
         style->XAxisText.Font      = resGrp.get<font_family>("Poppins");
         style->XAxisText.Size      = 100_pct;
-        style->XAxisText.AutoSize  = auto_size_mode::OnlyShrink;
+        style->XAxisText.AutoSize  = auto_size_mode::Always;
         style->XAxisText.Color     = colors::Black;
         style->YAxisText.Font      = resGrp.get<font_family>("Poppins");
-        style->YAxisText.Size      = 50_pct;
-        style->YAxisText.AutoSize  = auto_size_mode::OnlyShrink;
-        style->YAxisText.Color     = colors::Red;
-        style->LabelHeight         = 5_pct;
+        style->YAxisText.Size      = 100_pct;
+        style->YAxisText.AutoSize  = auto_size_mode::Always;
+        style->YAxisText.Color     = colors::Black;
+        style->XLabelHeight        = 5_pct;
+        style->YLabelWidth         = 10_pct;
 
         auto hoverStyle {retValue.create<scatter_chart>("scatter_chart", {.Hover = true})};
-        *hoverStyle                     = *style;
-        hoverStyle->PointSize           = 25_px;
-        hoverStyle->OutlineColor        = colors::Red;
-        hoverStyle->OutlineSize         = 4_px;
-        hoverStyle->HorizontalGridLines = grid_line_amount::Many;
-        hoverStyle->VerticalGridLines   = grid_line_amount::Many;
+        *hoverStyle              = *style;
+        hoverStyle->OutlineColor = colors::Red;
 
         auto activeStyle {retValue.create<scatter_chart>("scatter_chart", {.Active = true})};
         *activeStyle = *style;
