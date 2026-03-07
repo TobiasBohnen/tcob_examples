@@ -1034,17 +1034,22 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<radar_chart>("radar_chart", {}, {})};
-        style->Border.Size      = 3_px;
-        style->Margin           = {5_px};
-        style->Padding          = {5_px};
-        style->DropShadow.Color = color {0, 0, 0, 128};
-        style->Colors           = {colors::Tan, colors::SlateBlue, colors::SeaGreen, colors::DarkSeaGreen};
-        style->OutlineSize      = 4_px;
-        style->LineSize         = 2_px;
-        style->GridLineSize     = 2_px;
-        style->FillAreaAlpha    = 255;
-        style->GridColor        = colors::Black;
-        style->GridLines        = grid_line_amount::Few;
+        style->Border.Size        = 3_px;
+        style->Margin             = {5_px};
+        style->Padding            = {5_px};
+        style->DropShadow.Color   = color {0, 0, 0, 128};
+        style->Colors             = {colors::Tan, colors::SlateBlue, colors::SeaGreen, colors::DarkSeaGreen};
+        style->OutlineSize        = 4_px;
+        style->LineSize           = 2_px;
+        style->GridLineSize       = 2_px;
+        style->FillAreaAlpha      = 255;
+        style->GridColor          = colors::Black;
+        style->GridLines          = grid_line_amount::Few;
+        style->XAxisText.Font     = resGrp.get<font_family>("Poppins");
+        style->XAxisText.Size     = 100_pct;
+        style->XAxisText.AutoSize = auto_size_mode::OnlyShrink;
+        style->XAxisText.Color    = colors::Black;
+        style->XLabelHeight       = 10_pct;
 
         auto hoverStyle {retValue.create<radar_chart>("radar_chart", {.Hover = true})};
         *hoverStyle               = *style;

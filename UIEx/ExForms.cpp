@@ -563,6 +563,7 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
         });
         radarChart0.TransitionDuration = 250ms;
         radarChart0.YAxis              = {.Min = 0, .Max = 1};
+        radarChart0.XAxis              = {.CustomLabels = {"A", "B", "C", "D", "E", "F"}};
 
         auto& legend6 {panel1Layout.create_widget<legend>("Legend")};
         legend6.For  = &radarChart0;
