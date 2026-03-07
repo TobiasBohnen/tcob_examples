@@ -25,10 +25,8 @@ protected:
     void on_mouse_motion(mouse::motion_event const& ev) override;
 
 private:
-    std::shared_ptr<form_base> _form0;
-
-    std::shared_ptr<modal_dialog> _dialog0;
-    std::shared_ptr<modal_dialog> _dialog1;
-
     i32 _switch {0};
+
+    i32                                                                             _mode {0};
+    std::vector<std::shared_ptr<form_base> (*)(gfx::window&, assets::group const&)> _modes;
 };

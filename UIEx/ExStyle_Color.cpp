@@ -145,7 +145,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Border.Radius        = 5_px;
         style->Margin               = {10_px};
         style->Padding              = {2_px};
-        style->Tick.Type            = tick_type::Triangle;
+        style->Tick.Type            = tick_type::Square;
         style->Tick.Size            = 90_pct;
         style->EasingFunc           = easing_func::ExpoInOut;
 
@@ -169,7 +169,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Border.Radius = 5_px;
         style->Margin        = {5_px};
         style->Padding       = {5_px};
-        style->Tick.Type     = tick_type::Triangle;
+        style->Tick.Type     = tick_type::Disc;
         style->Tick.Size     = 80_pct;
 
         auto disabledStyle {retValue.create<radio_button>("radio_button", {.Disabled = true})};
@@ -364,9 +364,14 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         *hoverStyle          = *style;
         hoverStyle->GapRatio = 0.5f;
 
+        auto activeStyle {retValue.create<cycle_button>("cycle_button", {.Focus = true, .Active = true})};
+        *activeStyle = *style;
+
         normal.apply(style);
         disabled.apply(disabledStyle);
         hover.apply(hoverStyle);
+        active.apply(activeStyle);
+
         hoverStyle->Bar.LowerBackground  = colors::LightBlue;
         hoverStyle->Bar.HigherBackground = colors::RoyalBlue;
     }
@@ -1017,7 +1022,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->XAxisText.AutoSize  = auto_size_mode::Always;
         style->XAxisText.Color     = colors::Black;
         style->YAxisText.Font      = resGrp.get<font_family>("Poppins");
-        style->YAxisText.Size      = 100_pct;
+        style->YAxisText.Size      = 20_pct;
         style->YAxisText.AutoSize  = auto_size_mode::Always;
         style->YAxisText.Color     = colors::Black;
         style->XLabelHeight        = 5_pct;

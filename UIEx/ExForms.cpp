@@ -7,9 +7,9 @@ using namespace std::chrono_literals;
 
 i32 stackIdx {0};
 
-auto create_form0(window* wnd, group const& resGrp) -> std::shared_ptr<form_base>
+auto create_form0(window& wnd, group const& resGrp) -> std::shared_ptr<form_base>
 {
-    auto bounds {wnd->bounds()};
+    auto bounds {wnd.bounds()};
     // bounds.Position += point_i {40, 40};
     auto retValue {std::make_shared<form<dock_layout>>(form_init {"form0", bounds})};
 
@@ -313,11 +313,11 @@ auto create_form0(window* wnd, group const& resGrp) -> std::shared_ptr<form_base
     locate_service<input::system>().InputMode.Changed.connect([&](input::mode mode) {
         if (mode == input::mode::Controller) {
             retValue->find_widget_by_name("gridB0")->focus();
-            wnd->Cursor              = nullptr;
-            wnd->SystemCursorEnabled = false;
+            wnd.Cursor              = nullptr;
+            wnd.SystemCursorEnabled = false;
         } else {
             auto defaultCursor {resGrp.get<cursor>("default")};
-            wnd->Cursor               = defaultCursor;
+            wnd.Cursor                = defaultCursor;
             defaultCursor->ActiveMode = "default";
         }
     });
@@ -345,10 +345,10 @@ auto create_form0(window* wnd, group const& resGrp) -> std::shared_ptr<form_base
 
 ////////////////////////////////////////////////////////////
 
-auto create_form1(window* wnd) -> std::shared_ptr<form_base>
+auto create_form1(window& wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
 {
     auto retValue {std::make_shared<form<manual_layout>>(
-        form_init {"form1", wnd->bounds()})};
+        form_init {"form1", wnd.bounds()})};
 
     {
         auto& panel0 {retValue->create_container<panel>(rect_f {0, 0, 300, 300}, "Panel0")};
@@ -416,9 +416,9 @@ auto create_form1(window* wnd) -> std::shared_ptr<form_base>
     return retValue;
 }
 
-auto create_form_terminal(window* wnd) -> std::shared_ptr<form_base>
+auto create_form_terminal(window& wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
 {
-    auto retValue {std::make_shared<form<dock_layout>>(form_init {"form2", wnd->bounds()})};
+    auto retValue {std::make_shared<form<dock_layout>>(form_init {"form2", wnd.bounds()})};
 
     auto& panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
     panel0.Flex = {.Width = 100_pct, .Height = 100_pct};
@@ -470,11 +470,11 @@ auto create_form_terminal(window* wnd) -> std::shared_ptr<form_base>
     return retValue;
 }
 
-auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
+auto create_form_charting(window& wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
 {
     using namespace tcob::ui::charts;
 
-    auto retValue {std::make_shared<form<vertical_layout>>(form_init {"form5", wnd->bounds()})};
+    auto retValue {std::make_shared<form<vertical_layout>>(form_init {"form5", wnd.bounds()})};
 
     {
         auto& panel0 {retValue->create_container<panel>("Panel0")};
@@ -573,11 +573,11 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
     return retValue;
 }
 
-auto create_form_displays(window* wnd) -> std::shared_ptr<form_base>
+auto create_form_displays(window& wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
 {
-    auto retValue {std::make_shared<form<dock_layout>>(form_init {.Name = "form2", .Bounds = wnd->bounds()})};
+    auto retValue {std::make_shared<form<dock_layout>>(form_init {.Name = "form2", .Bounds = wnd.bounds()})};
 
-    retValue->Bounds = rect_f {0, 0, (*wnd->Size).Width * 0.8f, static_cast<f32>((*wnd->Size).Height)};
+    retValue->Bounds = rect_f {0, 0, (*wnd.Size).Width * 0.8f, static_cast<f32>((*wnd.Size).Height)};
 
     {
         auto& panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
@@ -609,7 +609,7 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form_base>
         auto& panel0Layout {panel0.create_layout<dock_layout>()};
 
         auto& colorPicker00 {panel0Layout.create_widget<color_picker>(dock_style::Fill, "CP1")};
-        colorPicker00.SelectedColor.Changed.connect([wnd](auto val) { wnd->ClearColor = color::FromHSVA(val); });
+        colorPicker00.SelectedColor.Changed.connect([&wnd](auto val) { wnd.ClearColor = color::FromHSVA(val); });
         colorPicker00.TransitionDuration = 550ms;
     }
     {
@@ -656,9 +656,9 @@ auto create_form_displays(window* wnd) -> std::shared_ptr<form_base>
     return retValue;
 }
 
-auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
+auto create_form_tabcontainer(window& wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
 {
-    auto retValue {std::make_shared<form<dock_layout>>(form_init {.Name = "form3", .Bounds = wnd->bounds()})};
+    auto retValue {std::make_shared<form<dock_layout>>(form_init {.Name = "form3", .Bounds = wnd.bounds()})};
 
     auto createTabs {[](tab_container& tabContainer0) {
         auto& boxVPanel0 {tabContainer0.create_tab<panel>("TAB0")};
@@ -728,9 +728,9 @@ auto create_form_tabcontainer(window* wnd, assets::group const& resGrp) -> std::
     return retValue;
 }
 
-auto create_form_accordion(window* wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
+auto create_form_accordion(window& wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
 {
-    auto bounds {wnd->bounds()};
+    auto bounds {wnd.bounds()};
     auto retValue {std::make_shared<form<dock_layout>>(form_init {"form4", bounds})};
 
     auto const createSections {[](accordion& accordion0) {
