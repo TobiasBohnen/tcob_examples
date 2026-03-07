@@ -956,6 +956,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Padding          = {5_px};
         style->DropShadow.Color = color {0, 0, 0, 128};
         style->Colors           = {colors::Tan, colors::SlateBlue, colors::SeaGreen, colors::DarkSeaGreen};
+        style->EasingFunc       = easing_func::CircularInOut;
 
         auto hoverStyle {retValue.create<pie_chart>("pie_chart", {.Hover = true})};
         *hoverStyle             = *style;

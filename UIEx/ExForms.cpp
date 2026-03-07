@@ -508,7 +508,7 @@ auto create_form_charting(window* wnd) -> std::shared_ptr<form_base>
             val.push_back({.Name = "pie3", .Value = 2});
             val.push_back({.Name = "pie4", .Value = 2});
         });
-        pieChart0.TransitionDuration = 250ms;
+        pieChart0.TransitionDuration = 500ms;
 
         auto& legend0 {panel0Layout.create_widget<legend>("Legend")};
         legend0.For  = &barChart0;
