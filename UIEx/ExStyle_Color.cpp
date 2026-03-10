@@ -900,14 +900,19 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->OutlineSize         = 1_px;
         style->LineSize            = 1_pct;
         style->GridLineSize        = 2_px;
+        style->MarkerType          = marker_type::Triangle;
+        style->MarkerFilled        = true;
+        style->MarkerSize          = 1_pct;
 
         auto hoverStyle {retValue.create<line_chart>("line_chart", {.Hover = true})};
         *hoverStyle                     = *style;
         hoverStyle->HorizontalGridLines = grid_line_amount::Many;
         hoverStyle->VerticalGridLines   = grid_line_amount::Many;
         hoverStyle->SmoothLines         = true;
-        hoverStyle->OutlineSize         = 5_px;
         hoverStyle->LineSize            = 5_pct;
+        hoverStyle->MarkerFilled        = false;
+        // hoverStyle->OutlineSize         = 3_px;
+        // hoverStyle->MarkerSize          = 2_pct;
 
         auto activeStyle {retValue.create<line_chart>("line_chart", {.Active = true})};
         *activeStyle = *style;
@@ -927,6 +932,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->BarSize             = 80_pct;
         style->BarRadius           = 0_pct;
         style->Colors              = {colors::SlateBlue, colors::SeaGreen, colors::DarkSeaGreen};
+        style->OutlineColors       = {colors::Black, colors::Red};
         style->XAxisText.Font      = resGrp.get<font_family>("Poppins");
         style->XAxisText.Size      = 100_pct;
         style->XAxisText.AutoSize  = auto_size_mode::OnlyShrink;
@@ -1014,7 +1020,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->DropShadow.Color    = color {0, 0, 0, 128};
         style->Colors              = {colors::Tan, colors::SlateBlue, colors::SeaGreen, colors::NavajoWhite};
         style->PointSize           = 10_px;
-        style->OutlineColor        = colors::Black;
+        style->OutlineColors       = {colors::Black};
         style->HorizontalGridLines = grid_line_amount::Normal;
         style->VerticalGridLines   = grid_line_amount::Normal;
         style->XAxisText.Font      = resGrp.get<font_family>("Poppins");
@@ -1029,8 +1035,8 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->YLabelWidth         = 10_pct;
 
         auto hoverStyle {retValue.create<scatter_chart>("scatter_chart", {.Hover = true})};
-        *hoverStyle              = *style;
-        hoverStyle->OutlineColor = colors::Red;
+        *hoverStyle               = *style;
+        hoverStyle->OutlineColors = {colors::Red};
 
         auto activeStyle {retValue.create<scatter_chart>("scatter_chart", {.Active = true})};
         *activeStyle = *style;
