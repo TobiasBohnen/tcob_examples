@@ -953,6 +953,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         hoverStyle->BarRadius           = 10_pct;
         hoverStyle->StackBars           = true;
         hoverStyle->OutlineSize         = 4_px;
+        hoverStyle->OutlineColors       = {colors::Red, colors::Black};
 
         auto activeStyle {retValue.create<bar_chart>("bar_chart", {.Active = true})};
         *activeStyle = *style;
@@ -969,12 +970,14 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->DropShadow.Color = color {0, 0, 0, 128};
         style->Colors           = {colors::Tan, colors::SlateBlue, colors::SeaGreen, colors::DarkSeaGreen};
         style->EasingFunc       = easing_func::CircularInOut;
+        style->OutlineColors    = {colors::Black, colors::Red};
 
         auto hoverStyle {retValue.create<pie_chart>("pie_chart", {.Hover = true})};
-        *hoverStyle             = *style;
-        hoverStyle->InnerRadius = 50_pct;
-        hoverStyle->PadAngle    = 15_deg;
-        hoverStyle->OutlineSize = 10_px;
+        *hoverStyle               = *style;
+        hoverStyle->InnerRadius   = 50_pct;
+        hoverStyle->PadAngle      = 15_deg;
+        hoverStyle->OutlineSize   = 10_px;
+        hoverStyle->OutlineColors = {colors::Red, colors::Black};
 
         auto activeStyle {retValue.create<pie_chart>("pie_chart", {.Active = true})};
         *activeStyle = *style;
