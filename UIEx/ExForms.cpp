@@ -481,20 +481,20 @@ auto create_form_charting(window& wnd, assets::group const& resGrp) -> std::shar
         auto& panel0Layout {panel0.create_layout<box_layout>(size_i {3, 2})};
 
         auto& barChart0 {panel0Layout.create_widget<bar_chart>("Bar")};
-        barChart0.Dataset.mutate([](auto& val) {
-            val.push_back({.Name = "bar1", .Value = {0.1f, 0.4f, 0.3f, 0.1f}});
-            val.push_back({.Name = "bar2", .Value = {0.2f, 0.1f, 0.4f, 0.5f}});
-            val.push_back({.Name = "bar3", .Value = {0.5f, 0.4f, 0.2f, 0.1f}});
+        barChart0.Datasets.mutate([](auto& val) {
+            val.push_back({.Name = "bar1", .Value = {0.1f, 0.4f, 0.3f, 0.1f}, .Color = colors::SlateBlue});
+            val.push_back({.Name = "bar2", .Value = {0.2f, 0.1f, 0.4f, 0.5f}, .Color = colors::SeaGreen});
+            val.push_back({.Name = "bar3", .Value = {0.5f, 0.4f, 0.2f, 0.1f}, .Color = colors::DarkSeaGreen});
         });
         barChart0.TransitionDuration = 250ms;
         barChart0.XAxis              = {.CustomLabels = {"Q1", "Q2", "Q3", "Q4"}};
         barChart0.YAxis              = {.Min = 0, .Max = 1, .SmallStep = 0.05f, .LargeStep = 0.20f};
 
         auto& lineChart0 {panel0Layout.create_widget<line_chart>("Line")};
-        lineChart0.Dataset.mutate([](auto& val) {
-            val.push_back({.Name = "line1", .Value = {0.1f, 0.4f, 0.8f, 0.1f, 0.8f, 0.1f, 0.8f}});
-            val.push_back({.Name = "line2", .Value = {0.2f, 0.75f, 0.75f, 0.15f, 0.15f, 0.85f, 0.97f}});
-            val.push_back({.Name = "line3", .Value = {0.3f, 0.15f, 0.5f, 0.25f, 0.5f, 0.25f, 0.83f}});
+        lineChart0.Datasets.mutate([](auto& val) {
+            val.push_back({.Name = "line1", .Value = {0.1f, 0.4f, 0.8f, 0.1f, 0.8f, 0.1f, 0.8f}, .Color = colors::SlateBlue});
+            val.push_back({.Name = "line2", .Value = {0.2f, 0.75f, 0.75f, 0.15f, 0.15f, 0.85f, 0.97f}, .Color = colors::SeaGreen});
+            val.push_back({.Name = "line3", .Value = {0.3f, 0.15f, 0.5f, 0.25f, 0.5f, 0.25f, 0.83f}, .Color = colors::DarkSeaGreen});
         });
         lineChart0.TransitionDuration = 250ms;
         lineChart0.XAxis              = {.Min = 1, .Max = 10, .SmallStep = 0.2f, .LargeStep = 1, .LabelPrecision = 2};
@@ -502,11 +502,11 @@ auto create_form_charting(window& wnd, assets::group const& resGrp) -> std::shar
 
         auto& pieChart0 {panel0Layout.create_widget<pie_chart>("Pie")};
 
-        pieChart0.Dataset.mutate([](auto& val) {
-            val.push_back({.Name = "pie1", .Value = 4});
-            val.push_back({.Name = "pie2", .Value = 6});
-            val.push_back({.Name = "pie3", .Value = 2});
-            val.push_back({.Name = "pie4", .Value = 2});
+        pieChart0.Datasets.mutate([](auto& val) {
+            val.push_back({.Name = "pie1", .Value = 4, .Color = colors::SlateBlue});
+            val.push_back({.Name = "pie2", .Value = 6, .Color = colors::SeaGreen});
+            val.push_back({.Name = "pie3", .Value = 2, .Color = colors::DarkSeaGreen});
+            val.push_back({.Name = "pie4", .Value = 2, .Color = colors::LightSteelBlue});
         });
         pieChart0.TransitionDuration = 500ms;
 
@@ -529,10 +529,10 @@ auto create_form_charting(window& wnd, assets::group const& resGrp) -> std::shar
 
         auto& mekkoChart0 {panel1Layout.create_widget<marimekko_chart>("Mekko")};
 
-        mekkoChart0.Dataset.mutate([](auto& val) {
-            val.push_back({.Name = "mekko1", .Value = {1, 1, 1, 1}});
-            val.push_back({.Name = "mekko2", .Value = {5, 4, 6, 9}});
-            val.push_back({.Name = "mekko3", .Value = {6, 2, 2, 6}});
+        mekkoChart0.Datasets.mutate([](auto& val) {
+            val.push_back({.Name = "mekko1", .Value = {1, 1, 1, 1}, .Color = colors::SlateBlue});
+            val.push_back({.Name = "mekko2", .Value = {5, 4, 6, 9}, .Color = colors::SeaGreen});
+            val.push_back({.Name = "mekko3", .Value = {6, 2, 2, 6}, .Color = colors::DarkSeaGreen});
         });
         mekkoChart0.TransitionDuration = 250ms;
         mekkoChart0.XAxis              = {.CustomLabels = {"Q1", "Q2", "Q3", "Q4"}};
@@ -542,9 +542,9 @@ auto create_form_charting(window& wnd, assets::group const& resGrp) -> std::shar
         legend4.Flex = {50_pct, 100_pct};
 
         auto& scatterChart0 {panel1Layout.create_widget<scatter_chart>("Scatter")};
-        scatterChart0.Dataset.mutate([](auto& val) {
-            val.push_back({.Name = "scatter1", .Value = {{0, 0}, {2, 3}, {3, 6}}});
-            val.push_back({.Name = "scatter2", .Value = {{3, 0}, {4, 2}, {10, 12}, {4, 3}}});
+        scatterChart0.Datasets.mutate([](auto& val) {
+            val.push_back({.Name = "scatter1", .Value = {{0, 0}, {2, 3}, {3, 6}}, .Color = colors::SlateBlue});
+            val.push_back({.Name = "scatter2", .Value = {{3, 0}, {4, 2}, {10, 12}, {4, 3}}, .Color = colors::SeaGreen});
         });
         scatterChart0.TransitionDuration = 250ms;
         scatterChart0.XAxis              = {.Min = 0, .Max = 10, .SmallStep = 1, .LargeStep = 2};
@@ -555,11 +555,11 @@ auto create_form_charting(window& wnd, assets::group const& resGrp) -> std::shar
         legend5.Flex = {50_pct, 100_pct};
 
         auto& radarChart0 {panel1Layout.create_widget<radar_chart>("Radar")};
-        radarChart0.Dataset.mutate([](auto& val) {
-            val.push_back({.Name = "radar1", .Value = {0.8f, 0.6f, 0.9f, 0.5f, 0.7f, 0.65f}});
-            val.push_back({.Name = "radar2", .Value = {0.5f, 0.7f, 0.4f, 0.95f, 0.45f, 0.8f}});
-            val.push_back({.Name = "radar3", .Value = {0.3f, 0.9f, 0.6f, 0.7f, 0.2f, 0.55f}});
-            val.push_back({.Name = "radar4", .Value = {0.6f, 0.4f, 0.8f, 0.6f, 0.5f, 0.9f}});
+        radarChart0.Datasets.mutate([](auto& val) {
+            val.push_back({.Name = "radar1", .Value = {0.8f, 0.6f, 0.9f, 0.5f, 0.7f, 0.65f}, .Color = colors::SlateBlue});
+            val.push_back({.Name = "radar2", .Value = {0.5f, 0.7f, 0.4f, 0.95f, 0.45f, 0.8f}, .Color = colors::SeaGreen});
+            val.push_back({.Name = "radar3", .Value = {0.3f, 0.9f, 0.6f, 0.7f, 0.2f, 0.55f}, .Color = colors::DarkSeaGreen});
+            val.push_back({.Name = "radar4", .Value = {0.6f, 0.4f, 0.8f, 0.6f, 0.5f, 0.9f}, .Color = colors::LightSteelBlue});
         });
         radarChart0.TransitionDuration = 250ms;
         radarChart0.YAxis              = {.Min = 0, .Max = 1};
