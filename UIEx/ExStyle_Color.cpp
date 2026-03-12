@@ -899,8 +899,6 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->OutlineSize         = 1_px;
         style->LineSize            = 1_pct;
         style->GridLineSize        = 2_px;
-        style->Marker.Type         = marker_type::Triangle;
-        style->Marker.Filled       = true;
         style->Marker.Size         = 1_pct;
 
         auto hoverStyle {retValue.create<line_chart>("line_chart", {.Hover = true})};
@@ -909,9 +907,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         hoverStyle->VerticalGridLines   = grid_line_amount::Many;
         hoverStyle->SmoothLines         = true;
         hoverStyle->LineSize            = 5_pct;
-        hoverStyle->Marker.Filled       = false;
-        // hoverStyle->OutlineSize         = 3_px;
-        // hoverStyle->MarkerSize          = 2_pct;
+        hoverStyle->Marker.Size         = 2_pct;
 
         auto activeStyle {retValue.create<line_chart>("line_chart", {.Active = true})};
         *activeStyle = *style;

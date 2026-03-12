@@ -492,9 +492,9 @@ auto create_form_charting(window& wnd, assets::group const& resGrp) -> std::shar
 
         auto& lineChart0 {panel0Layout.create_widget<line_chart>("Line")};
         lineChart0.Datasets.mutate([](auto& val) {
-            val.push_back({.Name = "line1", .Value = {0.1f, 0.4f, 0.8f, 0.1f, 0.8f, 0.1f, 0.8f}, .Color = colors::SlateBlue});
-            val.push_back({.Name = "line2", .Value = {0.2f, 0.75f, 0.75f, 0.15f, 0.15f, 0.85f, 0.97f}, .Color = colors::SeaGreen});
-            val.push_back({.Name = "line3", .Value = {0.3f, 0.15f, 0.5f, 0.25f, 0.5f, 0.25f, 0.83f}, .Color = colors::DarkSeaGreen});
+            val.push_back({.Name = "line1", .Value = {0.1f, 0.4f, 0.8f, 0.1f, 0.8f, 0.1f, 0.8f}, .Color = colors::SlateBlue, .Marker = {.Type = marker::type::Disc, .Filled = true}});
+            val.push_back({.Name = "line2", .Value = {0.2f, 0.75f, 0.75f, 0.15f, 0.15f, 0.85f, 0.97f}, .Color = colors::SeaGreen, .Marker = {.Type = marker::type::Disc, .Filled = false}});
+            val.push_back({.Name = "line3", .Value = {0.3f, 0.15f, 0.5f, 0.25f, 0.5f, 0.25f, 0.83f}, .Color = colors::DarkSeaGreen, .Marker = {.Type = marker::type::Triangle, .Filled = true}});
         });
         lineChart0.TransitionDuration = 250ms;
         lineChart0.XAxis              = {.Min = 1, .Max = 10, .SmallStep = 0.2f, .LargeStep = 1, .LabelPrecision = 2};
