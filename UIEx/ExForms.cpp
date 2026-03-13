@@ -493,7 +493,7 @@ auto create_form_charting(window& wnd, assets::group const& resGrp) -> std::shar
         auto& lineChart0 {panel0Layout.create_widget<line_chart>("Line")};
         lineChart0.Datasets.mutate([](auto& val) {
             val.push_back({.Name = "line1", .Value = {0.1f, 0.4f, 0.8f, 0.1f, 0.8f, 0.1f, 0.8f}, .Color = colors::SlateBlue, .Marker = {.Type = marker::type::Disc, .Filled = true}});
-            val.push_back({.Name = "line2", .Value = {0.2f, 0.75f, 0.75f, 0.15f, 0.15f, 0.85f, 0.97f}, .Color = colors::SeaGreen, .Marker = {.Type = marker::type::Disc, .Filled = false}});
+            val.push_back({.Name = "line2", .Value = {0.2f, 0.75f, 0.75f, 0.15f, 0.15f, 0.85f, 0.97f}, .Color = colors::SeaGreen, .Marker = {.Type = marker::type::Disc, .Filled = false, .Color = colors::Blue, .OutlineColor = colors::Red}});
             val.push_back({.Name = "line3", .Value = {0.3f, 0.15f, 0.5f, 0.25f, 0.5f, 0.25f, 0.83f}, .Color = colors::DarkSeaGreen, .Marker = {.Type = marker::type::Triangle, .Filled = true}});
         });
         lineChart0.TransitionDuration = 250ms;
@@ -502,7 +502,7 @@ auto create_form_charting(window& wnd, assets::group const& resGrp) -> std::shar
 
         auto& pieChart0 {panel0Layout.create_widget<pie_chart>("Pie")};
 
-        pieChart0.Datasets.mutate([](auto& val) {
+        pieChart0.Datasets.mutate([](pie_chart::dataset_type& val) {
             val.push_back({.Name = "pie1", .Value = 4, .Color = colors::SlateBlue});
             val.push_back({.Name = "pie2", .Value = 6, .Color = colors::SeaGreen});
             val.push_back({.Name = "pie3", .Value = 2, .Color = colors::DarkSeaGreen});
@@ -529,7 +529,7 @@ auto create_form_charting(window& wnd, assets::group const& resGrp) -> std::shar
 
         auto& mekkoChart0 {panel1Layout.create_widget<marimekko_chart>("Mekko")};
 
-        mekkoChart0.Datasets.mutate([](auto& val) {
+        mekkoChart0.Datasets.mutate([](marimekko_chart::dataset_type& val) {
             val.push_back({.Name = "mekko1", .Value = {1, 1, 1, 1}, .Color = colors::SlateBlue});
             val.push_back({.Name = "mekko2", .Value = {5, 4, 6, 9}, .Color = colors::SeaGreen});
             val.push_back({.Name = "mekko3", .Value = {6, 2, 2, 6}, .Color = colors::DarkSeaGreen});
@@ -542,9 +542,10 @@ auto create_form_charting(window& wnd, assets::group const& resGrp) -> std::shar
         legend4.Flex = {50_pct, 100_pct};
 
         auto& scatterChart0 {panel1Layout.create_widget<scatter_chart>("Scatter")};
-        scatterChart0.Datasets.mutate([](auto& val) {
-            val.push_back({.Name = "scatter1", .Value = {{0, 0}, {2, 3}, {3, 6}}, .Color = colors::SlateBlue});
-            val.push_back({.Name = "scatter2", .Value = {{3, 0}, {4, 2}, {10, 12}, {4, 3}}, .Color = colors::SeaGreen});
+        scatterChart0.Datasets.mutate([](scatter_chart::dataset_type& val) {
+            val.push_back({.Name = "scatter1", .Value = {{0, 0}, {2, 3}, {3, 6}}, .Color = colors::SlateBlue, .OutlineColor = colors::Red, .Marker = {.Type = marker::type::Disc, .Filled = true}});
+            val.push_back({.Name = "scatter2", .Value = {{3, 0}, {4, 2}, {10, 12}, {4, 3}}, .Color = colors::SeaGreen, .Marker = {.Type = marker::type::Square, .Filled = true}});
+            val.push_back({.Name = "scatter3", .Value = {{1, 5}, {9, 1}, {5, 1}, {3, 3}}, .Color = colors::Transparent, .Marker = {.Type = marker::type::Triangle, .Filled = true}});
         });
         scatterChart0.TransitionDuration = 250ms;
         scatterChart0.XAxis              = {.Min = 0, .Max = 10, .SmallStep = 1, .LargeStep = 2};
@@ -555,11 +556,11 @@ auto create_form_charting(window& wnd, assets::group const& resGrp) -> std::shar
         legend5.Flex = {50_pct, 100_pct};
 
         auto& radarChart0 {panel1Layout.create_widget<radar_chart>("Radar")};
-        radarChart0.Datasets.mutate([](auto& val) {
-            val.push_back({.Name = "radar1", .Value = {0.8f, 0.6f, 0.9f, 0.5f, 0.7f, 0.65f}, .Color = colors::SlateBlue});
-            val.push_back({.Name = "radar2", .Value = {0.5f, 0.7f, 0.4f, 0.95f, 0.45f, 0.8f}, .Color = colors::SeaGreen});
-            val.push_back({.Name = "radar3", .Value = {0.3f, 0.9f, 0.6f, 0.7f, 0.2f, 0.55f}, .Color = colors::DarkSeaGreen});
-            val.push_back({.Name = "radar4", .Value = {0.6f, 0.4f, 0.8f, 0.6f, 0.5f, 0.9f}, .Color = colors::LightSteelBlue});
+        radarChart0.Datasets.mutate([](radar_chart::dataset_type& val) {
+            val.push_back({.Name = "radar1", .Value = {0.8f, 0.6f, 0.9f, 0.5f, 0.7f, 0.65f}, .Color = colors::SlateBlue, .Marker = {.Type = marker::type::Square, .Filled = true}});
+            val.push_back({.Name = "radar2", .Value = {0.5f, 0.7f, 0.4f, 0.95f, 0.45f, 0.8f}, .Color = colors::SeaGreen, .Marker = {.Type = marker::type::Disc, .Filled = true}});
+            val.push_back({.Name = "radar3", .Value = {0.3f, 0.9f, 0.6f, 0.7f, 0.2f, 0.55f}, .Color = colors::DarkSeaGreen, .Marker = {.Type = marker::type::Square, .Filled = false}});
+            val.push_back({.Name = "radar4", .Value = {0.6f, 0.4f, 0.8f, 0.6f, 0.5f, 0.9f}, .Color = colors::LightSteelBlue, .Marker = {.Type = marker::type::Disc, .Filled = false}});
         });
         radarChart0.TransitionDuration = 250ms;
         radarChart0.YAxis              = {.Min = 0, .Max = 1};

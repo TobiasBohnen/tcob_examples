@@ -899,7 +899,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->OutlineSize         = 1_px;
         style->LineSize            = 1_pct;
         style->GridLineSize        = 2_px;
-        style->Marker.Size         = 1_pct;
+        style->MarkerSize          = 1_pct;
 
         auto hoverStyle {retValue.create<line_chart>("line_chart", {.Hover = true})};
         *hoverStyle                     = *style;
@@ -907,7 +907,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         hoverStyle->VerticalGridLines   = grid_line_amount::Many;
         hoverStyle->SmoothLines         = true;
         hoverStyle->LineSize            = 5_pct;
-        hoverStyle->Marker.Size         = 2_pct;
+        hoverStyle->MarkerSize          = 2_pct;
 
         auto activeStyle {retValue.create<line_chart>("line_chart", {.Active = true})};
         *activeStyle = *style;
@@ -1009,7 +1009,6 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Margin              = {5_px};
         style->Padding             = {5_px};
         style->DropShadow.Color    = color {0, 0, 0, 128};
-        style->PointSize           = 10_px;
         style->HorizontalGridLines = grid_line_amount::Normal;
         style->VerticalGridLines   = grid_line_amount::Normal;
         style->XAxisText.Font      = resGrp.get<font_family>("Poppins");
@@ -1022,6 +1021,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->YAxisText.Color     = colors::Black;
         style->XLabelHeight        = 5_pct;
         style->YLabelWidth         = 10_pct;
+        style->MarkerSize          = 10_px;
 
         auto hoverStyle {retValue.create<scatter_chart>("scatter_chart", {.Hover = true})};
         *hoverStyle = *style;
@@ -1050,6 +1050,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->XAxisText.AutoSize = auto_size_mode::OnlyShrink;
         style->XAxisText.Color    = colors::Black;
         style->XLabelHeight       = 10_pct;
+        style->MarkerSize         = 5_px;
 
         auto hoverStyle {retValue.create<radar_chart>("radar_chart", {.Hover = true})};
         *hoverStyle               = *style;
