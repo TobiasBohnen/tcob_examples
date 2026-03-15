@@ -13,9 +13,9 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     normal.BarHigher      = colors::DarkGreen;
     normal.Caret          = colors::Black;
     normal.Item           = colors::LightGray;
-    normal.NavArrowInc    = colors::White;
-    normal.NavArrowDec    = colors::White;
-    normal.NavArrow       = colors::Blue;
+    normal.NavArrowInc    = colors::SlateGray;
+    normal.NavArrowDec    = colors::SlateGray;
+    normal.NavArrow       = colors::SaddleBrown;
     normal.TextShadow     = colors::Silver;
     normal.TextDecoration = colors::Red;
     normal.Thumb          = colors::LightGreen;
@@ -28,8 +28,8 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     normal.DropShadow    = color {0, 0, 0, 32};
     hover.Item           = colors::LightGreen;
     hover.Thumb          = colors::DarkKhaki;
-    hover.NavArrowInc    = colors::Red;
-    hover.NavArrowDec    = colors::Green;
+    hover.NavArrowInc    = colors::LightGreen;
+    hover.NavArrowDec    = colors::LightGreen;
     hover.Tick           = colors::White;
     hover.TextDecoration = colors::Blue;
 
@@ -59,8 +59,8 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     active.Tick        = colors::Blue;
     active.Item        = colors::FireBrick;
     active.Thumb       = colors::Black;
-    active.NavArrowInc = colors::Green;
-    active.NavArrowDec = colors::Red;
+    active.NavArrowInc = colors::MediumAquaMarine;
+    active.NavArrowDec = colors::MediumAquaMarine;
 
     color_theme activeCheck {active};
     activeCheck.Tick = colors::Green;
@@ -524,11 +524,11 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Padding                    = {5_px};
         style->DropShadow.Color           = color {0, 0, 0, 128};
         style->MaxVisibleRows             = 10;
-        style->ItemClass                  = "list_items";
+        style->ItemClasses                = {"row_items_0", "row_items_1", "row_items_2"};
         style->NavArrowClass              = "tree_nav_arrows";
         style->VScrollBar.ThumbClass      = "scrollbar_thumb";
-        style->VScrollBar.Bar.Size        = 5_pct;
-        style->VScrollBar.Bar.Border.Size = 3_px;
+        style->VScrollBar.Bar.Size        = 10_pct;
+        style->VScrollBar.Bar.Border.Size = 2_px;
         style->VScrollBar.Bar.Delay       = 250ms;
 
         auto hoverStyle {retValue.create<tree_view>("tree_view", {.Hover = true})};
@@ -764,10 +764,11 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     {
         auto style {retValue.create<nav_arrows_style>("tree_nav_arrows", {}, {})};
         style->NavArrow.Size.Height   = {0.75f, length::type::Relative};
-        style->NavArrow.Size.Width    = {0.10f, length::type::Relative};
+        style->NavArrow.Size.Width    = {0.20f, length::type::Relative};
         style->NavArrow.Border.Size   = 1_px;
         style->NavArrow.Border.Radius = 0_px;
-        style->NavArrow.Padding       = 2_px;
+        style->NavArrow.Padding       = 1_px;
+        style->NavArrow.Type          = nav_arrow_type::Arrow;
 
         auto hoverStyle {retValue.create<nav_arrows_style>("tree_nav_arrows", {.Hover = true})};
         hoverStyle->NavArrow = style->NavArrow;
@@ -910,7 +911,6 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         active.apply(activeStyle);
         activeStyle->Item.Border.Background = activeBg;
         activeStyle->Item.Background        = activeBg;
-        activeStyle->Item.Padding           = {10_px, 10_px, 20_px, 0_px};
     }};
 
     makeGridRowStyle("row_items_0", colors::LightGreen, colors::Khaki, colors::IndianRed);

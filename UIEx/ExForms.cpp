@@ -263,7 +263,7 @@ auto create_form0(window& wnd, group const& resGrp) -> std::shared_ptr<form_base
 
     imgBox0.start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::Looped);
 
-    auto& gridView0 {panel0Layout.create_widget<grid_view>({1980, 450, 450, 400}, "GridView0")};
+    auto& gridView0 {panel0Layout.create_widget<grid_view>({1580, 450, 450, 400}, "GridView0")};
     gridView0.Header = {{"Last"}, {"First"}, {"Age"}, {"City"}};
     gridView0.Grid.mutate([&](auto& grid) {
         grid.resize({4, 5});
@@ -289,7 +289,7 @@ auto create_form0(window& wnd, group const& resGrp) -> std::shared_ptr<form_base
         label0.Label = std::format("grid: {}", gridView0.get_cell(gridView0.SelectedCellIndex).Text);
     });
 
-    auto& treeView0 {panel0Layout.create_widget<tree_view>({1280, 450, 450, 400}, "TreeView0")};
+    auto& treeView0 {panel0Layout.create_widget<tree_view>({1280, 450, 200, 400}, "TreeView0")};
     treeView0.Nodes = {
         {.Item = {.Text = "parent1"}, .Children = {
                                           {.Item = {.Text = "child1"}},
