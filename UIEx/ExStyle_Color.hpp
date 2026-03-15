@@ -42,6 +42,7 @@ struct color_theme {
     void apply(std::shared_ptr<slider::style> const& style) const;
     void apply(std::shared_ptr<spinner::style> const& style) const;
     void apply(std::shared_ptr<text_box::style> const& style) const;
+    void apply(std::shared_ptr<tree_view::style> const& style) const;
     void apply(std::shared_ptr<toggle::style> const& style) const;
 
     void apply(std::shared_ptr<panel::style> const& style) const;

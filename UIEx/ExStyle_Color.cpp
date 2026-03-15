@@ -16,7 +16,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     normal.NavArrowInc    = colors::White;
     normal.NavArrowDec    = colors::White;
     normal.NavArrow       = colors::Blue;
-    normal.TextShadow     = colors::White;
+    normal.TextShadow     = colors::Silver;
     normal.TextDecoration = colors::Red;
     normal.Thumb          = colors::LightGreen;
     normal.Tick           = colors::Black;
@@ -517,6 +517,30 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         hover.apply(hoverStyle);
     }
     {
+        auto style {retValue.create<tree_view>("tree_view", {})};
+        style->Border.Size                = 3_px;
+        style->Border.Radius              = 5_px;
+        style->Margin                     = {5_px};
+        style->Padding                    = {5_px};
+        style->DropShadow.Color           = color {0, 0, 0, 128};
+        style->MaxVisibleRows             = 10;
+        style->ItemClass                  = "list_items";
+        style->NavArrowClass              = "tree_nav_arrows";
+        style->VScrollBar.ThumbClass      = "scrollbar_thumb";
+        style->VScrollBar.Bar.Size        = 5_pct;
+        style->VScrollBar.Bar.Border.Size = 3_px;
+        style->VScrollBar.Bar.Delay       = 250ms;
+
+        auto hoverStyle {retValue.create<tree_view>("tree_view", {.Hover = true})};
+        *hoverStyle = *style;
+
+        auto disabledStyle {retValue.create<tree_view>("tree_view", {.Disabled = true})};
+
+        normal.apply(style);
+        disabled.apply(disabledStyle);
+        hover.apply(hoverStyle);
+    }
+    {
         auto style {retValue.create<tab_container>("tab_container", {})};
         style->Border.Size      = 3_px;
         style->Border.Radius    = 5_px;
@@ -731,6 +755,24 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         hoverStyle->NavArrow = style->NavArrow;
 
         auto activeStyle {retValue.create<nav_arrows_style>("nav_arrows", {.Active = true})};
+        activeStyle->NavArrow = style->NavArrow;
+
+        normal.apply(style);
+        hover.apply(hoverStyle);
+        active.apply(activeStyle);
+    }
+    {
+        auto style {retValue.create<nav_arrows_style>("tree_nav_arrows", {}, {})};
+        style->NavArrow.Size.Height   = {0.75f, length::type::Relative};
+        style->NavArrow.Size.Width    = {0.10f, length::type::Relative};
+        style->NavArrow.Border.Size   = 1_px;
+        style->NavArrow.Border.Radius = 0_px;
+        style->NavArrow.Padding       = 2_px;
+
+        auto hoverStyle {retValue.create<nav_arrows_style>("tree_nav_arrows", {.Hover = true})};
+        hoverStyle->NavArrow = style->NavArrow;
+
+        auto activeStyle {retValue.create<nav_arrows_style>("tree_nav_arrows", {.Active = true})};
         activeStyle->NavArrow = style->NavArrow;
 
         normal.apply(style);
@@ -1201,6 +1243,16 @@ void color_theme::apply(std::shared_ptr<text_box::style> const& style) const
     style->Text.Decoration.Color = TextDecoration;
     style->Text.Shadow.Color     = TextShadow;
     style->Caret.Color           = Caret;
+}
+
+void color_theme::apply(std::shared_ptr<tree_view::style> const& style) const
+{
+    style->Background                       = Background;
+    style->Border.Background                = Border;
+    style->DropShadow.Color                 = DropShadow;
+    style->VScrollBar.Bar.HigherBackground  = BarHigher;
+    style->VScrollBar.Bar.LowerBackground   = BarLower;
+    style->VScrollBar.Bar.Border.Background = Border;
 }
 
 void color_theme::apply(std::shared_ptr<toggle::style> const& style) const

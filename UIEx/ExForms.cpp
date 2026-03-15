@@ -263,7 +263,7 @@ auto create_form0(window& wnd, group const& resGrp) -> std::shared_ptr<form_base
 
     imgBox0.start_animation(*resGrp.get<frame_animation>("anim"), playback_mode::Looped);
 
-    auto& gridView0 {panel0Layout.create_widget<grid_view>({1280, 450, 450, 400}, "GridView0")};
+    auto& gridView0 {panel0Layout.create_widget<grid_view>({1980, 450, 450, 400}, "GridView0")};
     gridView0.Header = {{"Last"}, {"First"}, {"Age"}, {"City"}};
     gridView0.Grid.mutate([&](auto& grid) {
         grid.resize({4, 5});
@@ -288,6 +288,26 @@ auto create_form0(window& wnd, group const& resGrp) -> std::shared_ptr<form_base
         if (*gridView0.SelectedCellIndex == point_i {-1, -1}) { return; }
         label0.Label = std::format("grid: {}", gridView0.get_cell(gridView0.SelectedCellIndex).Text);
     });
+
+    auto& treeView0 {panel0Layout.create_widget<tree_view>({1280, 450, 450, 400}, "TreeView0")};
+    treeView0.Nodes = {
+        {.Item = {.Text = "parent1"}, .Children = {
+                                          {.Item = {.Text = "child1"}},
+                                          {.Item = {.Text = "child2"}, .Children = {
+                                                                           {.Item = {.Text = "grandchild1"}},
+                                                                           {.Item = {.Text = "grandchild2"}},
+                                                                       }},
+                                          {.Item = {.Text = "child3"}},
+                                      }},
+        {.Item = {.Text = "parent2"}, .Children = {
+                                          {.Item = {.Text = "child4"}},
+                                          {.Item = {.Text = "child5"}},
+                                      }},
+        {.Item = {.Text = "parent3"}},
+        {.Item = {.Text = "parent4"}},
+        {.Item = {.Text = "parent5"}},
+        {.Item = {.Text = "parent6"}},
+    };
 
     button0.Click.connect([&] {
         progressBar0.Value = progressBar0.Value == 100
