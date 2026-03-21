@@ -38,7 +38,7 @@ PathfindingEx::~PathfindingEx() = default;
 void PathfindingEx::on_start()
 {
     f32              min {2000}, max {0};
-    perlin_noise     noise {20};
+    perlin_noise     noise {{20, 20}};
     std::vector<f32> values;
     for (i32 x {0}; x < GRID_SIZE.Width; ++x) {
         for (i32 y {0}; y < GRID_SIZE.Height; ++y) {
