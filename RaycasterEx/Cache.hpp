@@ -27,9 +27,9 @@ public:
         auto const loadTex {[&](i32 tex, string const& path) {
             auto img {image::Load(path).value()};
 
-            resize_bilinear filter;
+            bilinear_resize filter;
             filter.NewSize = tex_size();
-            img            = remove_alpha {}(filter(img));
+            img            = alpha_remove {}(filter(img));
 
             for (isize idx {0}; idx < filter.NewSize.Width * filter.NewSize.Height * tex_bpp(); ++idx) {
                 texture(tex)[idx] = img.ptr()[idx];
