@@ -823,3 +823,32 @@ auto create_form_accordion(window& wnd, assets::group const& resGrp) -> std::sha
     }
     return retValue;
 }
+
+auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
+{
+    auto  bounds {wnd.bounds()};
+    auto  retValue {std::make_shared<form<dock_layout>>(form_init {"form-ng", bounds})};
+    auto& panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
+    panel0.Flex = {.Width = 100_pct, .Height = 100_pct};
+    auto& panel0Layout {panel0.create_layout<dock_layout>()};
+    auto& ng {panel0Layout.create_widget<node_graph>(dock_style::Fill, "NG1")};
+
+    node_def mathAdd {.Title   = "Add",
+                      .Inputs  = {{.ID = 1, .Name = "A", .Color = colors::Blue}, {.ID = 2, .Name = "B", .Color = colors::Blue}},
+                      .Outputs = {{.ID = 3, .Name = "Result", .Color = colors::Red}}};
+    node_def mathMul {.Title   = "Multiply",
+                      .Inputs  = {{.ID = 1, .Name = "A", .Color = colors::Blue}, {.ID = 2, .Name = "B", .Color = colors::Blue}},
+                      .Outputs = {{.ID = 3, .Name = "Result", .Color = colors::Red}}};
+    node_def output {.Title   = "Output",
+                     .Inputs  = {{.ID = 1, .Name = "Value", .Color = colors::Red}},
+                     .Outputs = {}};
+
+    uid const addID {ng.create_node(mathAdd, {0.1f, 0.1f})};
+    uid const mulID {ng.create_node(mathMul, {0.1f, 0.3f})};
+    uid const outID {ng.create_node(output, {0.3f, 0.5f})};
+
+    ng.create_connection(addID, 3, outID, 1, colors::Red);
+    ng.create_connection(mulID, 3, addID, 1, colors::Red);
+
+    return retValue;
+}

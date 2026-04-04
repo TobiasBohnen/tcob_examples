@@ -637,6 +637,28 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Caret.Color     = colors::Red;
     }
     {
+        auto style {retValue.create<node_graph>("node_graph", {})};
+        style->NodeText.Font  = resGrp.get<font_family>("DejaVuSansMono");
+        style->NodeText.Style = {.IsItalic = false, .Weight = font::weight::Bold};
+        style->NodeText.Size  = 24_px;
+        style->NodeSize       = {10_pct, 5_pct};
+
+        style->InputPortText.Font      = resGrp.get<font_family>("DejaVuSansMono");
+        style->InputPortText.Style     = {.IsItalic = false, .Weight = font::weight::Normal};
+        style->InputPortText.Size      = 12_px;
+        style->InputPortText.Color     = colors::Black;
+        style->InputPortText.Alignment = {.Horizontal = horizontal_alignment::Left, .Vertical = vertical_alignment::Middle};
+
+        style->OutputPortText.Font      = resGrp.get<font_family>("DejaVuSansMono");
+        style->OutputPortText.Style     = {.IsItalic = false, .Weight = font::weight::Normal};
+        style->OutputPortText.Size      = 12_px;
+        style->OutputPortText.Color     = colors::Black;
+        style->OutputPortText.Alignment = {.Horizontal = horizontal_alignment::Right, .Vertical = vertical_alignment::Middle};
+
+        style->Background        = colors::LightGray;
+        style->Border.Background = colors::Black;
+    }
+    {
         auto style {retValue.create<dot_matrix_display>("dot_matrix_display", {})};
         rng  r;
         /*

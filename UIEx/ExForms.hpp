@@ -16,3 +16,5 @@ auto create_form_charting(window& wnd, assets::group const& resGrp) -> std::shar
 auto create_form_displays(window& wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>;
 auto create_form_tabcontainer(window& wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>;
 auto create_form_accordion(window& wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>;
+
+auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>;
