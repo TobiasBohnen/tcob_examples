@@ -845,10 +845,10 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
 
     uid const addID {ng.create_node(mathAdd, {0.1f, 0.1f})};
     uid const mulID {ng.create_node(mathMul, {0.1f, 0.3f})};
-    uid const outID {ng.create_node(output, {0.3f, 0.5f})};
+    uid const outputID {ng.create_node(output, {0.3f, 0.5f})};
 
-    ng.create_connection(addID, 3, outID, 1, colors::Red);
-    ng.create_connection(mulID, 3, addID, 1, colors::Red);
+    ng.create_connection(addID, 3, outputID, 1);
+    ng.create_connection(mulID, 3, addID, 1);
 
     return retValue;
 }
