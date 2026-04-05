@@ -830,25 +830,68 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
     auto  retValue {std::make_shared<form<dock_layout>>(form_init {"form-ng", bounds})};
     auto& panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
     panel0.Flex = {.Width = 100_pct, .Height = 100_pct};
-    auto& panel0Layout {panel0.create_layout<dock_layout>()};
-    auto& ng {panel0Layout.create_widget<node_graph>(dock_style::Fill, "NG1")};
+    auto& panelLayout {panel0.create_layout<dock_layout>()};
+    auto& lbl {panelLayout.create_widget<label>(dock_style::Top, "LBL1")};
+    lbl.Flex = {.Width = 100_pct, .Height = 5_pct};
+    auto& ng {panelLayout.create_widget<node_graph>(dock_style::Fill, "NG1")};
 
-    node_def mathAdd {.Title   = "Add",
-                      .Inputs  = {{.ID = 1, .Name = "A", .Color = colors::Blue}, {.ID = 2, .Name = "B", .Color = colors::Blue}},
-                      .Outputs = {{.ID = 3, .Name = "Result", .Color = colors::Red}}};
-    node_def mathMul {.Title   = "Multiply",
-                      .Inputs  = {{.ID = 1, .Name = "A", .Color = colors::Blue}, {.ID = 2, .Name = "B", .Color = colors::Blue}},
-                      .Outputs = {{.ID = 3, .Name = "Result", .Color = colors::Red}}};
-    node_def output {.Title   = "Output",
-                     .Inputs  = {{.ID = 1, .Name = "Value", .Color = colors::Red}},
-                     .Outputs = {}};
+    node_def addNode {
+        .Title   = "Add",
+        .Inputs  = {{.ID = 1, .Name = "A", .Color = colors::Orange},
+                    {.ID = 2, .Name = "B", .Color = colors::Orange}},
+        .Outputs = {{.ID = 3, .Name = "Result", .Color = colors::Orange}},
+        .Compute = [](auto const& in) -> std::vector<node_value_types> {
+            return {std::get<f32>(in[0]) + std::get<f32>(in[1])};
+        }};
 
-    uid const addID {ng.create_node(mathAdd, {0.1f, 0.1f})};
-    uid const mulID {ng.create_node(mathMul, {0.1f, 0.3f})};
-    uid const outputID {ng.create_node(output, {0.3f, 0.5f})};
+    node_def mulNode {
+        .Title   = "Multiply",
+        .Inputs  = {{.ID = 1, .Name = "A", .Color = colors::Orange},
+                    {.ID = 2, .Name = "B", .Color = colors::Orange}},
+        .Outputs = {{.ID = 3, .Name = "Result", .Color = colors::Orange}},
+        .Compute = [](auto const& in) -> std::vector<node_value_types> {
+            return {std::get<f32>(in[0]) * std::get<f32>(in[1])};
+        }};
 
-    ng.create_connection(addID, 3, outputID, 1);
-    ng.create_connection(mulID, 3, addID, 1);
+    node_def printNode {
+        .Title   = "Print",
+        .Inputs  = {{.ID = 1, .Name = "Value", .Color = colors::Orange}},
+        .Outputs = {},
+        .Compute = [&](auto const& in) -> std::vector<node_value_types> {
+            lbl.Label = std::format("Result: {:.2f}", std::get<f32>(in[0]));
+            return {};
+        }};
+
+    node_def floatNode {
+        .Title   = "Float",
+        .Inputs  = {},
+        .Outputs = {{.ID = 1, .Name = "Value", .Color = colors::Orange}}};
+
+    node_def f3 {floatNode};
+    f3.Title   = "Float (3)";
+    f3.Compute = [](auto const&) -> std::vector<node_value_types> { return {3.0f}; };
+    node_def f4 {floatNode};
+    f4.Title   = "Float (4)";
+    f4.Compute = [](auto const&) -> std::vector<node_value_types> { return {4.0f}; };
+    node_def f2 {floatNode};
+    f2.Title   = "Float (2)";
+    f2.Compute = [](auto const&) -> std::vector<node_value_types> { return {2.0f}; };
+
+    uid const id3 {ng.create_node(f3, {0.05f, 0.15f})};
+    uid const id4 {ng.create_node(f4, {0.05f, 0.45f})};
+    uid const id2 {ng.create_node(f2, {0.05f, 0.75f})};
+    uid const addID {ng.create_node(addNode, {0.35f, 0.25f})};
+    uid const mulID {ng.create_node(mulNode, {0.60f, 0.40f})};
+    uid const printID {ng.create_node(printNode, {0.85f, 0.40f})};
+
+    ng.create_connection(id3, 1, addID, 1);
+    ng.create_connection(id4, 1, addID, 2);
+    ng.create_connection(addID, 3, mulID, 1);
+    ng.create_connection(id2, 1, mulID, 2);
+    ng.create_connection(mulID, 3, printID, 1);
+
+    ng.Changed.connect([&, printID] { ng.evaluate(printID); });
+    ng.evaluate(printID);
 
     return retValue;
 }
