@@ -827,7 +827,7 @@ auto create_form_accordion(window& wnd, assets::group const& resGrp) -> std::sha
 auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
 {
     auto  bounds {wnd.bounds()};
-    auto  retValue {std::make_shared<form<dock_layout>>(form_init {"form - ng ", bounds})};
+    auto  retValue {std::make_shared<form<dock_layout>>(form_init {"form-ng", bounds})};
     auto& panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
     panel0.Flex = {.Width = 100_pct, .Height = 100_pct};
     auto& panelLayout {panel0.create_layout<dock_layout>()};
@@ -835,65 +835,94 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
     lbl.Flex = {.Width = 100_pct, .Height = 5_pct};
     auto& ng {panelLayout.create_widget<node_graph>(dock_style::Fill, "NG1")};
 
-    // f32 source — drag to change
+    auto const toFloat {[](node_value_types const& v) -> f32 {
+        return std::visit(overloaded {
+                              [](f32 val) { return val; },
+                              [](i32 val) { return static_cast<f32>(val); },
+                              [](bool val) { return val ? 1.0f : 0.0f; }},
+                          v);
+    }};
+
+    auto const toBool {[](node_value_types const& v) -> bool {
+        return std::visit(overloaded {
+                              [](bool val) { return val; },
+                              [](auto) { return false; }},
+                          v);
+    }};
+
+    // f32 source
     node_def floatNode {
         .Title      = "Float",
-        .Outputs    = {{.ID = 1, .Name = "Value", .Color = colors::Orange}},
+        .Outputs    = {{.ID      = 1,
+                        .Name    = "Value",
+                        .Color   = colors::Orange,
+                        .Compute = [](auto const& /*in*/, auto const& vals) -> std::vector<node_value_types> {
+                         return {std::get<f32>(vals[0])};
+                        }},
+                       {.ID      = 2,
+                        .Name    = "Double Value",
+                        .Color   = colors::Orange,
+                        .Compute = [](auto const& /*in*/, auto const& vals) -> std::vector<node_value_types> {
+                         return {std::get<f32>(vals[0]) * 2.0f};
+                        }}},
         .Parameters = {node_param_float {.Name = "Value", .Value = 1.0f, .Max = 2.5f, .Step = 0.25f}},
-        .Compute    = [](auto const& /*in*/, auto const& vals) -> std::vector<node_value_types> {
-            return {std::get<f32>(vals[0])};
-        }};
+    };
 
-    // i32 source — drag to change
+    // i32 source
     node_def intNode {
         .Title      = "Int",
-        .Outputs    = {{.ID = 1, .Name = "Value", .Color = colors::Cyan}},
+        .Outputs    = {{.ID      = 1,
+                        .Name    = "Value",
+                        .Color   = colors::Cyan,
+                        .Compute = [](auto const& /*in*/, auto const& vals) -> std::vector<node_value_types> {
+                         return {std::get<i32>(vals[0])};
+                        }}},
         .Parameters = {node_param_int {.Name = "Value", .Value = 5, .Step = 15}},
-        .Compute    = [](auto const& /*in*/, auto const& vals) -> std::vector<node_value_types> {
-            return {std::get<i32>(vals[0])};
-        }};
+    };
 
-    // bool source — click to toggle
+    // bool source
     node_def boolNode {
         .Title      = "Bool",
-        .Outputs    = {{.ID = 1, .Name = "Value", .Color = colors::Green}},
+        .Outputs    = {{.ID      = 1,
+                        .Name    = "Value",
+                        .Color   = colors::Green,
+                        .Compute = [](auto const& /*in*/, auto const& vals) -> std::vector<node_value_types> {
+                         return {std::get<bool>(vals[0])};
+                        }}},
         .Parameters = {node_param_bool {.Name = "Enabled", .Value = true}},
-        .Compute    = [](auto const& /*in*/, auto const& vals) -> std::vector<node_value_types> {
-            return {std::get<bool>(vals[0])};
-        }};
+    };
 
-    // multiply f32 by i32 (cast i32 to f32)
+    // multiply
     node_def scaleNode {
         .Title   = "Scale",
         .Inputs  = {{.ID = 1, .Name = "Value", .Color = colors::Orange},
                     {.ID = 2, .Name = "Factor", .Color = colors::Cyan}},
-        .Outputs = {{.ID = 3, .Name = "Result", .Color = colors::Orange}},
-        .Compute = [](auto const& in, auto const& /*vals*/) -> std::vector<node_value_types> {
-            f32 const value {std::get<f32>(in[0])};
-            f32 const factor {static_cast<f32>(std::get<i32>(in[1]))};
-            return {value * factor};
-        }};
+        .Outputs = {{.ID      = 3,
+                     .Name    = "Result",
+                     .Color   = colors::Orange,
+                     .Compute = [toFloat](auto const& in, auto const& /*vals*/) -> std::vector<node_value_types> {
+                         return {toFloat(in[0]) * toFloat(in[1])};
+                     }}},
+    };
 
-    // gate — pass value through only if bool is true, else 0
+    // gate
     node_def gateNode {
         .Title   = "Gate",
         .Inputs  = {{.ID = 1, .Name = "Value", .Color = colors::Orange},
                     {.ID = 2, .Name = "Enabled", .Color = colors::Green}},
-        .Outputs = {{.ID = 3, .Name = "Result", .Color = colors::Orange}},
-        .Compute = [](auto const& in, auto const& /*vals*/) -> std::vector<node_value_types> {
-            f32 const  value {std::get<f32>(in[0])};
-            bool const enabled {std::get<bool>(in[1])};
-            return {enabled ? value : 0.0f};
-        }};
+        .Outputs = {{.ID      = 3,
+                     .Name    = "Result",
+                     .Color   = colors::Orange,
+                     .Compute = [toFloat, toBool](auto const& in, auto const& /*vals*/) -> std::vector<node_value_types> {
+                         return {toBool(in[1]) ? toFloat(in[0]) : 0.0f};
+                     }}},
+    };
 
     // print result to label
     node_def printNode {
-        .Title   = "Print",
-        .Inputs  = {{.ID = 1, .Name = "Value", .Color = colors::Orange}},
-        .Compute = [&](auto const& in, auto const& /*vals*/) -> std::vector<node_value_types> {
-            lbl.Label = std::format("Result: {:.3f}", std::get<f32>(in[0]));
-            return {};
-        }};
+        .Title  = "Print",
+        .Inputs = {{.ID = 1, .Name = "Value", .Color = colors::Orange}},
+    };
 
     uid const floatID {ng.create_node(floatNode, {0.05f, 0.10f})};
     uid const intID {ng.create_node(intNode, {0.05f, 0.40f})};
@@ -902,14 +931,21 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
     uid const gateID {ng.create_node(gateNode, {0.60f, 0.35f})};
     uid const printID {ng.create_node(printNode, {0.85f, 0.40f})};
 
-    ng.create_connection(floatID, 1, scaleID, 1); // f32 -> scale.Value
-    ng.create_connection(intID, 1, scaleID, 2);   // i32   -> scale.Factor
-    ng.create_connection(scaleID, 3, gateID, 1);  // scale -> gate.Value
-    ng.create_connection(boolID, 1, gateID, 2);   // bool  -> gate.Enabled
-    ng.create_connection(gateID, 3, printID, 1);  // gate  -> print.Value
+    ng.create_connection(floatID, 1, scaleID, 1);
+    ng.create_connection(intID, 1, scaleID, 2);
+    ng.create_connection(scaleID, 3, gateID, 1);
+    ng.create_connection(boolID, 1, gateID, 2);
+    ng.create_connection(gateID, 3, printID, 1);
 
-    ng.Changed.connect([&, printID] { ng.evaluate(printID); });
-    ng.evaluate(printID);
+    auto eval {[lbl = &lbl, toFloat](auto const& in, auto const& /*vals*/) -> std::vector<node_value_types> {
+        if (!in.empty()) {
+            lbl->Label = std::format("Result: {:.3f}", toFloat(in[0]));
+        }
+        return {};
+    }};
+
+    ng.Changed.connect([ng = &ng, eval, printID] { ng->evaluate(printID, 1, eval); });
+    ng.evaluate(printID, 1, eval);
 
     return retValue;
 }
