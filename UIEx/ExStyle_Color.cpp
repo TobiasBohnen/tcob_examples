@@ -655,6 +655,12 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->OutputPortText.Color     = colors::Black;
         style->OutputPortText.Alignment = {.Horizontal = horizontal_alignment::Right, .Vertical = vertical_alignment::Middle};
 
+        style->ParamText.Font      = resGrp.get<font_family>("DejaVuSansMono");
+        style->ParamText.Style     = {.IsItalic = false, .Weight = font::weight::Normal};
+        style->ParamText.Size      = 12_px;
+        style->ParamText.Color     = colors::Black;
+        style->ParamText.Alignment = {.Horizontal = horizontal_alignment::Centered, .Vertical = vertical_alignment::Middle};
+
         style->Background        = colors::LightGray;
         style->Border.Background = colors::Black;
     }
