@@ -856,14 +856,14 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         .Outputs    = {{.ID      = 1,
                         .Name    = "Value",
                         .Color   = colors::Orange,
-                        .Compute = [](auto const& /*in*/, auto const& vals) -> std::vector<node_value_types> {
-                         return {std::get<f32>(vals[0])};
+                        .Compute = [](auto const& /*in*/, auto const& vals) -> node_value_types {
+                         return std::get<f32>(vals[0]);
                         }},
                        {.ID      = 2,
                         .Name    = "Double Value",
                         .Color   = colors::Orange,
-                        .Compute = [](auto const& /*in*/, auto const& vals) -> std::vector<node_value_types> {
-                         return {std::get<f32>(vals[0]) * 2.0f};
+                        .Compute = [](auto const& /*in*/, auto const& vals) -> node_value_types {
+                         return std::get<f32>(vals[0]) * 2.0f;
                         }}},
         .Parameters = {node_param_float {.Name = "Value", .Value = 1.0f, .Max = 2.5f, .Step = 0.25f}},
     };
@@ -874,8 +874,8 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         .Outputs    = {{.ID      = 1,
                         .Name    = "Value",
                         .Color   = colors::Cyan,
-                        .Compute = [](auto const& /*in*/, auto const& vals) -> std::vector<node_value_types> {
-                         return {std::get<i32>(vals[0])};
+                        .Compute = [](auto const& /*in*/, auto const& vals) -> node_value_types {
+                         return std::get<i32>(vals[0]);
                         }}},
         .Parameters = {node_param_int {.Name = "Value", .Value = 5, .Step = 15}},
     };
@@ -886,8 +886,8 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         .Outputs    = {{.ID      = 1,
                         .Name    = "Value",
                         .Color   = colors::Green,
-                        .Compute = [](auto const& /*in*/, auto const& vals) -> std::vector<node_value_types> {
-                         return {std::get<bool>(vals[0])};
+                        .Compute = [](auto const& /*in*/, auto const& vals) -> node_value_types {
+                         return std::get<bool>(vals[0]);
                         }}},
         .Parameters = {node_param_bool {.Name = "Enabled", .Value = true}},
     };
@@ -900,8 +900,8 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         .Outputs = {{.ID      = 3,
                      .Name    = "Result",
                      .Color   = colors::Orange,
-                     .Compute = [toFloat](auto const& in, auto const& /*vals*/) -> std::vector<node_value_types> {
-                         return {toFloat(in[0]) * toFloat(in[1])};
+                     .Compute = [toFloat](auto const& in, auto const& /*vals*/) -> node_value_types {
+                         return toFloat(in[0]) * toFloat(in[1]);
                      }}},
     };
 
@@ -913,8 +913,8 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         .Outputs = {{.ID      = 3,
                      .Name    = "Result",
                      .Color   = colors::Orange,
-                     .Compute = [toFloat, toBool](auto const& in, auto const& /*vals*/) -> std::vector<node_value_types> {
-                         return {toBool(in[1]) ? toFloat(in[0]) : 0.0f};
+                     .Compute = [toFloat, toBool](auto const& in, auto const& /*vals*/) -> node_value_types {
+                         return toBool(in[1]) ? toFloat(in[0]) : 0.0f;
                      }}},
     };
 
@@ -937,7 +937,7 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
     ng.create_connection(boolID, 1, gateID, 2);
     ng.create_connection(gateID, 3, printID, 1);
 
-    auto eval {[lbl = &lbl, toFloat](auto const& in, auto const& /*vals*/) -> std::vector<node_value_types> {
+    auto eval {[lbl = &lbl, toFloat](auto const& in, auto const& /*vals*/) -> node_value_types {
         if (!in.empty()) {
             lbl->Label = std::format("Result: {:.3f}", toFloat(in[0]));
         }
