@@ -663,6 +663,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
 
         style->Background        = colors::LightGray;
         style->Border.Background = colors::Black;
+        style->Border.Size       = 2_px;
     }
     {
         auto style {retValue.create<dot_matrix_display>("dot_matrix_display", {})};
