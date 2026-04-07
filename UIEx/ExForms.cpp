@@ -833,7 +833,7 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
     auto& panelLayout {panel0.create_layout<dock_layout>()};
     auto& lbl {panelLayout.create_widget<label>(dock_style::Top, "LBL1")};
     lbl.Flex = {.Width = 100_pct, .Height = 5_pct};
-    auto& ng {panelLayout.create_widget<node_graph>(dock_style::Fill, "NG1")};
+    auto& ng {panelLayout.create_widget<node_graph_view>(dock_style::Fill, "NG1")};
 
     auto const toFloat {[](node_value_types const& v) -> f32 {
         return std::visit(overloaded {
@@ -924,18 +924,27 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         .Inputs = {{.ID = 1, .Name = "Value", .Color = colors::Orange}},
     };
 
-    uid const floatID {ng.create_node(floatNode, {0.05f, 0.10f})};
-    uid const intID {ng.create_node(intNode, {0.05f, 0.40f})};
-    uid const boolID {ng.create_node(boolNode, {0.05f, 0.70f})};
-    uid const scaleID {ng.create_node(scaleNode, {0.35f, 0.20f})};
-    uid const gateID {ng.create_node(gateNode, {0.60f, 0.35f})};
-    uid const printID {ng.create_node(printNode, {0.85f, 0.40f})};
+    uid printID {0};
+    ng.Graph.mutate([&](auto& graph) {
+        uid const floatID {graph.create_node(floatNode)};
+        ng.set_node_position(floatID, {0.05f, 0.10f});
+        uid const intID {graph.create_node(intNode)};
+        ng.set_node_position(intID, {0.05f, 0.40f});
+        uid const boolID {graph.create_node(boolNode)};
+        ng.set_node_position(boolID, {0.05f, 0.70f});
+        uid const scaleID {graph.create_node(scaleNode)};
+        ng.set_node_position(scaleID, {0.35f, 0.20f});
+        uid const gateID {graph.create_node(gateNode)};
+        ng.set_node_position(gateID, {0.60f, 0.35f});
+        printID = graph.create_node(printNode);
+        ng.set_node_position(printID, {0.85f, 0.40f});
 
-    ng.create_connection(floatID, 1, scaleID, 1);
-    ng.create_connection(intID, 1, scaleID, 2);
-    ng.create_connection(scaleID, 3, gateID, 1);
-    ng.create_connection(boolID, 1, gateID, 2);
-    ng.create_connection(gateID, 3, printID, 1);
+        graph.create_connection(floatID, 1, scaleID, 1);
+        graph.create_connection(intID, 1, scaleID, 2);
+        graph.create_connection(scaleID, 3, gateID, 1);
+        graph.create_connection(boolID, 1, gateID, 2);
+        graph.create_connection(gateID, 3, printID, 1);
+    });
 
     auto eval {[lbl = &lbl, toFloat](auto const& in, auto const& /*vals*/) -> node_value_types {
         if (!in.empty()) {
@@ -943,9 +952,10 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         }
         return {};
     }};
-
-    ng.Changed.connect([ng = &ng, eval, printID] { ng->evaluate(printID, 1, eval); });
-    ng.evaluate(printID, 1, eval);
+    ng.GraphDirty.connect([ng = &ng, eval, printID] {
+        ng->Graph->evaluate(printID, 1, eval);
+    });
+    ng.Graph->evaluate(printID, 1, eval);
 
     return retValue;
 }

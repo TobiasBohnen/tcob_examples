@@ -637,7 +637,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Caret.Color     = colors::Red;
     }
     {
-        auto style {retValue.create<node_graph>("node_graph", {})};
+        auto style {retValue.create<node_graph_view>("node_graph_view", {})};
         style->NodeText.Font  = resGrp.get<font_family>("DejaVuSansMono");
         style->NodeText.Style = {.IsItalic = false, .Weight = font::weight::Bold};
         style->NodeText.Size  = 24_px;
