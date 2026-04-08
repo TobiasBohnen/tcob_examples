@@ -866,13 +866,11 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         .Title      = "Float",
         .Outputs    = {{.ID      = 1,
                         .Name    = "Value",
-                        .Color   = colors::Orange,
                         .Compute = [](auto const& /*in*/, auto const& vals) -> node_value_types {
                          return std::get<f32>(vals[0]);
                         }},
                        {.ID      = 2,
                         .Name    = "Double Value",
-                        .Color   = colors::Orange,
                         .Compute = [](auto const& /*in*/, auto const& vals) -> node_value_types {
                          return std::get<f32>(vals[0]) * 2.0f;
                         }}},
@@ -884,7 +882,6 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         .Title      = "Int",
         .Outputs    = {{.ID      = 1,
                         .Name    = "Value",
-                        .Color   = colors::Cyan,
                         .Compute = [](auto const& /*in*/, auto const& vals) -> node_value_types {
                          return std::get<i32>(vals[0]);
                         }}},
@@ -896,7 +893,6 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         .Title      = "Bool",
         .Outputs    = {{.ID      = 1,
                         .Name    = "Value",
-                        .Color   = colors::Green,
                         .Compute = [](auto const& /*in*/, auto const& vals) -> node_value_types {
                          return std::get<bool>(vals[0]);
                         }}},
@@ -907,7 +903,6 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         .Title      = "String",
         .Outputs    = {{.ID      = 1,
                         .Name    = "Value",
-                        .Color   = colors::Olive,
                         .Compute = [](auto const& /*in*/, auto const& vals) -> node_value_types {
                          return std::get<string>(vals[0]);
                         }}},
@@ -917,11 +912,10 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
     // multiply
     node_def scaleNode {
         .Title   = "Scale",
-        .Inputs  = {{.ID = 1, .Name = "Value", .Color = colors::Orange},
-                    {.ID = 2, .Name = "Factor", .Color = colors::Cyan}},
+        .Inputs  = {{.ID = 1, .Name = "Value"},
+                    {.ID = 2, .Name = "Factor"}},
         .Outputs = {{.ID      = 3,
                      .Name    = "Result",
-                     .Color   = colors::Orange,
                      .Compute = [toFloat](auto const& in, auto const& /*vals*/) -> node_value_types {
                          return toFloat(in[0]) * toFloat(in[1]);
                      }}},
@@ -930,11 +924,10 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
     // gate
     node_def gateNode {
         .Title   = "Gate",
-        .Inputs  = {{.ID = 1, .Name = "Value", .Color = colors::Orange},
-                    {.ID = 2, .Name = "Enabled", .Color = colors::Green}},
+        .Inputs  = {{.ID = 1, .Name = "Value"},
+                    {.ID = 2, .Name = "Enabled"}},
         .Outputs = {{.ID      = 3,
                      .Name    = "Result",
-                     .Color   = colors::Orange,
                      .Compute = [toFloat, toBool](auto const& in, auto const& /*vals*/) -> node_value_types {
                          return toBool(in[1]) ? toFloat(in[0]) : 0.0f;
                      }}},
@@ -943,7 +936,7 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
     // print result to label
     node_def printNode {
         .Title  = "Print",
-        .Inputs = {{.ID = 1, .Name = "Value", .Color = colors::Orange}},
+        .Inputs = {{.ID = 1, .Name = "Value"}},
     };
 
     auto& graph {ng.graph()};

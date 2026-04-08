@@ -661,9 +661,11 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->ParamText.Color     = colors::Black;
         style->ParamText.Alignment = {.Horizontal = horizontal_alignment::Centered, .Vertical = vertical_alignment::Middle};
 
-        style->Background        = colors::LightGray;
-        style->Border.Background = colors::Black;
-        style->Border.Size       = 2_px;
+        style->ParamColor             = colors::LightSkyBlue;
+        style->PortColors[0xffffffff] = colors::Red;
+        style->Background             = colors::LightGray;
+        style->Border.Background      = colors::Black;
+        style->Border.Size            = 2_px;
     }
     {
         auto style {retValue.create<dot_matrix_display>("dot_matrix_display", {})};
