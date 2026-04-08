@@ -839,14 +839,25 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         return std::visit(overloaded {
                               [](f32 val) { return val; },
                               [](i32 val) { return static_cast<f32>(val); },
-                              [](bool val) { return val ? 1.0f : 0.0f; }},
+                              [](bool val) { return val ? 1.0f : 0.0f; },
+                              [](string const& val) {
+                                  auto f {helper::to_number<f32>(val)};
+                                  return f ? *f : 0.0f;
+                              }},
                           v);
     }};
 
     auto const toBool {[](node_value_types const& v) -> bool {
         return std::visit(overloaded {
                               [](bool val) { return val; },
-                              [](auto) { return false; }},
+                              [](auto const&) { return false; }},
+                          v);
+    }};
+
+    auto const toString {[](node_value_types const& v) -> string {
+        return std::visit(overloaded {
+                              [](bool val) -> string { return val ? "true" : "false"; },
+                              [](auto const& val) -> string { return helper::to_string(val); }},
                           v);
     }};
 
@@ -892,6 +903,17 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         .Parameters = {node_param_bool {.Name = "Enabled", .Value = true}},
     };
 
+    node_def opNode {
+        .Title      = "String",
+        .Outputs    = {{.ID      = 1,
+                        .Name    = "Value",
+                        .Color   = colors::Olive,
+                        .Compute = [](auto const& /*in*/, auto const& vals) -> node_value_types {
+                         return std::get<string>(vals[0]);
+                        }}},
+        .Parameters = {node_param_string {.Name = "Op", .Value = "add", .Options = {"add", "subtract", "multiply", "divide"}}},
+    };
+
     // multiply
     node_def scaleNode {
         .Title   = "Scale",
@@ -924,38 +946,39 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         .Inputs = {{.ID = 1, .Name = "Value", .Color = colors::Orange}},
     };
 
-    uid printID {0};
-    ng.Graph.mutate([&](auto& graph) {
-        uid const floatID {graph.create_node(floatNode)};
-        ng.set_node_position(floatID, {0.05f, 0.10f});
-        uid const intID {graph.create_node(intNode)};
-        ng.set_node_position(intID, {0.05f, 0.40f});
-        uid const boolID {graph.create_node(boolNode)};
-        ng.set_node_position(boolID, {0.05f, 0.70f});
-        uid const scaleID {graph.create_node(scaleNode)};
-        ng.set_node_position(scaleID, {0.35f, 0.20f});
-        uid const gateID {graph.create_node(gateNode)};
-        ng.set_node_position(gateID, {0.60f, 0.35f});
-        printID = graph.create_node(printNode);
-        ng.set_node_position(printID, {0.85f, 0.40f});
+    auto& graph {ng.graph()};
 
-        graph.create_connection(floatID, 1, scaleID, 1);
-        graph.create_connection(intID, 1, scaleID, 2);
-        graph.create_connection(scaleID, 3, gateID, 1);
-        graph.create_connection(boolID, 1, gateID, 2);
-        graph.create_connection(gateID, 3, printID, 1);
-    });
+    uid const floatID {graph.create_node(floatNode)};
+    ng.set_node_position(floatID, {0.05f, 0.10f});
+    uid const intID {graph.create_node(intNode)};
+    ng.set_node_position(intID, {0.05f, 0.40f});
+    uid const boolID {graph.create_node(boolNode)};
+    ng.set_node_position(boolID, {0.05f, 0.70f});
+    uid const opID {graph.create_node(opNode)};
+    ng.set_node_position(opID, {0.35f, 0.40f});
+    uid const scaleID {graph.create_node(scaleNode)};
+    ng.set_node_position(scaleID, {0.35f, 0.20f});
+    uid const gateID {graph.create_node(gateNode)};
+    ng.set_node_position(gateID, {0.60f, 0.35f});
+    uid const printID {graph.create_node(printNode)};
+    ng.set_node_position(printID, {0.85f, 0.40f});
 
-    auto eval {[lbl = &lbl, toFloat](auto const& in, auto const& /*vals*/) -> node_value_types {
+    graph.create_connection(floatID, 1, scaleID, 1);
+    graph.create_connection(intID, 1, scaleID, 2);
+    graph.create_connection(scaleID, 3, gateID, 1);
+    graph.create_connection(boolID, 1, gateID, 2);
+    graph.create_connection(gateID, 3, printID, 1);
+
+    auto eval {[lbl = &lbl, toString](auto const& in, auto const& /*vals*/) -> node_value_types {
         if (!in.empty()) {
-            lbl->Label = std::format("Result: {:.3f}", toFloat(in[0]));
+            lbl->Label = std::format("Result: {}", toString(in[0]));
         }
         return {};
     }};
-    ng.GraphDirty.connect([ng = &ng, eval, printID] {
-        ng->Graph->evaluate(printID, 1, eval);
+    ng.GraphChanged.connect([ng = &ng, eval, printID] {
+        ng->graph().evaluate(printID, 1, eval);
     });
-    ng.Graph->evaluate(printID, 1, eval);
+    ng.graph().evaluate(printID, 1, eval);
 
     return retValue;
 }
