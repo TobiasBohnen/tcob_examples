@@ -638,27 +638,31 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
     }
     {
         auto style {retValue.create<node_graph_view>("node_graph_view", {})};
-        style->NodeText.Font  = resGrp.get<font_family>("DejaVuSansMono");
-        style->NodeText.Style = {.IsItalic = false, .Weight = font::weight::Bold};
-        style->NodeText.Size  = 24_px;
-        style->NodeSize       = {10_pct, 5_pct};
+        style->NodeText.Font     = resGrp.get<font_family>("DejaVuSansMono");
+        style->NodeText.Style    = {.IsItalic = false, .Weight = font::weight::Bold};
+        style->NodeText.Size     = 24_px;
+        style->NodeText.AutoSize = auto_size_mode::OnlyShrink;
+        style->NodeSize          = {10_pct, 5_pct};
 
         style->InputPortText.Font      = resGrp.get<font_family>("DejaVuSansMono");
         style->InputPortText.Style     = {.IsItalic = false, .Weight = font::weight::Normal};
         style->InputPortText.Size      = 12_px;
         style->InputPortText.Color     = colors::Black;
+        style->InputPortText.AutoSize  = auto_size_mode::OnlyShrink;
         style->InputPortText.Alignment = {.Horizontal = horizontal_alignment::Left, .Vertical = vertical_alignment::Middle};
 
         style->OutputPortText.Font      = resGrp.get<font_family>("DejaVuSansMono");
         style->OutputPortText.Style     = {.IsItalic = false, .Weight = font::weight::Normal};
         style->OutputPortText.Size      = 12_px;
         style->OutputPortText.Color     = colors::Black;
+        style->OutputPortText.AutoSize  = auto_size_mode::OnlyShrink;
         style->OutputPortText.Alignment = {.Horizontal = horizontal_alignment::Right, .Vertical = vertical_alignment::Middle};
 
         style->ParamText.Font      = resGrp.get<font_family>("DejaVuSansMono");
         style->ParamText.Style     = {.IsItalic = false, .Weight = font::weight::Normal};
         style->ParamText.Size      = 12_px;
         style->ParamText.Color     = colors::Black;
+        style->ParamText.AutoSize  = auto_size_mode::OnlyShrink;
         style->ParamText.Alignment = {.Horizontal = horizontal_alignment::Centered, .Vertical = vertical_alignment::Middle};
 
         constexpr u32 TYPE_FLOAT {1 << 0};
