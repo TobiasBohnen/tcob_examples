@@ -826,6 +826,11 @@ auto create_form_accordion(window& wnd, assets::group const& resGrp) -> std::sha
 
 auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
 {
+    constexpr u32 TYPE_FLOAT {1 << 0};
+    constexpr u32 TYPE_INT {1 << 1};
+    constexpr u32 TYPE_BOOL {1 << 2};
+    constexpr u32 TYPE_COLOR {1 << 3};
+
     auto  bounds {wnd.bounds()};
     auto  retValue {std::make_shared<form<dock_layout>>(form_init {"form-ng", bounds})};
     auto& panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
@@ -835,6 +840,7 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
     lbl.Flex = {.Width = 100_pct, .Height = 5_pct};
     auto& ng {panelLayout.create_widget<node_graph_view>(dock_style::Fill, "NG1")};
 
+    // helpers
     auto const toFloat {[](node_value_types const& v) -> f32 {
         return std::visit(overloaded {
                               [](f32 val) { return val; },
@@ -846,123 +852,349 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
                               }},
                           v);
     }};
-
+    auto const toInt {[](node_value_types const& v) -> i32 {
+        return std::visit(overloaded {
+                              [](i32 val) { return val; },
+                              [](f32 val) { return static_cast<i32>(val); },
+                              [](auto const&) { return 0; }},
+                          v);
+    }};
     auto const toBool {[](node_value_types const& v) -> bool {
         return std::visit(overloaded {
                               [](bool val) { return val; },
+                              [](f32 val) { return val != 0.0f; },
+                              [](i32 val) { return val != 0; },
                               [](auto const&) { return false; }},
                           v);
     }};
 
-    auto const toString {[](node_value_types const& v) -> string {
-        return std::visit(overloaded {
-                              [](bool val) -> string { return val ? "true" : "false"; },
-                              [](auto const& val) -> string { return helper::to_string(val); }},
-                          v);
+    auto const packColor {[](f32 r, f32 g, f32 b) -> string {
+        return std::format("{:.4f},{:.4f},{:.4f}", r, g, b);
+    }};
+    auto const unpackColor {[](string const& s) -> std::array<f32, 3> {
+        std::array<f32, 3> out {0.0f, 0.0f, 0.0f};
+        usize              i {0};
+        for (auto part : s | std::views::split(',')) {
+            if (i >= 3) { break; }
+            auto f {helper::to_number<f32>(string(part.begin(), part.end()))};
+            out[i++] = f ? *f : 0.0f;
+        }
+        return out;
     }};
 
-    // f32 source
+    auto const getFloat {[toFloat](auto const& in, usize i) -> f32 {
+        return i < in.size() ? toFloat(in[i]) : 0.0f;
+    }};
+    auto const getBool {[toBool](auto const& in, usize i) -> bool {
+        return i < in.size() ? toBool(in[i]) : false;
+    }};
+    auto const getColor {[unpackColor](auto const& in, usize i) -> std::array<f32, 3> {
+        if (i >= in.size()) { return {0.0f, 0.0f, 0.0f}; }
+        auto const* s {std::get_if<string>(&in[i])};
+        return s ? unpackColor(*s) : std::array<f32, 3> {0.0f, 0.0f, 0.0f};
+    }};
+    auto const getString {[](auto const& in, usize i) -> string {
+        if (i >= in.size()) { return {}; }
+        auto const* s {std::get_if<string>(&in[i])};
+        return s ? *s : string {};
+    }};
+
+    // --- source nodes ---
+
     node_def floatNode {
         .Title      = "Float",
         .Outputs    = {{.ID      = 1,
                         .Name    = "Value",
+                        .Type    = TYPE_FLOAT,
                         .Compute = [](auto const& /*in*/, auto const& vals) -> node_value_types {
                          return std::get<f32>(vals[0]);
-                        }},
-                       {.ID      = 2,
-                        .Name    = "Double Value",
-                        .Compute = [](auto const& /*in*/, auto const& vals) -> node_value_types {
-                         return std::get<f32>(vals[0]) * 2.0f;
                         }}},
-        .Parameters = {node_param_float {.Name = "Value", .Value = 1.0f, .Max = 2.5f, .Step = 0.25f}},
+        .Parameters = {node_param_float {.Name = "Value", .Value = 1.0f, .Min = -10.0f, .Max = 10.0f, .Step = 0.1f}},
     };
 
-    // i32 source
     node_def intNode {
         .Title      = "Int",
         .Outputs    = {{.ID      = 1,
                         .Name    = "Value",
+                        .Type    = TYPE_INT,
                         .Compute = [](auto const& /*in*/, auto const& vals) -> node_value_types {
                          return std::get<i32>(vals[0]);
                         }}},
-        .Parameters = {node_param_int {.Name = "Value", .Value = 5, .Step = 15}},
+        .Parameters = {node_param_int {.Name = "Value", .Value = 1, .Min = -100, .Max = 100, .Step = 1}},
     };
 
-    // bool source
     node_def boolNode {
         .Title      = "Bool",
         .Outputs    = {{.ID      = 1,
                         .Name    = "Value",
+                        .Type    = TYPE_BOOL,
                         .Compute = [](auto const& /*in*/, auto const& vals) -> node_value_types {
                          return std::get<bool>(vals[0]);
                         }}},
-        .Parameters = {node_param_bool {.Name = "Enabled", .Value = true}},
+        .Parameters = {node_param_bool {.Name = "Value", .Value = true}},
     };
 
-    node_def opNode {
-        .Title      = "String",
+    node_def colorNode {
+        .Title      = "Color",
         .Outputs    = {{.ID      = 1,
-                        .Name    = "Value",
+                        .Name    = "RGB",
+                        .Type    = TYPE_COLOR,
+                        .Compute = [packColor](auto const& /*in*/, auto const& vals) -> node_value_types {
+                         return packColor(std::get<f32>(vals[0]), std::get<f32>(vals[1]), std::get<f32>(vals[2]));
+                        }},
+                       {.ID      = 2,
+                        .Name    = "R",
+                        .Type    = TYPE_FLOAT,
                         .Compute = [](auto const& /*in*/, auto const& vals) -> node_value_types {
-                         return std::get<string>(vals[0]);
+                         return std::get<f32>(vals[0]);
+                        }},
+                       {.ID      = 3,
+                        .Name    = "G",
+                        .Type    = TYPE_FLOAT,
+                        .Compute = [](auto const& /*in*/, auto const& vals) -> node_value_types {
+                         return std::get<f32>(vals[1]);
+                        }},
+                       {.ID      = 4,
+                        .Name    = "B",
+                        .Type    = TYPE_FLOAT,
+                        .Compute = [](auto const& /*in*/, auto const& vals) -> node_value_types {
+                         return std::get<f32>(vals[2]);
+                        }}},
+        .Parameters = {
+            node_param_float {.Name = "R", .Value = 1.0f, .Min = 0.0f, .Max = 1.0f, .Step = 0.01f},
+            node_param_float {.Name = "G", .Value = 0.5f, .Min = 0.0f, .Max = 1.0f, .Step = 0.01f},
+            node_param_float {.Name = "B", .Value = 0.2f, .Min = 0.0f, .Max = 1.0f, .Step = 0.01f},
+        },
+    };
+
+    // --- math nodes ---
+
+    node_def mathNode {
+        .Title      = "Math",
+        .Inputs     = {{.ID = 1, .Name = "A", .Type = TYPE_FLOAT},
+                       {.ID = 2, .Name = "B", .Type = TYPE_FLOAT}},
+        .Outputs    = {{.ID      = 3,
+                        .Name    = "Result",
+                        .Type    = TYPE_FLOAT,
+                        .Compute = [getFloat, getString](auto const& in, auto const& vals) -> node_value_types {
+                         f32 const    a {getFloat(in, 0)};
+                         f32 const    b {getFloat(in, 1)};
+                         string const op {std::get<string>(vals[0])};
+                         if (op == "add") { return a + b; }
+                         if (op == "subtract") { return a - b; }
+                         if (op == "multiply") { return a * b; }
+                         if (op == "divide") { return b != 0.0f ? a / b : 0.0f; }
+                         return 0.0f;
                         }}},
         .Parameters = {node_param_string {.Name = "Op", .Value = "add", .Options = {"add", "subtract", "multiply", "divide"}}},
     };
 
-    // multiply
-    node_def scaleNode {
-        .Title   = "Scale",
-        .Inputs  = {{.ID = 1, .Name = "Value"},
-                    {.ID = 2, .Name = "Factor"}},
+    node_def clampNode {
+        .Title      = "Clamp",
+        .Inputs     = {{.ID = 1, .Name = "Value", .Type = TYPE_FLOAT}},
+        .Outputs    = {{.ID      = 2,
+                        .Name    = "Result",
+                        .Type    = TYPE_FLOAT,
+                        .Compute = [getFloat](auto const& in, auto const& vals) -> node_value_types {
+                         f32 const v {getFloat(in, 0)};
+                         f32 const mn {std::get<f32>(vals[0])};
+                         f32 const mx {std::get<f32>(vals[1])};
+                         return std::clamp(v, std::min(mn, mx), std::max(mn, mx));
+                        }}},
+        .Parameters = {
+            node_param_float {.Name = "Min", .Value = 0.0f, .Min = -10.0f, .Max = 10.0f, .Step = 0.1f},
+            node_param_float {.Name = "Max", .Value = 1.0f, .Min = -10.0f, .Max = 10.0f, .Step = 0.1f},
+        },
+    };
+
+    node_def remapNode {
+        .Title      = "Remap",
+        .Inputs     = {{.ID = 1, .Name = "Value", .Type = TYPE_FLOAT}},
+        .Outputs    = {{.ID      = 2,
+                        .Name    = "Result",
+                        .Type    = TYPE_FLOAT,
+                        .Compute = [getFloat](auto const& in, auto const& vals) -> node_value_types {
+                         f32 const v {getFloat(in, 0)};
+                         f32 const inMn {std::get<f32>(vals[0])};
+                         f32 const inMx {std::get<f32>(vals[1])};
+                         f32 const ouMn {std::get<f32>(vals[2])};
+                         f32 const ouMx {std::get<f32>(vals[3])};
+                         if (inMx == inMn) { return ouMn; }
+                         return ouMn + ((v - inMn) / (inMx - inMn)) * (ouMx - ouMn);
+                        }}},
+        .Parameters = {
+            node_param_float {.Name = "In Min", .Value = 0.0f, .Min = -10.0f, .Max = 10.0f, .Step = 0.1f},
+            node_param_float {.Name = "In Max", .Value = 1.0f, .Min = -10.0f, .Max = 10.0f, .Step = 0.1f},
+            node_param_float {.Name = "Out Min", .Value = 0.0f, .Min = -10.0f, .Max = 10.0f, .Step = 0.1f},
+            node_param_float {.Name = "Out Max", .Value = 2.0f, .Min = -10.0f, .Max = 10.0f, .Step = 0.1f},
+        },
+    };
+
+    node_def quantizeNode {
+        .Title      = "Quantize",
+        .Inputs     = {{.ID = 1, .Name = "Value", .Type = TYPE_FLOAT | TYPE_INT}},
+        .Outputs    = {{.ID      = 2,
+                        .Name    = "Result",
+                        .Type    = TYPE_FLOAT,
+                        .Compute = [getFloat](auto const& in, auto const& vals) -> node_value_types {
+                         f32 const v {getFloat(in, 0)};
+                         i32 const steps {std::max(1, std::get<i32>(vals[0]))};
+                         f32 const s {static_cast<f32>(steps)};
+                         return std::round(v * s) / s;
+                        }}},
+        .Parameters = {node_param_int {.Name = "Steps", .Value = 4, .Min = 1, .Max = 32, .Step = 1}},
+    };
+
+    // --- color nodes ---
+
+    node_def colorScaleNode {
+        .Title   = "Color Scale",
+        .Inputs  = {{.ID = 1, .Name = "Color", .Type = TYPE_COLOR},
+                    {.ID = 2, .Name = "Factor", .Type = TYPE_FLOAT}},
         .Outputs = {{.ID      = 3,
                      .Name    = "Result",
-                     .Compute = [toFloat](auto const& in, auto const& /*vals*/) -> node_value_types {
-                         return toFloat(in[0]) * toFloat(in[1]);
+                     .Type    = TYPE_COLOR,
+                     .Compute = [getFloat, getColor, packColor](auto const& in, auto const& /*vals*/) -> node_value_types {
+                         auto const rgb {getColor(in, 0)};
+                         f32 const  f {getFloat(in, 1)};
+                         return packColor(
+                             std::clamp(rgb[0] * f, 0.0f, 1.0f),
+                             std::clamp(rgb[1] * f, 0.0f, 1.0f),
+                             std::clamp(rgb[2] * f, 0.0f, 1.0f));
                      }}},
     };
 
-    // gate
-    node_def gateNode {
-        .Title   = "Gate",
-        .Inputs  = {{.ID = 1, .Name = "Value"},
-                    {.ID = 2, .Name = "Enabled"}},
-        .Outputs = {{.ID      = 3,
+    node_def colorMixNode {
+        .Title   = "Color Mix",
+        .Inputs  = {{.ID = 1, .Name = "A", .Type = TYPE_COLOR},
+                    {.ID = 2, .Name = "B", .Type = TYPE_COLOR},
+                    {.ID = 3, .Name = "Weight", .Type = TYPE_FLOAT}},
+        .Outputs = {{.ID      = 4,
                      .Name    = "Result",
-                     .Compute = [toFloat, toBool](auto const& in, auto const& /*vals*/) -> node_value_types {
-                         return toBool(in[1]) ? toFloat(in[0]) : 0.0f;
+                     .Type    = TYPE_COLOR,
+                     .Compute = [getFloat, getColor, packColor](auto const& in, auto const& /*vals*/) -> node_value_types {
+                         auto const a {getColor(in, 0)};
+                         auto const b {getColor(in, 1)};
+                         f32 const  t {std::clamp(getFloat(in, 2), 0.0f, 1.0f)};
+                         return packColor(
+                             a[0] + (b[0] - a[0]) * t,
+                             a[1] + (b[1] - a[1]) * t,
+                             a[2] + (b[2] - a[2]) * t);
                      }}},
     };
 
-    // print result to label
-    node_def printNode {
-        .Title  = "Print",
-        .Inputs = {{.ID = 1, .Name = "Value"}},
+    node_def luminanceNode {
+        .Title   = "Luminance",
+        .Inputs  = {{.ID = 1, .Name = "Color", .Type = TYPE_COLOR}},
+        .Outputs = {{.ID      = 2,
+                     .Name    = "Value",
+                     .Type    = TYPE_FLOAT,
+                     .Compute = [getColor](auto const& in, auto const& /*vals*/) -> node_value_types {
+                         auto const rgb {getColor(in, 0)};
+                         return 0.2126f * rgb[0] + 0.7152f * rgb[1] + 0.0722f * rgb[2];
+                     }}},
     };
 
-    uid const floatID {ng.create_node(floatNode, {0.05f, 0.10f})};
-    uid const intID {ng.create_node(intNode, {0.05f, 0.40f})};
-    uid const boolID {ng.create_node(boolNode, {0.05f, 0.70f})};
-    uid const opID {ng.create_node(opNode, {0.35f, 0.40f})};
-    uid const scaleID {ng.create_node(scaleNode, {0.35f, 0.20f})};
-    uid const gateID {ng.create_node(gateNode, {0.60f, 0.35f})};
-    uid const printID {ng.create_node(printNode, {0.85f, 0.40f})};
+    // --- logic nodes ---
 
-    ng.create_connection(floatID, 1, scaleID, 1);
-    ng.create_connection(intID, 1, scaleID, 2);
-    ng.create_connection(scaleID, 3, gateID, 1);
-    ng.create_connection(boolID, 1, gateID, 2);
-    ng.create_connection(gateID, 3, printID, 1);
+    node_def compareNode {
+        .Title      = "Compare",
+        .Inputs     = {{.ID = 1, .Name = "A", .Type = TYPE_FLOAT},
+                       {.ID = 2, .Name = "B", .Type = TYPE_FLOAT}},
+        .Outputs    = {{.ID      = 3,
+                        .Name    = "Result",
+                        .Type    = TYPE_BOOL,
+                        .Compute = [getFloat](auto const& in, auto const& vals) -> node_value_types {
+                         f32 const    a {getFloat(in, 0)};
+                         f32 const    b {getFloat(in, 1)};
+                         string const op {std::get<string>(vals[0])};
+                         if (op == ">") { return a > b; }
+                         if (op == "<") { return a < b; }
+                         if (op == ">=") { return a >= b; }
+                         if (op == "<=") { return a <= b; }
+                         if (op == "==") { return a == b; }
+                         return false;
+                        }}},
+        .Parameters = {node_param_string {.Name = "Op", .Value = ">", .Options = {">", "<", ">=", "<=", "=="}}},
+    };
 
-    auto eval {[lbl = &lbl, toString](auto const& in, auto const& /*vals*/) -> node_value_types {
-        if (!in.empty()) {
-            lbl->Label = std::format("Result: {}", toString(in[0]));
-        }
+    node_def colorGateNode {
+        .Title   = "Color Gate",
+        .Inputs  = {{.ID = 1, .Name = "Color", .Type = TYPE_COLOR},
+                    {.ID = 2, .Name = "Enabled", .Type = TYPE_BOOL}},
+        .Outputs = {{.ID      = 3,
+                     .Name    = "Result",
+                     .Type    = TYPE_COLOR,
+                     .Compute = [getBool, getColor, packColor](auto const& in, auto const& /*vals*/) -> node_value_types {
+                         auto const rgb {getColor(in, 0)};
+                         return getBool(in, 1) ? packColor(rgb[0], rgb[1], rgb[2]) : packColor(0.0f, 0.0f, 0.0f);
+                     }}},
+    };
+
+    // --- sink ---
+
+    node_def outputNode {
+        .Title  = "Output",
+        .Inputs = {{.ID = 1, .Name = "Color", .Type = TYPE_COLOR},
+                   {.ID = 2, .Name = "Luminance", .Type = TYPE_FLOAT}},
+    };
+
+    // layout
+    uid const floatID {ng.create_node(floatNode, {0.02f, 0.05f})};
+    uid const intID {ng.create_node(intNode, {0.02f, 0.25f})};
+    uid const boolID {ng.create_node(boolNode, {0.02f, 0.50f})};
+    uid const colorID {ng.create_node(colorNode, {0.02f, 0.68f})};
+    uid const mathID {ng.create_node(mathNode, {0.28f, 0.05f})};
+    uid const clampID {ng.create_node(clampNode, {0.28f, 0.28f})};
+    uid const remapID {ng.create_node(remapNode, {0.28f, 0.48f})};
+    uid const quantizeID {ng.create_node(quantizeNode, {0.28f, 0.75f})};
+    uid const colorScaleID {ng.create_node(colorScaleNode, {0.55f, 0.10f})};
+    uid const colorMixID {ng.create_node(colorMixNode, {0.55f, 0.38f})};
+    uid const luminanceID {ng.create_node(luminanceNode, {0.55f, 0.68f})};
+    uid const compareID {ng.create_node(compareNode, {0.55f, 0.85f})};
+    uid const colorGateID {ng.create_node(colorGateNode, {0.78f, 0.38f})};
+    uid const outputID {ng.create_node(outputNode, {0.90f, 0.38f})};
+
+    // float -> math A, clamp, remap
+    ng.create_connection(floatID, 1, mathID, 1);
+    ng.create_connection(floatID, 1, clampID, 1);
+    ng.create_connection(floatID, 1, remapID, 1);
+    // int -> math B
+    ng.create_connection(intID, 1, mathID, 2);
+    // math result -> color scale factor, quantize
+    ng.create_connection(mathID, 3, colorScaleID, 2);
+    ng.create_connection(mathID, 3, quantizeID, 1);
+    // color -> color scale, color mix A
+    ng.create_connection(colorID, 1, colorScaleID, 1);
+    ng.create_connection(colorID, 1, colorMixID, 1);
+    // color scale -> color mix B
+    ng.create_connection(colorScaleID, 3, colorMixID, 2);
+    // clamp -> color mix weight
+    ng.create_connection(clampID, 2, colorMixID, 3);
+    // color mix -> gate, luminance
+    ng.create_connection(colorMixID, 4, colorGateID, 1);
+    ng.create_connection(colorMixID, 4, luminanceID, 1);
+    // bool -> gate
+    ng.create_connection(boolID, 1, colorGateID, 2);
+    // gate -> output color
+    ng.create_connection(colorGateID, 3, outputID, 1);
+    // luminance -> compare A, output
+    ng.create_connection(luminanceID, 2, compareID, 1);
+    ng.create_connection(luminanceID, 2, outputID, 2);
+    // remap -> compare B
+    ng.create_connection(remapID, 2, compareID, 2);
+
+    auto const eval {[lbl = &lbl, getColor, getFloat](auto const& in, auto const& /*vals*/) -> node_value_types {
+        auto const rgb {getColor(in, 0)};
+        f32 const  lum {getFloat(in, 1)};
+        lbl->Label = std::format("RGB: ({:.2f}, {:.2f}, {:.2f})  Lum: {:.4f}", rgb[0], rgb[1], rgb[2], lum);
         return {};
     }};
-    ng.GraphChanged.connect([ng = &ng, eval, printID] {
-        ng->evaluate(printID, 1, eval);
+
+    ng.GraphChanged.connect([ng = &ng, eval, outputID] {
+        ng->evaluate(outputID, eval);
     });
-    ng.evaluate(printID, 1, eval);
+    ng.evaluate(outputID, eval);
 
     return retValue;
 }
