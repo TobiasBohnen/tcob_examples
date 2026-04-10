@@ -1136,5 +1136,7 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
     });
     ng.evaluate(outputID, eval);
 
+    ng.MinimapAlignment = gfx::alignment {.Horizontal = gfx::horizontal_alignment::Right, .Vertical = gfx::vertical_alignment::Bottom};
+
     return retValue;
 }

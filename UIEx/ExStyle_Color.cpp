@@ -664,6 +664,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->ParamText.Color     = colors::Black;
         style->ParamText.AutoSize  = auto_size_mode::OnlyShrink;
         style->ParamText.Alignment = {.Horizontal = horizontal_alignment::Centered, .Vertical = vertical_alignment::Middle};
+        style->MinimapSize         = {.Width = {0.1f, length::type::Relative}, .Height = {0.1f, length::type::Relative}};
 
         constexpr u32 TYPE_FLOAT {1 << 0};
         constexpr u32 TYPE_INT {1 << 1};
