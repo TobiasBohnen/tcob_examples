@@ -894,9 +894,25 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         return s ? unpackColor(*s) : std::array<f32, 3> {0.0f, 0.0f, 0.0f};
     }};
 
+    constexpr uid floatID {1};
+    constexpr uid intID {2};
+    constexpr uid boolID {3};
+    constexpr uid colorID {4};
+    constexpr uid mathID {5};
+    constexpr uid clampID {6};
+    constexpr uid remapID {7};
+    constexpr uid quantizeID {8};
+    constexpr uid colorScaleID {9};
+    constexpr uid colorMixID {10};
+    constexpr uid luminanceID {11};
+    constexpr uid compareID {12};
+    constexpr uid colorGateID {13};
+    constexpr uid outputID {14};
+
     // --- source nodes ---
 
-    node_def floatNode {
+    node floatNode {
+        .ID         = floatID,
         .Title      = "Float",
         .Outputs    = {{.ID = 1, .Name = "Value", .Type = TYPE_FLOAT}},
         .Parameters = {node_param_float {.Name = "Value", .Value = 1.0f, .Min = -10.0f, .Max = 10.0f, .Step = 0.1f}},
@@ -905,7 +921,8 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         },
     };
 
-    node_def intNode {
+    node intNode {
+        .ID         = intID,
         .Title      = "Int",
         .Outputs    = {{.ID = 1, .Name = "Value", .Type = TYPE_INT}},
         .Parameters = {node_param_int {.Name = "Value", .Value = 1, .Min = -100, .Max = 100, .Step = 1}},
@@ -914,7 +931,8 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         },
     };
 
-    node_def boolNode {
+    node boolNode {
+        .ID         = boolID,
         .Title      = "Bool",
         .Outputs    = {{.ID = 1, .Name = "Value", .Type = TYPE_BOOL}},
         .Parameters = {node_param_bool {.Name = "Value", .Value = true}},
@@ -923,7 +941,8 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         },
     };
 
-    node_def colorNode {
+    node colorNode {
+        .ID         = colorID,
         .Title      = "Color",
         .Outputs    = {{.ID = 1, .Name = "RGB", .Type = TYPE_COLOR},
                        {.ID = 2, .Name = "R", .Type = TYPE_FLOAT},
@@ -944,7 +963,8 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
 
     // --- math nodes ---
 
-    node_def mathNode {
+    node mathNode {
+        .ID         = mathID,
         .Title      = "Math",
         .Inputs     = {{.ID = 1, .Name = "A", .Type = TYPE_FLOAT | TYPE_INT},
                        {.ID = 2, .Name = "B", .Type = TYPE_FLOAT | TYPE_INT}},
@@ -962,7 +982,8 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         },
     };
 
-    node_def clampNode {
+    node clampNode {
+        .ID         = clampID,
         .Title      = "Clamp",
         .Inputs     = {{.ID = 1, .Name = "Value", .Type = TYPE_FLOAT | TYPE_INT}},
         .Outputs    = {{.ID = 2, .Name = "Result", .Type = TYPE_FLOAT}},
@@ -978,7 +999,8 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         },
     };
 
-    node_def remapNode {
+    node remapNode {
+        .ID         = remapID,
         .Title      = "Remap",
         .Inputs     = {{.ID = 1, .Name = "Value", .Type = TYPE_FLOAT | TYPE_INT}},
         .Outputs    = {{.ID = 2, .Name = "Result", .Type = TYPE_FLOAT}},
@@ -999,7 +1021,8 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         },
     };
 
-    node_def quantizeNode {
+    node quantizeNode {
+        .ID         = quantizeID,
         .Title      = "Quantize",
         .Inputs     = {{.ID = 1, .Name = "Value", .Type = TYPE_FLOAT | TYPE_INT}},
         .Outputs    = {{.ID = 2, .Name = "Result", .Type = TYPE_FLOAT}},
@@ -1014,7 +1037,8 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
 
     // --- color nodes ---
 
-    node_def colorScaleNode {
+    node colorScaleNode {
+        .ID      = colorScaleID,
         .Title   = "Color Scale",
         .Inputs  = {{.ID = 1, .Name = "Color", .Type = TYPE_COLOR},
                     {.ID = 2, .Name = "Factor", .Type = TYPE_FLOAT | TYPE_INT}},
@@ -1026,7 +1050,8 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         },
     };
 
-    node_def colorMixNode {
+    node colorMixNode {
+        .ID      = colorMixID,
         .Title   = "Color Mix",
         .Inputs  = {{.ID = 1, .Name = "A", .Type = TYPE_COLOR},
                     {.ID = 2, .Name = "B", .Type = TYPE_COLOR},
@@ -1040,7 +1065,8 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         },
     };
 
-    node_def luminanceNode {
+    node luminanceNode {
+        .ID      = luminanceID,
         .Title   = "Luminance",
         .Inputs  = {{.ID = 1, .Name = "Color", .Type = TYPE_COLOR}},
         .Outputs = {{.ID = 2, .Name = "Value", .Type = TYPE_FLOAT}},
@@ -1052,7 +1078,8 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
 
     // --- logic nodes ---
 
-    node_def compareNode {
+    node compareNode {
+        .ID         = compareID,
         .Title      = "Compare",
         .Inputs     = {{.ID = 1, .Name = "A", .Type = TYPE_FLOAT | TYPE_INT},
                        {.ID = 2, .Name = "B", .Type = TYPE_FLOAT | TYPE_INT}},
@@ -1071,7 +1098,8 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         },
     };
 
-    node_def colorGateNode {
+    node colorGateNode {
+        .ID      = colorGateID,
         .Title   = "Color Gate",
         .Inputs  = {{.ID = 1, .Name = "Color", .Type = TYPE_COLOR},
                     {.ID = 2, .Name = "Enabled", .Type = TYPE_BOOL}},
@@ -1084,27 +1112,27 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
 
     // --- sink ---
 
-    node_def outputNode {
+    node outputNode {
+        .ID     = outputID,
         .Title  = "Output",
         .Inputs = {{.ID = 1, .Name = "Color", .Type = TYPE_COLOR},
                    {.ID = 2, .Name = "Luminance", .Type = TYPE_FLOAT}},
     };
 
-    // layout
-    uid const floatID {ng.create_node(floatNode, {0.02f, 0.05f})};
-    uid const intID {ng.create_node(intNode, {0.02f, 0.25f})};
-    uid const boolID {ng.create_node(boolNode, {0.02f, 0.50f})};
-    uid const colorID {ng.create_node(colorNode, {0.02f, 0.68f})};
-    uid const mathID {ng.create_node(mathNode, {0.28f, 0.05f})};
-    uid const clampID {ng.create_node(clampNode, {0.28f, 0.28f})};
-    uid const remapID {ng.create_node(remapNode, {0.28f, 0.48f})};
-    uid const quantizeID {ng.create_node(quantizeNode, {0.28f, 0.75f})};
-    uid const colorScaleID {ng.create_node(colorScaleNode, {0.55f, 0.10f})};
-    uid const colorMixID {ng.create_node(colorMixNode, {0.55f, 0.38f})};
-    uid const luminanceID {ng.create_node(luminanceNode, {0.55f, 0.68f})};
-    uid const compareID {ng.create_node(compareNode, {0.55f, 0.85f})};
-    uid const colorGateID {ng.create_node(colorGateNode, {0.78f, 0.38f})};
-    uid const outputID {ng.create_node(outputNode, {0.90f, 0.38f})};
+    ng.create_node(floatNode, {0.02f, 0.05f});
+    ng.create_node(intNode, {0.02f, 0.25f});
+    ng.create_node(boolNode, {0.02f, 0.50f});
+    ng.create_node(colorNode, {0.02f, 0.68f});
+    ng.create_node(mathNode, {0.28f, 0.05f});
+    ng.create_node(clampNode, {0.28f, 0.28f});
+    ng.create_node(remapNode, {0.28f, 0.48f});
+    ng.create_node(quantizeNode, {0.28f, 0.75f});
+    ng.create_node(colorScaleNode, {0.55f, 0.10f});
+    ng.create_node(colorMixNode, {0.55f, 0.38f});
+    ng.create_node(luminanceNode, {0.55f, 0.68f});
+    ng.create_node(compareNode, {0.55f, 0.85f});
+    ng.create_node(colorGateNode, {0.78f, 0.38f});
+    ng.create_node(outputNode, {0.90f, 0.38f});
 
     ng.create_connection(floatID, 1, mathID, 1);
     ng.create_connection(floatID, 1, clampID, 1);
