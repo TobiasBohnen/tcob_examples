@@ -835,12 +835,11 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
     auto retValue {std::make_shared<form<dock_layout>>(form_init {"form-ng", bounds})};
 
     auto& panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
-    panel0.Flex = {.Width = 100_pct, .Height = 100_pct};
-    auto& panelLayout {panel0.create_layout<dock_layout>()};
+    auto& panelLayout {panel0.create_layout<manual_layout>()};
 
-    auto& lbl {panelLayout.create_widget<label>(dock_style::Top, "LBL1")};
+    auto& lbl {panelLayout.create_widget<label>(rect_f {0, 0, bounds.width() * 1.f, 50}, "LBL1")};
     lbl.Flex = {.Width = 100_pct, .Height = 5_pct};
-    auto& ng {panelLayout.create_widget<node_graph_view>(dock_style::Fill, "NG1")};
+    auto& ng {panelLayout.create_widget<node_graph_view>(rect_f {0, 50, bounds.width() * 0.9f, bounds.height() * 0.85f}, "NG1")};
 
     // helpers
     auto const toFloat {[](node_value_types const& v) -> f32 {
