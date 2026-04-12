@@ -831,11 +831,13 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
     constexpr u32 TYPE_BOOL {1 << 2};
     constexpr u32 TYPE_COLOR {1 << 3};
 
-    auto  bounds {wnd.bounds()};
-    auto  retValue {std::make_shared<form<dock_layout>>(form_init {"form-ng", bounds})};
+    auto bounds {wnd.bounds()};
+    auto retValue {std::make_shared<form<dock_layout>>(form_init {"form-ng", bounds})};
+
     auto& panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
     panel0.Flex = {.Width = 100_pct, .Height = 100_pct};
     auto& panelLayout {panel0.create_layout<dock_layout>()};
+
     auto& lbl {panelLayout.create_widget<label>(dock_style::Top, "LBL1")};
     lbl.Flex = {.Width = 100_pct, .Height = 5_pct};
     auto& ng {panelLayout.create_widget<node_graph_view>(dock_style::Fill, "NG1")};
@@ -908,6 +910,8 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
     constexpr uid compareID {12};
     constexpr uid colorGateID {13};
     constexpr uid outputID {14};
+
+    using node = node_graph::node;
 
     // --- source nodes ---
 
@@ -1119,7 +1123,7 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
                    {.ID = 2, .Name = "Luminance", .Type = TYPE_FLOAT}},
     };
 
-    ng.create_node(floatNode, {0.02f, 0.05f});
+    ng.create_node(floatNode, {0.02f, 0.00f});
     ng.create_node(intNode, {0.02f, 0.25f});
     ng.create_node(boolNode, {0.02f, 0.50f});
     ng.create_node(colorNode, {0.02f, 0.68f});
