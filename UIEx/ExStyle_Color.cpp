@@ -644,6 +644,9 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->NodeText.AutoSize = auto_size_mode::OnlyShrink;
         style->NodeSize          = {10_pct, 5_pct};
 
+        style->ConnectionWidth = 3_px;
+        style->ConnectionStyle = node_graph_view::connection_style::Bezier;
+
         style->InputPortText.Font      = resGrp.get<font_family>("DejaVuSansMono");
         style->InputPortText.Style     = {.IsItalic = false, .Weight = font::weight::Normal};
         style->InputPortText.Size      = 12_px;
