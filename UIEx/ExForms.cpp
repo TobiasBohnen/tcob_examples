@@ -826,6 +826,7 @@ auto create_form_accordion(window& wnd, assets::group const& resGrp) -> std::sha
 
 auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
 {
+    using color_t = std::array<f32, 3>;
     constexpr u32 TYPE_FLOAT {1 << 0};
     constexpr u32 TYPE_INT {1 << 1};
     constexpr u32 TYPE_BOOL {1 << 2};
@@ -842,57 +843,15 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
     auto& ng {panelLayout.create_widget<node_graph_view>(rect_f {0, 50, bounds.width() * 0.9f, bounds.height() * 0.85f}, "NG1")};
 
     // helpers
-    auto const toFloat {[](node_value_types const& v) -> f32 {
-        return std::visit(overloaded {
-                              [](f32 val) { return val; },
-                              [](i32 val) { return static_cast<f32>(val); },
-                              [](bool val) { return val ? 1.0f : 0.0f; },
-                              [](string const& val) {
-                                  auto f {helper::to_number<f32>(val)};
-                                  return f ? *f : 0.0f;
-                              }},
-                          v);
+    auto const getFloat {[](auto const& in, usize i) -> f32 {
+        return node_graph::GetFloat(in, i).value_or(0.0f);
     }};
-    auto const toInt {[](node_value_types const& v) -> i32 {
-        return std::visit(overloaded {
-                              [](i32 val) { return val; },
-                              [](f32 val) { return static_cast<i32>(val); },
-                              [](auto const&) { return 0; }},
-                          v);
+    auto const getBool {[](auto const& in, usize i) -> bool {
+        return node_graph::GetBool(in, i).value_or(false);
     }};
-    auto const toBool {[](node_value_types const& v) -> bool {
-        return std::visit(overloaded {
-                              [](bool val) { return val; },
-                              [](f32 val) { return val != 0.0f; },
-                              [](i32 val) { return val != 0; },
-                              [](auto const&) { return false; }},
-                          v);
-    }};
-
-    auto const packColor {[](f32 r, f32 g, f32 b) -> string {
-        return std::format("{:.4f},{:.4f},{:.4f}", r, g, b);
-    }};
-    auto const unpackColor {[](string const& s) -> std::array<f32, 3> {
-        std::array<f32, 3> out {0.0f, 0.0f, 0.0f};
-        usize              i {0};
-        for (auto part : s | std::views::split(',')) {
-            if (i >= 3) { break; }
-            auto f {helper::to_number<f32>(string(part.begin(), part.end()))};
-            out[i++] = f ? *f : 0.0f;
-        }
-        return out;
-    }};
-
-    auto const getFloat {[toFloat](auto const& in, usize i) -> f32 {
-        return i < in.size() ? toFloat(in[i]) : 0.0f;
-    }};
-    auto const getBool {[toBool](auto const& in, usize i) -> bool {
-        return i < in.size() ? toBool(in[i]) : false;
-    }};
-    auto const getColor {[unpackColor](auto const& in, usize i) -> std::array<f32, 3> {
-        if (i >= in.size()) { return {0.0f, 0.0f, 0.0f}; }
-        auto const* s {std::get_if<string>(&in[i])};
-        return s ? unpackColor(*s) : std::array<f32, 3> {0.0f, 0.0f, 0.0f};
+    auto const getColor {[](auto const& in, usize i) -> color_t {
+        auto const* s {node_graph::GetObject<color_t>(in, i)};
+        return s ? *s : color_t {0.0f, 0.0f, 0.0f};
     }};
 
     constexpr uid floatID {1};
@@ -956,16 +915,15 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
             node_param_float {.Name = "G", .Value = 0.5f, .Min = 0.0f, .Max = 1.0f, .Step = 0.01f},
             node_param_float {.Name = "B", .Value = 0.2f, .Min = 0.0f, .Max = 1.0f, .Step = 0.01f},
         },
-        .Compute = [packColor](auto const& /*in*/, auto const& params) -> node_compute_result {
+        .Compute = [](auto const& /*in*/, auto const& params) -> node_compute_result {
             f32 const r {std::get<f32>(params[0])};
             f32 const g {std::get<f32>(params[1])};
             f32 const b {std::get<f32>(params[2])};
-            return {{1, packColor(r, g, b)}, {2, r}, {3, g}, {4, b}};
+            return {{1, user_object::Make<color_t>(color_t {r, g, b})}, {2, r}, {3, g}, {4, b}};
         },
     };
 
     // --- math nodes ---
-
     node mathNode {
         .ID         = mathID,
         .Title      = "Math",
@@ -1046,10 +1004,14 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         .Inputs  = {{.ID = 1, .Name = "Color", .Type = TYPE_COLOR},
                     {.ID = 2, .Name = "Factor", .Type = TYPE_FLOAT | TYPE_INT}},
         .Outputs = {{.ID = 3, .Name = "Result", .Type = TYPE_COLOR}},
-        .Compute = [getFloat, getColor, packColor](auto const& in, auto const& /*params*/) -> node_compute_result {
+        .Compute = [getFloat, getColor](auto const& in, auto const& /*params*/) -> node_compute_result {
             auto const rgb {getColor(in, 0)};
             f32 const  f {getFloat(in, 1)};
-            return {{3, packColor(std::clamp(rgb[0] * f, 0.0f, 1.0f), std::clamp(rgb[1] * f, 0.0f, 1.0f), std::clamp(rgb[2] * f, 0.0f, 1.0f))}};
+            return {{3,
+                     user_object::Make<color_t>(color_t {
+                         std::clamp(rgb[0] * f, 0.0f, 1.0f),
+                         std::clamp(rgb[1] * f, 0.0f, 1.0f),
+                         std::clamp(rgb[2] * f, 0.0f, 1.0f)})}};
         },
     };
 
@@ -1060,11 +1022,15 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
                     {.ID = 2, .Name = "B", .Type = TYPE_COLOR},
                     {.ID = 3, .Name = "Weight", .Type = TYPE_FLOAT | TYPE_INT}},
         .Outputs = {{.ID = 4, .Name = "Result", .Type = TYPE_COLOR}},
-        .Compute = [getFloat, getColor, packColor](auto const& in, auto const& /*params*/) -> node_compute_result {
+        .Compute = [getFloat, getColor](auto const& in, auto const& /*params*/) -> node_compute_result {
             auto const a {getColor(in, 0)};
             auto const b {getColor(in, 1)};
             f32 const  t {std::clamp(getFloat(in, 2), 0.0f, 1.0f)};
-            return {{4, packColor(a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t)}};
+            return {{4,
+                     user_object::Make<color_t>(color_t {
+                         a[0] + (b[0] - a[0]) * t,
+                         a[1] + (b[1] - a[1]) * t,
+                         a[2] + (b[2] - a[2]) * t})}};
         },
     };
 
@@ -1107,9 +1073,12 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         .Inputs  = {{.ID = 1, .Name = "Color", .Type = TYPE_COLOR},
                     {.ID = 2, .Name = "Enabled", .Type = TYPE_BOOL}},
         .Outputs = {{.ID = 3, .Name = "Result", .Type = TYPE_COLOR}},
-        .Compute = [getBool, getColor, packColor](auto const& in, auto const& /*params*/) -> node_compute_result {
+        .Compute = [getBool, getColor](auto const& in, auto const& /*params*/) -> node_compute_result {
             auto const rgb {getColor(in, 0)};
-            return {{3, getBool(in, 1) ? packColor(rgb[0], rgb[1], rgb[2]) : packColor(0.0f, 0.0f, 0.0f)}};
+            return {{3,
+                     getBool(in, 1)
+                         ? user_object::Make<color_t>(color_t {rgb[0], rgb[1], rgb[2]})
+                         : user_object::Make<color_t>(color_t {0, 0, 0})}};
         },
     };
 
