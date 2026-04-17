@@ -317,7 +317,7 @@ auto create_form0(window& wnd, group const& resGrp) -> std::shared_ptr<form_base
             ? 0
             : progressBar1.Value + 10;
         listbox0.Items.mutate([&](auto& items) {
-            items.push_back({.Text = std::to_string(progressBar0.Value), .Icon = {.Texture = resGrp.get<texture>("blue_boxCheckmark")}, .UserData = {}});
+            items.push_back({.Text = std::to_string(progressBar0.Value), .Icon = {.Texture = resGrp.get<texture>("blue_boxCheckmark")}});
         });
 
         dropDownList0.Items.mutate([&](auto& items) {
