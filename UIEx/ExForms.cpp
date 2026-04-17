@@ -919,7 +919,7 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
             f32 const r {std::get<f32>(params[0])};
             f32 const g {std::get<f32>(params[1])};
             f32 const b {std::get<f32>(params[2])};
-            return {{1, user_object::Make<color_t>(color_t {r, g, b})}, {2, r}, {3, g}, {4, b}};
+            return {{1, color_t {r, g, b}}, {2, r}, {3, g}, {4, b}};
         },
     };
 
@@ -1007,11 +1007,7 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
         .Compute = [getFloat, getColor](auto const& in, auto const& /*params*/) -> node_compute_result {
             auto const rgb {getColor(in, 0)};
             f32 const  f {getFloat(in, 1)};
-            return {{3,
-                     user_object::Make<color_t>(color_t {
-                         std::clamp(rgb[0] * f, 0.0f, 1.0f),
-                         std::clamp(rgb[1] * f, 0.0f, 1.0f),
-                         std::clamp(rgb[2] * f, 0.0f, 1.0f)})}};
+            return {{3, color_t {std::clamp(rgb[0] * f, 0.0f, 1.0f), std::clamp(rgb[1] * f, 0.0f, 1.0f), std::clamp(rgb[2] * f, 0.0f, 1.0f)}}};
         },
     };
 
@@ -1026,11 +1022,7 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
             auto const a {getColor(in, 0)};
             auto const b {getColor(in, 1)};
             f32 const  t {std::clamp(getFloat(in, 2), 0.0f, 1.0f)};
-            return {{4,
-                     user_object::Make<color_t>(color_t {
-                         a[0] + (b[0] - a[0]) * t,
-                         a[1] + (b[1] - a[1]) * t,
-                         a[2] + (b[2] - a[2]) * t})}};
+            return {{4, color_t {a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t}}};
         },
     };
 
@@ -1077,8 +1069,8 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
             auto const rgb {getColor(in, 0)};
             return {{3,
                      getBool(in, 1)
-                         ? user_object::Make<color_t>(color_t {rgb[0], rgb[1], rgb[2]})
-                         : user_object::Make<color_t>(color_t {0, 0, 0})}};
+                         ? color_t {rgb[0], rgb[1], rgb[2]}
+                         : color_t {0, 0, 0}}};
         },
     };
 
