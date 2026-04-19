@@ -30,9 +30,41 @@ void FSMEx::on_start()
         });
     }
 
+    // create prey shapes
+    for (auto const& p : _prey) {
+        auto& shape {_batch.create_shape<gfx::rect_shape>()};
+        shape.Bounds   = {{p.Position.X - 10.0f, p.Position.Y - 10.0f}, {20.0f, 20.0f}};
+        shape.Color    = colors::CornflowerBlue;
+        shape.Material = material::Empty();
+        _preyShapes.push_back(&shape);
+    }
+
+    // create hunter shape
+    hunter_data hd;
+    hd.Position = {_windowSize.Width / 2.0f, _windowSize.Height / 2.0f};
+    hd.Home     = {_windowSize.Width / 2.0f, _windowSize.Height / 2.0f};
+    hd.Velocity = {80.0f, 60.0f};
+
+    auto& hunterShape {_batch.create_shape<gfx::rect_shape>()};
+    hunterShape.Bounds   = {{hd.Position.X - 15.0f, hd.Position.Y - 15.0f}, {30.0f, 30.0f}};
+    hunterShape.Color    = colors::Orange;
+    hunterShape.Material = material::Empty();
+    _hunterShape         = &hunterShape;
+
+    // create range indicator
+    auto& rangeShape {_batch.create_shape<gfx::circle_shape>()};
+    rangeShape.Center   = hunterShape.Bounds->center();
+    rangeShape.Radius   = DETECTION_RANGE;
+    rangeShape.Color    = color {255, 165, 0, 30};
+    rangeShape.Material = material::Empty();
+    _rangeShape         = &rangeShape;
+
+    // add states
     _fsm.add_state({
         .ID          = STATE_IDLE,
-        .OnEnter     = [](user_object& data) { data.get<hunter_data>()->Target = std::nullopt; },
+        .OnEnter     = [this](user_object& data) {
+            _hunterShape->Color = colors::Green;
+            data.get<hunter_data>()->Target = std::nullopt; },
         .OnTick      = [this](user_object& data, milliseconds dt) {
             auto*     h   {data.get<hunter_data>()};
             f32 const dts {static_cast<f32>(dt.count()) / 1000.0f};
@@ -58,6 +90,7 @@ void FSMEx::on_start()
 
     _fsm.add_state({
         .ID          = STATE_HUNT,
+        .OnEnter     = [this](user_object&) { _hunterShape->Color = colors::Red; },
         .OnTick      = [this](user_object& data, milliseconds dt) {
             auto* h {data.get<hunter_data>()};
             if (!h->Target) { return; }
@@ -93,13 +126,13 @@ void FSMEx::on_start()
     });
 
     _fsm.add_state({
-        .ID     = STATE_RETURN,
-        .OnTick = [](user_object& data, milliseconds dt) {
+        .ID          = STATE_RETURN,
+        .OnEnter     = [this](user_object&) { _hunterShape->Color = colors::Yellow; },
+        .OnTick      = [](user_object& data, milliseconds dt) {
             auto*         h {data.get<hunter_data>()};
             f32 const     dts {static_cast<f32>(dt.count()) / 1000.0f};
             point_f const dir {point_f {h->Home - h->Position}.as_normalized()};
-            h->Position += dir * (HUNTER_SPEED * 0.5f * dts);
-        },
+            h->Position += dir * (HUNTER_SPEED * 0.5f * dts); },
         .Transitions = {{
             .TargetStateID = STATE_IDLE,
             .Condition     = [](user_object const& data) -> bool {
@@ -109,35 +142,7 @@ void FSMEx::on_start()
         }},
     });
 
-    hunter_data hd;
-    hd.Position = {_windowSize.Width / 2.0f, _windowSize.Height / 2.0f};
-    hd.Home     = {_windowSize.Width / 2.0f, _windowSize.Height / 2.0f};
-    hd.Velocity = {80.0f, 60.0f};
     _fsm.start(STATE_IDLE, user_object {hd});
-
-    // create prey shapes
-    for (auto const& p : _prey) {
-        auto& shape {_batch.create_shape<gfx::rect_shape>()};
-        shape.Bounds   = {{p.Position.X - 10.0f, p.Position.Y - 10.0f}, {20.0f, 20.0f}};
-        shape.Color    = colors::CornflowerBlue;
-        shape.Material = material::Empty();
-        _preyShapes.push_back(&shape);
-    }
-
-    // create hunter shape
-    auto& hunterShape {_batch.create_shape<gfx::rect_shape>()};
-    hunterShape.Bounds   = {{hd.Position.X - 15.0f, hd.Position.Y - 15.0f}, {30.0f, 30.0f}};
-    hunterShape.Color    = colors::Orange;
-    hunterShape.Material = material::Empty();
-    _hunterShape         = &hunterShape;
-
-    // create range indicator
-    auto& rangeShape {_batch.create_shape<gfx::circle_shape>()};
-    rangeShape.Center   = hunterShape.Bounds->center();
-    rangeShape.Radius   = DETECTION_RANGE;
-    rangeShape.Color    = color {255, 165, 0, 30};
-    rangeShape.Material = material::Empty();
-    _rangeShape         = &rangeShape;
 }
 
 void FSMEx::on_fixed_update(milliseconds /* deltaTime */)
@@ -169,18 +174,7 @@ void FSMEx::on_update(milliseconds deltaTime)
 
     if (auto const* h {_fsm.data<hunter_data>()}) {
         _hunterShape->Bounds = {{h->Position.X - 15.0f, h->Position.Y - 15.0f}, {30.0f, 30.0f}};
-        switch (_fsm.current_state()) {
-        case STATE_HUNT:
-            _hunterShape->Color = colors::Red;
-            break;
-        case STATE_IDLE:
-            _hunterShape->Color = colors::Green;
-            break;
-        case STATE_RETURN:
-            _hunterShape->Color = colors::Orange;
-            break;
-        }
-        _rangeShape->Center = h->Position;
+        _rangeShape->Center  = h->Position;
     }
 
     _batch.update(deltaTime);
