@@ -30,10 +30,6 @@ void FSMEx::on_start()
         });
     }
 
-    constexpr uid TRANS_SPOT {1};
-    constexpr uid TRANS_CAUGHT {2};
-    constexpr uid TRANS_RETURN {3};
-
     _fsm.add_state({
         .ID          = STATE_IDLE,
         .OnEnter     = [](user_object& data) { data.get<hunter_data>()->Target = std::nullopt; },
@@ -44,12 +40,10 @@ void FSMEx::on_start()
             h->Position.X  = std::clamp(h->Position.X, 0.0f, _windowSize.Width);
             h->Position.Y  = std::clamp(h->Position.Y, 0.0f, _windowSize.Height); },
         .Transitions = {{
-            .ID        = TRANS_SPOT,
-            .Condition = [this](user_object const& data) -> uid {
+            .TargetStateID = STATE_HUNT,
+            .Condition     = [this](user_object const& data) -> bool {
                 auto const* h {data.get<hunter_data>()};
-                return std::ranges::any_of(_prey, [&](auto const& p) { return p.Alive && p.Position.distance_to(h->Position) < DETECTION_RANGE; })
-                    ? STATE_HUNT
-                    : INVALID_ID;
+                return std::ranges::any_of(_prey, [&](auto const& p) { return p.Alive && p.Position.distance_to(h->Position) < DETECTION_RANGE; });
             },
             .OnTransition = [this](user_object& data) {
                 auto* h {data.get<hunter_data>()};
@@ -71,19 +65,19 @@ void FSMEx::on_start()
             point_f const dir {point_f {_prey[*h->Target].Position - h->Position}.as_normalized()};
             h->Position += dir * (HUNTER_SPEED * dts); },
         .Transitions = {{
-            .ID        = TRANS_CAUGHT,
-            .Condition = [this](user_object const& data) -> uid {
+            .TargetStateID = STATE_RETURN,
+            .Condition     = [this](user_object const& data) -> bool {
                 auto const* h {data.get<hunter_data>()};
-                if (!h->Target) { return STATE_RETURN; }
+                if (!h->Target) { return true; }
 
                 auto const& p {_prey[*h->Target]};
-                if (!p.Alive) { return STATE_RETURN; }
+                if (!p.Alive) { return true; }
 
                 f64 const dist {p.Position.distance_to(h->Position)};
-                if (dist < CATCH_RANGE) { return STATE_RETURN; }
-                if (dist > DETECTION_RANGE * 2.0f) { return STATE_RETURN; }
+                if (dist < CATCH_RANGE) { return true; }
+                if (dist > DETECTION_RANGE * 2.0f) { return true; }
 
-                return INVALID_ID;
+                return false;
             },
             .OnTransition = [this](user_object& data) {    
                 auto* h {data.get<hunter_data>()};
@@ -107,10 +101,10 @@ void FSMEx::on_start()
             h->Position += dir * (HUNTER_SPEED * 0.5f * dts);
         },
         .Transitions = {{
-            .ID        = TRANS_RETURN,
-            .Condition = [](user_object const& data) -> uid {
+            .TargetStateID = STATE_IDLE,
+            .Condition     = [](user_object const& data) -> bool {
                 auto const* h {data.get<hunter_data>()};
-                return h->Home.distance_to(h->Position) < 10.0 ? STATE_IDLE : INVALID_ID;
+                return h->Home.distance_to(h->Position) < 10.0;
             },
         }},
     });
