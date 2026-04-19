@@ -115,6 +115,8 @@ void FSMEx::on_start()
             .TargetStateID = STATE_RETURN,
             .Condition =
                 [this](user_object const& data) -> bool {
+                if (_fsm.time_in_state() >= seconds {1.5}) { return true; }
+
                 auto const* h {data.get<hunter_data>()};
                 if (!h->Target) { return true; }
 
@@ -139,7 +141,6 @@ void FSMEx::on_start()
                     }
                     h->Target = std::nullopt;
                 },
-            .Timeout = milliseconds {1500},
         }},
     });
 
