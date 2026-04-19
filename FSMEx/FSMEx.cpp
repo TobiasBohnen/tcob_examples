@@ -12,6 +12,10 @@ FSMEx::FSMEx(game& game)
 
 FSMEx::~FSMEx() = default;
 
+constexpr uid STATE_IDLE {1};
+constexpr uid STATE_HUNT {2};
+constexpr uid STATE_RETURN {3};
+
 void FSMEx::on_start()
 {
     _windowSize = size_f {*window().Size};
@@ -26,107 +30,96 @@ void FSMEx::on_start()
         });
     }
 
-    constexpr uid STATE_IDLE {1};
-    constexpr uid STATE_HUNT {2};
-    constexpr uid STATE_RETURN {3};
-
     constexpr uid TRANS_SPOT {1};
     constexpr uid TRANS_CAUGHT {2};
     constexpr uid TRANS_RETURN {3};
 
     _fsm.add_state({
-        .ID      = STATE_IDLE,
-        .Title   = "Idle",
-        .OnEnter = [](user_object& data) { data.get<hunter_data>()->Target = std::nullopt; },
-        .OnTick  = [this](user_object& data, milliseconds dt) {
-            auto*     h    {data.get<hunter_data>()};
+        .ID          = STATE_IDLE,
+        .OnEnter     = [](user_object& data) { data.get<hunter_data>()->Target = std::nullopt; },
+        .OnTick      = [this](user_object& data, milliseconds dt) {
+            auto*     h   {data.get<hunter_data>()};
             f32 const dts {static_cast<f32>(dt.count()) / 1000.0f};
             h->Position   += h->Velocity * (dts * 0.2f);
             h->Position.X  = std::clamp(h->Position.X, 0.0f, _windowSize.Width);
             h->Position.Y  = std::clamp(h->Position.Y, 0.0f, _windowSize.Height); },
+        .Transitions = {{
+            .ID        = TRANS_SPOT,
+            .Condition = [this](user_object const& data) -> uid {
+                auto const* h {data.get<hunter_data>()};
+                return std::ranges::any_of(_prey, [&](auto const& p) { return p.Alive && p.Position.distance_to(h->Position) < DETECTION_RANGE; })
+                    ? STATE_HUNT
+                    : INVALID_ID;
+            },
+            .OnTransition = [this](user_object& data) {
+                auto* h {data.get<hunter_data>()};
+                for (usize i {0}; i < _prey.size(); ++i) {
+                    if (_prey[i].Alive && _prey[i].Position.distance_to(h->Position) < DETECTION_RANGE) {
+                        h->Target = i;
+                        return;
+                    }
+                } },
+        }},
     });
 
     _fsm.add_state({
-        .ID     = STATE_HUNT,
-        .Title  = "Hunt",
-        .OnTick = [this](user_object& data, milliseconds dt) {
+        .ID          = STATE_HUNT,
+        .OnTick      = [this](user_object& data, milliseconds dt) {
             auto* h {data.get<hunter_data>()};
             if (!h->Target) { return; }
             f32 const     dts {static_cast<f32>(dt.count()) / 1000.0f};
             point_f const dir {point_f {_prey[*h->Target].Position - h->Position}.as_normalized()};
-            h->Position += dir * (HUNTER_SPEED * dts);
-        },
+            h->Position += dir * (HUNTER_SPEED * dts); },
+        .Transitions = {{
+            .ID        = TRANS_CAUGHT,
+            .Condition = [this](user_object const& data) -> uid {
+                auto const* h {data.get<hunter_data>()};
+                if (!h->Target) { return STATE_RETURN; }
+
+                auto const& p {_prey[*h->Target]};
+                if (!p.Alive) { return STATE_RETURN; }
+
+                f64 const dist {p.Position.distance_to(h->Position)};
+                if (dist < CATCH_RANGE) { return STATE_RETURN; }
+                if (dist > DETECTION_RANGE * 2.0f) { return STATE_RETURN; }
+
+                return INVALID_ID;
+            },
+            .OnTransition = [this](user_object& data) {    
+                auto* h {data.get<hunter_data>()};
+                if (!h->Target) { return; }
+                auto& p {_prey[*h->Target]};
+
+                if (p.Position.distance_to(h->Position) < CATCH_RANGE) {
+                    p.Alive = false;
+                    h->CaughtCount++;
+                }
+                h->Target = std::nullopt; },
+        }},
     });
 
     _fsm.add_state({
         .ID     = STATE_RETURN,
-        .Title  = "Return",
         .OnTick = [](user_object& data, milliseconds dt) {
             auto*         h {data.get<hunter_data>()};
             f32 const     dts {static_cast<f32>(dt.count()) / 1000.0f};
             point_f const dir {point_f {h->Home - h->Position}.as_normalized()};
             h->Position += dir * (HUNTER_SPEED * 0.5f * dts);
         },
-    });
-
-    _fsm.add_transition({
-        .ID        = TRANS_SPOT,
-        .FromID    = STATE_IDLE,
-        .ToID      = STATE_HUNT,
-        .Condition = [this](user_object const& data) -> bool {
-            auto const* h {data.get<hunter_data>()};
-            return std::ranges::any_of(_prey, [&](auto const& p) { return p.Alive && p.Position.distance_to(h->Position) < DETECTION_RANGE; });
-        },
-        .OnTransition = [this](user_object& data) {
-            auto* h {data.get<hunter_data>()};
-            for (usize i {0}; i < _prey.size(); ++i) {
-                if (_prey[i].Alive && _prey[i].Position.distance_to(h->Position) < DETECTION_RANGE) {
-                    h->Target = i;
-                    return;
-                }
-            } },
-    });
-
-    _fsm.add_transition({
-        .ID        = TRANS_CAUGHT,
-        .FromID    = STATE_HUNT,
-        .ToID      = STATE_RETURN,
-        .Condition = [this](user_object const& data) -> bool {
-            auto const* h {data.get<hunter_data>()};
-            if (!h->Target) { return true; }
-            auto const& p {_prey[*h->Target]};
-            if (!p.Alive) { return true; }
-            f64 const dist {p.Position.distance_to(h->Position)};
-            if (dist < CATCH_RANGE) { return true; }
-            if (dist > DETECTION_RANGE * 2.0f) { return true; }
-            return false;
-        },
-        .OnTransition = [this](user_object& data) {
-            auto* h {data.get<hunter_data>()};
-            if (!h->Target) { return; }
-            auto& p {_prey[*h->Target]};
-            if (p.Position.distance_to(h->Position) < CATCH_RANGE) {
-                p.Alive = false;
-                h->CaughtCount++;
-            }
-            h->Target = std::nullopt; },
-    });
-
-    _fsm.add_transition({
-        .ID        = TRANS_RETURN,
-        .FromID    = STATE_RETURN,
-        .ToID      = STATE_IDLE,
-        .Condition = [](user_object const& data) -> bool {
-            auto const* h {data.get<hunter_data>()};
-            return h->Home.distance_to(h->Position) < 10.0;
-        },
+        .Transitions = {{
+            .ID        = TRANS_RETURN,
+            .Condition = [](user_object const& data) -> uid {
+                auto const* h {data.get<hunter_data>()};
+                return h->Home.distance_to(h->Position) < 10.0 ? STATE_IDLE : INVALID_ID;
+            },
+        }},
     });
 
     hunter_data hd;
-    hd.Position = {_windowSize.Width / 2, _windowSize.Height / 2};
-    hd.Home     = {_windowSize.Width / 2, _windowSize.Height / 2};
+    hd.Position = {_windowSize.Width / 2.0f, _windowSize.Height / 2.0f};
+    hd.Home     = {_windowSize.Width / 2.0f, _windowSize.Height / 2.0f};
     hd.Velocity = {80.0f, 60.0f};
-    _fsm.start(STATE_IDLE, std::move(user_object {hd}));
+    _fsm.start(STATE_IDLE, user_object {hd});
 
     // create prey shapes
     for (auto const& p : _prey) {
@@ -156,11 +149,10 @@ void FSMEx::on_start()
 void FSMEx::on_fixed_update(milliseconds /* deltaTime */)
 {
     auto const& stats {locate_service<gfx::render_system>().statistics()};
-    auto const* h {_fsm.data().get<hunter_data>()};
     window().Title = std::format("FSMEx | FPS avg:{:.2f} | State:{} Caught:{}",
                                  stats.average_FPS(),
                                  _fsm.current_state(),
-                                 h ? h->CaughtCount : 0);
+                                 _fsm.data<hunter_data>() ? _fsm.data<hunter_data>()->CaughtCount : 0);
 }
 
 void FSMEx::on_update(milliseconds deltaTime)
@@ -174,17 +166,27 @@ void FSMEx::on_update(milliseconds deltaTime)
             continue;
         }
         p.Position += p.Velocity * dts;
-        if (p.Position.X < 0.0f || p.Position.X > _windowSize.Width) { p.Velocity.X = -p.Velocity.X; }
-        if (p.Position.Y < 0.0f || p.Position.Y > _windowSize.Height) { p.Velocity.Y = -p.Velocity.Y; }
+        if (p.Position.X < 10.0f || p.Position.X > _windowSize.Width - 10.0f) { p.Velocity.X = -p.Velocity.X; }
+        if (p.Position.Y < 10.0f || p.Position.Y > _windowSize.Height - 10.0f) { p.Velocity.Y = -p.Velocity.Y; }
         _preyShapes[i]->Bounds = {{p.Position.X - 10.0f, p.Position.Y - 10.0f}, {20.0f, 20.0f}};
     }
 
     _fsm.tick(deltaTime);
 
-    if (auto const* h {_fsm.data().get<hunter_data>()}) {
+    if (auto const* h {_fsm.data<hunter_data>()}) {
         _hunterShape->Bounds = {{h->Position.X - 15.0f, h->Position.Y - 15.0f}, {30.0f, 30.0f}};
-        _hunterShape->Color  = h->Target ? colors::Red : colors::Orange;
-        _rangeShape->Center  = h->Position;
+        switch (_fsm.current_state()) {
+        case STATE_HUNT:
+            _hunterShape->Color = colors::Red;
+            break;
+        case STATE_IDLE:
+            _hunterShape->Color = colors::Green;
+            break;
+        case STATE_RETURN:
+            _hunterShape->Color = colors::Orange;
+            break;
+        }
+        _rangeShape->Center = h->Position;
     }
 
     _batch.update(deltaTime);

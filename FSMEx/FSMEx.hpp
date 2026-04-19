@@ -35,8 +35,8 @@ private:
 
     static constexpr f32 DETECTION_RANGE {200.0f};
     static constexpr f32 CATCH_RANGE {20.0f};
-    static constexpr f32 HUNTER_SPEED {180.0f};
-    static constexpr i32 NUM_PREY {16};
+    static constexpr f32 HUNTER_SPEED {250.0f};
+    static constexpr i32 NUM_PREY {64};
 
     fsm                    _fsm {};
     gfx::shape_batch       _batch {};
