@@ -15,6 +15,7 @@ FSMEx::~FSMEx() = default;
 constexpr uid STATE_IDLE {1};
 constexpr uid STATE_HUNT {2};
 constexpr uid STATE_RETURN {3};
+constexpr uid STATE_DEAD {4};
 
 void FSMEx::on_start()
 {
@@ -23,10 +24,9 @@ void FSMEx::on_start()
     // spawn prey
     for (i32 i {0}; i < NUM_PREY; ++i) {
         _prey.push_back({
-            .Position = {
-                static_cast<f32>((std::rand() % static_cast<i32>(_windowSize.Width)) + 50),
-                static_cast<f32>((std::rand() % static_cast<i32>(_windowSize.Height)) + 50)},
-            .Velocity = {static_cast<f32>(std::rand() % 200) - 100.0f, static_cast<f32>(std::rand() % 200) - 100.0f},
+            .Position = {_rng(0.0f, _windowSize.Width), _rng(0.0f, _windowSize.Height)},
+            .Velocity = {_rng(50.f, 150.f) * (_rng(0, 1) ? 1.0f : -1.0f),
+                         _rng(50.f, 150.f) * (_rng(0, 1) ? 1.0f : -1.0f)},
         });
     }
 
@@ -43,7 +43,7 @@ void FSMEx::on_start()
     hunter_data hd;
     hd.Position = {_windowSize.Width / 2.0f, _windowSize.Height / 2.0f};
     hd.Home     = {_windowSize.Width / 2.0f, _windowSize.Height / 2.0f};
-    hd.Velocity = {80.0f, 60.0f};
+    hd.Velocity = {120.0f, 100.0f};
 
     auto& hunterShape {_batch.create_shape<gfx::rect_shape>()};
     hunterShape.Bounds   = {{hd.Position.X - 15.0f, hd.Position.Y - 15.0f}, {30.0f, 30.0f}};
@@ -122,6 +122,7 @@ void FSMEx::on_start()
                     h->CaughtCount++;
                 }
                 h->Target = std::nullopt; },
+            .Timeout      = milliseconds {1500},
         }},
     });
 
@@ -132,7 +133,7 @@ void FSMEx::on_start()
             auto*         h {data.get<hunter_data>()};
             f32 const     dts {static_cast<f32>(dt.count()) / 1000.0f};
             point_f const dir {point_f {h->Home - h->Position}.as_normalized()};
-            h->Position += dir * (HUNTER_SPEED * 0.5f * dts); },
+            h->Position += dir * (HUNTER_SPEED /2 * dts); },
         .Transitions = {{
             .TargetStateID = STATE_IDLE,
             .Condition     = [](user_object const& data) -> bool {
@@ -140,6 +141,19 @@ void FSMEx::on_start()
                 return h->Home.distance_to(h->Position) < 10.0;
             },
         }},
+    });
+
+    _fsm.add_state({
+        .ID      = STATE_DEAD,
+        .OnEnter = [this](user_object&) { _hunterShape->Color = colors::Black; },
+    });
+
+    _fsm.add_global_transition({
+        .TargetStateID = STATE_DEAD,
+        .Condition     = [&](user_object const& data) -> bool {
+            auto const* h {data.get<hunter_data>()};
+            return h->CaughtCount == NUM_PREY;
+        },
     });
 
     _fsm.start(STATE_IDLE, user_object {hd});
