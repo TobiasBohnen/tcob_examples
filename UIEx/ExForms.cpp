@@ -824,7 +824,7 @@ auto create_form_accordion(window& wnd, assets::group const& resGrp) -> std::sha
     return retValue;
 }
 
-auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
+auto add_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
 {
     using color_t = std::array<f32, 3>;
     constexpr u32 TYPE_FLOAT {1 << 0};
@@ -1083,20 +1083,20 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
                    {.ID = 2, .Name = "Luminance", .Type = TYPE_FLOAT}},
     };
 
-    ng.create_node(floatNode, {0.02f, 0.00f});
-    ng.create_node(intNode, {0.02f, 0.25f});
-    ng.create_node(boolNode, {0.02f, 0.50f});
-    ng.create_node(colorNode, {0.02f, 0.68f});
-    ng.create_node(mathNode, {0.28f, 0.05f});
-    ng.create_node(clampNode, {0.28f, 0.28f});
-    ng.create_node(remapNode, {0.28f, 0.48f});
-    ng.create_node(quantizeNode, {0.28f, 0.75f});
-    ng.create_node(colorScaleNode, {0.55f, 0.10f});
-    ng.create_node(colorMixNode, {0.55f, 0.38f});
-    ng.create_node(luminanceNode, {0.55f, 0.68f});
-    ng.create_node(compareNode, {0.55f, 0.85f});
-    ng.create_node(colorGateNode, {0.78f, 0.38f});
-    ng.create_node(outputNode, {0.90f, 0.38f});
+    ng.add_node(floatNode, {0.02f, 0.00f});
+    ng.add_node(intNode, {0.02f, 0.25f});
+    ng.add_node(boolNode, {0.02f, 0.50f});
+    ng.add_node(colorNode, {0.02f, 0.68f});
+    ng.add_node(mathNode, {0.28f, 0.05f});
+    ng.add_node(clampNode, {0.28f, 0.28f});
+    ng.add_node(remapNode, {0.28f, 0.48f});
+    ng.add_node(quantizeNode, {0.28f, 0.75f});
+    ng.add_node(colorScaleNode, {0.55f, 0.10f});
+    ng.add_node(colorMixNode, {0.55f, 0.38f});
+    ng.add_node(luminanceNode, {0.55f, 0.68f});
+    ng.add_node(compareNode, {0.55f, 0.85f});
+    ng.add_node(colorGateNode, {0.78f, 0.38f});
+    ng.add_node(outputNode, {0.90f, 0.38f});
 
     ng.create_connection(floatID, 1, mathID, 1);
     ng.create_connection(floatID, 1, clampID, 1);
