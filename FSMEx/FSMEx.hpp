@@ -20,9 +20,10 @@ protected:
 
 private:
     struct prey_data {
-        point_f Position {};
-        point_f Velocity {};
-        bool    Alive {true};
+        point_f              Position {};
+        point_f              Velocity {};
+        bool                 Alive {true};
+        std::shared_ptr<fsm> Behavior {};
     };
 
     struct hunter_data {
@@ -38,9 +39,10 @@ private:
     static constexpr f32 HUNTER_SPEED {250.0f};
     static constexpr i32 NUM_PREY {12};
 
-    fsm                    _fsm {};
-    gfx::shape_batch       _batch {};
-    std::vector<prey_data> _prey {};
+    fsm                          _hunterBehavior {};
+    std::shared_ptr<hunter_data> _hunter;
+    gfx::shape_batch             _batch {};
+    std::vector<prey_data>       _prey {};
 
     std::vector<gfx::rect_shape*> _preyShapes {};
     gfx::rect_shape*              _hunterShape {nullptr};
