@@ -27,11 +27,11 @@ private:
     };
 
     struct hunter_data {
-        point_f              Position {};
-        point_f              Home {};
-        point_f              Velocity {};
-        std::optional<usize> Target {};
-        i32                  CaughtCount {0};
+        point_f    Position {};
+        point_f    Home {};
+        point_f    Velocity {};
+        prey_data* Target {nullptr};
+        i32        CaughtCount {0};
     };
 
     static constexpr f32 DETECTION_RANGE {200.0f};
