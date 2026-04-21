@@ -19,19 +19,22 @@ protected:
     void on_key_down(keyboard::event const& ev) override;
 
 private:
-    struct prey_data {
+    struct prey {
         point_f              Position {};
         point_f              Velocity {};
         bool                 Alive {true};
+        gfx::rect_shape*     Shape {nullptr};
         std::shared_ptr<fsm> Behavior {};
     };
 
-    struct hunter_data {
-        point_f    Position {};
-        point_f    Home {};
-        point_f    Velocity {};
-        prey_data* Target {nullptr};
-        i32        CaughtCount {0};
+    struct hunter {
+        point_f          Position {};
+        point_f          Home {};
+        point_f          Velocity {};
+        prey*            Target {nullptr};
+        gfx::rect_shape* Shape {nullptr};
+        i32              CaughtCount {0};
+        fsm              Behavior {};
     };
 
     static constexpr f32 DETECTION_RANGE {200.0f};
@@ -39,14 +42,12 @@ private:
     static constexpr f32 HUNTER_SPEED {250.0f};
     static constexpr i32 NUM_PREY {12};
 
-    fsm                          _hunterBehavior {};
-    std::shared_ptr<hunter_data> _hunter;
-    gfx::shape_batch             _batch {};
-    std::vector<prey_data>       _prey {};
+    gfx::shape_batch _batch {};
 
-    std::vector<gfx::rect_shape*> _preyShapes {};
-    gfx::rect_shape*              _hunterShape {nullptr};
-    gfx::circle_shape*            _rangeShape {nullptr};
+    std::shared_ptr<hunter> _hunter;
+    std::vector<prey>       _prey {};
+
+    gfx::circle_shape* _rangeShape {nullptr};
 
     size_f _windowSize {};
     rng    _rng;

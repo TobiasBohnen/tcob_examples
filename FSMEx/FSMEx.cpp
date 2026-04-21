@@ -35,7 +35,7 @@ void FSMEx::on_start()
 
     // 1. Setup Prey
     for (i32 i {0}; i < NUM_PREY; ++i) {
-        prey_data& p {_prey.emplace_back()};
+        prey& p {_prey.emplace_back()};
         p.Position = {_rng(20.0f, _windowSize.Width - 20.0f), _rng(20.0f, _windowSize.Height - 20.0f)};
         p.Velocity = {_rng(50.f, 100.f) * (_rng(0, 1) ? 1.0f : -1.0f),
                       _rng(50.f, 100.f) * (_rng(0, 1) ? 1.0f : -1.0f)};
@@ -44,7 +44,7 @@ void FSMEx::on_start()
         shape.Bounds   = {{p.Position.X - 10.0f, p.Position.Y - 10.0f}, {20.0f, 20.0f}};
         shape.Color    = colors::CornflowerBlue;
         shape.Material = material::Empty();
-        _preyShapes.push_back(&shape);
+        p.Shape        = &shape;
 
         p.Behavior = std::make_shared<fsm>();
 
@@ -66,13 +66,13 @@ void FSMEx::on_start()
 
         p.Behavior->add_state({
             .ID          = PREY_WANDER,
-            .OnEnter     = [this, i](user_object&) { _preyShapes[i]->Color = colors::CornflowerBlue; },
+            .OnEnter     = [this, i](user_object&) { _prey[i].Shape->Color = colors::CornflowerBlue; },
             .Transitions = {{.TargetStateID = PREY_FLEE, .Condition = preyWanderCondition}},
         });
 
         p.Behavior->add_state({
             .ID          = PREY_FLEE,
-            .OnEnter     = [this, i](user_object&) { _preyShapes[i]->Color = colors::White; },
+            .OnEnter     = [this, i](user_object&) { _prey[i].Shape->Color = colors::White; },
             .OnUpdate    = preyFleeUpdate,
             .Transitions = {{.TargetStateID = PREY_WANDER, .Condition = preyFleeCondition}},
         });
@@ -80,7 +80,7 @@ void FSMEx::on_start()
         p.Behavior->start(PREY_WANDER, user_object {});
     }
 
-    _hunter           = std::make_shared<hunter_data>();
+    _hunter           = std::make_shared<hunter>();
     _hunter->Position = {_windowSize.Width / 2.0f, _windowSize.Height / 2.0f};
     _hunter->Home     = {_windowSize.Width / 2.0f, _windowSize.Height / 2.0f};
     _hunter->Velocity = {120.0f, 100.0f};
@@ -90,7 +90,7 @@ void FSMEx::on_start()
     hunterShape.Bounds   = {{_hunter->Position.X - 15.0f, _hunter->Position.Y - 15.0f}, {30.0f, 30.0f}};
     hunterShape.Color    = colors::Orange;
     hunterShape.Material = material::Empty();
-    _hunterShape         = &hunterShape;
+    _hunter->Shape       = &hunterShape;
 
     auto& rangeShape {_batch.create_shape<gfx::circle_shape>()};
     rangeShape.Center   = hunterShape.Bounds->center();
@@ -100,18 +100,18 @@ void FSMEx::on_start()
     _rangeShape         = &rangeShape;
 
     // 3. Setup Hunter FSM
-    auto const h {[](user_object& data) -> hunter_data& { return *data.get<hunter_data>(); }};
-    auto const ch {[](user_object const& data) -> hunter_data const& { return *data.get<hunter_data>(); }};
+    auto const h {[](user_object& data) -> hunter& { return *data.get<hunter>(); }};
+    auto const ch {[](user_object const& data) -> hunter const& { return *data.get<hunter>(); }};
     auto const dts {[](milliseconds dt) -> f32 { return static_cast<f32>(dt.count()) / 1000.0f; }};
 
     auto const idleEnter {[this, h](user_object& data) {
-        _hunterShape->Color = colors::Green;
-        h(data).Target      = nullptr;
+        _hunter->Shape->Color = colors::Green;
+        h(data).Target        = nullptr;
     }};
 
     auto const idleUpdate {[this, h](user_object& data, milliseconds) {
         auto&     hd {h(data)};
-        f32 const elapsed {static_cast<f32>(_hunterBehavior.time_in_state().count()) / 1000.0f};
+        f32 const elapsed {static_cast<f32>(_hunter->Behavior.time_in_state().count()) / 1000.0f};
         hd.Position.X = hd.Home.X + (std::cos(elapsed * 1.5f) * 150.0f);
         hd.Position.Y = hd.Home.Y + (std::sin(elapsed * 1.5f) * 150.0f);
     }};
@@ -133,7 +133,7 @@ void FSMEx::on_start()
         }
     }};
 
-    _hunterBehavior.add_state({
+    _hunter->Behavior.add_state({
         .ID          = STATE_IDLE,
         .OnEnter     = idleEnter,
         .OnUpdate    = idleUpdate,
@@ -153,21 +153,22 @@ void FSMEx::on_start()
         f64 const dist {hd.Target->Position.distance_to(hd.Position)};
         return dist < CATCH_RANGE
             || dist > DETECTION_RANGE * 2.0f
-            || _hunterBehavior.time_in_state() > seconds {3};
+            || _hunter->Behavior.time_in_state() > seconds {3};
     }};
 
     auto const huntTransition {[this, h](user_object& data) {
         auto& hd {h(data)};
         if (hd.Target && hd.Target->Position.distance_to(hd.Position) < CATCH_RANGE) {
             hd.Target->Alive = false;
+            hd.Target->Shape->hide();
             hd.CaughtCount++;
         }
         hd.Target = nullptr;
     }};
 
-    _hunterBehavior.add_state({
+    _hunter->Behavior.add_state({
         .ID          = STATE_HUNT,
-        .OnEnter     = [this](user_object&) { _hunterShape->Color = colors::Red; },
+        .OnEnter     = [this](user_object&) { _hunter->Shape->Color = colors::Red; },
         .OnUpdate    = huntUpdate,
         .Transitions = {{.TargetStateID = STATE_RETURN, .Condition = huntCondition, .OnTransition = huntTransition}},
     });
@@ -185,31 +186,31 @@ void FSMEx::on_start()
         return hd.Position.distance_to(circleStart) < 5.0f;
     }};
 
-    _hunterBehavior.add_state({
+    _hunter->Behavior.add_state({
         .ID          = STATE_RETURN,
-        .OnEnter     = [this](user_object&) { _hunterShape->Color = colors::Yellow; },
+        .OnEnter     = [this](user_object&) { _hunter->Shape->Color = colors::Yellow; },
         .OnUpdate    = returnUpdate,
         .Transitions = {{.TargetStateID = STATE_IDLE, .Condition = returnCondition}},
     });
 
     auto const deadEnter {[this](user_object&) {
-        _hunterShape->Color = colors::Black;
-        _rangeShape->Color  = colors::Transparent;
+        _hunter->Shape->Color = colors::Black;
+        _rangeShape->Color    = colors::Transparent;
     }};
 
-    _hunterBehavior.add_state({
+    _hunter->Behavior.add_state({
         .ID      = STATE_DEAD,
         .OnEnter = deadEnter,
     });
 
     auto const deadCondition {[](user_object const& data) -> bool {
-        return data.get<hunter_data>()->CaughtCount == NUM_PREY;
+        return data.get<hunter>()->CaughtCount == NUM_PREY;
     }};
 
-    _hunterBehavior.add_global_transition({.TargetStateID = STATE_DEAD,
-                                           .Condition     = deadCondition});
+    _hunter->Behavior.add_global_transition({.TargetStateID = STATE_DEAD,
+                                             .Condition     = deadCondition});
 
-    _hunterBehavior.start(STATE_IDLE, user_object {_hunter});
+    _hunter->Behavior.start(STATE_IDLE, user_object {_hunter});
 }
 
 void FSMEx::on_fixed_update(milliseconds /* deltaTime */)
@@ -217,7 +218,7 @@ void FSMEx::on_fixed_update(milliseconds /* deltaTime */)
     auto const& stats {locate_service<gfx::render_system>().statistics()};
     window().Title = std::format("FSMEx | FPS avg:{:.2f} | State: {} Caught: {} / {}",
                                  stats.average_FPS(),
-                                 STATES.at(_hunterBehavior.current_state()),
+                                 STATES.at(_hunter->Behavior.current_state()),
                                  _hunter ? _hunter->CaughtCount : 0,
                                  NUM_PREY);
 }
@@ -228,10 +229,7 @@ void FSMEx::on_update(milliseconds deltaTime)
 
     for (usize i {0}; i < _prey.size(); ++i) {
         auto& p {_prey[i]};
-        if (!p.Alive) {
-            _preyShapes[i]->Color = colors::Transparent;
-            continue;
-        }
+        if (!p.Alive) { continue; }
 
         p.Behavior->update(deltaTime);
 
@@ -253,17 +251,17 @@ void FSMEx::on_update(milliseconds deltaTime)
             p.Velocity.Y *= -1;
         }
 
-        _preyShapes[i]->Bounds = {{p.Position.X - 10.0f, p.Position.Y - 10.0f}, {20.0f, 20.0f}};
+        _prey[i].Shape->Bounds = {{p.Position.X - 10.0f, p.Position.Y - 10.0f}, {20.0f, 20.0f}};
     }
 
-    _hunterBehavior.update(deltaTime);
+    _hunter->Behavior.update(deltaTime);
 
-    if (auto* h {_hunterBehavior.data<hunter_data>()}) {
+    if (auto* h {_hunter->Behavior.data<hunter>()}) {
         h->Position.X = std::clamp(h->Position.X, 15.0f, _windowSize.Width - 15.0f);
         h->Position.Y = std::clamp(h->Position.Y, 15.0f, _windowSize.Height - 15.0f);
 
-        _hunterShape->Bounds = {{h->Position.X - 15.0f, h->Position.Y - 15.0f}, {30.0f, 30.0f}};
-        _rangeShape->Center  = h->Position;
+        _hunter->Shape->Bounds = {{h->Position.X - 15.0f, h->Position.Y - 15.0f}, {30.0f, 30.0f}};
+        _rangeShape->Center    = h->Position;
     }
 
     _batch.update(deltaTime);
