@@ -50,7 +50,7 @@ void FSMEx::on_start()
 
         // Individual Prey FSM
         // prey behaviors
-        auto const preyWanderCondition {[this, i](user_object const&) -> bool {
+        auto const preyWanderCondition {[this, i](user_object const& data) -> bool {
             return _hunter && _prey[i].Position.distance_to(_hunter->Position) < DETECTION_RANGE;
         }};
 
@@ -105,13 +105,14 @@ void FSMEx::on_start()
     auto const dts {[](milliseconds dt) -> f32 { return static_cast<f32>(dt.count()) / 1000.0f; }};
 
     auto const idleEnter {[this, h](user_object& data) {
-        _hunter->Shape->Color = colors::Green;
-        h(data).Target        = nullptr;
+        auto& hd {h(data)};
+        hd.Shape->Color = colors::Green;
+        hd.Target       = nullptr;
     }};
 
     auto const idleUpdate {[this, h](user_object& data, milliseconds) {
         auto&     hd {h(data)};
-        f32 const elapsed {static_cast<f32>(_hunter->Behavior.time_in_state().count()) / 1000.0f};
+        f32 const elapsed {static_cast<f32>(hd.Behavior.time_in_state().count()) / 1000.0f};
         hd.Position.X = hd.Home.X + (std::cos(elapsed * 1.5f) * 150.0f);
         hd.Position.Y = hd.Home.Y + (std::sin(elapsed * 1.5f) * 150.0f);
     }};
@@ -153,7 +154,7 @@ void FSMEx::on_start()
         f64 const dist {hd.Target->Position.distance_to(hd.Position)};
         return dist < CATCH_RANGE
             || dist > DETECTION_RANGE * 2.0f
-            || _hunter->Behavior.time_in_state() > seconds {3};
+            || hd.Behavior.time_in_state() > seconds {3};
     }};
 
     auto const huntTransition {[this, h](user_object& data) {
@@ -168,7 +169,7 @@ void FSMEx::on_start()
 
     _hunter->Behavior.add_state({
         .ID          = STATE_HUNT,
-        .OnEnter     = [this](user_object&) { _hunter->Shape->Color = colors::Red; },
+        .OnEnter     = [this, h](user_object& data) { h(data).Shape->Color = colors::Red; },
         .OnUpdate    = huntUpdate,
         .Transitions = {{.TargetStateID = STATE_RETURN, .Condition = huntCondition, .OnTransition = huntTransition}},
     });
@@ -188,14 +189,14 @@ void FSMEx::on_start()
 
     _hunter->Behavior.add_state({
         .ID          = STATE_RETURN,
-        .OnEnter     = [this](user_object&) { _hunter->Shape->Color = colors::Yellow; },
+        .OnEnter     = [this, h](user_object& data) { h(data).Shape->Color = colors::Yellow; },
         .OnUpdate    = returnUpdate,
         .Transitions = {{.TargetStateID = STATE_IDLE, .Condition = returnCondition}},
     });
 
-    auto const deadEnter {[this](user_object&) {
-        _hunter->Shape->Color = colors::Black;
-        _rangeShape->Color    = colors::Transparent;
+    auto const deadEnter {[this, h](user_object& data) {
+        h(data).Shape->Color = colors::Black;
+        _rangeShape->Color   = colors::Transparent;
     }};
 
     _hunter->Behavior.add_state({
@@ -219,7 +220,7 @@ void FSMEx::on_fixed_update(milliseconds /* deltaTime */)
     window().Title = std::format("FSMEx | FPS avg:{:.2f} | State: {} Caught: {} / {}",
                                  stats.average_FPS(),
                                  STATES.at(_hunter->Behavior.current_state()),
-                                 _hunter ? _hunter->CaughtCount : 0,
+                                 _hunter->CaughtCount,
                                  NUM_PREY);
 }
 
@@ -227,8 +228,7 @@ void FSMEx::on_update(milliseconds deltaTime)
 {
     f32 const dts {static_cast<f32>(deltaTime.count()) / 1000.0f};
 
-    for (usize i {0}; i < _prey.size(); ++i) {
-        auto& p {_prey[i]};
+    for (auto& p : _prey) {
         if (!p.Alive) { continue; }
 
         p.Behavior->update(deltaTime);
@@ -251,7 +251,7 @@ void FSMEx::on_update(milliseconds deltaTime)
             p.Velocity.Y *= -1;
         }
 
-        _prey[i].Shape->Bounds = {{p.Position.X - 10.0f, p.Position.Y - 10.0f}, {20.0f, 20.0f}};
+        p.Shape->Bounds = {{p.Position.X - 10.0f, p.Position.Y - 10.0f}, {20.0f, 20.0f}};
     }
 
     _hunter->Behavior.update(deltaTime);
