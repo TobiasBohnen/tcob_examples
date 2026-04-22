@@ -19,6 +19,9 @@ protected:
     void on_key_down(keyboard::event const& ev) override;
 
 private:
+    void setup_prey();
+    void setup_hunter();
+
     struct prey {
         point_f              Position {};
         point_f              Velocity {};
