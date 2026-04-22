@@ -28,13 +28,13 @@ private:
     };
 
     struct hunter {
-        point_f          Position {};
-        point_f          Home {};
-        point_f          Velocity {};
-        prey*            Target {nullptr};
-        gfx::rect_shape* Shape {nullptr};
-        i32              CaughtCount {0};
-        fsm              Behavior {};
+        point_f             Position {};
+        point_f             Home {};
+        point_f             Velocity {};
+        std::weak_ptr<prey> Target {};
+        gfx::rect_shape*    Shape {nullptr};
+        i32                 CaughtCount {0};
+        fsm                 Behavior {};
     };
 
     static constexpr f32 DETECTION_RANGE {200.0f};
@@ -44,8 +44,8 @@ private:
 
     gfx::shape_batch _batch {};
 
-    std::shared_ptr<hunter> _hunter;
-    std::vector<prey>       _prey {};
+    std::shared_ptr<hunter>            _hunter;
+    std::vector<std::shared_ptr<prey>> _prey {};
 
     gfx::circle_shape* _rangeShape {nullptr};
 
