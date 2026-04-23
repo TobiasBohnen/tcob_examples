@@ -3,6 +3,7 @@ add_executable(FSMEx)
 target_sources(FSMEx PRIVATE
     main.cpp
     FSMEx.cpp
+    Sim.cpp
 )
 
 set_target_properties(FSMEx PROPERTIES
