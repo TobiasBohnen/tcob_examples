@@ -36,6 +36,7 @@ private:
         point_f             Velocity {};
         std::weak_ptr<prey> Target {};
         gfx::rect_shape*    Shape {nullptr};
+        gfx::circle_shape*  RangeShape {nullptr};
         i32                 CaughtCount {0};
         fsm                 Behavior {};
     };
@@ -49,8 +50,6 @@ private:
 
     std::shared_ptr<hunter>            _hunter;
     std::vector<std::shared_ptr<prey>> _prey {};
-
-    gfx::circle_shape* _rangeShape {nullptr};
 
     size_f _windowSize {};
     rng    _rng;
