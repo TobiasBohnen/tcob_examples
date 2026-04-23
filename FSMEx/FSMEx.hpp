@@ -19,10 +19,14 @@ struct prey_data {
 
     void on_wander_enter() const;
     void on_wander_update(milliseconds dt);
-    auto on_wander_condition() const -> bool;
+
+    auto on_wander_flee_condition() const -> bool;
+
     void on_flee_enter() const;
     void on_flee_update(milliseconds dt);
-    auto on_flee_condition() const -> bool;
+
+    auto on_flee_wander_condition() const -> bool;
+
     void move(milliseconds dt);
 };
 
@@ -43,17 +47,23 @@ struct hunter_data {
     hunter                                         Actor {};
 
     void sync();
+
     void on_idle_enter();
     void on_idle_update(milliseconds dt);
+
     auto on_idle_hunt_condition() const -> bool;
     void on_idle_hunt_transition();
+
     void on_hunt_enter() const;
     void on_hunt_update(milliseconds dt);
+
     auto on_hunt_return_condition() const -> bool;
     void on_hunt_return_transition();
+
     void on_return_enter() const;
     void on_return_update(milliseconds dt);
     auto on_return_idle_condition() const -> bool;
+
     void on_dead_enter() const;
     auto on_dead_condition() const -> bool;
 };

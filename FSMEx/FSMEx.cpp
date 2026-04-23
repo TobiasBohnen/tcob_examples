@@ -65,7 +65,7 @@ void prey_data::on_wander_update(milliseconds dt)
     move(dt);
 }
 
-auto prey_data::on_wander_condition() const -> bool
+auto prey_data::on_wander_flee_condition() const -> bool
 {
     return Actor.Position.distance_to(Hunter->Actor.Position) < DETECTION_RANGE;
 }
@@ -82,7 +82,7 @@ void prey_data::on_flee_update(milliseconds dt)
     move(dt);
 }
 
-auto prey_data::on_flee_condition() const -> bool
+auto prey_data::on_flee_wander_condition() const -> bool
 {
     return Actor.Position.distance_to(Hunter->Actor.Position) > DETECTION_RANGE * 1.5f;
 }
@@ -234,7 +234,7 @@ void FSMEx::setup_prey()
             .OnUpdate    = [](user_object& data, milliseconds dt) { data.get<prey_data>()->on_wander_update(dt); },
             .Transitions = {{
                 .TargetStateID = PREY_FLEE,
-                .Condition     = [](user_object const& data) { return data.get<prey_data>()->on_wander_condition(); },
+                .Condition     = [](user_object const& data) { return data.get<prey_data>()->on_wander_flee_condition(); },
             }},
         });
         pd->Behavior.add_state({
@@ -243,7 +243,7 @@ void FSMEx::setup_prey()
             .OnUpdate    = [](user_object& data, milliseconds dt) { data.get<prey_data>()->on_flee_update(dt); },
             .Transitions = {{
                 .TargetStateID = PREY_WANDER,
-                .Condition     = [](user_object const& data) { return data.get<prey_data>()->on_flee_condition(); },
+                .Condition     = [](user_object const& data) { return data.get<prey_data>()->on_flee_wander_condition(); },
             }},
         });
         pd->Behavior.start(PREY_WANDER, user_object {pd});
