@@ -60,9 +60,8 @@ void ParticleSystemEx::on_start()
             .Spin     = std::minmax(-150_deg, 150_deg),
             .Rotation = std::minmax(-15_deg, 15_deg),
         };
-        emi0.Settings.SpawnArea   = {450, 450, 5, 5};
-        emi0.Settings.SpawnRate   = 10000;
-        emi0.Settings.IsExplosion = true;
+        emi0.Settings.SpawnArea = {450, 450, 5, 5};
+        emi0.Settings.Pattern   = particle_emitter::emit_burst {.Count = 1000, .Interval = 1000ms, .Repeats = 5};
 
         uid const explosionID {emi0.id()};
 
@@ -83,10 +82,9 @@ void ParticleSystemEx::on_start()
                 .Size          = {1, 1},
                 .Spin          = std::minmax(-50_deg, 50_deg),
             };
-            subEmi.Settings.SpawnArea   = {ev.Particles.Bounds[ev.Index].left(), ev.Particles.Bounds[ev.Index].top(), 2, 2};
-            subEmi.Settings.SpawnRate   = 10;
-            subEmi.Settings.IsExplosion = true;
-            subEmi.Settings.Transient   = true;
+            subEmi.Settings.SpawnArea = {ev.Particles.Bounds[ev.Index].left(), ev.Particles.Bounds[ev.Index].top(), 2, 2};
+            subEmi.Settings.Pattern   = particle_emitter::emit_burst {.Count = 10, .Interval = 0ms, .Repeats = 1};
+            subEmi.Settings.Transient = true;
         });
     }
     {
@@ -107,7 +105,7 @@ void ParticleSystemEx::on_start()
             .Size  = {10, 10},
         };
         emi0.Settings.SpawnArea = {1200, 450, 120, 75};
-        emi0.Settings.SpawnRate = 100;
+        emi0.Settings.Pattern   = particle_emitter::emit_linear {.Rate = 100};
     }
     _system0.start();
 }
