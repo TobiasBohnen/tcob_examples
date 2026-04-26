@@ -188,7 +188,7 @@ void RaycasterEx::cast(i32 x, i32 w, i32 h)
         // How much to increase the texture coordinate per screen pixel
         f64 const texStep {1.0 * texHeight / lineHeight};
         // Starting texture coordinate
-        f64       texPos {(drawStart - h / 2 + lineHeight / 2) * texStep};
+        f64       texPos {(drawStart - (h / 2) + (lineHeight / 2)) * texStep};
         for (i32 y {drawStart}; y < drawEnd; y++) {
             // Cast the texture coordinate to integer, and mask with (cache::TexSize.Height - 1) in case of overflow
             i32 const texY {static_cast<i32>(texPos) & (texHeight - 1)};
@@ -217,7 +217,7 @@ void RaycasterEx::cast(i32 x, i32 w, i32 h)
 
     // draw the floor from drawEnd to the bottom of the screen
     for (i32 y {drawEnd}; y < h; y++) {
-        f64 const currentDist {h / (2.0 * y - h)};
+        f64 const currentDist {h / ((2.0 * y) - h)};
         f64 const weight {std::min(currentDist / perpWallDist, 1.0)};
 
         point_d const currentFloor {(weight * floorWall.X) + ((1.0 - weight) * _pos.X), (weight * floorWall.Y) + ((1.0 - weight) * _pos.Y)};

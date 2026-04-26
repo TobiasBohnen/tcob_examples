@@ -7,102 +7,132 @@
 
 #include <algorithm>
 
-using namespace std::chrono_literals;
-
-static auto create_tileset() -> orthogonal_tilemap::set
-{
-    orthogonal_tilemap::set retValue;
-
-    auto const gradLow {color_gradient {{0.0f, colors::White}, {0.10f, colors::LightGreen}, {1.0f, colors::Green}}.colors()};
-    auto const gradHigh {color_gradient {{0.0f, colors::White}, {0.10f, colors::LightSalmon}, {1.0f, colors::Red}}.colors()};
-    for (i32 i {0}; i < 256; ++i) {
-        if (i > 127) {
-            retValue[i + 1] = {.Color = gradHigh[(i - 128) * 2]};
-        } else {
-            retValue[i + 1] = {.Color = gradLow[(127 - i) * 2]};
-        }
-    }
-
-    return retValue;
-}
-
 PathfindingEx::PathfindingEx(game& game)
     : scene {game}
 {
-    _tileMapOrtho.Tileset = create_tileset();
-    window().ClearColor   = colors::DarkRed;
+    window().ClearColor = colors::Black;
 }
 
 PathfindingEx::~PathfindingEx() = default;
 
 void PathfindingEx::on_start()
 {
-    f32              min {2000}, max {0};
-    perlin_noise     noise {{20, 20}};
-    std::vector<f32> values;
-    for (i32 x {0}; x < GRID_SIZE.Width; ++x) {
-        for (i32 y {0}; y < GRID_SIZE.Height; ++y) {
-            point_f pos {static_cast<f32>(x), static_cast<f32>(y)};
-            pos /= GRID_SIZE.Width;
-            f32 const f {1 - noise(pos)};
-            min = std::min(min, f);
-            max = std::max(max, f);
-            values.push_back(f);
-        }
-    }
-    for (u32 i {0}; i < values.size(); ++i) {
-        tile_index_t const val {static_cast<tile_index_t>(std::clamp((values[i] - min) / (max - min) * 256 + 1, 1.0f, 256.0f))};
+    static constexpr i32 CELL {6};
+    static constexpr i32 WALL {1};
+    static constexpr i32 STEP {CELL + WALL};
+    static constexpr i32 CW {(GRID_SIZE.Width - WALL) / STEP};
+    static constexpr i32 CH {(GRID_SIZE.Height - WALL) / STEP};
 
-        _tiles[i] = val;
+    static constexpr tile_index_t WALL_TILE {256};
+    static constexpr tile_index_t PASSAGE_TILE {1};
+    _tiles.fill(WALL_TILE);
+
+    auto carve {[&](i32 cx, i32 cy) {
+        i32 const tx {(cx * STEP) + WALL};
+        i32 const ty {(cy * STEP) + WALL};
+        for (i32 dy {0}; dy < CELL; ++dy) {
+            for (i32 dx {0}; dx < CELL; ++dx) {
+                _tiles[{tx + dx, ty + dy}] = PASSAGE_TILE;
+            }
+        }
+    }};
+
+    auto carve_between {[&](point_i a, point_i b) {
+        i32 const tx {(std::min(a.X, b.X) * STEP) + WALL + (a.X != b.X ? CELL : 0)};
+        i32 const ty {(std::min(a.Y, b.Y) * STEP) + WALL + (a.Y != b.Y ? CELL : 0)};
+        if (a.X != b.X) {
+            for (i32 dy {0}; dy < CELL; ++dy) {
+                _tiles[{tx, ty + dy}] = PASSAGE_TILE;
+            }
+        } else {
+            for (i32 dx {0}; dx < CELL; ++dx) {
+                _tiles[{tx + dx, ty}] = PASSAGE_TILE;
+            }
+        }
+    }};
+
+    static constexpr std::array<point_i, 4> DIRS {{{0, -1}, {0, 1}, {-1, 0}, {1, 0}}};
+
+    grid<bool>           visited {{CW, CH}, false};
+    std::vector<point_i> stack;
+
+    point_i cur {0, 0};
+    visited[cur] = true;
+    carve(cur.X, cur.Y);
+    stack.push_back(cur);
+    random::shuffle<point_i> shuffle {12345};
+    while (!stack.empty()) {
+        cur = stack.back();
+        std::array<point_i, 4> dirs {DIRS};
+        shuffle(dirs);
+        bool pushed {false};
+        for (auto const& d : dirs) {
+            point_i const next {cur.X + d.X, cur.Y + d.Y};
+            if (next.X < 0 || next.X >= CW || next.Y < 0 || next.Y >= CH) { continue; }
+            if (visited[next]) { continue; }
+            visited[next] = true;
+            carve(next.X, next.Y);
+            carve_between(cur, next);
+            stack.push_back(next);
+            pushed = true;
+            break;
+        }
+        if (!pushed) { stack.pop_back(); }
     }
 
     f32 const size {(*window().Size).Height / static_cast<f32>(GRID_SIZE.Height)};
-    _tileSize          = {size, size};
-    _tileMapOrtho.Grid = {.TileSize = _tileSize};
-
-    auto& layer {_tileMapOrtho.create_layer()};
-    layer.Tiles            = _tiles;
-    _tileMapOrtho.Material = material::Empty();
+    _tileSize = {size, size};
 }
 
 void PathfindingEx::on_draw_to(render_target& target, transform const& xform)
 {
-    _tileMapOrtho.draw_to(target, xform);
-
     auto const size {*target.Size};
+    if (_canvasDirty) {
+        _canvas.begin_frame(size, 1);
+        _canvas.set_edge_antialias(false);
 
-    _canvas.begin_frame(size, 1);
-
-    _canvas.set_edge_antialias(false);
-
-    // path
-    _canvas.begin_path();
-    _canvas.set_fill_style(colors::Blue);
-    for (auto const& point : _path) {
-        _canvas.rect({point_f {point} * point_f {_tileSize.Width, _tileSize.Height}, _tileSize});
-    }
-    _canvas.fill();
-
-    // start/end
-    auto drawRect {[&](point_i pos, color col) {
+        // background
         _canvas.begin_path();
-        _canvas.set_fill_style(col);
-        _canvas.rect({point_f {pos} * point_f {_tileSize.Width, _tileSize.Height}, _tileSize});
+        _canvas.set_fill_style(colors::Black);
+        _canvas.rect({{0, 0}, size_f {size}});
         _canvas.fill();
-    }};
-    if (_start != INVALID) { drawRect(_start, colors::Green); }
-    if (_end != INVALID) { drawRect(_end, colors::Red); }
 
-    _canvas.end_frame();
+        // passages
+        _canvas.begin_path();
+        _canvas.set_fill_style(colors::White);
+        for (i32 y {0}; y < GRID_SIZE.Height; ++y) {
+            for (i32 x {0}; x < GRID_SIZE.Width; ++x) {
+                if (_tiles[{x, y}] == 1) {
+                    _canvas.rect({point_f {static_cast<f32>(x), static_cast<f32>(y)} * point_f {_tileSize.Width, _tileSize.Height}, _tileSize});
+                }
+            }
+        }
+        _canvas.fill();
 
+        // path
+        _canvas.begin_path();
+        _canvas.set_fill_style(colors::Blue);
+        for (auto const& point : _path) {
+            _canvas.rect({point_f {point} * point_f {_tileSize.Width, _tileSize.Height}, _tileSize});
+        }
+        _canvas.fill();
+
+        // start/end
+        auto drawRect {[&](point_i pos, color col) {
+            _canvas.begin_path();
+            _canvas.set_fill_style(col);
+            _canvas.rect({point_f {pos} * point_f {_tileSize.Width, _tileSize.Height}, _tileSize});
+            _canvas.fill();
+        }};
+        if (_start != INVALID) { drawRect(_start, colors::Green); }
+        if (_end != INVALID) { drawRect(_end, colors::Red); }
+
+        _canvas.end_frame();
+        _canvasDirty = false;
+    }
     _renderer.queue_layer(0);
     _renderer.set_bounds({point_f::Zero, size_f {size}});
     _renderer.render_to_target(target, transform::Identity);
-}
-
-void PathfindingEx::on_update(milliseconds deltaTime)
-{
-    _tileMapOrtho.update(deltaTime);
 }
 
 void PathfindingEx::on_fixed_update(milliseconds deltaTime)
@@ -127,20 +157,21 @@ void PathfindingEx::on_key_down(keyboard::event const& ev)
 void PathfindingEx::on_mouse_button_down(mouse::button_event const& ev)
 {
     if (ev.Button == mouse::button::Left) {
-        _start = point_i {static_cast<i32>(ev.Position.X / _tileSize.Width), static_cast<i32>(ev.Position.Y / _tileSize.Height)};
-        if (_start.X >= GRID_SIZE.Width || _start.Y >= GRID_SIZE.Height) {
-            _start = INVALID;
+        point_i const p {static_cast<i32>(ev.Position.X / _tileSize.Width), static_cast<i32>(ev.Position.Y / _tileSize.Height)};
+        if (p.X < GRID_SIZE.Width && p.Y < GRID_SIZE.Height && _tiles[p] != 256) {
+            _start = p;
         }
     } else if (ev.Button == mouse::button::Right) {
-        _end = point_i {static_cast<i32>(ev.Position.X / _tileSize.Width), static_cast<i32>(ev.Position.Y / _tileSize.Height)};
-        if (_end.X >= GRID_SIZE.Width || _end.Y >= GRID_SIZE.Height) {
-            _end = INVALID;
+        point_i const p {static_cast<i32>(ev.Position.X / _tileSize.Width), static_cast<i32>(ev.Position.Y / _tileSize.Height)};
+        if (p.X < GRID_SIZE.Width && p.Y < GRID_SIZE.Height && _tiles[p] != 256) {
+            _end = p;
         }
     }
 
     if (_start != INVALID && _end != INVALID) {
-        _path = _pathfinder.find_path(_costs, _tiles.size(), _start, _end);
+        _path = _pathfinder.find_path(_costs, GRID_SIZE, _start, _end);
     } else {
         _path.clear();
     }
+    _canvasDirty = true;
 }
