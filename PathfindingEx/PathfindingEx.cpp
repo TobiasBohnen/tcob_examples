@@ -79,7 +79,7 @@ void PathfindingEx::on_draw_to(render_target& target, transform const& xform)
     _canvas.begin_path();
     _canvas.set_fill_style(colors::Blue);
     for (auto const& point : _path) {
-        _canvas.rect({point_f {point * point_f {_tileSize.Width, _tileSize.Height}}, _tileSize});
+        _canvas.rect({point_f {point} * point_f {_tileSize.Width, _tileSize.Height}, _tileSize});
     }
     _canvas.fill();
 
@@ -87,7 +87,7 @@ void PathfindingEx::on_draw_to(render_target& target, transform const& xform)
     auto drawRect {[&](point_i pos, color col) {
         _canvas.begin_path();
         _canvas.set_fill_style(col);
-        _canvas.rect({point_f {pos * point_f {_tileSize.Width, _tileSize.Height}}, _tileSize});
+        _canvas.rect({point_f {pos} * point_f {_tileSize.Width, _tileSize.Height}, _tileSize});
         _canvas.fill();
     }};
     if (_start != INVALID) { drawRect(_start, colors::Green); }
@@ -96,7 +96,7 @@ void PathfindingEx::on_draw_to(render_target& target, transform const& xform)
     _canvas.end_frame();
 
     _renderer.queue_layer(0);
-    _renderer.set_bounds({point_f::Zero, size_f {*window().Size}});
+    _renderer.set_bounds({point_f::Zero, size_f {size}});
     _renderer.render_to_target(target, transform::Identity);
 }
 
