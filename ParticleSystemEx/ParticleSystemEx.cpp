@@ -52,7 +52,7 @@ void ParticleSystemEx::on_start()
             .Colors        = {colors::Black},
             .Transparency  = std::minmax(0.0f, 0.5f),
 
-            .Lifetime = std::minmax(5000ms, 25000ms),
+            .Lifetime = std::minmax(500ms, 2500ms),
 
             .Scale = std::minmax(0.75f, 1.5f),
             .Size  = {10, 10},
@@ -61,8 +61,33 @@ void ParticleSystemEx::on_start()
             .Rotation = std::minmax(-15_deg, 15_deg),
         };
         emi0.Settings.SpawnArea   = {450, 450, 5, 5};
-        emi0.Settings.SpawnRate   = 1000;
+        emi0.Settings.SpawnRate   = 10000;
         emi0.Settings.IsExplosion = true;
+
+        uid const explosionID {emi0.id()};
+
+        _system0.ParticleDeath.connect([&, explosionID](particle_event const& ev) {
+            if (ev.Particles.EmitterID[ev.Index] != explosionID) { return; }
+
+            auto& subEmi {_system0.create_emitter()};
+            subEmi.Settings.Template = {
+                .Speed         = std::minmax(5.f, 15.f),
+                .Direction     = std::minmax(0_deg, 360_deg),
+                .LinearDamping = std::minmax(0.5f, 1.0f),
+                .Gravity       = {{0, 20.f}, {0, 20.f}},
+                .TextureRegion = "snowflake",
+                .Colors        = {colors::OrangeRed},
+                .Transparency  = std::minmax(0.0f, 0.3f),
+                .Lifetime      = std::minmax(5000ms, 15000ms),
+                .Scale         = std::minmax(1.0f, 1.5f),
+                .Size          = {1, 1},
+                .Spin          = std::minmax(-50_deg, 50_deg),
+            };
+            subEmi.Settings.SpawnArea   = {ev.Particles.Bounds[ev.Index].left(), ev.Particles.Bounds[ev.Index].top(), 2, 2};
+            subEmi.Settings.SpawnRate   = 10;
+            subEmi.Settings.IsExplosion = true;
+            subEmi.Settings.Transient   = true;
+        });
     }
     {
         auto& emi0 {_system0.create_emitter()};
