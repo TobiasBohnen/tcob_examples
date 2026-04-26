@@ -39,20 +39,21 @@ inline void rng_form::draw_dice()
     _canvas->set_fill_style(colors::LightGray);
     _canvas->fill();
 
-    u64 const seed      = static_cast<u64>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
-    i32       rollCount = 400'000;
+    using rng_t = random::xoroshiro_128_plus;
+    rng_t::seed_type const seed {static_cast<rng_t::seed_type>(std::chrono::high_resolution_clock::now().time_since_epoch().count())};
+    i32 constexpr ROLL_COUNT {100000};
 
-    random::dice<20, random::xoshiro_256_star_star> dice {seed};
-    auto                                            rolls {dice.roll_n(rollCount)};
-    std::map<i32, i32>                              hist;
-    for (i32 n {0}; n < rollCount; ++n) { ++hist[rolls[n]]; }
+    random::dice<6, rng_t> dice {seed};
+    auto                   rolls {dice.roll_n(ROLL_COUNT)};
+    std::map<i32, i32>     hist;
+    for (i32 n {0}; n < ROLL_COUNT; ++n) { ++hist[rolls[n]]; }
     i32 max {0};
     for (auto p : hist) { max = std::max(p.second, max); }
 
     f32 const xoff {bounds.width() / hist.size()};
     f32 const barOffset {1.2f};
     i32 const blockCount {50};
-    f32 const barHeight {(bounds.height() - font->info().LineHeight * 2.2f) / blockCount / barOffset};
+    f32 const barHeight {(bounds.height() - (font->info().LineHeight * 2.2f)) / blockCount / barOffset};
 
     point_f pos {0, 0};
 

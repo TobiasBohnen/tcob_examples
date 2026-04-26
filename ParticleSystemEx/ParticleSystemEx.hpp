@@ -30,7 +30,6 @@ private:
     void load_emitter(particle_emitter& emi);
 
     particle_system _system0;
-    particle_system _system1;
 
     basic_cam          _cam;
     bool               _reverse {false};

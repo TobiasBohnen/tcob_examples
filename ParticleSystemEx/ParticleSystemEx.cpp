@@ -10,7 +10,6 @@ using namespace std::chrono_literals;
 ParticleSystemEx::ParticleSystemEx(game& game)
     : scene {game}
     , _system0 {true, 50000}
-    , _system1 {true, 50000}
 {
     auto const colors {color_gradient {{0.0f, colors::Red},
                                        {0.14f, colors::Orange},
@@ -35,8 +34,9 @@ void ParticleSystemEx::on_start()
     auto& resMgr {parent().library()};
     auto* resGrp {resMgr.get_group("res")};
 
+    _system0.Material = resGrp->get<material>("QuadParticleMat");
+
     {
-        _system0.Material = resGrp->get<material>("QuadParticleMat");
         auto& emi0 {_system0.create_emitter()};
         emi0.Settings.Template = {
             .Speed     = std::minmax(30.f, 50.f),
@@ -63,13 +63,9 @@ void ParticleSystemEx::on_start()
         emi0.Settings.SpawnArea   = {450, 450, 5, 5};
         emi0.Settings.SpawnRate   = 1000;
         emi0.Settings.IsExplosion = true;
-
-        _system0.start();
     }
     {
-        _system1.Material = resGrp->get<material>("QuadParticleMat");
-
-        auto& emi0 {_system1.create_emitter()};
+        auto& emi0 {_system0.create_emitter()};
         emi0.Settings.Template = {
             .Speed     = std::minmax(3.f, 5.f),
             .Direction = std::minmax(0_deg, 180_deg),
@@ -87,21 +83,18 @@ void ParticleSystemEx::on_start()
         };
         emi0.Settings.SpawnArea = {1200, 450, 120, 75};
         emi0.Settings.SpawnRate = 100;
-
-        _system1.start();
     }
+    _system0.start();
 }
 
 void ParticleSystemEx::on_draw_to(render_target& target, transform const& xform)
 {
     _system0.draw_to(target, xform);
-    _system1.draw_to(target, xform);
 }
 
 void ParticleSystemEx::on_update(milliseconds deltaTime)
 {
     _system0.update(_reverse ? -deltaTime : deltaTime);
-    _system1.update(_reverse ? -deltaTime : deltaTime);
 }
 
 void ParticleSystemEx::on_fixed_update(milliseconds deltaTime)
@@ -111,7 +104,7 @@ void ParticleSystemEx::on_fixed_update(milliseconds deltaTime)
     window().Title = std::format("TestGame | FPS avg:{:.2f} best:{:.2f} worst:{:.2f} | x:{} y:{} | particles:{} ",
                                  stats.average_FPS(), stats.best_FPS(), stats.worst_FPS(),
                                  mouse.X, mouse.Y,
-                                 _system0.particle_count() + _system1.particle_count());
+                                 _system0.particle_count());
 }
 
 void ParticleSystemEx::on_key_down(keyboard::event const& ev)
@@ -122,20 +115,12 @@ void ParticleSystemEx::on_key_down(keyboard::event const& ev)
         break;
     case scan_code::D1:
         _system0.restart();
-        _system1.restart();
         break;
     case scan_code::D2:
         if (_system0.is_running()) {
             _system0.stop();
         } else {
             _system0.start();
-        }
-        break;
-    case scan_code::D3:
-        if (_system1.is_running()) {
-            _system1.stop();
-        } else {
-            _system1.start();
         }
         break;
     case scan_code::R:
