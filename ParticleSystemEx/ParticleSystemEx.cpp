@@ -27,7 +27,7 @@ ParticleSystemEx::~ParticleSystemEx() = default;
 
 void ParticleSystemEx::on_start()
 {
-    window().ClearColor = colors::LightSteelBlue;
+    window().ClearColor = colors::Black;
 
     using namespace tcob::literals;
 
@@ -40,16 +40,16 @@ void ParticleSystemEx::on_start()
         auto& emi0 {_system0.create_emitter()};
         emi0.Settings.Template = {
             .Speed     = std::minmax(30.f, 50.f),
-            .Direction = std::minmax(0_deg, 180_deg),
+            .Direction = std::minmax(-45_deg, 45_deg),
 
             // .LinearDamping          = std::minmax(0.1f, 0.5f),
-            .LinearAcceleration     = std::minmax(1.f, 3.f),
-            .TangentialAcceleration = std::minmax(-40.f, 40.f),
+            .LinearAcceleration = std::minmax(1.f, 3.f),
+            .RadialAcceleration = std::minmax(-40.f, 400.f),
 
             .Gravity = {{0, 10.f}, {0, 10.f}},
 
             .TextureRegion = "snowflake",
-            .Colors        = {colors::Black},
+            .Colors        = {colors::Gold, colors::Silver, colors::RosyBrown},
             .Transparency  = std::minmax(0.0f, 0.5f),
 
             .Lifetime = std::minmax(500ms, 2500ms),
