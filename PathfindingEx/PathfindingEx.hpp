@@ -9,6 +9,12 @@ class PathfindingEx : public scene {
     static constexpr point_i INVALID {-1, -1};
     static constexpr size_i  GRID_SIZE {256, 256};
 
+    enum class map_mode : u8 { Maze,
+                               Open };
+    enum class algo_mode : u8 { AStar,
+                                BidirAStar,
+                                ThetaStar };
+
 public:
     PathfindingEx(game& game);
     ~PathfindingEx() override;
@@ -21,16 +27,27 @@ protected:
     void on_mouse_button_down(mouse::button_event const& ev) override;
 
 private:
+    void generate_maze();
+    void generate_open();
+    void compute_clearance();
+    void run_pathfinding();
+
     size_f          _tileSize;
     canvas          _canvas;
     canvas_renderer _renderer {_canvas};
     bool            _canvasDirty {false};
+    f64             _lastMs {0};
+
+    map_mode  _mapMode {map_mode::Maze};
+    algo_mode _algoMode {algo_mode::ThetaStar};
 
     point_i              _start {INVALID};
     point_i              _end {INVALID};
     std::vector<point_i> _path;
 
-    ai::astar_pathfinding _pathfinder {true};
+    ai::astar_pathfinding       _astar {true};
+    ai::bidir_astar_pathfinding _bidir {true};
+    ai::thetastar_pathfinding   _thetastar {true};
 
     grid<tile_index_t> _tiles {GRID_SIZE, 1};
     grid<tile_index_t> _clearance {GRID_SIZE, 0};

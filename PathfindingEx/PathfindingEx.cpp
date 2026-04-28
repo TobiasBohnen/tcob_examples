@@ -25,15 +25,12 @@ auto PathfindingEx::grid_view::get_cost(point_i from, point_i to) const -> u64
         }
     }
     tile_index_t const c {(*Clearance)[to]};
-    if (c == 0) { return ai::pathfinding::IMPASSABLE_COST; }
-    u64 const clearanceCost {200 / c};
-    u64 const diagPenalty {from.X != to.X && from.Y != to.Y ? 50u : 0};
-    return clearanceCost + diagPenalty;
+    return c == 0 ? ai::pathfinding::IMPASSABLE_COST : 200 / c;
 }
 
-void PathfindingEx::on_start()
+void PathfindingEx::generate_maze()
 {
-    static constexpr i32 CELL {6};
+    static constexpr i32 CELL {7};
     static constexpr i32 WALL {1};
     static constexpr i32 STEP {CELL + WALL};
     static constexpr i32 CW {(GRID_SIZE.Width - WALL) / STEP};
@@ -68,7 +65,7 @@ void PathfindingEx::on_start()
     }};
 
     static constexpr std::array<point_i, 4> DIRS {{{0, -1}, {0, 1}, {-1, 0}, {1, 0}}};
-    random::shuffle                         shuffle {12345};
+    random::shuffle                         shuffle;
 
     grid<bool>           visited {{CW, CH}, false};
     std::vector<point_i> stack;
@@ -96,20 +93,48 @@ void PathfindingEx::on_start()
         }
         if (!pushed) { stack.pop_back(); }
     }
+}
 
+void PathfindingEx::generate_open()
+{
+    _tiles.fill(1);
+
+    rng                                  rng;
+    random::prng_xoroshiro_128_plus_plus posRng;
+
+    for (i32 i {0}; i < 500; ++i) {
+        i32 const x {static_cast<i32>(posRng(0, GRID_SIZE.Width - 1))};
+        i32 const y {static_cast<i32>(posRng(0, GRID_SIZE.Height - 1))};
+        _tiles[{x, y}] = 256;
+    }
+
+    // ensure corners are clear
+    for (i32 y {0}; y < 5; ++y) {
+        for (i32 x {0}; x < 5; ++x) {
+            _tiles[{x, y}] = 1;
+        }
+    }
+    for (i32 y {GRID_SIZE.Height - 5}; y < GRID_SIZE.Height; ++y) {
+        for (i32 x {GRID_SIZE.Width - 5}; x < GRID_SIZE.Width; ++x) {
+            _tiles[{x, y}] = 1;
+        }
+    }
+}
+
+void PathfindingEx::compute_clearance()
+{
     static constexpr std::array<point_i, 4> FLOOD_DIRS {{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}};
     std::queue<point_i>                     bfsQueue;
     _clearance.fill(std::numeric_limits<tile_index_t>::max());
 
     for (i32 y {0}; y < GRID_SIZE.Height; ++y) {
         for (i32 x {0}; x < GRID_SIZE.Width; ++x) {
-            if (_tiles[{x, y}] == WALL_TILE) {
+            if (_tiles[{x, y}] == 256) {
                 _clearance[{x, y}] = 0;
                 bfsQueue.emplace(x, y);
             }
         }
     }
-
     while (!bfsQueue.empty()) {
         point_i const p {bfsQueue.front()};
         bfsQueue.pop();
@@ -122,9 +147,39 @@ void PathfindingEx::on_start()
             }
         }
     }
+}
+
+void PathfindingEx::on_start()
+{
+    generate_maze();
+    compute_clearance();
 
     f32 const size {(*window().Size).Height / static_cast<f32>(GRID_SIZE.Height)};
     _tileSize    = {size, size};
+    _canvasDirty = true;
+}
+
+void PathfindingEx::run_pathfinding()
+{
+    if (_start == INVALID || _end == INVALID) {
+        _path.clear();
+        _canvasDirty = true;
+        return;
+    }
+
+    stopwatch sw {stopwatch::StartNew()};
+    switch (_algoMode) {
+    case algo_mode::AStar:
+        _path = _astar.find_path(_costs, GRID_SIZE, _start, _end);
+        break;
+    case algo_mode::BidirAStar:
+        _path = _bidir.find_path(_costs, GRID_SIZE, _start, _end);
+        break;
+    case algo_mode::ThetaStar:
+        _path = _thetastar.find_path(_costs, GRID_SIZE, _start, _end);
+        break;
+    }
+    _lastMs      = sw.elapsed_milliseconds();
     _canvasDirty = true;
 }
 
@@ -173,7 +228,7 @@ void PathfindingEx::on_draw_to(render_target& target, transform const& xform)
         auto drawRect {[&](point_i pos, color col) {
             _canvas.begin_path();
             _canvas.set_fill_style(col);
-            _canvas.rect({toScreen(pos), {3, 3}});
+            _canvas.rect({toScreen(pos) - point_f {_tileSize.Width / 2, _tileSize.Height / 2}, _tileSize});
             _canvas.fill();
         }};
         if (_start != INVALID) { drawRect(_start, colors::Green); }
@@ -192,9 +247,22 @@ void PathfindingEx::on_fixed_update(milliseconds deltaTime)
 {
     auto const& stats {locate_service<gfx::render_system>().statistics()};
     auto const& mouse {locate_service<input::system>().mouse().get_position()};
-    window().Title = std::format("TestGame | FPS avg:{:.2f} best:{:.2f} worst:{:.2f} | x:{} y:{} ",
-                                 stats.average_FPS(), stats.best_FPS(), stats.worst_FPS(),
-                                 mouse.X, mouse.Y);
+
+    string_view mapName;
+    switch (_mapMode) {
+    case map_mode::Maze: mapName = "Maze"; break;
+    case map_mode::Open: mapName = "Open"; break;
+    }
+
+    string_view algoName;
+    switch (_algoMode) {
+    case algo_mode::AStar:      algoName = "A*"; break;
+    case algo_mode::BidirAStar: algoName = "Bidir A*"; break;
+    case algo_mode::ThetaStar:  algoName = "Theta*"; break;
+    }
+    window().Title = std::format("TestGame | FPS avg:{:.2f} | map:{} | algo:{} | path:{:.3f}ms | nodes:{} | x:{} y:{} ",
+                                 stats.average_FPS(), mapName, algoName,
+                                 _lastMs, _path.size(), mouse.X, mouse.Y);
 }
 
 void PathfindingEx::on_key_down(keyboard::event const& ev)
@@ -202,6 +270,31 @@ void PathfindingEx::on_key_down(keyboard::event const& ev)
     switch (ev.ScanCode) {
     case scan_code::BACKSPACE:
         parent().pop_current_scene();
+        break;
+    case scan_code::M:
+        _mapMode = (_mapMode == map_mode::Maze) ? map_mode::Open : map_mode::Maze;
+        _start   = INVALID;
+        _end     = INVALID;
+        _path.clear();
+        if (_mapMode == map_mode::Open) {
+            generate_open();
+        } else {
+            generate_maze();
+        }
+        compute_clearance();
+        if (_mapMode == map_mode::Open) {
+            run_pathfinding();
+        } else {
+            _canvasDirty = true;
+        }
+        break;
+    case scan_code::A:
+        switch (_algoMode) {
+        case algo_mode::AStar:      _algoMode = algo_mode::BidirAStar; break;
+        case algo_mode::BidirAStar: _algoMode = algo_mode::ThetaStar; break;
+        case algo_mode::ThetaStar:  _algoMode = algo_mode::AStar; break;
+        }
+        run_pathfinding();
         break;
     default: break;
     }
@@ -221,11 +314,5 @@ void PathfindingEx::on_mouse_button_down(mouse::button_event const& ev)
         }
     }
 
-    if (_start != INVALID && _end != INVALID) {
-        _path        = _pathfinder.find_path(_costs, GRID_SIZE, _start, _end);
-        _canvasDirty = true;
-    } else {
-        _path.clear();
-        _canvasDirty = true;
-    }
+    run_pathfinding();
 }
