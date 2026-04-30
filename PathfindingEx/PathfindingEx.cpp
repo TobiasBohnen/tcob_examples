@@ -147,17 +147,6 @@ void PathfindingEx::compute_clearance()
     }
 }
 
-void PathfindingEx::initialize_lpa()
-{
-    if (_start == INVALID || _end == INVALID) { return; }
-    stopwatch sw {stopwatch::StartNew()};
-    _lpa.initialize(_costs, GRID_SIZE, _start, _end);
-    _lastMs         = sw.elapsed_milliseconds();
-    _path           = _lpa.path();
-    _lpaInitialized = true;
-    _canvasDirty    = true;
-}
-
 void PathfindingEx::on_start()
 {
     generate_maze();
@@ -194,6 +183,13 @@ void PathfindingEx::run_pathfinding()
         }
         _path = _lpa.path();
         break;
+    case algo_mode::DStarLite:
+        if (!_dstarInitialized) {
+            _dstar.initialize(_costs, GRID_SIZE, _start, _end);
+            _dstarInitialized = true;
+        }
+        _path = _dstar.path();
+        break;
     }
     _lastMs      = sw.elapsed_milliseconds();
     _canvasDirty = true;
@@ -228,12 +224,25 @@ void PathfindingEx::on_draw_to(render_target& target, transform const& xform)
             return point_f {p} * point_f {_tileSize.Width, _tileSize.Height};
         }};
 
+        // agent position for D* Lite
+        if (_algoMode == algo_mode::DStarLite && _dstarInitialized) {
+            point_i const pos {_dstar.position()};
+            if (pos != INVALID) {
+                _canvas.begin_path();
+                _canvas.set_fill_style(colors::Cyan);
+                _canvas.rect({toScreen(pos), _tileSize});
+                _canvas.fill();
+            }
+        }
+
         // path
         if (!_path.empty()) {
             _canvas.begin_path();
             _canvas.set_stroke_style(colors::Blue);
             _canvas.set_stroke_width(2);
-            _canvas.move_to(toScreen(_start));
+            _canvas.move_to(toScreen(_algoMode == algo_mode::DStarLite && _dstarInitialized
+                                         ? _dstar.position()
+                                         : _start));
             for (auto const& p : _path) {
                 _canvas.line_to(toScreen(p));
             }
@@ -277,6 +286,7 @@ void PathfindingEx::on_fixed_update(milliseconds deltaTime)
     case algo_mode::BidirAStar: algoName = "Bidir A*"; break;
     case algo_mode::ThetaStar:  algoName = "Theta*"; break;
     case algo_mode::LPA:        algoName = "LPA*"; break;
+    case algo_mode::DStarLite:  algoName = "D* Lite"; break;
     }
 
     window().Title = std::format("TestGame | FPS avg:{:.2f} | map:{} | algo:{} | path:{:.3f}ms | nodes:{} | x:{} y:{} ",
@@ -297,7 +307,8 @@ void PathfindingEx::on_key_down(keyboard::event const& ev)
         _start = INVALID;
         _end   = INVALID;
         _path.clear();
-        _lpaInitialized = false;
+        _lpaInitialized   = false;
+        _dstarInitialized = false;
         if (_mapMode == map_mode::Open) {
             generate_open();
         } else {
@@ -307,27 +318,44 @@ void PathfindingEx::on_key_down(keyboard::event const& ev)
         _canvasDirty = true;
         break;
     case scan_code::A:
-        _lpaInitialized = false;
+        _lpaInitialized   = false;
+        _dstarInitialized = false;
         switch (_algoMode) {
         case algo_mode::AStar:      _algoMode = algo_mode::BidirAStar; break;
         case algo_mode::BidirAStar: _algoMode = algo_mode::ThetaStar; break;
         case algo_mode::ThetaStar:  _algoMode = algo_mode::LPA; break;
-        case algo_mode::LPA:        _algoMode = algo_mode::AStar; break;
+        case algo_mode::LPA:        _algoMode = algo_mode::DStarLite; break;
+        case algo_mode::DStarLite:  _algoMode = algo_mode::AStar; break;
         }
         run_pathfinding();
         break;
     case scan_code::U:
-        static constexpr point_i CENTER {GRID_SIZE.Width / 2, GRID_SIZE.Height / 2};
-        _tiles[CENTER] = (_tiles[CENTER] == 256) ? 1 : 256;
-        compute_clearance();
-
-        if (_algoMode == algo_mode::LPA && _lpaInitialized && _start != INVALID && _end != INVALID) {
+        // toggle a tile near center as dynamic obstacle, update stateful algos
+        {
+            static constexpr point_i CENTER {GRID_SIZE.Width / 2, GRID_SIZE.Height / 2};
+            _tiles[CENTER] = (_tiles[CENTER] == 256) ? 1 : 256;
+            compute_clearance();
             stopwatch sw {stopwatch::StartNew()};
-            _lpa.update(_costs, CENTER);
-            _lastMs = sw.elapsed_milliseconds();
-            _path   = _lpa.path();
+            if (_algoMode == algo_mode::LPA && _lpaInitialized) {
+                _lpa.update(_costs, CENTER);
+                _path = _lpa.path();
+            } else if (_algoMode == algo_mode::DStarLite && _dstarInitialized) {
+                _dstar.update(_costs, CENTER);
+                _path = _dstar.path();
+            }
+            _lastMs      = sw.elapsed_milliseconds();
+            _canvasDirty = true;
         }
-        _canvasDirty = true;
+        break;
+    case scan_code::SPACE:
+        // advance D* Lite agent one step
+        if (_algoMode == algo_mode::DStarLite && _dstarInitialized) {
+            stopwatch sw {stopwatch::StartNew()};
+            _dstar.move(_costs);
+            _path        = _dstar.path();
+            _lastMs      = sw.elapsed_milliseconds();
+            _canvasDirty = true;
+        }
         break;
     default: break;
     }
@@ -338,14 +366,16 @@ void PathfindingEx::on_mouse_button_down(mouse::button_event const& ev)
     if (ev.Button == mouse::button::Left) {
         point_i const p {static_cast<i32>(ev.Position.X / _tileSize.Width), static_cast<i32>(ev.Position.Y / _tileSize.Height)};
         if (p.X < GRID_SIZE.Width && p.Y < GRID_SIZE.Height && _tiles[p] != 256) {
-            _start          = p;
-            _lpaInitialized = false;
+            _start            = p;
+            _lpaInitialized   = false;
+            _dstarInitialized = false;
         }
     } else if (ev.Button == mouse::button::Right) {
         point_i const p {static_cast<i32>(ev.Position.X / _tileSize.Width), static_cast<i32>(ev.Position.Y / _tileSize.Height)};
         if (p.X < GRID_SIZE.Width && p.Y < GRID_SIZE.Height && _tiles[p] != 256) {
-            _end            = p;
-            _lpaInitialized = false;
+            _end              = p;
+            _lpaInitialized   = false;
+            _dstarInitialized = false;
         }
     }
 

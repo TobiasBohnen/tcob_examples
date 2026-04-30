@@ -14,7 +14,8 @@ class PathfindingEx : public scene {
     enum class algo_mode : u8 { AStar,
                                 BidirAStar,
                                 ThetaStar,
-                                LPA };
+                                LPA,
+                                DStarLite };
 
 public:
     PathfindingEx(game& game);
@@ -32,7 +33,6 @@ private:
     void generate_open();
     void compute_clearance();
     void run_pathfinding();
-    void initialize_lpa();
 
     size_f          _tileSize;
     canvas          _canvas;
@@ -51,8 +51,10 @@ private:
     ai::bidir_astar_pathfinding _bidir {true};
     ai::thetastar_pathfinding   _thetastar {true};
     ai::lpastar_pathfinding     _lpa {true};
+    ai::dstar_lite_pathfinding  _dstar {true};
 
     bool _lpaInitialized {false};
+    bool _dstarInitialized {false};
 
     grid<tile_index_t> _tiles {GRID_SIZE, 1};
     grid<tile_index_t> _clearance {GRID_SIZE, 0};
