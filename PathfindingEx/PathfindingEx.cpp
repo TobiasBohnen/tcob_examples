@@ -192,6 +192,9 @@ void PathfindingEx::run_pathfinding()
         }
         _path = _dstar.path();
         break;
+    case algo_mode::MinTurn:
+        _path = _minturn.find_path(_costs, GRID_SIZE, _start, _end);
+        break;
     }
     _lastMs      = sw.elapsed_milliseconds();
     _canvasDirty = true;
@@ -289,6 +292,7 @@ void PathfindingEx::on_fixed_update(milliseconds deltaTime)
     case algo_mode::ThetaStar:  algoName = "Theta*"; break;
     case algo_mode::LPA:        algoName = "LPA*"; break;
     case algo_mode::DStarLite:  algoName = "D* Lite"; break;
+    case algo_mode::MinTurn:    algoName = "MinTurn"; break;
     }
 
     window().Title = std::format("TestGame | FPS avg:{:.2f} | map:{} | algo:{} | path:{:.3f}ms | nodes:{} | x:{} y:{} ",
@@ -327,7 +331,8 @@ void PathfindingEx::on_key_down(keyboard::event const& ev)
         case algo_mode::BidirAStar: _algoMode = algo_mode::ThetaStar; break;
         case algo_mode::ThetaStar:  _algoMode = algo_mode::LPA; break;
         case algo_mode::LPA:        _algoMode = algo_mode::DStarLite; break;
-        case algo_mode::DStarLite:  _algoMode = algo_mode::AStar; break;
+        case algo_mode::DStarLite:  _algoMode = algo_mode::MinTurn; break;
+        case algo_mode::MinTurn:    _algoMode = algo_mode::AStar; break;
         }
         run_pathfinding();
         break;

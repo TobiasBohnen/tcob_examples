@@ -15,7 +15,8 @@ class PathfindingEx : public scene {
                                 BidirAStar,
                                 ThetaStar,
                                 LPA,
-                                DStarLite };
+                                DStarLite,
+                                MinTurn };
 
 public:
     PathfindingEx(game& game);
@@ -47,11 +48,12 @@ private:
     point_i              _end {INVALID};
     std::vector<point_i> _path;
 
-    ai::astar_pathfinding       _astar {true, pathfinding::heuristic::Euclidean};
-    ai::bidir_astar_pathfinding _bidir {true, pathfinding::heuristic::Euclidean};
-    ai::thetastar_pathfinding   _thetastar {true};
-    ai::lpastar_pathfinding     _lpa {true, pathfinding::heuristic::Euclidean};
-    ai::dstar_lite_pathfinding  _dstar {true, pathfinding::heuristic::Euclidean};
+    ai::pathfinding::astar       _astar {true, pathfinding::heuristic::Euclidean};
+    ai::pathfinding::bidir_astar _bidir {true, pathfinding::heuristic::Euclidean};
+    ai::pathfinding::thetastar   _thetastar {true};
+    ai::pathfinding::lpastar     _lpa {true, pathfinding::heuristic::Euclidean};
+    ai::pathfinding::dstar_lite  _dstar {true, pathfinding::heuristic::Euclidean};
+    ai::pathfinding::minturns    _minturn {true};
 
     bool _lpaInitialized {false};
     bool _dstarInitialized {false};
