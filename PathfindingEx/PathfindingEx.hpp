@@ -9,14 +9,18 @@ class PathfindingEx : public scene {
     static constexpr point_i INVALID {-1, -1};
     static constexpr size_i  GRID_SIZE {256, 256};
 
-    enum class map_mode : u8 { Maze,
-                               Open };
-    enum class algo_mode : u8 { AStar,
-                                BidirAStar,
-                                ThetaStar,
-                                LPA,
-                                DStarLite,
-                                MinTurn };
+    enum class map_mode : u8 {
+        Maze,
+        Open
+    };
+    enum class algo_mode : u8 {
+        AStar,
+        BidirAStar,
+        ThetaStar,
+        LPA,
+        DStarLite,
+        MinTurn
+    };
 
 public:
     PathfindingEx(game& game);
@@ -53,7 +57,7 @@ private:
     ai::pathfinding::thetastar   _thetastar {true};
     ai::pathfinding::lpastar     _lpa {true, pathfinding::heuristic::Euclidean};
     ai::pathfinding::dstar_lite  _dstar {true, pathfinding::heuristic::Euclidean};
-    ai::pathfinding::minturns    _minturn {true};
+    ai::pathfinding::minturns    _minturn {false};
 
     bool _lpaInitialized {false};
     bool _dstarInitialized {false};
