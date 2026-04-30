@@ -2,7 +2,6 @@
 //
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
-
 #include "PathfindingEx.hpp"
 
 #include <algorithm>
@@ -108,7 +107,6 @@ void PathfindingEx::generate_open()
         _tiles[{x, y}] = 256;
     }
 
-    // ensure corners are clear
     for (i32 y {0}; y < 5; ++y) {
         for (i32 x {0}; x < 5; ++x) {
             _tiles[{x, y}] = 1;
@@ -149,6 +147,17 @@ void PathfindingEx::compute_clearance()
     }
 }
 
+void PathfindingEx::initialize_lpa()
+{
+    if (_start == INVALID || _end == INVALID) { return; }
+    stopwatch sw {stopwatch::StartNew()};
+    _lpa.initialize(_costs, GRID_SIZE, _start, _end);
+    _lastMs         = sw.elapsed_milliseconds();
+    _path           = _lpa.path();
+    _lpaInitialized = true;
+    _canvasDirty    = true;
+}
+
 void PathfindingEx::on_start()
 {
     generate_maze();
@@ -177,6 +186,13 @@ void PathfindingEx::run_pathfinding()
         break;
     case algo_mode::ThetaStar:
         _path = _thetastar.find_path(_costs, GRID_SIZE, _start, _end);
+        break;
+    case algo_mode::LPA:
+        if (!_lpaInitialized) {
+            _lpa.initialize(_costs, GRID_SIZE, _start, _end);
+            _lpaInitialized = true;
+        }
+        _path = _lpa.path();
         break;
     }
     _lastMs      = sw.elapsed_milliseconds();
@@ -207,6 +223,7 @@ void PathfindingEx::on_draw_to(render_target& target, transform const& xform)
             }
         }
         _canvas.fill();
+
         auto toScreen {[&](point_i p) {
             return point_f {p} * point_f {_tileSize.Width, _tileSize.Height};
         }};
@@ -259,7 +276,9 @@ void PathfindingEx::on_fixed_update(milliseconds deltaTime)
     case algo_mode::AStar:      algoName = "A*"; break;
     case algo_mode::BidirAStar: algoName = "Bidir A*"; break;
     case algo_mode::ThetaStar:  algoName = "Theta*"; break;
+    case algo_mode::LPA:        algoName = "LPA*"; break;
     }
+
     window().Title = std::format("TestGame | FPS avg:{:.2f} | map:{} | algo:{} | path:{:.3f}ms | nodes:{} | x:{} y:{} ",
                                  stats.average_FPS(), mapName, algoName,
                                  _lastMs, _path.size(), mouse.X, mouse.Y);
@@ -273,28 +292,42 @@ void PathfindingEx::on_key_down(keyboard::event const& ev)
         break;
     case scan_code::M:
         _mapMode = (_mapMode == map_mode::Maze) ? map_mode::Open : map_mode::Maze;
-        _start   = INVALID;
-        _end     = INVALID;
+        [[fallthrough]];
+    case scan_code::R:
+        _start = INVALID;
+        _end   = INVALID;
         _path.clear();
+        _lpaInitialized = false;
         if (_mapMode == map_mode::Open) {
             generate_open();
         } else {
             generate_maze();
         }
         compute_clearance();
-        if (_mapMode == map_mode::Open) {
-            run_pathfinding();
-        } else {
-            _canvasDirty = true;
-        }
+        _canvasDirty = true;
         break;
     case scan_code::A:
+        _lpaInitialized = false;
         switch (_algoMode) {
         case algo_mode::AStar:      _algoMode = algo_mode::BidirAStar; break;
         case algo_mode::BidirAStar: _algoMode = algo_mode::ThetaStar; break;
-        case algo_mode::ThetaStar:  _algoMode = algo_mode::AStar; break;
+        case algo_mode::ThetaStar:  _algoMode = algo_mode::LPA; break;
+        case algo_mode::LPA:        _algoMode = algo_mode::AStar; break;
         }
         run_pathfinding();
+        break;
+    case scan_code::U:
+        static constexpr point_i CENTER {GRID_SIZE.Width / 2, GRID_SIZE.Height / 2};
+        _tiles[CENTER] = (_tiles[CENTER] == 256) ? 1 : 256;
+        compute_clearance();
+
+        if (_algoMode == algo_mode::LPA && _lpaInitialized && _start != INVALID && _end != INVALID) {
+            stopwatch sw {stopwatch::StartNew()};
+            _lpa.update(_costs, CENTER);
+            _lastMs = sw.elapsed_milliseconds();
+            _path   = _lpa.path();
+        }
+        _canvasDirty = true;
         break;
     default: break;
     }
@@ -305,12 +338,14 @@ void PathfindingEx::on_mouse_button_down(mouse::button_event const& ev)
     if (ev.Button == mouse::button::Left) {
         point_i const p {static_cast<i32>(ev.Position.X / _tileSize.Width), static_cast<i32>(ev.Position.Y / _tileSize.Height)};
         if (p.X < GRID_SIZE.Width && p.Y < GRID_SIZE.Height && _tiles[p] != 256) {
-            _start = p;
+            _start          = p;
+            _lpaInitialized = false;
         }
     } else if (ev.Button == mouse::button::Right) {
         point_i const p {static_cast<i32>(ev.Position.X / _tileSize.Width), static_cast<i32>(ev.Position.Y / _tileSize.Height)};
         if (p.X < GRID_SIZE.Width && p.Y < GRID_SIZE.Height && _tiles[p] != 256) {
-            _end = p;
+            _end            = p;
+            _lpaInitialized = false;
         }
     }
 
