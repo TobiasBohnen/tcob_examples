@@ -24,7 +24,9 @@ auto PathfindingEx::grid_view::get_cost(point_i from, point_i to) const -> u64
         }
     }
     tile_index_t const c {(*Clearance)[to]};
-    return c == 0 ? ai::pathfinding::IMPASSABLE_COST : 200 / c;
+    if (c == 0) { return pathfinding::IMPASSABLE_COST; }
+    bool const diagonal {(from.X != to.X) && (from.Y != to.Y)};
+    return diagonal ? 300 / c : 200 / c;
 }
 
 void PathfindingEx::generate_maze()
