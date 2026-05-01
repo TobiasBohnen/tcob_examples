@@ -22,7 +22,7 @@ auto PathfindingEx::grid_view::get_cost(point_i from, point_i to) const -> u64
             return ai::pathfinding::IMPASSABLE_COST;
         }
     }
-
+    if (Terrain != nullptr) { return (*Terrain)[to]; }
     return 1;
 }
 
@@ -34,16 +34,14 @@ void PathfindingEx::generate_maze()
     static constexpr i32 CW {(GRID_SIZE.Width - WALL) / STEP};
     static constexpr i32 CH {(GRID_SIZE.Height - WALL) / STEP};
 
-    static constexpr bool WALL_TILE {true};
-    static constexpr bool PASSAGE_TILE {false};
-    _walls.fill(WALL_TILE);
+    _walls.fill(true);
 
     auto carve {[&](i32 cx, i32 cy) {
         i32 const tx {(cx * STEP) + WALL};
         i32 const ty {(cy * STEP) + WALL};
         for (i32 dy {0}; dy < CELL; ++dy) {
             for (i32 dx {0}; dx < CELL; ++dx) {
-                _walls[{tx + dx, ty + dy}] = PASSAGE_TILE;
+                _walls[{tx + dx, ty + dy}] = false;
             }
         }
     }};
@@ -53,11 +51,11 @@ void PathfindingEx::generate_maze()
         i32 const ty {(std::min(a.Y, b.Y) * STEP) + WALL + (a.Y != b.Y ? CELL : 0)};
         if (a.X != b.X) {
             for (i32 dy {0}; dy < CELL; ++dy) {
-                _walls[{tx, ty + dy}] = PASSAGE_TILE;
+                _walls[{tx, ty + dy}] = false;
             }
         } else {
             for (i32 dx {0}; dx < CELL; ++dx) {
-                _walls[{tx + dx, ty}] = PASSAGE_TILE;
+                _walls[{tx + dx, ty}] = false;
             }
         }
     }};
@@ -91,6 +89,8 @@ void PathfindingEx::generate_maze()
         }
         if (!pushed) { stack.pop_back(); }
     }
+
+    _gridView = {&_walls, nullptr};
 }
 
 void PathfindingEx::generate_open()
@@ -107,14 +107,16 @@ void PathfindingEx::generate_open()
 
     for (i32 y {0}; y < 5; ++y) {
         for (i32 x {0}; x < 5; ++x) {
-            _walls[{x, y}] = true;
+            _walls[{x, y}] = false;
         }
     }
     for (i32 y {GRID_SIZE.Height - 5}; y < GRID_SIZE.Height; ++y) {
         for (i32 x {GRID_SIZE.Width - 5}; x < GRID_SIZE.Width; ++x) {
-            _walls[{x, y}] = true;
+            _walls[{x, y}] = false;
         }
     }
+
+    _gridView = {&_walls, nullptr};
 }
 
 void PathfindingEx::generate_boxes()
@@ -122,8 +124,7 @@ void PathfindingEx::generate_boxes()
     _walls.fill(false);
     rng rng;
 
-    i32 const numObstacles {8};
-    for (i32 i {0}; i < numObstacles; ++i) {
+    for (i32 i {0}; i < 8; ++i) {
         i32 const w {static_cast<i32>(rng(10, 20))};
         i32 const h {static_cast<i32>(rng(10, 20))};
         i32 const xStart {static_cast<i32>(rng(2, GRID_SIZE.Width - w - 2))};
@@ -139,12 +140,100 @@ void PathfindingEx::generate_boxes()
 
     auto const clearArea {[&](i32 sx, i32 sy) {
         for (i32 y {sy}; y < sy + 5; ++y) {
-            for (i32 x {sx}; x < sx + 5; ++x) { _walls[{x, y}] = true; }
+            for (i32 x {sx}; x < sx + 5; ++x) {
+                _walls[{x, y}] = false;
+            }
         }
     }};
 
     clearArea(0, 0);
     clearArea(GRID_SIZE.Width - 5, GRID_SIZE.Height - 5);
+
+    _gridView = {&_walls, nullptr};
+}
+
+constexpr i32 FOREST_COST {2};
+constexpr i32 WATER_COST {8};
+
+void PathfindingEx::generate_terrain()
+{
+    _walls.fill(false);
+    _costs.fill(1);
+
+    // border walls
+    for (i32 x {0}; x < GRID_SIZE.Width; ++x) {
+        _walls[{x, 0}]                    = true;
+        _walls[{x, GRID_SIZE.Height - 1}] = true;
+    }
+    for (i32 y {0}; y < GRID_SIZE.Height; ++y) {
+        _walls[{0, y}]                   = true;
+        _walls[{GRID_SIZE.Width - 1, y}] = true;
+    }
+
+    rng rng;
+
+    // water regions
+    for (i32 i {0}; i < 6; ++i) {
+        i32 const cx {static_cast<i32>(rng(20, GRID_SIZE.Width - 20))};
+        i32 const cy {static_cast<i32>(rng(20, GRID_SIZE.Height - 20))};
+        i32 const r {static_cast<i32>(rng(15, 35))};
+        for (i32 y {cy - r}; y <= cy + r; ++y) {
+            for (i32 x {cx - r}; x <= cx + r; ++x) {
+                if (x < 1 || x >= GRID_SIZE.Width - 1 || y < 1 || y >= GRID_SIZE.Height - 1) { continue; }
+                if (((x - cx) * (x - cx)) + ((y - cy) * (y - cy)) <= (r * r)) {
+                    _costs[{x, y}] = WATER_COST;
+                }
+            }
+        }
+    }
+
+    // forest regions
+    for (i32 i {0}; i < 8; ++i) {
+        i32 const cx {static_cast<i32>(rng(15, GRID_SIZE.Width - 15))};
+        i32 const cy {static_cast<i32>(rng(15, GRID_SIZE.Height - 15))};
+        i32 const r {static_cast<i32>(rng(10, 25))};
+        for (i32 y {cy - r}; y <= cy + r; ++y) {
+            for (i32 x {cx - r}; x <= cx + r; ++x) {
+                if (x < 1 || x >= GRID_SIZE.Width - 1 || y < 1 || y >= GRID_SIZE.Height - 1) { continue; }
+                if (((x - cx) * (x - cx)) + ((y - cy) * (y - cy)) <= (r * r)) {
+                    if (_costs[{x, y}] == 1) {
+                        _costs[{x, y}] = FOREST_COST;
+                    }
+                }
+            }
+        }
+    }
+
+    // mountain walls
+    for (i32 i {0}; i < 4; ++i) {
+        i32 const cx {static_cast<i32>(rng(20, GRID_SIZE.Width - 20))};
+        i32 const cy {static_cast<i32>(rng(20, GRID_SIZE.Height - 20))};
+        i32 const r {static_cast<i32>(rng(8, 15))};
+        for (i32 y {cy - r}; y <= cy + r; ++y) {
+            for (i32 x {cx - r}; x <= cx + r; ++x) {
+                if (x < 1 || x >= GRID_SIZE.Width - 1 || y < 1 || y >= GRID_SIZE.Height - 1) { continue; }
+                if (((x - cx) * (x - cx)) + ((y - cy) * (y - cy)) <= (r * r)) {
+                    _walls[{x, y}] = true;
+                }
+            }
+        }
+    }
+
+    // ensure corners clear
+    for (i32 y {1}; y < 6; ++y) {
+        for (i32 x {1}; x < 6; ++x) {
+            _walls[{x, y}] = false;
+            _costs[{x, y}] = 1;
+        }
+    }
+    for (i32 y {GRID_SIZE.Height - 6}; y < GRID_SIZE.Height - 1; ++y) {
+        for (i32 x {GRID_SIZE.Width - 6}; x < GRID_SIZE.Width - 1; ++x) {
+            _walls[{x, y}] = false;
+            _costs[{x, y}] = 1;
+        }
+    }
+
+    _gridView = {&_walls, &_costs};
 }
 
 void PathfindingEx::on_start()
@@ -167,34 +256,34 @@ void PathfindingEx::run_pathfinding()
     stopwatch sw {stopwatch::StartNew()};
     switch (_algoMode) {
     case algo_mode::AStar:
-        _path = _astar.find_path(_costs, GRID_SIZE, _start, _end);
+        _path = _astar.find_path(_gridView, GRID_SIZE, _start, _end);
         break;
     case algo_mode::BidirAStar:
-        _path = _bidir.find_path(_costs, GRID_SIZE, _start, _end);
+        _path = _bidir.find_path(_gridView, GRID_SIZE, _start, _end);
         break;
     case algo_mode::ThetaStar:
-        _path = _thetastar.find_path(_costs, GRID_SIZE, _start, _end);
+        _path = _thetastar.find_path(_gridView, GRID_SIZE, _start, _end);
         break;
     case algo_mode::LPA:
         if (!_lpaInitialized) {
-            _lpa.initialize(_costs, GRID_SIZE, _start, _end);
+            _lpa.initialize(_gridView, GRID_SIZE, _start, _end);
             _lpaInitialized = true;
         }
         _path = _lpa.path();
         break;
     case algo_mode::DStarLite:
         if (!_dstarInitialized) {
-            _dstar.initialize(_costs, GRID_SIZE, _start, _end);
+            _dstar.initialize(_gridView, GRID_SIZE, _start, _end);
             _dstarInitialized = true;
         }
         _path = _dstar.path();
         break;
     case algo_mode::MinTurns:
-        _path = _minturns.find_path(_costs, GRID_SIZE, _start, _end);
+        _path = _minturns.find_path(_gridView, GRID_SIZE, _start, _end);
         break;
     case algo_mode::FlowField:
         if (!_flowfieldInitialized) {
-            _flowfield.build(_costs, GRID_SIZE, _end);
+            _flowfield.build(_gridView, GRID_SIZE, _end);
             _flowfieldInitialized = true;
         }
         _path = _flowfield.path(_start);
@@ -211,39 +300,67 @@ void PathfindingEx::on_draw_to(render_target& target, transform const& xform)
         _canvas.begin_frame(size, 1);
         _canvas.set_edge_antialias(false);
 
+        auto toScreen {[&](point_i p) -> point_f {
+            return {std::floor(static_cast<f32>(p.X) * _tileSize.Width),
+                    std::floor(static_cast<f32>(p.Y) * _tileSize.Height)};
+        }};
+
+        auto tileRect {[&](point_i p) -> rect_f {
+            point_f const pos {toScreen(p)};
+            point_f const next {toScreen({p.X + 1, p.Y + 1})};
+            return {pos, size_f {next.X - pos.X, next.Y - pos.Y}};
+        }};
+
         // background
         _canvas.begin_path();
         _canvas.set_fill_style(colors::Black);
         _canvas.rect({{0, 0}, size_f {size}});
         _canvas.fill();
 
-        // passages with clearance color
+        // passages
+        _canvas.begin_path();
+        _canvas.set_fill_style(colors::White);
         for (i32 y {0}; y < GRID_SIZE.Height; ++y) {
             for (i32 x {0}; x < GRID_SIZE.Width; ++x) {
-                color const col {_walls[{x, y}] ? colors::Black : colors::White};
+                if (!_walls[{x, y}]) {
+                    _canvas.rect(tileRect({x, y}));
+                }
+            }
+        }
+        _canvas.fill();
 
-                _canvas.begin_path();
-                _canvas.set_fill_style(col);
-                _canvas.rect({point_f {static_cast<f32>(x), static_cast<f32>(y)} * point_f {_tileSize.Width, _tileSize.Height}, _tileSize});
-                _canvas.fill();
+        // terrain costs
+        if (_mapMode == map_mode::Terrain) {
+            for (i32 y {0}; y < GRID_SIZE.Height; ++y) {
+                for (i32 x {0}; x < GRID_SIZE.Width; ++x) {
+                    if (_walls[{x, y}]) { continue; }
+                    u64 const cost {_costs[{x, y}]};
+                    if (cost == 1) { continue; }
+                    color col;
+                    switch (cost) {
+                    case FOREST_COST: col = colors::DarkGreen; break;
+                    case WATER_COST:  col = colors::DarkBlue; break;
+                    default:          col = colors::Gray; break;
+                    }
+                    _canvas.begin_path();
+                    _canvas.set_fill_style(col);
+                    _canvas.rect(tileRect({x, y}));
+                    _canvas.fill();
+                }
             }
         }
 
-        auto toScreen {[&](point_i p) {
-            return point_f {p} * point_f {_tileSize.Width, _tileSize.Height};
-        }};
-
         // flow field visualization
         if (_algoMode == algo_mode::FlowField && _flowfieldInitialized) {
-            point_f const half {_tileSize.Width / 2, _tileSize.Height / 2};
-            f32 const     scale {_tileSize.Width * 2.5f};
+            f32 const scale {_tileSize.Width * 2.5f};
             for (i32 y {0}; y < GRID_SIZE.Height; y += 4) {
                 for (i32 x {0}; x < GRID_SIZE.Width; x += 4) {
                     if (_walls[{x, y}]) { continue; }
                     point_i const dir {_flowfield.direction({x, y})};
                     if (dir == pathfinding::INVALID_DIR) { continue; }
 
-                    point_f const center {toScreen({x, y}) + half};
+                    rect_f const  tr {tileRect({x, y})};
+                    point_f const center {tr.Position + point_f {tr.Size.Width / 2, tr.Size.Height / 2}};
                     point_f const fd {static_cast<f32>(dir.X), static_cast<f32>(dir.Y)};
                     f32 const     len {std::sqrt((fd.X * fd.X) + (fd.Y * fd.Y))};
                     point_f const fn {fd.X / len, fd.Y / len};
@@ -267,23 +384,24 @@ void PathfindingEx::on_draw_to(render_target& target, transform const& xform)
             if (pos != INVALID) {
                 _canvas.begin_path();
                 _canvas.set_fill_style(colors::Cyan);
-                _canvas.rect({toScreen(pos), _tileSize});
+                _canvas.rect(tileRect(pos));
                 _canvas.fill();
             }
         }
 
         // path
         if (!_path.empty()) {
+            point_i const pathStart {_algoMode == algo_mode::DStarLite && _dstarInitialized
+                                         ? _dstar.position()
+                                         : _start};
             _canvas.begin_path();
             _canvas.set_stroke_style(colors::Blue);
             _canvas.set_stroke_width(2);
-            _canvas.move_to(toScreen(_algoMode == algo_mode::DStarLite && _dstarInitialized
-                                         ? _dstar.position()
-                                         : _start));
+            _canvas.move_to(toScreen(pathStart) + point_f {_tileSize.Width / 2, _tileSize.Height / 2});
             for (auto const& p : _path) {
-                _canvas.line_to(toScreen(p));
+                _canvas.line_to(toScreen(p) + point_f {_tileSize.Width / 2, _tileSize.Height / 2});
             }
-            _canvas.line_to(toScreen(_end));
+            _canvas.line_to(toScreen(_end) + point_f {_tileSize.Width / 2, _tileSize.Height / 2});
             _canvas.stroke();
         }
 
@@ -291,7 +409,7 @@ void PathfindingEx::on_draw_to(render_target& target, transform const& xform)
         auto drawRect {[&](point_i pos, color col) {
             _canvas.begin_path();
             _canvas.set_fill_style(col);
-            _canvas.rect({toScreen(pos) - point_f {_tileSize.Width / 2, _tileSize.Height / 2}, _tileSize});
+            _canvas.rect(tileRect(pos));
             _canvas.fill();
         }};
         if (_start != INVALID) { drawRect(_start, colors::Green); }
@@ -313,9 +431,10 @@ void PathfindingEx::on_fixed_update(milliseconds deltaTime)
 
     string_view mapName;
     switch (_mapMode) {
-    case map_mode::Maze:  mapName = "Maze"; break;
-    case map_mode::Open:  mapName = "Open"; break;
-    case map_mode::Boxes: mapName = "Boxes"; break;
+    case map_mode::Maze:    mapName = "Maze"; break;
+    case map_mode::Open:    mapName = "Open"; break;
+    case map_mode::Boxes:   mapName = "Boxes"; break;
+    case map_mode::Terrain: mapName = "Terrain"; break;
     }
 
     string_view algoName;
@@ -342,9 +461,10 @@ void PathfindingEx::on_key_down(keyboard::event const& ev)
         break;
     case scan_code::M:
         switch (_mapMode) {
-        case map_mode::Open:  _mapMode = map_mode::Maze; break;
-        case map_mode::Maze:  _mapMode = map_mode::Boxes; break;
-        case map_mode::Boxes: _mapMode = map_mode::Open; break;
+        case map_mode::Maze:    _mapMode = map_mode::Open; break;
+        case map_mode::Open:    _mapMode = map_mode::Boxes; break;
+        case map_mode::Boxes:   _mapMode = map_mode::Terrain; break;
+        case map_mode::Terrain: _mapMode = map_mode::Maze; break;
         }
         [[fallthrough]];
     case scan_code::R:
@@ -355,11 +475,11 @@ void PathfindingEx::on_key_down(keyboard::event const& ev)
         _dstarInitialized     = false;
         _flowfieldInitialized = false;
         switch (_mapMode) {
-        case map_mode::Maze:  generate_maze(); break;
-        case map_mode::Open:  generate_open(); break;
-        case map_mode::Boxes: generate_boxes(); break;
+        case map_mode::Maze:    generate_maze(); break;
+        case map_mode::Open:    generate_open(); break;
+        case map_mode::Boxes:   generate_boxes(); break;
+        case map_mode::Terrain: generate_terrain(); break;
         }
-
         _canvasDirty = true;
         break;
     case scan_code::A:
@@ -383,15 +503,15 @@ void PathfindingEx::on_key_down(keyboard::event const& ev)
         _flowfieldInitialized = false;
         stopwatch sw {stopwatch::StartNew()};
         if (_algoMode == algo_mode::LPA && _lpaInitialized) {
-            _lpa.update(_costs, CENTER);
+            _lpa.update(_gridView, CENTER);
             _path = _lpa.path();
         } else if (_algoMode == algo_mode::DStarLite && _dstarInitialized) {
-            _dstar.update(_costs, CENTER);
+            _dstar.update(_gridView, CENTER);
             _path = _dstar.path();
-        } else if (_algoMode == algo_mode::FlowField) {
-            _flowfield.build(_costs, GRID_SIZE, _end);
-            _flowfieldInitialized = _end != INVALID;
-            _path                 = _flowfieldInitialized ? _flowfield.path(_start) : std::vector<point_i> {};
+        } else if (_algoMode == algo_mode::FlowField && _end != INVALID) {
+            _flowfield.build(_gridView, GRID_SIZE, _end);
+            _flowfieldInitialized = true;
+            _path                 = _flowfield.path(_start);
         }
         _lastMs      = sw.elapsed_milliseconds();
         _canvasDirty = true;
@@ -399,14 +519,14 @@ void PathfindingEx::on_key_down(keyboard::event const& ev)
     case scan_code::SPACE:
         if (_algoMode == algo_mode::DStarLite && _dstarInitialized) {
             stopwatch sw {stopwatch::StartNew()};
-            _dstar.move(_costs);
+            _dstar.move(_gridView);
             _path        = _dstar.path();
             _lastMs      = sw.elapsed_milliseconds();
             _canvasDirty = true;
         }
         break;
     case scan_code::S:
-        _path        = pathfinding::smooth_path(_costs, _walls.size(), _path);
+        _path        = pathfinding::smooth_path(_gridView, GRID_SIZE, _path);
         _canvasDirty = true;
         break;
     default: break;

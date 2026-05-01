@@ -9,20 +9,17 @@ class PathfindingEx : public scene {
     static constexpr point_i INVALID {-1, -1};
     static constexpr size_i  GRID_SIZE {256, 256};
 
-    enum class map_mode : u8 {
-        Maze,
-        Open,
-        Boxes
-    };
-    enum class algo_mode : u8 {
-        AStar,
-        BidirAStar,
-        ThetaStar,
-        LPA,
-        DStarLite,
-        MinTurns,
-        FlowField
-    };
+    enum class map_mode : u8 { Maze,
+                               Open,
+                               Boxes,
+                               Terrain };
+    enum class algo_mode : u8 { AStar,
+                                BidirAStar,
+                                ThetaStar,
+                                LPA,
+                                DStarLite,
+                                MinTurns,
+                                FlowField };
 
 public:
     PathfindingEx(game& game);
@@ -39,6 +36,7 @@ private:
     void generate_maze();
     void generate_open();
     void generate_boxes();
+    void generate_terrain();
     void run_pathfinding();
 
     size_f          _tileSize;
@@ -67,10 +65,12 @@ private:
     bool _flowfieldInitialized {false};
 
     grid<bool> _walls {GRID_SIZE, true};
+    grid<u64>  _costs {GRID_SIZE, 1};
 
     struct grid_view {
         auto        get_cost(point_i from, point_i to) const -> u64;
         grid<bool>* Wall;
+        grid<u64>*  Terrain;
     };
-    grid_view _costs {&_walls};
+    grid_view _gridView {};
 };
