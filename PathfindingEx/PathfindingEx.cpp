@@ -405,6 +405,10 @@ void PathfindingEx::on_key_down(keyboard::event const& ev)
             _canvasDirty = true;
         }
         break;
+    case scan_code::S:
+        _path        = pathfinding::smooth_path(_costs, _walls.size(), _path);
+        _canvasDirty = true;
+        break;
     default: break;
     }
 }
