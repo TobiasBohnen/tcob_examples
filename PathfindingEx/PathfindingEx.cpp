@@ -239,7 +239,7 @@ void PathfindingEx::on_draw_to(render_target& target, transform const& xform)
             f32 const     scale {_tileSize.Width * 2.5f};
             for (i32 y {0}; y < GRID_SIZE.Height; y += 4) {
                 for (i32 x {0}; x < GRID_SIZE.Width; x += 4) {
-                    if (!_walls[{x, y}]) { continue; }
+                    if (_walls[{x, y}]) { continue; }
                     point_i const dir {_flowfield.direction({x, y})};
                     if (dir == pathfinding::INVALID_DIR) { continue; }
 
