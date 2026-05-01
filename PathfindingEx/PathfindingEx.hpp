@@ -52,12 +52,12 @@ private:
     point_i              _end {INVALID};
     std::vector<point_i> _path;
 
-    ai::pathfinding::astar       _astar {true, pathfinding::heuristic::Euclidean};
-    ai::pathfinding::bidir_astar _bidir {true, pathfinding::heuristic::Euclidean};
-    ai::pathfinding::thetastar   _thetastar {true};
-    ai::pathfinding::lpastar     _lpa {true, pathfinding::heuristic::Euclidean};
-    ai::pathfinding::dstar_lite  _dstar {true, pathfinding::heuristic::Euclidean};
-    ai::pathfinding::minturns    _minturn {false};
+    ai::pathfinding::astar          _astar {true, pathfinding::heuristic::Euclidean};
+    ai::pathfinding::bidir_astar    _bidir {true, pathfinding::heuristic::Euclidean};
+    ai::pathfinding::thetastar      _thetastar {true};
+    ai::pathfinding::lpastar        _lpa {true, pathfinding::heuristic::Euclidean};
+    ai::pathfinding::dstar_lite     _dstar {true, pathfinding::heuristic::Euclidean};
+    ai::pathfinding::astar_minturns _minturn {true};
 
     bool _lpaInitialized {false};
     bool _dstarInitialized {false};

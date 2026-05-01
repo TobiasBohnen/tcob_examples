@@ -25,8 +25,7 @@ auto PathfindingEx::grid_view::get_cost(point_i from, point_i to) const -> u64
     }
     tile_index_t const c {(*Clearance)[to]};
     if (c == 0) { return pathfinding::IMPASSABLE_COST; }
-    bool const diagonal {(from.X != to.X) && (from.Y != to.Y)};
-    return diagonal ? 300 / c : 200 / c;
+    return 200 / c;
 }
 
 void PathfindingEx::generate_maze()
@@ -213,17 +212,23 @@ void PathfindingEx::on_draw_to(render_target& target, transform const& xform)
         _canvas.rect({{0, 0}, size_f {size}});
         _canvas.fill();
 
-        // passages
-        _canvas.begin_path();
-        _canvas.set_fill_style(colors::White);
+        // passages with clearance color
         for (i32 y {0}; y < GRID_SIZE.Height; ++y) {
             for (i32 x {0}; x < GRID_SIZE.Width; ++x) {
-                if (_tiles[{x, y}] == 1) {
-                    _canvas.rect({point_f {static_cast<f32>(x), static_cast<f32>(y)} * point_f {_tileSize.Width, _tileSize.Height}, _tileSize});
+                if (_tiles[{x, y}] != 1) { continue; }
+                tile_index_t const c {_clearance[{x, y}]};
+                color              col;
+                switch (c) {
+                case 1:  col = colors::Red; break;
+                case 2:  col = colors::Orange; break;
+                default: col = colors::Yellow; break;
                 }
+                _canvas.begin_path();
+                _canvas.set_fill_style(col);
+                _canvas.rect({point_f {static_cast<f32>(x), static_cast<f32>(y)} * point_f {_tileSize.Width, _tileSize.Height}, _tileSize});
+                _canvas.fill();
             }
         }
-        _canvas.fill();
 
         auto toScreen {[&](point_i p) {
             return point_f {p} * point_f {_tileSize.Width, _tileSize.Height};
