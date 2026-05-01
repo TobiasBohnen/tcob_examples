@@ -19,7 +19,8 @@ class PathfindingEx : public scene {
         ThetaStar,
         LPA,
         DStarLite,
-        MinTurn
+        MinTurns,
+        FlowField
     };
 
 public:
@@ -57,10 +58,12 @@ private:
     ai::pathfinding::thetastar      _thetastar {true};
     ai::pathfinding::lpastar        _lpa {true, pathfinding::heuristic::Euclidean};
     ai::pathfinding::dstar_lite     _dstar {true, pathfinding::heuristic::Euclidean};
-    ai::pathfinding::astar_minturns _minturn {true};
+    ai::pathfinding::astar_minturns _minturns {true};
+    ai::pathfinding::flow_field     _flowfield {true};
 
     bool _lpaInitialized {false};
     bool _dstarInitialized {false};
+    bool _flowfieldInitialized {false};
 
     grid<tile_index_t> _tiles {GRID_SIZE, 1};
     grid<tile_index_t> _clearance {GRID_SIZE, 0};

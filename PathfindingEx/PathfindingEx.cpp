@@ -191,8 +191,15 @@ void PathfindingEx::run_pathfinding()
         }
         _path = _dstar.path();
         break;
-    case algo_mode::MinTurn:
-        _path = _minturn.find_path(_costs, GRID_SIZE, _start, _end);
+    case algo_mode::MinTurns:
+        _path = _minturns.find_path(_costs, GRID_SIZE, _start, _end);
+        break;
+    case algo_mode::FlowField:
+        if (!_flowfieldInitialized) {
+            _flowfield.build(_costs, GRID_SIZE, _end);
+            _flowfieldInitialized = true;
+        }
+        _path = _flowfield.path(_start);
         break;
     }
     _lastMs      = sw.elapsed_milliseconds();
@@ -219,9 +226,9 @@ void PathfindingEx::on_draw_to(render_target& target, transform const& xform)
                 tile_index_t const c {_clearance[{x, y}]};
                 color              col;
                 switch (c) {
-                case 1:  col = colors::Red; break;
-                case 2:  col = colors::Orange; break;
-                default: col = colors::Yellow; break;
+                case 1:  col = colors::Black; break;
+                case 2:  col = colors::LightBlue; break;
+                default: col = colors::White; break;
                 }
                 _canvas.begin_path();
                 _canvas.set_fill_style(col);
@@ -233,6 +240,34 @@ void PathfindingEx::on_draw_to(render_target& target, transform const& xform)
         auto toScreen {[&](point_i p) {
             return point_f {p} * point_f {_tileSize.Width, _tileSize.Height};
         }};
+
+        // flow field visualization
+        if (_algoMode == algo_mode::FlowField && _flowfieldInitialized) {
+            point_f const half {_tileSize.Width / 2, _tileSize.Height / 2};
+            f32 const     scale {_tileSize.Width * 2.5f};
+            for (i32 y {0}; y < GRID_SIZE.Height; y += 4) {
+                for (i32 x {0}; x < GRID_SIZE.Width; x += 4) {
+                    if (_tiles[{x, y}] != 1) { continue; }
+                    point_i const dir {_flowfield.direction({x, y})};
+                    if (dir == pathfinding::flow_field::INVALID_DIR) { continue; }
+
+                    point_f const center {toScreen({x, y}) + half};
+                    point_f const fd {static_cast<f32>(dir.X), static_cast<f32>(dir.Y)};
+                    f32 const     len {std::sqrt((fd.X * fd.X) + (fd.Y * fd.Y))};
+                    point_f const fn {fd.X / len, fd.Y / len};
+                    point_f const perp {fn.as_perpendicular()};
+
+                    point_f const tip {center + point_f {fn.X * scale, fn.Y * scale}};
+                    point_f const left {center + point_f {perp.X * scale * 0.4f, perp.Y * scale * 0.4f}};
+                    point_f const right {center - point_f {perp.X * scale * 0.4f, perp.Y * scale * 0.4f}};
+
+                    _canvas.begin_path();
+                    _canvas.set_fill_style(colors::Black);
+                    _canvas.triangle(left, right, tip);
+                    _canvas.fill();
+                }
+            }
+        }
 
         // agent position for D* Lite
         if (_algoMode == algo_mode::DStarLite && _dstarInitialized) {
@@ -297,7 +332,8 @@ void PathfindingEx::on_fixed_update(milliseconds deltaTime)
     case algo_mode::ThetaStar:  algoName = "Theta*"; break;
     case algo_mode::LPA:        algoName = "LPA*"; break;
     case algo_mode::DStarLite:  algoName = "D* Lite"; break;
-    case algo_mode::MinTurn:    algoName = "MinTurn"; break;
+    case algo_mode::MinTurns:   algoName = "MinTurns"; break;
+    case algo_mode::FlowField:  algoName = "FlowField"; break;
     }
 
     window().Title = std::format("TestGame | FPS avg:{:.2f} | map:{} | algo:{} | path:{:.3f}ms | nodes:{} | x:{} y:{} ",
@@ -318,8 +354,9 @@ void PathfindingEx::on_key_down(keyboard::event const& ev)
         _start = INVALID;
         _end   = INVALID;
         _path.clear();
-        _lpaInitialized   = false;
-        _dstarInitialized = false;
+        _lpaInitialized       = false;
+        _dstarInitialized     = false;
+        _flowfieldInitialized = false;
         if (_mapMode == map_mode::Open) {
             generate_open();
         } else {
@@ -329,38 +366,41 @@ void PathfindingEx::on_key_down(keyboard::event const& ev)
         _canvasDirty = true;
         break;
     case scan_code::A:
-        _lpaInitialized   = false;
-        _dstarInitialized = false;
+        _lpaInitialized       = false;
+        _dstarInitialized     = false;
+        _flowfieldInitialized = false;
         switch (_algoMode) {
         case algo_mode::AStar:      _algoMode = algo_mode::BidirAStar; break;
         case algo_mode::BidirAStar: _algoMode = algo_mode::ThetaStar; break;
         case algo_mode::ThetaStar:  _algoMode = algo_mode::LPA; break;
         case algo_mode::LPA:        _algoMode = algo_mode::DStarLite; break;
-        case algo_mode::DStarLite:  _algoMode = algo_mode::MinTurn; break;
-        case algo_mode::MinTurn:    _algoMode = algo_mode::AStar; break;
+        case algo_mode::DStarLite:  _algoMode = algo_mode::MinTurns; break;
+        case algo_mode::MinTurns:   _algoMode = algo_mode::FlowField; break;
+        case algo_mode::FlowField:  _algoMode = algo_mode::AStar; break;
         }
         run_pathfinding();
         break;
-    case scan_code::U:
-        // toggle a tile near center as dynamic obstacle, update stateful algos
-        {
-            static constexpr point_i CENTER {GRID_SIZE.Width / 2, GRID_SIZE.Height / 2};
-            _tiles[CENTER] = (_tiles[CENTER] == 256) ? 1 : 256;
-            compute_clearance();
-            stopwatch sw {stopwatch::StartNew()};
-            if (_algoMode == algo_mode::LPA && _lpaInitialized) {
-                _lpa.update(_costs, CENTER);
-                _path = _lpa.path();
-            } else if (_algoMode == algo_mode::DStarLite && _dstarInitialized) {
-                _dstar.update(_costs, CENTER);
-                _path = _dstar.path();
-            }
-            _lastMs      = sw.elapsed_milliseconds();
-            _canvasDirty = true;
+    case scan_code::U: {
+        static constexpr point_i CENTER {GRID_SIZE.Width / 2, GRID_SIZE.Height / 2};
+        _tiles[CENTER] = (_tiles[CENTER] == 256) ? 1 : 256;
+        compute_clearance();
+        _flowfieldInitialized = false;
+        stopwatch sw {stopwatch::StartNew()};
+        if (_algoMode == algo_mode::LPA && _lpaInitialized) {
+            _lpa.update(_costs, CENTER);
+            _path = _lpa.path();
+        } else if (_algoMode == algo_mode::DStarLite && _dstarInitialized) {
+            _dstar.update(_costs, CENTER);
+            _path = _dstar.path();
+        } else if (_algoMode == algo_mode::FlowField) {
+            _flowfield.build(_costs, GRID_SIZE, _end);
+            _flowfieldInitialized = _end != INVALID;
+            _path                 = _flowfieldInitialized ? _flowfield.path(_start) : std::vector<point_i> {};
         }
-        break;
+        _lastMs      = sw.elapsed_milliseconds();
+        _canvasDirty = true;
+    } break;
     case scan_code::SPACE:
-        // advance D* Lite agent one step
         if (_algoMode == algo_mode::DStarLite && _dstarInitialized) {
             stopwatch sw {stopwatch::StartNew()};
             _dstar.move(_costs);
@@ -385,9 +425,10 @@ void PathfindingEx::on_mouse_button_down(mouse::button_event const& ev)
     } else if (ev.Button == mouse::button::Right) {
         point_i const p {static_cast<i32>(ev.Position.X / _tileSize.Width), static_cast<i32>(ev.Position.Y / _tileSize.Height)};
         if (p.X < GRID_SIZE.Width && p.Y < GRID_SIZE.Height && _tiles[p] != 256) {
-            _end              = p;
-            _lpaInitialized   = false;
-            _dstarInitialized = false;
+            _end                  = p;
+            _lpaInitialized       = false;
+            _dstarInitialized     = false;
+            _flowfieldInitialized = false;
         }
     }
 
