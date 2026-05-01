@@ -249,7 +249,7 @@ void PathfindingEx::on_draw_to(render_target& target, transform const& xform)
                 for (i32 x {0}; x < GRID_SIZE.Width; x += 4) {
                     if (_tiles[{x, y}] != 1) { continue; }
                     point_i const dir {_flowfield.direction({x, y})};
-                    if (dir == pathfinding::flow_field::INVALID_DIR) { continue; }
+                    if (dir == pathfinding::INVALID_DIR) { continue; }
 
                     point_f const center {toScreen({x, y}) + half};
                     point_f const fd {static_cast<f32>(dir.X), static_cast<f32>(dir.Y)};
