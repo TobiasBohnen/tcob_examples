@@ -5,7 +5,6 @@
 #include "PathfindingEx.hpp"
 
 #include <algorithm>
-#include <queue>
 
 PathfindingEx::PathfindingEx(game& game)
     : scene {game}
@@ -17,15 +16,14 @@ PathfindingEx::~PathfindingEx() = default;
 
 auto PathfindingEx::grid_view::get_cost(point_i from, point_i to) const -> u64
 {
-    if ((*Parent)[to] == 256) { return ai::pathfinding::IMPASSABLE_COST; }
+    if ((*Wall)[to]) { return ai::pathfinding::IMPASSABLE_COST; }
     if (from.X != to.X && from.Y != to.Y) {
-        if ((*Parent)[{from.X, to.Y}] == 256 || (*Parent)[{to.X, from.Y}] == 256) {
+        if ((*Wall)[{from.X, to.Y}] || (*Wall)[{to.X, from.Y}]) {
             return ai::pathfinding::IMPASSABLE_COST;
         }
     }
-    tile_index_t const c {(*Clearance)[to]};
-    if (c == 0) { return pathfinding::IMPASSABLE_COST; }
-    return 200 / c;
+
+    return 1;
 }
 
 void PathfindingEx::generate_maze()
@@ -36,16 +34,16 @@ void PathfindingEx::generate_maze()
     static constexpr i32 CW {(GRID_SIZE.Width - WALL) / STEP};
     static constexpr i32 CH {(GRID_SIZE.Height - WALL) / STEP};
 
-    static constexpr tile_index_t WALL_TILE {256};
-    static constexpr tile_index_t PASSAGE_TILE {1};
-    _tiles.fill(WALL_TILE);
+    static constexpr bool WALL_TILE {true};
+    static constexpr bool PASSAGE_TILE {false};
+    _walls.fill(WALL_TILE);
 
     auto carve {[&](i32 cx, i32 cy) {
         i32 const tx {(cx * STEP) + WALL};
         i32 const ty {(cy * STEP) + WALL};
         for (i32 dy {0}; dy < CELL; ++dy) {
             for (i32 dx {0}; dx < CELL; ++dx) {
-                _tiles[{tx + dx, ty + dy}] = PASSAGE_TILE;
+                _walls[{tx + dx, ty + dy}] = PASSAGE_TILE;
             }
         }
     }};
@@ -55,11 +53,11 @@ void PathfindingEx::generate_maze()
         i32 const ty {(std::min(a.Y, b.Y) * STEP) + WALL + (a.Y != b.Y ? CELL : 0)};
         if (a.X != b.X) {
             for (i32 dy {0}; dy < CELL; ++dy) {
-                _tiles[{tx, ty + dy}] = PASSAGE_TILE;
+                _walls[{tx, ty + dy}] = PASSAGE_TILE;
             }
         } else {
             for (i32 dx {0}; dx < CELL; ++dx) {
-                _tiles[{tx + dx, ty}] = PASSAGE_TILE;
+                _walls[{tx + dx, ty}] = PASSAGE_TILE;
             }
         }
     }};
@@ -97,61 +95,61 @@ void PathfindingEx::generate_maze()
 
 void PathfindingEx::generate_open()
 {
-    _tiles.fill(1);
+    _walls.fill(false);
 
-    rng                                  rng;
-    random::prng_xoroshiro_128_plus_plus posRng;
+    rng rng;
 
     for (i32 i {0}; i < 500; ++i) {
-        i32 const x {static_cast<i32>(posRng(0, GRID_SIZE.Width - 1))};
-        i32 const y {static_cast<i32>(posRng(0, GRID_SIZE.Height - 1))};
-        _tiles[{x, y}] = 256;
+        i32 const x {static_cast<i32>(rng(0, GRID_SIZE.Width - 1))};
+        i32 const y {static_cast<i32>(rng(0, GRID_SIZE.Height - 1))};
+        _walls[{x, y}] = true;
     }
 
     for (i32 y {0}; y < 5; ++y) {
         for (i32 x {0}; x < 5; ++x) {
-            _tiles[{x, y}] = 1;
+            _walls[{x, y}] = true;
         }
     }
     for (i32 y {GRID_SIZE.Height - 5}; y < GRID_SIZE.Height; ++y) {
         for (i32 x {GRID_SIZE.Width - 5}; x < GRID_SIZE.Width; ++x) {
-            _tiles[{x, y}] = 1;
+            _walls[{x, y}] = true;
         }
     }
 }
 
-void PathfindingEx::compute_clearance()
+void PathfindingEx::generate_boxes()
 {
-    static constexpr std::array<point_i, 4> FLOOD_DIRS {{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}};
-    std::queue<point_i>                     bfsQueue;
-    _clearance.fill(std::numeric_limits<tile_index_t>::max());
+    _walls.fill(false);
+    rng rng;
 
-    for (i32 y {0}; y < GRID_SIZE.Height; ++y) {
-        for (i32 x {0}; x < GRID_SIZE.Width; ++x) {
-            if (_tiles[{x, y}] == 256) {
-                _clearance[{x, y}] = 0;
-                bfsQueue.emplace(x, y);
+    i32 const numObstacles {8};
+    for (i32 i {0}; i < numObstacles; ++i) {
+        i32 const w {static_cast<i32>(rng(10, 20))};
+        i32 const h {static_cast<i32>(rng(10, 20))};
+        i32 const xStart {static_cast<i32>(rng(2, GRID_SIZE.Width - w - 2))};
+        i32 const yStart {static_cast<i32>(rng(2, GRID_SIZE.Height - h - 2))};
+
+        for (i32 y {yStart}; y < yStart + h; ++y) {
+            for (i32 x {xStart}; x < xStart + w; ++x) {
+                bool const isEdge {x == xStart || x == xStart + w - 1 || y == yStart || y == yStart + h - 1};
+                if (isEdge) { _walls[{x, y}] = true; }
             }
         }
     }
-    while (!bfsQueue.empty()) {
-        point_i const p {bfsQueue.front()};
-        bfsQueue.pop();
-        for (auto const& dir : FLOOD_DIRS) {
-            point_i const n {p.X + dir.X, p.Y + dir.Y};
-            if (n.X < 0 || n.X >= GRID_SIZE.Width || n.Y < 0 || n.Y >= GRID_SIZE.Height) { continue; }
-            if (_clearance[n] == std::numeric_limits<tile_index_t>::max()) {
-                _clearance[n] = _clearance[p] + 1;
-                bfsQueue.push(n);
-            }
+
+    auto const clearArea {[&](i32 sx, i32 sy) {
+        for (i32 y {sy}; y < sy + 5; ++y) {
+            for (i32 x {sx}; x < sx + 5; ++x) { _walls[{x, y}] = true; }
         }
-    }
+    }};
+
+    clearArea(0, 0);
+    clearArea(GRID_SIZE.Width - 5, GRID_SIZE.Height - 5);
 }
 
 void PathfindingEx::on_start()
 {
     generate_maze();
-    compute_clearance();
 
     f32 const size {(*window().Size).Height / static_cast<f32>(GRID_SIZE.Height)};
     _tileSize    = {size, size};
@@ -222,14 +220,8 @@ void PathfindingEx::on_draw_to(render_target& target, transform const& xform)
         // passages with clearance color
         for (i32 y {0}; y < GRID_SIZE.Height; ++y) {
             for (i32 x {0}; x < GRID_SIZE.Width; ++x) {
-                if (_tiles[{x, y}] != 1) { continue; }
-                tile_index_t const c {_clearance[{x, y}]};
-                color              col;
-                switch (c) {
-                case 1:  col = colors::Black; break;
-                case 2:  col = colors::LightBlue; break;
-                default: col = colors::White; break;
-                }
+                color const col {_walls[{x, y}] ? colors::Black : colors::White};
+
                 _canvas.begin_path();
                 _canvas.set_fill_style(col);
                 _canvas.rect({point_f {static_cast<f32>(x), static_cast<f32>(y)} * point_f {_tileSize.Width, _tileSize.Height}, _tileSize});
@@ -247,7 +239,7 @@ void PathfindingEx::on_draw_to(render_target& target, transform const& xform)
             f32 const     scale {_tileSize.Width * 2.5f};
             for (i32 y {0}; y < GRID_SIZE.Height; y += 4) {
                 for (i32 x {0}; x < GRID_SIZE.Width; x += 4) {
-                    if (_tiles[{x, y}] != 1) { continue; }
+                    if (!_walls[{x, y}]) { continue; }
                     point_i const dir {_flowfield.direction({x, y})};
                     if (dir == pathfinding::INVALID_DIR) { continue; }
 
@@ -321,8 +313,9 @@ void PathfindingEx::on_fixed_update(milliseconds deltaTime)
 
     string_view mapName;
     switch (_mapMode) {
-    case map_mode::Maze: mapName = "Maze"; break;
-    case map_mode::Open: mapName = "Open"; break;
+    case map_mode::Maze:  mapName = "Maze"; break;
+    case map_mode::Open:  mapName = "Open"; break;
+    case map_mode::Boxes: mapName = "Boxes"; break;
     }
 
     string_view algoName;
@@ -348,7 +341,11 @@ void PathfindingEx::on_key_down(keyboard::event const& ev)
         parent().pop_current_scene();
         break;
     case scan_code::M:
-        _mapMode = (_mapMode == map_mode::Maze) ? map_mode::Open : map_mode::Maze;
+        switch (_mapMode) {
+        case map_mode::Open:  _mapMode = map_mode::Maze; break;
+        case map_mode::Maze:  _mapMode = map_mode::Boxes; break;
+        case map_mode::Boxes: _mapMode = map_mode::Open; break;
+        }
         [[fallthrough]];
     case scan_code::R:
         _start = INVALID;
@@ -357,12 +354,12 @@ void PathfindingEx::on_key_down(keyboard::event const& ev)
         _lpaInitialized       = false;
         _dstarInitialized     = false;
         _flowfieldInitialized = false;
-        if (_mapMode == map_mode::Open) {
-            generate_open();
-        } else {
-            generate_maze();
+        switch (_mapMode) {
+        case map_mode::Maze:  generate_maze(); break;
+        case map_mode::Open:  generate_open(); break;
+        case map_mode::Boxes: generate_boxes(); break;
         }
-        compute_clearance();
+
         _canvasDirty = true;
         break;
     case scan_code::A:
@@ -382,8 +379,7 @@ void PathfindingEx::on_key_down(keyboard::event const& ev)
         break;
     case scan_code::U: {
         static constexpr point_i CENTER {GRID_SIZE.Width / 2, GRID_SIZE.Height / 2};
-        _tiles[CENTER] = (_tiles[CENTER] == 256) ? 1 : 256;
-        compute_clearance();
+        _walls[CENTER]        = !_walls[CENTER];
         _flowfieldInitialized = false;
         stopwatch sw {stopwatch::StartNew()};
         if (_algoMode == algo_mode::LPA && _lpaInitialized) {
@@ -417,14 +413,14 @@ void PathfindingEx::on_mouse_button_down(mouse::button_event const& ev)
 {
     if (ev.Button == mouse::button::Left) {
         point_i const p {static_cast<i32>(ev.Position.X / _tileSize.Width), static_cast<i32>(ev.Position.Y / _tileSize.Height)};
-        if (p.X < GRID_SIZE.Width && p.Y < GRID_SIZE.Height && _tiles[p] != 256) {
+        if (p.X < GRID_SIZE.Width && p.Y < GRID_SIZE.Height && !_walls[p]) {
             _start            = p;
             _lpaInitialized   = false;
             _dstarInitialized = false;
         }
     } else if (ev.Button == mouse::button::Right) {
         point_i const p {static_cast<i32>(ev.Position.X / _tileSize.Width), static_cast<i32>(ev.Position.Y / _tileSize.Height)};
-        if (p.X < GRID_SIZE.Width && p.Y < GRID_SIZE.Height && _tiles[p] != 256) {
+        if (p.X < GRID_SIZE.Width && p.Y < GRID_SIZE.Height && !_walls[p]) {
             _end                  = p;
             _lpaInitialized       = false;
             _dstarInitialized     = false;

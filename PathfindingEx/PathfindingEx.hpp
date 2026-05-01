@@ -11,7 +11,8 @@ class PathfindingEx : public scene {
 
     enum class map_mode : u8 {
         Maze,
-        Open
+        Open,
+        Boxes
     };
     enum class algo_mode : u8 {
         AStar,
@@ -37,7 +38,7 @@ protected:
 private:
     void generate_maze();
     void generate_open();
-    void compute_clearance();
+    void generate_boxes();
     void run_pathfinding();
 
     size_f          _tileSize;
@@ -65,13 +66,11 @@ private:
     bool _dstarInitialized {false};
     bool _flowfieldInitialized {false};
 
-    grid<tile_index_t> _tiles {GRID_SIZE, 1};
-    grid<tile_index_t> _clearance {GRID_SIZE, 0};
+    grid<bool> _walls {GRID_SIZE, true};
 
     struct grid_view {
-        auto                get_cost(point_i from, point_i to) const -> u64;
-        grid<tile_index_t>* Parent;
-        grid<tile_index_t>* Clearance;
+        auto        get_cost(point_i from, point_i to) const -> u64;
+        grid<bool>* Wall;
     };
-    grid_view _costs {&_tiles, &_clearance};
+    grid_view _costs {&_walls};
 };
