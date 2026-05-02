@@ -12,7 +12,7 @@ SoundFontEx::SoundFontEx(game& game)
 
 SoundFontEx::~SoundFontEx() = default;
 
-seconds const full {1s};
+seconds const full {0.5s}; // 120 bpm
 
 void SoundFontEx::on_start()
 {
@@ -69,7 +69,7 @@ void SoundFontEx::play_note(milliseconds dur, i32 preset, midi_note note)
     sound_font_commands commands;
     commands.start_new_section(dur);
     commands.add<sound_font::note_on>(preset, note, 1.0f);
-    commands.start_new_section(full - dur);
+    commands.start_new_section((full / 2) + (full - dur));
     commands.add<sound_font::note_off_all>();
 
     _sound = std::make_shared<sound>(_soundFont->create_buffer(commands));
