@@ -7,29 +7,27 @@
 
 SoundFontEx::SoundFontEx(game& game)
     : scene {game}
-    , _form0 {std::make_shared<piano_form>(window())}
 {
 }
 
 SoundFontEx::~SoundFontEx() = default;
 
-seconds const full {2s}; // 120 bpm
-seconds const half {full / 2};
-seconds const quarter {half / 2};
-seconds const eighth {quarter / 2};
+seconds const full {1s};
 
 void SoundFontEx::on_start()
 {
     auto& resMgr {library()};
     auto* resGrp {resMgr.get_group("res")};
 
-    _soundFont         = resGrp->get<sound_font>("font0");
+    _soundFont = resGrp->get<sound_font>("font0");
+
+    _form0             = std::make_shared<piano_form>(window(), *_soundFont.ptr());
     root_node().Entity = _form0;
 
     auto mouseDown {[&](auto&& btn, midi_note baseNote) {
         btn->MouseButtonDown.connect([&, baseNote] {
             auto const note {static_cast<midi_note>(static_cast<u8>(baseNote) + ((_form0->Octave->Value + 1) * 12))};
-            play_note(quarter, 0, note);
+            play_note(full / std::pow(2, _form0->Length->Value), _form0->Preset->Value, note);
         });
     }};
     mouseDown(_form0->C, midi_note::CNeg1);
@@ -71,7 +69,7 @@ void SoundFontEx::play_note(milliseconds dur, i32 preset, midi_note note)
     sound_font_commands commands;
     commands.start_new_section(dur);
     commands.add<sound_font::note_on>(preset, note, 1.0f);
-    commands.start_new_section(half);
+    commands.start_new_section(full - dur);
     commands.add<sound_font::note_off_all>();
 
     _sound = std::make_shared<sound>(_soundFont->create_buffer(commands));

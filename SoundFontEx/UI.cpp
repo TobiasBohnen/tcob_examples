@@ -15,7 +15,7 @@ using namespace tcob::random;
 
 ////////////////////////////////////////////////////////////
 
-piano_form::piano_form(window& window)
+piano_form::piano_form(window& window, sound_font const& sf)
     : form {{.Name = "piano", .Bounds = window.bounds()}}
     , _font {"trim", "trim"}
 {
@@ -23,14 +23,14 @@ piano_form::piano_form(window& window)
     gen_styles();
 
     auto& mainPanel {create_container<glass>(dock_style::Fill, "main")};
-    auto& mainPanelLayout {mainPanel.create_layout<grid_layout>(size_i {24, 6})};
+    auto& mainPanelLayout {mainPanel.create_layout<grid_layout>(size_i {24, 8})};
 
     // White
     std::array<std::tuple<button*&, i32, std::string>, 7> const whiteKeys {
         {{C, 0, "C"}, {D, 3, "D"}, {E, 6, "E"}, {F, 9, "F"}, {G, 12, "G"}, {A, 15, "A"}, {B, 18, "B"}}};
 
     for (auto const& [btn, posX, label] : whiteKeys) {
-        btn         = &mainPanelLayout.create_widget<button>({posX, 0, 3, 6}, label);
+        btn         = &mainPanelLayout.create_widget<button>({posX, 1, 3, 6}, label);
         btn->Class  = "white-keys";
         btn->Label  = label;
         btn->ZOrder = 1;
@@ -41,23 +41,55 @@ piano_form::piano_form(window& window)
         {{CSharp, 2, "C#"}, {DSharp, 5, "D#"}, {FSharp, 11, "F#"}, {GSharp, 14, "G#"}, {ASharp, 17, "A#"}}};
 
     for (auto const& [btn, posX, label] : blackKeys) {
-        btn         = &mainPanelLayout.create_widget<button>({posX, 0, 2, 3}, label);
+        btn         = &mainPanelLayout.create_widget<button>({posX, 1, 2, 3}, label);
         btn->Class  = "black-keys";
         btn->Label  = label;
         btn->ZOrder = 10;
     }
 
+    { // Preset
+        Preset      = &mainPanelLayout.create_widget<slider>({2, 0, 5, 1}, "Preset");
+        Preset->Min = 0;
+        Preset->Max = sf.info().PresetCount - 1;
+
+        auto& lbl {mainPanelLayout.create_widget<label>({0, 0, 2, 1}, "lblPreset")};
+        Preset->Value.Changed.connect([sf = &sf, &lbl](auto val) {
+            lbl.Label = sf->get_preset_name(val);
+        });
+
+        Preset->Value = 0;
+        lbl.Label     = sf.get_preset_name(0);
+    }
+    { // Length
+        Length      = &mainPanelLayout.create_widget<slider>({10, 0, 5, 1}, "Length");
+        Length->Min = 0;
+        Length->Max = 3;
+
+        auto& lbl {mainPanelLayout.create_widget<label>({8, 0, 2, 1}, "lblLength")};
+        Length->Value.Changed.connect([sf = &sf, &lbl](isize val) {
+            switch (val) {
+            case 0: lbl.Label = "full"; break;
+            case 1: lbl.Label = "half"; break;
+            case 2: lbl.Label = "quarter"; break;
+            case 3: lbl.Label = "eighth"; break;
+            }
+        });
+
+        Length->Value = 0;
+        lbl.Label     = "full";
+    }
     // Octave
-    Octave      = &mainPanelLayout.create_widget<slider>({22, 1, 2, 5}, "Octave");
-    Octave->Min = 0;
-    Octave->Max = 8;
+    {
+        Octave      = &mainPanelLayout.create_widget<slider>({18, 0, 5, 1}, "Octave");
+        Octave->Min = 0;
+        Octave->Max = 8;
 
-    auto& lbl {mainPanelLayout.create_widget<label>({22, 0, 2, 1}, "lblOctave")};
-    Octave->Value.Changed.connect([&lbl](auto val) {
-        lbl.Label = std::to_string(static_cast<i32>(val));
-    });
-
-    Octave->Value = 4;
+        auto& lbl {mainPanelLayout.create_widget<label>({16, 0, 2, 1}, "lblOctave")};
+        Octave->Value.Changed.connect([&lbl](auto val) {
+            lbl.Label = std::to_string(static_cast<i32>(val));
+        });
+        Octave->Value = 4;
+    }
 }
 
 void piano_form::gen_styles()

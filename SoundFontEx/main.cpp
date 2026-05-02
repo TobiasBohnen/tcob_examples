@@ -36,7 +36,9 @@ auto main(int /* argc */, char* argv[]) -> int
     auto& resGrp {resMgr.create_or_get_group("res")};
     resGrp.mount("./soundfontex.zip");
     resMgr.load_all_groups();
-
+    while (!resMgr.is_loading_complete()) {
+        locate_service<task_manager>().process_defer_queue(milliseconds {1}, false);
+    }
     game.push_scene<SoundFontEx>();
     game.start();
     return 0;
