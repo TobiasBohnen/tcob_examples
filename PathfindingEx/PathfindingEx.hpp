@@ -3,23 +3,14 @@
 // This software is released under the MIT License.
 // https://opensource.org/licenses/MIT
 #pragma once
+
 #include "../_common/Common.hpp"
+
+#include "UI.hpp"
 
 class PathfindingEx : public scene {
     static constexpr point_i INVALID {-1, -1};
     static constexpr size_i  GRID_SIZE {256, 256};
-
-    enum class map_mode : u8 { Maze,
-                               Open,
-                               Boxes,
-                               Terrain };
-    enum class algo_mode : u8 { AStar,
-                                BidirAStar,
-                                ThetaStar,
-                                LPA,
-                                DStarLite,
-                                MinTurns,
-                                FlowField };
 
 public:
     PathfindingEx(game& game);
@@ -33,20 +24,25 @@ protected:
     void on_mouse_button_down(mouse::button_event const& ev) override;
 
 private:
+    void generate_map();
     void generate_maze();
     void generate_open();
     void generate_boxes();
     void generate_terrain();
+
     void run_pathfinding();
+
+    void reset_stateful();
+
+    void do_smooth();
+    void do_toggle_wall();
+    void do_dstar_move();
 
     size_f          _tileSize;
     canvas          _canvas;
     canvas_renderer _renderer {_canvas};
     bool            _canvasDirty {false};
     f64             _lastMs {0};
-
-    map_mode  _mapMode {map_mode::Maze};
-    algo_mode _algoMode {algo_mode::ThetaStar};
 
     point_i              _start {INVALID};
     point_i              _end {INVALID};
@@ -73,4 +69,7 @@ private:
         grid<u64>*  Terrain;
     };
     grid_view _gridView {};
+
+    std::shared_ptr<pathfinding_form> _form;
+    f32                               _uiWidth {0};
 };

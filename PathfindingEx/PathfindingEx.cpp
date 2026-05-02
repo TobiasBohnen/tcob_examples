@@ -6,6 +6,9 @@
 
 #include <algorithm>
 
+static constexpr i32 FOREST_COST {2};
+static constexpr i32 WATER_COST {8};
+
 PathfindingEx::PathfindingEx(game& game)
     : scene {game}
 {
@@ -24,6 +27,59 @@ auto PathfindingEx::grid_view::get_cost(point_i from, point_i to) const -> u64
     }
     if (Terrain != nullptr) { return (*Terrain)[to]; }
     return 1;
+}
+
+void PathfindingEx::on_start()
+{
+    auto const windowSize {*window().Size};
+    _uiWidth = static_cast<f32>(windowSize.Width) / 5.0f;
+
+    rect_i const formBounds {windowSize.Width - static_cast<i32>(_uiWidth), 0,
+                             static_cast<i32>(_uiWidth), windowSize.Height};
+    _form = std::make_shared<pathfinding_form>(formBounds);
+
+    _form->OnRegenerate.connect([this] { generate_map(); run_pathfinding(); });
+    _form->OnSmooth.connect([this] { do_smooth(); });
+    _form->OnToggleWall.connect([this] { do_toggle_wall(); });
+    _form->OnDStarMove.connect([this] { do_dstar_move(); });
+    _form->OnMapChanged.connect([this] {
+        generate_map();
+        run_pathfinding();
+    });
+    _form->OnAlgoChanged.connect([this] {
+        reset_stateful();
+        run_pathfinding();
+    });
+
+    root_node().Entity = _form;
+
+    f32 const tileSize {std::floor(static_cast<f32>(windowSize.Height) / static_cast<f32>(GRID_SIZE.Height))};
+    _tileSize = {tileSize, tileSize};
+
+    generate_map();
+}
+
+void PathfindingEx::generate_map()
+{
+    _start = INVALID;
+    _end   = INVALID;
+    _path.clear();
+    reset_stateful();
+
+    switch (_form->current_map_mode()) {
+    case pathfinding_form::map_mode::Maze:    generate_maze(); break;
+    case pathfinding_form::map_mode::Open:    generate_open(); break;
+    case pathfinding_form::map_mode::Boxes:   generate_boxes(); break;
+    case pathfinding_form::map_mode::Terrain: generate_terrain(); break;
+    }
+    _canvasDirty = true;
+}
+
+void PathfindingEx::reset_stateful()
+{
+    _lpaInitialized       = false;
+    _dstarInitialized     = false;
+    _flowfieldInitialized = false;
 }
 
 void PathfindingEx::generate_maze()
@@ -50,13 +106,9 @@ void PathfindingEx::generate_maze()
         i32 const tx {(std::min(a.X, b.X) * STEP) + WALL + (a.X != b.X ? CELL : 0)};
         i32 const ty {(std::min(a.Y, b.Y) * STEP) + WALL + (a.Y != b.Y ? CELL : 0)};
         if (a.X != b.X) {
-            for (i32 dy {0}; dy < CELL; ++dy) {
-                _walls[{tx, ty + dy}] = false;
-            }
+            for (i32 dy {0}; dy < CELL; ++dy) { _walls[{tx, ty + dy}] = false; }
         } else {
-            for (i32 dx {0}; dx < CELL; ++dx) {
-                _walls[{tx + dx, ty}] = false;
-            }
+            for (i32 dx {0}; dx < CELL; ++dx) { _walls[{tx + dx, ty}] = false; }
         }
     }};
 
@@ -96,24 +148,18 @@ void PathfindingEx::generate_maze()
 void PathfindingEx::generate_open()
 {
     _walls.fill(false);
-
     rng rng;
 
     for (i32 i {0}; i < 500; ++i) {
-        i32 const x {static_cast<i32>(rng(0, GRID_SIZE.Width - 1))};
-        i32 const y {static_cast<i32>(rng(0, GRID_SIZE.Height - 1))};
-        _walls[{x, y}] = true;
+        _walls[{static_cast<i32>(rng(0, GRID_SIZE.Width - 1)),
+                static_cast<i32>(rng(0, GRID_SIZE.Height - 1))}] = true;
     }
 
     for (i32 y {0}; y < 5; ++y) {
-        for (i32 x {0}; x < 5; ++x) {
-            _walls[{x, y}] = false;
-        }
+        for (i32 x {0}; x < 5; ++x) { _walls[{x, y}] = false; }
     }
     for (i32 y {GRID_SIZE.Height - 5}; y < GRID_SIZE.Height; ++y) {
-        for (i32 x {GRID_SIZE.Width - 5}; x < GRID_SIZE.Width; ++x) {
-            _walls[{x, y}] = false;
-        }
+        for (i32 x {GRID_SIZE.Width - 5}; x < GRID_SIZE.Width; ++x) { _walls[{x, y}] = false; }
     }
 
     _gridView = {&_walls, nullptr};
@@ -129,38 +175,31 @@ void PathfindingEx::generate_boxes()
         i32 const h {static_cast<i32>(rng(10, 20))};
         i32 const xStart {static_cast<i32>(rng(2, GRID_SIZE.Width - w - 2))};
         i32 const yStart {static_cast<i32>(rng(2, GRID_SIZE.Height - h - 2))};
-
         for (i32 y {yStart}; y < yStart + h; ++y) {
             for (i32 x {xStart}; x < xStart + w; ++x) {
-                bool const isEdge {x == xStart || x == xStart + w - 1 || y == yStart || y == yStart + h - 1};
-                if (isEdge) { _walls[{x, y}] = true; }
+                if (x == xStart || x == xStart + w - 1 || y == yStart || y == yStart + h - 1) {
+                    _walls[{x, y}] = true;
+                }
             }
         }
     }
 
-    auto const clearArea {[&](i32 sx, i32 sy) {
+    auto clearArea {[&](i32 sx, i32 sy) {
         for (i32 y {sy}; y < sy + 5; ++y) {
-            for (i32 x {sx}; x < sx + 5; ++x) {
-                _walls[{x, y}] = false;
-            }
+            for (i32 x {sx}; x < sx + 5; ++x) { _walls[{x, y}] = false; }
         }
     }};
-
     clearArea(0, 0);
     clearArea(GRID_SIZE.Width - 5, GRID_SIZE.Height - 5);
 
     _gridView = {&_walls, nullptr};
 }
 
-constexpr i32 FOREST_COST {2};
-constexpr i32 WATER_COST {8};
-
 void PathfindingEx::generate_terrain()
 {
     _walls.fill(false);
     _costs.fill(1);
 
-    // border walls
     for (i32 x {0}; x < GRID_SIZE.Width; ++x) {
         _walls[{x, 0}]                    = true;
         _walls[{x, GRID_SIZE.Height - 1}] = true;
@@ -172,54 +211,34 @@ void PathfindingEx::generate_terrain()
 
     rng rng;
 
-    // water regions
+    auto fillCircle {[&](i32 cx, i32 cy, i32 r, auto fn) {
+        for (i32 y {cy - r}; y <= cy + r; ++y) {
+            for (i32 x {cx - r}; x <= cx + r; ++x) {
+                if (x < 1 || x >= GRID_SIZE.Width - 1 || y < 1 || y >= GRID_SIZE.Height - 1) { continue; }
+                if (((x - cx) * (x - cx)) + ((y - cy) * (y - cy)) <= (r * r)) { fn(x, y); }
+            }
+        }
+    }};
+
     for (i32 i {0}; i < 6; ++i) {
-        i32 const cx {static_cast<i32>(rng(20, GRID_SIZE.Width - 20))};
-        i32 const cy {static_cast<i32>(rng(20, GRID_SIZE.Height - 20))};
-        i32 const r {static_cast<i32>(rng(15, 35))};
-        for (i32 y {cy - r}; y <= cy + r; ++y) {
-            for (i32 x {cx - r}; x <= cx + r; ++x) {
-                if (x < 1 || x >= GRID_SIZE.Width - 1 || y < 1 || y >= GRID_SIZE.Height - 1) { continue; }
-                if (((x - cx) * (x - cx)) + ((y - cy) * (y - cy)) <= (r * r)) {
-                    _costs[{x, y}] = WATER_COST;
-                }
-            }
-        }
+        fillCircle(static_cast<i32>(rng(20, GRID_SIZE.Width - 20)),
+                   static_cast<i32>(rng(20, GRID_SIZE.Height - 20)),
+                   static_cast<i32>(rng(15, 35)),
+                   [&](i32 x, i32 y) { _costs[{x, y}] = WATER_COST; });
     }
-
-    // forest regions
     for (i32 i {0}; i < 8; ++i) {
-        i32 const cx {static_cast<i32>(rng(15, GRID_SIZE.Width - 15))};
-        i32 const cy {static_cast<i32>(rng(15, GRID_SIZE.Height - 15))};
-        i32 const r {static_cast<i32>(rng(10, 25))};
-        for (i32 y {cy - r}; y <= cy + r; ++y) {
-            for (i32 x {cx - r}; x <= cx + r; ++x) {
-                if (x < 1 || x >= GRID_SIZE.Width - 1 || y < 1 || y >= GRID_SIZE.Height - 1) { continue; }
-                if (((x - cx) * (x - cx)) + ((y - cy) * (y - cy)) <= (r * r)) {
-                    if (_costs[{x, y}] == 1) {
-                        _costs[{x, y}] = FOREST_COST;
-                    }
-                }
-            }
-        }
+        fillCircle(static_cast<i32>(rng(15, GRID_SIZE.Width - 15)),
+                   static_cast<i32>(rng(15, GRID_SIZE.Height - 15)),
+                   static_cast<i32>(rng(10, 25)),
+                   [&](i32 x, i32 y) { if (_costs[{x, y}] == 1) { _costs[{x, y}] = FOREST_COST; } });
     }
-
-    // mountain walls
     for (i32 i {0}; i < 4; ++i) {
-        i32 const cx {static_cast<i32>(rng(20, GRID_SIZE.Width - 20))};
-        i32 const cy {static_cast<i32>(rng(20, GRID_SIZE.Height - 20))};
-        i32 const r {static_cast<i32>(rng(8, 15))};
-        for (i32 y {cy - r}; y <= cy + r; ++y) {
-            for (i32 x {cx - r}; x <= cx + r; ++x) {
-                if (x < 1 || x >= GRID_SIZE.Width - 1 || y < 1 || y >= GRID_SIZE.Height - 1) { continue; }
-                if (((x - cx) * (x - cx)) + ((y - cy) * (y - cy)) <= (r * r)) {
-                    _walls[{x, y}] = true;
-                }
-            }
-        }
+        fillCircle(static_cast<i32>(rng(20, GRID_SIZE.Width - 20)),
+                   static_cast<i32>(rng(20, GRID_SIZE.Height - 20)),
+                   static_cast<i32>(rng(8, 15)),
+                   [&](i32 x, i32 y) { _walls[{x, y}] = true; });
     }
 
-    // ensure corners clear
     for (i32 y {1}; y < 6; ++y) {
         for (i32 x {1}; x < 6; ++x) {
             _walls[{x, y}] = false;
@@ -236,15 +255,6 @@ void PathfindingEx::generate_terrain()
     _gridView = {&_walls, &_costs};
 }
 
-void PathfindingEx::on_start()
-{
-    generate_maze();
-
-    f32 const size {(*window().Size).Height / static_cast<f32>(GRID_SIZE.Height)};
-    _tileSize    = {size, size};
-    _canvasDirty = true;
-}
-
 void PathfindingEx::run_pathfinding()
 {
     if (_start == INVALID || _end == INVALID) {
@@ -254,34 +264,34 @@ void PathfindingEx::run_pathfinding()
     }
 
     stopwatch sw {stopwatch::StartNew()};
-    switch (_algoMode) {
-    case algo_mode::AStar:
+    switch (_form->current_algo_mode()) {
+    case pathfinding_form::algo_mode::AStar:
         _path = _astar.find_path(_gridView, GRID_SIZE, _start, _end);
         break;
-    case algo_mode::BidirAStar:
+    case pathfinding_form::algo_mode::BidirAStar:
         _path = _bidir.find_path(_gridView, GRID_SIZE, _start, _end);
         break;
-    case algo_mode::ThetaStar:
+    case pathfinding_form::algo_mode::ThetaStar:
         _path = _thetastar.find_path(_gridView, GRID_SIZE, _start, _end);
         break;
-    case algo_mode::LPA:
+    case pathfinding_form::algo_mode::LPA:
         if (!_lpaInitialized) {
             _lpa.initialize(_gridView, GRID_SIZE, _start, _end);
             _lpaInitialized = true;
         }
         _path = _lpa.path();
         break;
-    case algo_mode::DStarLite:
+    case pathfinding_form::algo_mode::DStarLite:
         if (!_dstarInitialized) {
             _dstar.initialize(_gridView, GRID_SIZE, _start, _end);
             _dstarInitialized = true;
         }
         _path = _dstar.path();
         break;
-    case algo_mode::MinTurns:
+    case pathfinding_form::algo_mode::MinTurns:
         _path = _minturns.find_path(_gridView, GRID_SIZE, _start, _end);
         break;
-    case algo_mode::FlowField:
+    case pathfinding_form::algo_mode::FlowField:
         if (!_flowfieldInitialized) {
             _flowfield.build(_gridView, GRID_SIZE, _end);
             _flowfieldInitialized = true;
@@ -289,13 +299,80 @@ void PathfindingEx::run_pathfinding()
         _path = _flowfield.path(_start);
         break;
     }
-    _lastMs      = sw.elapsed_milliseconds();
+
+    _lastMs = sw.elapsed_milliseconds();
+    _form->set_time(_lastMs);
+    _form->set_nodes(_path.size());
     _canvasDirty = true;
+}
+
+void PathfindingEx::do_smooth()
+{
+    _path = pathfinding::smooth_path(_gridView, GRID_SIZE, _path);
+    _form->set_nodes(_path.size());
+    _canvasDirty = true;
+}
+
+void PathfindingEx::do_toggle_wall()
+{
+    static constexpr point_i CENTER {GRID_SIZE.Width / 2, GRID_SIZE.Height / 2};
+    _walls[CENTER]        = !_walls[CENTER];
+    _flowfieldInitialized = false;
+
+    stopwatch  sw {stopwatch::StartNew()};
+    auto const algo {_form->current_algo_mode()};
+    if (algo == pathfinding_form::algo_mode::LPA && _lpaInitialized) {
+        _lpa.update(_gridView, CENTER);
+        _path = _lpa.path();
+    } else if (algo == pathfinding_form::algo_mode::DStarLite && _dstarInitialized) {
+        _dstar.update(_gridView, CENTER);
+        _path = _dstar.path();
+    } else if (algo == pathfinding_form::algo_mode::FlowField && _end != INVALID) {
+        _flowfield.build(_gridView, GRID_SIZE, _end);
+        _flowfieldInitialized = true;
+        _path                 = _flowfield.path(_start);
+    }
+    _lastMs = sw.elapsed_milliseconds();
+    _form->set_time(_lastMs);
+    _form->set_nodes(_path.size());
+    _canvasDirty = true;
+}
+
+void PathfindingEx::do_dstar_move()
+{
+    if (_form->current_algo_mode() != pathfinding_form::algo_mode::DStarLite || !_dstarInitialized) { return; }
+    stopwatch sw {stopwatch::StartNew()};
+    _dstar.move(_gridView);
+    _path   = _dstar.path();
+    _lastMs = sw.elapsed_milliseconds();
+    _form->set_time(_lastMs);
+    _form->set_nodes(_path.size());
+    _canvasDirty = true;
+}
+
+void PathfindingEx::on_fixed_update(milliseconds deltaTime)
+{
+    auto const& stats {locate_service<gfx::render_system>().statistics()};
+    window().Title = std::format("TestGame | FPS avg:{:.2f} | map:{} | algo:{} ",
+                                 stats.average_FPS(),
+                                 _form->map_mode_name(),
+                                 _form->algo_mode_name());
+}
+
+void PathfindingEx::on_key_down(keyboard::event const& ev)
+{
+    switch (ev.ScanCode) {
+    case scan_code::BACKSPACE:
+        parent().pop_current_scene();
+        break;
+    default: break;
+    }
 }
 
 void PathfindingEx::on_draw_to(render_target& target, transform const& xform)
 {
-    auto const size {*target.Size};
+    size_i const size {static_cast<i32>(_tileSize.Width * GRID_SIZE.Width),
+                       static_cast<i32>(_tileSize.Height * GRID_SIZE.Height)};
     if (_canvasDirty) {
         _canvas.begin_frame(size, 1);
         _canvas.set_edge_antialias(false);
@@ -322,15 +399,13 @@ void PathfindingEx::on_draw_to(render_target& target, transform const& xform)
         _canvas.set_fill_style(colors::White);
         for (i32 y {0}; y < GRID_SIZE.Height; ++y) {
             for (i32 x {0}; x < GRID_SIZE.Width; ++x) {
-                if (!_walls[{x, y}]) {
-                    _canvas.rect(tileRect({x, y}));
-                }
+                if (!_walls[{x, y}]) { _canvas.rect(tileRect({x, y})); }
             }
         }
         _canvas.fill();
 
-        // terrain costs
-        if (_mapMode == map_mode::Terrain) {
+        // terrain
+        if (_form->is_terrain_map()) {
             for (i32 y {0}; y < GRID_SIZE.Height; ++y) {
                 for (i32 x {0}; x < GRID_SIZE.Width; ++x) {
                     if (_walls[{x, y}]) { continue; }
@@ -350,8 +425,9 @@ void PathfindingEx::on_draw_to(render_target& target, transform const& xform)
             }
         }
 
-        // flow field visualization
-        if (_algoMode == algo_mode::FlowField && _flowfieldInitialized) {
+        // flow field
+        auto const algo {_form->current_algo_mode()};
+        if (algo == pathfinding_form::algo_mode::FlowField && _flowfieldInitialized) {
             f32 const scale {_tileSize.Width * 2.5f};
             for (i32 y {0}; y < GRID_SIZE.Height; y += 4) {
                 for (i32 x {0}; x < GRID_SIZE.Width; x += 4) {
@@ -378,8 +454,8 @@ void PathfindingEx::on_draw_to(render_target& target, transform const& xform)
             }
         }
 
-        // agent position for D* Lite
-        if (_algoMode == algo_mode::DStarLite && _dstarInitialized) {
+        // D* Lite agent
+        if (algo == pathfinding_form::algo_mode::DStarLite && _dstarInitialized) {
             point_i const pos {_dstar.position()};
             if (pos != INVALID) {
                 _canvas.begin_path();
@@ -391,7 +467,7 @@ void PathfindingEx::on_draw_to(render_target& target, transform const& xform)
 
         // path
         if (!_path.empty()) {
-            point_i const pathStart {_algoMode == algo_mode::DStarLite && _dstarInitialized
+            point_i const pathStart {algo == pathfinding_form::algo_mode::DStarLite && _dstarInitialized
                                          ? _dstar.position()
                                          : _start};
             _canvas.begin_path();
@@ -424,132 +500,22 @@ void PathfindingEx::on_draw_to(render_target& target, transform const& xform)
     _renderer.render_to_target(target, transform::Identity);
 }
 
-void PathfindingEx::on_fixed_update(milliseconds deltaTime)
-{
-    auto const& stats {locate_service<gfx::render_system>().statistics()};
-    auto const& mouse {locate_service<input::system>().mouse().get_position()};
-
-    string_view mapName;
-    switch (_mapMode) {
-    case map_mode::Maze:    mapName = "Maze"; break;
-    case map_mode::Open:    mapName = "Open"; break;
-    case map_mode::Boxes:   mapName = "Boxes"; break;
-    case map_mode::Terrain: mapName = "Terrain"; break;
-    }
-
-    string_view algoName;
-    switch (_algoMode) {
-    case algo_mode::AStar:      algoName = "A*"; break;
-    case algo_mode::BidirAStar: algoName = "Bidir A*"; break;
-    case algo_mode::ThetaStar:  algoName = "Theta*"; break;
-    case algo_mode::LPA:        algoName = "LPA*"; break;
-    case algo_mode::DStarLite:  algoName = "D* Lite"; break;
-    case algo_mode::MinTurns:   algoName = "MinTurns"; break;
-    case algo_mode::FlowField:  algoName = "FlowField"; break;
-    }
-
-    window().Title = std::format("TestGame | FPS avg:{:.2f} | map:{} | algo:{} | path:{:.3f}ms | nodes:{} | x:{} y:{} ",
-                                 stats.average_FPS(), mapName, algoName,
-                                 _lastMs, _path.size(), mouse.X, mouse.Y);
-}
-
-void PathfindingEx::on_key_down(keyboard::event const& ev)
-{
-    switch (ev.ScanCode) {
-    case scan_code::BACKSPACE:
-        parent().pop_current_scene();
-        break;
-    case scan_code::M:
-        switch (_mapMode) {
-        case map_mode::Maze:    _mapMode = map_mode::Open; break;
-        case map_mode::Open:    _mapMode = map_mode::Boxes; break;
-        case map_mode::Boxes:   _mapMode = map_mode::Terrain; break;
-        case map_mode::Terrain: _mapMode = map_mode::Maze; break;
-        }
-        [[fallthrough]];
-    case scan_code::R:
-        _start = INVALID;
-        _end   = INVALID;
-        _path.clear();
-        _lpaInitialized       = false;
-        _dstarInitialized     = false;
-        _flowfieldInitialized = false;
-        switch (_mapMode) {
-        case map_mode::Maze:    generate_maze(); break;
-        case map_mode::Open:    generate_open(); break;
-        case map_mode::Boxes:   generate_boxes(); break;
-        case map_mode::Terrain: generate_terrain(); break;
-        }
-        _canvasDirty = true;
-        break;
-    case scan_code::A:
-        _lpaInitialized       = false;
-        _dstarInitialized     = false;
-        _flowfieldInitialized = false;
-        switch (_algoMode) {
-        case algo_mode::AStar:      _algoMode = algo_mode::BidirAStar; break;
-        case algo_mode::BidirAStar: _algoMode = algo_mode::ThetaStar; break;
-        case algo_mode::ThetaStar:  _algoMode = algo_mode::LPA; break;
-        case algo_mode::LPA:        _algoMode = algo_mode::DStarLite; break;
-        case algo_mode::DStarLite:  _algoMode = algo_mode::MinTurns; break;
-        case algo_mode::MinTurns:   _algoMode = algo_mode::FlowField; break;
-        case algo_mode::FlowField:  _algoMode = algo_mode::AStar; break;
-        }
-        run_pathfinding();
-        break;
-    case scan_code::U: {
-        static constexpr point_i CENTER {GRID_SIZE.Width / 2, GRID_SIZE.Height / 2};
-        _walls[CENTER]        = !_walls[CENTER];
-        _flowfieldInitialized = false;
-        stopwatch sw {stopwatch::StartNew()};
-        if (_algoMode == algo_mode::LPA && _lpaInitialized) {
-            _lpa.update(_gridView, CENTER);
-            _path = _lpa.path();
-        } else if (_algoMode == algo_mode::DStarLite && _dstarInitialized) {
-            _dstar.update(_gridView, CENTER);
-            _path = _dstar.path();
-        } else if (_algoMode == algo_mode::FlowField && _end != INVALID) {
-            _flowfield.build(_gridView, GRID_SIZE, _end);
-            _flowfieldInitialized = true;
-            _path                 = _flowfield.path(_start);
-        }
-        _lastMs      = sw.elapsed_milliseconds();
-        _canvasDirty = true;
-    } break;
-    case scan_code::SPACE:
-        if (_algoMode == algo_mode::DStarLite && _dstarInitialized) {
-            stopwatch sw {stopwatch::StartNew()};
-            _dstar.move(_gridView);
-            _path        = _dstar.path();
-            _lastMs      = sw.elapsed_milliseconds();
-            _canvasDirty = true;
-        }
-        break;
-    case scan_code::S:
-        _path        = pathfinding::smooth_path(_gridView, GRID_SIZE, _path);
-        _canvasDirty = true;
-        break;
-    default: break;
-    }
-}
-
 void PathfindingEx::on_mouse_button_down(mouse::button_event const& ev)
 {
+    // ignore clicks in the UI panel
+    if (ev.Position.X >= static_cast<f32>((*window().Size).Width) - _uiWidth) { return; }
+
+    point_i const p {static_cast<i32>(ev.Position.X / _tileSize.Width),
+                     static_cast<i32>(ev.Position.Y / _tileSize.Height)};
+    if (p.X >= GRID_SIZE.Width || p.Y >= GRID_SIZE.Height || _walls[p]) { return; }
+
     if (ev.Button == mouse::button::Left) {
-        point_i const p {static_cast<i32>(ev.Position.X / _tileSize.Width), static_cast<i32>(ev.Position.Y / _tileSize.Height)};
-        if (p.X < GRID_SIZE.Width && p.Y < GRID_SIZE.Height && !_walls[p]) {
-            _start            = p;
-            _lpaInitialized   = false;
-            _dstarInitialized = false;
-        }
+        _start            = p;
+        _lpaInitialized   = false;
+        _dstarInitialized = false;
     } else if (ev.Button == mouse::button::Right) {
-        point_i const p {static_cast<i32>(ev.Position.X / _tileSize.Width), static_cast<i32>(ev.Position.Y / _tileSize.Height)};
-        if (p.X < GRID_SIZE.Width && p.Y < GRID_SIZE.Height && !_walls[p]) {
-            _end                  = p;
-            _lpaInitialized       = false;
-            _dstarInitialized     = false;
-            _flowfieldInitialized = false;
-        }
+        _end = p;
+        reset_stateful();
     }
 
     run_pathfinding();

@@ -2,6 +2,7 @@ add_executable(PathfindingEx)
 
 target_sources(PathfindingEx PRIVATE
     main.cpp
+    UI.cpp
     PathfindingEx.cpp
 )
 
