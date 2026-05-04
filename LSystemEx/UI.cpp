@@ -41,9 +41,10 @@ void lsystem_form::create_rule(grid_layout& layout)
     txbRule.Selectable = true;
 
     auto& spnProp {layout.create_widget<spinner>({26, 1, 6, 3}, "spnProp")};
-    spnProp.Min   = 0;
-    spnProp.Max   = 100;
-    spnProp.Value = 100;
+    spnProp.Min       = 0;
+    spnProp.Max       = 100;
+    spnProp.Value     = 100;
+    spnProp.Precision = 0;
 
     auto& btnAdd {layout.create_widget<button>({34, 1, 4, 3}, "btnAdd")};
     btnAdd.Label = "+";
@@ -103,35 +104,39 @@ void lsystem_form::create_settings(grid_layout& layout)
     _txbAxiom->Text = "X";
 
     auto& lblIterations {layout.create_widget<label>({1, 28, 8, 2}, "lblIterations")};
-    lblIterations.Label   = "Iterations:";
-    _spnIterations        = &layout.create_widget<spinner>({9, 28, 8, 2}, "spnIterations");
-    _spnIterations->Step  = 1;
-    _spnIterations->Min   = 1;
-    _spnIterations->Value = 5;
+    lblIterations.Label       = "Iterations:";
+    _spnIterations            = &layout.create_widget<spinner>({9, 28, 8, 2}, "spnIterations");
+    _spnIterations->Step      = 1;
+    _spnIterations->Min       = 1;
+    _spnIterations->Value     = 5;
+    _spnIterations->Precision = 0;
 
     auto& lblAngle {layout.create_widget<label>({21, 28, 8, 2}, "lblAngle")};
-    lblAngle.Label   = "Angle:";
-    _spnAngle        = &layout.create_widget<spinner>({29, 28, 8, 2}, "spnAngle");
-    _spnAngle->Step  = 1;
-    _spnAngle->Min   = 0;
-    _spnAngle->Max   = 359;
-    _spnAngle->Value = 20;
+    lblAngle.Label       = "Angle:";
+    _spnAngle            = &layout.create_widget<spinner>({29, 28, 8, 2}, "spnAngle");
+    _spnAngle->Step      = 1;
+    _spnAngle->Min       = 0;
+    _spnAngle->Max       = 359;
+    _spnAngle->Value     = 20;
+    _spnAngle->Precision = 0;
 
     auto& lblLine {layout.create_widget<label>({1, 30, 8, 2}, "lblLine")};
-    lblLine.Label   = "Line:";
-    _spnLine        = &layout.create_widget<spinner>({9, 30, 8, 2}, "spnLine");
-    _spnLine->Step  = 1;
-    _spnLine->Min   = 5;
-    _spnLine->Max   = 20;
-    _spnLine->Value = 12;
+    lblLine.Label       = "Line:";
+    _spnLine            = &layout.create_widget<spinner>({9, 30, 8, 2}, "spnLine");
+    _spnLine->Step      = 1;
+    _spnLine->Min       = 5;
+    _spnLine->Max       = 20;
+    _spnLine->Value     = 12;
+    _spnLine->Precision = 0;
 
     auto& lblStroke {layout.create_widget<label>({21, 30, 8, 2}, "lblStroke")};
-    lblStroke.Label   = "Stroke:";
-    _spnStroke        = &layout.create_widget<spinner>({29, 30, 8, 2}, "spnStroke");
-    _spnStroke->Step  = 1;
-    _spnStroke->Min   = 1;
-    _spnStroke->Max   = 10;
-    _spnStroke->Value = 5;
+    lblStroke.Label       = "Stroke:";
+    _spnStroke            = &layout.create_widget<spinner>({29, 30, 8, 2}, "spnStroke");
+    _spnStroke->Step      = 1;
+    _spnStroke->Min       = 1;
+    _spnStroke->Max       = 10;
+    _spnStroke->Value     = 5;
+    _spnStroke->Precision = 0;
 }
 
 auto lsystem_form::get_settings() const -> settings
