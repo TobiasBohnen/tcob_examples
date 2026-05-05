@@ -824,7 +824,7 @@ auto create_form_accordion(window& wnd, assets::group const& resGrp) -> std::sha
     return retValue;
 }
 
-auto add_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
+auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
 {
     using color_t = std::array<f32, 3>;
     constexpr u32 TYPE_FLOAT {1 << 0};
