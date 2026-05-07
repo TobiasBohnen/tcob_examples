@@ -76,7 +76,7 @@ void lsystem_form::create_rule(grid_layout& layout)
     });
 
     btnAdd.Click.connect([&](widget_event const& ev) {
-        if (_grdRules->Grid->height() >= 5 || txbVariable.Text->empty() || txbRule.Text->empty()) { return; }
+        if (_grdRules->Grid->height() >= 5 || (*txbVariable.Text).empty() || (*txbVariable.Text).empty()) { return; }
 
         _grdRules->Grid.mutate([&](auto& grid) {
             for (i32 i {0}; i < grid.height(); ++i) {
