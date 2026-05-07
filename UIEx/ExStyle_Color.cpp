@@ -328,13 +328,16 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Border.Radius       = 5_px;
         style->Text.Style          = {false, font::weight::Normal};
         style->Text.Font           = resGrp.get<font_family>("Poppins");
-        style->Text.Size           = 50_pct;
+        style->Text.Size           = 25_pct;
         style->Text.Shadow.OffsetX = 0_px;
         style->Text.Shadow.OffsetY = 1_px;
         style->Text.Alignment      = {horizontal_alignment::Left, vertical_alignment::Middle};
+        style->Text.AutoSize       = auto_size_mode::Always;
         style->Margin              = {5_px};
         style->Padding             = {5_px};
         style->NavArrowClass       = "nav_arrows";
+        style->Caret.BlinkRate     = 500ms;
+        style->Caret.Color         = colors::Red;
 
         auto disabledStyle {retValue.create<spinner>("spinner", {.Disabled = true})};
 
