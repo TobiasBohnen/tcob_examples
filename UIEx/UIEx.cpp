@@ -25,6 +25,7 @@ UIEx::UIEx(game& game)
         &create_form_displays,
         &create_form_tabcontainer,
         &create_form_accordion,
+        &create_form_toast,
     };
 }
 
@@ -37,7 +38,7 @@ void UIEx::on_start()
     window().Cursor           = defaultCursor;
     defaultCursor->ActiveMode = "default";
 
-    auto form0 {create_form0(window(), *resGrp)};
+    auto form0 {create_form_toast(window(), *resGrp)};
     form0->Styles = create_color_styles(*resGrp);
     form0->Cursor = window().Cursor;
     // _form0->Bounds = rect_f {{300, 450}, size_f {*window().Size * 2}};

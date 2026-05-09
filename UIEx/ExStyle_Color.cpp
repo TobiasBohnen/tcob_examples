@@ -133,7 +133,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Text.Font      = resGrp.get<font_family>("Poppins");
         style->Text.Size      = 50_pct;
         style->Text.Alignment = {.Horizontal = horizontal_alignment::Left, .Vertical = vertical_alignment::Middle};
-
+        style->Text.AutoSize  = auto_size_mode::Always;
         normal.apply(style);
     }
     {
@@ -439,6 +439,14 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Border.Radius = 5_px;
 
         normal.apply(style);
+    }
+    {
+        auto style {retValue.create<toast>("toast", {})};
+        style->Border.Size   = 3_px;
+        style->Border.Radius = 15_px;
+
+        style->Background        = colors::FireBrick;
+        style->Border.Background = colors::Red;
     }
     {
         auto style {retValue.create<list_box>("list_box", {})};
