@@ -1133,6 +1133,7 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
     return retValue;
 }
 
+rng  RNG;
 auto create_form_toast(window& wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
 {
     auto retValue {std::make_shared<form<dock_layout>>(form_init {"form-toast", wnd.bounds()})};
@@ -1140,29 +1141,60 @@ auto create_form_toast(window& wnd, assets::group const& resGrp) -> std::shared_
     auto& panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
     auto& panel0Layout {panel0.get_layout<panel::default_layout>()};
 
-    auto& btnTL {panel0Layout.create_widget<button>({450, 50, 160, 50}, "BtnTL")};
-    btnTL.Label = "Toast Top-Left";
-    btnTL.Click.connect([form = retValue.get()] {
-        auto& t {form->queue_toast("toast_tl", corner::TopLeft)};
-        t.FadeIn   = 300ms;
-        t.Duration = 1500ms;
-        t.FadeOut  = 300ms;
-        auto& layout {t.create_layout<dock_layout>()};
-        auto& lbl {layout.create_widget<label>(dock_style::Fill, "Lbl")};
-        lbl.Label = "Hello from top-left!";
-    });
+    {
+        auto& btnTL {panel0Layout.create_widget<button>({450, 50, 160, 50}, "BtnTL")};
+        btnTL.Label = "Toast Top-Left";
+        btnTL.Click.connect([form = retValue.get()] {
+            auto& t {form->queue_toast("toast_tl", corner::TopLeft, {RNG(1, 3), RNG(1, 3)})};
+            t.FadeIn   = 0ms;
+            t.Duration = 1500ms;
+            t.FadeOut  = 300ms;
+            auto& layout {t.create_layout<dock_layout>()};
+            auto& lbl {layout.create_widget<label>(dock_style::Fill, "Lbl")};
+            lbl.Label = "Hello from top-left!";
+        });
+    }
 
-    auto& btnBR {panel0Layout.create_widget<button>({450, 120, 160, 50}, "BtnBR")};
-    btnBR.Label = "Toast Bottom-Right";
-    btnBR.Click.connect([form = retValue.get()] {
-        auto& t {form->queue_toast("toast_br", corner::BottomRight)};
-        t.FadeIn   = 500ms;
-        t.Duration = 1000ms;
-        t.FadeOut  = 500ms;
-        auto& layout {t.create_layout<dock_layout>()};
-        auto& lbl {layout.create_widget<label>(dock_style::Fill, "Lbl")};
-        lbl.Label = "Hello from bottom-right!";
-    });
+    {
+        auto& btnTR {panel0Layout.create_widget<button>({450, 120, 160, 50}, "BtnBR")};
+        btnTR.Label = "Toast Top-Right";
+        btnTR.Click.connect([form = retValue.get()] {
+            auto& t {form->queue_toast("toast_tr", corner::TopRight)};
+            t.FadeIn   = 150ms;
+            t.Duration = 1000ms;
+            t.FadeOut  = 150ms;
+            auto& layout {t.create_layout<dock_layout>()};
+            auto& lbl {layout.create_widget<label>(dock_style::Fill, "Lbl")};
+            lbl.Label = "Hello from top-right!";
+        });
+    }
 
+    {
+        auto& btnBL {panel0Layout.create_widget<button>({450, 190, 160, 50}, "BtnTL")};
+        btnBL.Label = "Toast Bottom-Left";
+        btnBL.Click.connect([form = retValue.get()] {
+            auto& t {form->queue_toast("toast_bl", corner::BottomLeft, {RNG(1, 3), RNG(1, 3)})};
+            t.FadeIn   = 150ms;
+            t.Duration = 1000ms;
+            t.FadeOut  = 150ms;
+            auto& layout {t.create_layout<dock_layout>()};
+            auto& lbl {layout.create_widget<label>(dock_style::Fill, "Lbl")};
+            lbl.Label = "Hello from bottom-left!";
+        });
+    }
+
+    {
+        auto& btnBR {panel0Layout.create_widget<button>({450, 260, 160, 50}, "BtnBR")};
+        btnBR.Label = "Toast Bottom-Right";
+        btnBR.Click.connect([form = retValue.get()] {
+            auto& t {form->queue_toast("toast_br", corner::BottomRight)};
+            t.FadeIn   = 500ms;
+            t.Duration = 1000ms;
+            t.FadeOut  = 0ms;
+            auto& layout {t.create_layout<dock_layout>()};
+            auto& lbl {layout.create_widget<label>(dock_style::Fill, "Lbl")};
+            lbl.Label = "Hello from bottom-right!";
+        });
+    }
     return retValue;
 }
