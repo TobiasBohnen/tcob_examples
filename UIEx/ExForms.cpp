@@ -1133,7 +1133,6 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
     return retValue;
 }
 
-rng  RNG;
 auto create_form_toast(window& wnd, assets::group const& resGrp) -> std::shared_ptr<form_base>
 {
     auto retValue {std::make_shared<form<dock_layout>>(form_init {"form-toast", wnd.bounds()})};
@@ -1145,13 +1144,17 @@ auto create_form_toast(window& wnd, assets::group const& resGrp) -> std::shared_
         auto& btnTL {panel0Layout.create_widget<button>({450, 50, 160, 50}, "BtnTL")};
         btnTL.Label = "Toast Top-Left";
         btnTL.Click.connect([form = retValue.get()] {
-            auto& t {form->queue_toast("toast_tl", corner::TopLeft, {RNG(1, 3), RNG(1, 3)})};
+            auto& t {form->queue_toast("toast_tl", corner::TopLeft, {2, 2})};
             t.FadeIn   = 0ms;
-            t.Duration = 1500ms;
+            t.Duration = 15000ms;
             t.FadeOut  = 300ms;
             auto& layout {t.create_layout<dock_layout>()};
-            auto& lbl {layout.create_widget<label>(dock_style::Fill, "Lbl")};
+            auto& lbl {layout.create_widget<label>(dock_style::Bottom, "Lbl")};
             lbl.Label = "Hello from top-left!";
+            lbl.Flex  = {100_pct, 75_pct};
+            auto& btn {layout.create_widget<button>(dock_style::Fill, "Close")};
+            btn.Label = "X";
+            btn.Click.connect([&t] { t.close(); });
         });
     }
 
@@ -1170,7 +1173,8 @@ auto create_form_toast(window& wnd, assets::group const& resGrp) -> std::shared_
     }
 
     {
-        auto& btnBL {panel0Layout.create_widget<button>({450, 190, 160, 50}, "BtnTL")};
+        static rng RNG;
+        auto&      btnBL {panel0Layout.create_widget<button>({450, 190, 160, 50}, "BtnTL")};
         btnBL.Label = "Toast Bottom-Left";
         btnBL.Click.connect([form = retValue.get()] {
             auto& t {form->queue_toast("toast_bl", corner::BottomLeft, {RNG(1, 3), RNG(1, 3)})};
