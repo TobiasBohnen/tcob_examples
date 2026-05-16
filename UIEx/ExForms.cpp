@@ -168,7 +168,7 @@ auto create_form0(window& wnd, group const& resGrp) -> std::shared_ptr<form_base
 
     auto& gridPanel {panel0Layout.create_widget<panel>({230, 20, 250, 250}, "SPanel0")};
     gridPanel.TabStop = {.Enabled = false};
-    auto& gridLayout {gridPanel.create_layout<variable_row_layout>(
+    auto& gridLayout {gridPanel.create_layout<horizontal_layout>(
         std::vector {std::vector {1.0f, 2.0f}, std::vector {1.0f}, std::vector {1.0f, .5f, .5f, 1.0f}})};
     auto  createGridWidget {
         [&](std::string const& name) {
