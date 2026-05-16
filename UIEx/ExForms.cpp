@@ -168,20 +168,21 @@ auto create_form0(window& wnd, group const& resGrp) -> std::shared_ptr<form_base
 
     auto& gridPanel {panel0Layout.create_widget<panel>({230, 20, 250, 250}, "SPanel0")};
     gridPanel.TabStop = {.Enabled = false};
-    auto& gridLayout {gridPanel.create_layout<grid_layout>(size_i {4, 3}, true)};
+    auto& gridLayout {gridPanel.create_layout<variable_row_layout>(
+        std::vector {std::vector {1.0f, 2.0f}, std::vector {1.0f}, std::vector {1.0f, .5f, .5f, 1.0f}})};
     auto  createGridWidget {
-        [&](rect_i loc, std::string const& name) {
-            auto& b {gridLayout.create_widget<button>(loc, "gridB" + name)};
+        [&](std::string const& name) {
+            auto& b {gridLayout.create_widget<button>("gridB" + name)};
             b.Label   = name;
             b.Tooltip = tooltip0;
         }};
-    createGridWidget({0, 0, 2, 1}, "0");
-    createGridWidget({2, 0, 2, 1}, "1");
-    createGridWidget({0, 1, 4, 1}, "2");
-    createGridWidget({0, 2, 1, 1}, "3");
-    createGridWidget({1, 2, 1, 1}, "4");
-    createGridWidget({2, 2, 1, 1}, "5");
-    createGridWidget({3, 2, 1, 1}, "6");
+    createGridWidget("0");
+    createGridWidget("1");
+    createGridWidget("2");
+    createGridWidget("3");
+    createGridWidget("4");
+    createGridWidget("5");
+    createGridWidget("6");
 
     auto& boxVPanel0 {panel0Layout.create_widget<panel>({490, 20, 250, 250}, "SPanel1")};
     boxVPanel0.TabStop = {.Enabled = false};
@@ -216,15 +217,15 @@ auto create_form0(window& wnd, group const& resGrp) -> std::shared_ptr<form_base
     masonryPanel0.FocusLost.connect([](widget_event ev) {
         ev.Sender->Bounds = {ev.Sender->Bounds->Position, {250, ev.Sender->Bounds->height()}};
     });
-    auto& masonryLayout0 {masonryPanel0.create_layout<masonry_layout>(6)};
+    auto& masonryLayout0 {masonryPanel0.create_layout<masonry_layout>(6, direction::Left)};
     for (i32 i {0}; i < 16; i++) {
         auto& fb {masonryLayout0.create_widget<button>("FButton" + std::to_string(i))};
         if (i % 3 == 0) {
-            fb.Flex = {.Width = 100_pct, .Height = 40_pct};
+            fb.Flex = {.Width = 40_pct, .Height = 100_pct};
         } else if (i % 2 == 0) {
-            fb.Flex = {.Width = 100_pct, .Height = 30_pct};
+            fb.Flex = {.Width = 30_pct, .Height = 100_pct};
         } else {
-            fb.Flex = {.Width = 100_pct, .Height = 20_pct};
+            fb.Flex = {.Width = 20_pct, .Height = 100_pct};
         }
 
         fb.Label = std::to_string(i);
@@ -498,7 +499,7 @@ auto create_form_charting(window& wnd, assets::group const& resGrp) -> std::shar
 
     {
         auto& panel0 {retValue->create_container<panel>("Panel0")};
-        auto& panel0Layout {panel0.create_layout<box_layout>(size_i {3, 2})};
+        auto& panel0Layout {panel0.create_layout<tile_layout>(size_i {3, 2})};
 
         auto& barChart0 {panel0Layout.create_widget<bar_chart>("Bar")};
         barChart0.Datasets.mutate([](auto& val) {
