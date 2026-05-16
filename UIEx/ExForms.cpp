@@ -20,7 +20,7 @@ auto create_form0(window& wnd, group const& resGrp) -> std::shared_ptr<form_base
     tooltip0->Popup.connect([&tooltipLabel0](auto const& event) { tooltipLabel0.Label = event.Widget->name(); });
 
     auto& panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
-    panel0.RelativeSize = {.Width = 100_pct, .Height = 100_pct};
+    panel0.RelativeSize = size_f::One;
     auto& panel0Layout {panel0.get_layout<panel::default_layout>()};
     panel0.TabStop       = {.Enabled = false};
     panel0.ScrollEnabled = true;
@@ -144,7 +144,7 @@ auto create_form0(window& wnd, group const& resGrp) -> std::shared_ptr<form_base
     auto& circlePanelLayout {circlePanel.create_layout<circle_layout>()};
     auto  createCircleButton([&circlePanelLayout](string const& lbl) {
         auto& btn {circlePanelLayout.create_widget<button>(lbl)};
-        btn.RelativeSize = {20_pct, 25_pct};
+        btn.RelativeSize = {0.20f, 0.25f};
         btn.Label        = lbl;
     });
     createCircleButton("1");
@@ -221,11 +221,11 @@ auto create_form0(window& wnd, group const& resGrp) -> std::shared_ptr<form_base
     for (i32 i {0}; i < 16; i++) {
         auto& fb {masonryLayout0.create_widget<button>("FButton" + std::to_string(i))};
         if (i % 3 == 0) {
-            fb.RelativeSize = {.Width = 40_pct, .Height = 100_pct};
+            fb.RelativeSize = {0.4f, 1};
         } else if (i % 2 == 0) {
-            fb.RelativeSize = {.Width = 30_pct, .Height = 100_pct};
+            fb.RelativeSize = {0.3f, 1};
         } else {
-            fb.RelativeSize = {.Width = 20_pct, .Height = 100_pct};
+            fb.RelativeSize = {0.2f, 1};
         }
 
         fb.Label = std::to_string(i);
@@ -373,7 +373,7 @@ auto create_form1(window& wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     {
         auto& panel0 {retValue->create_container<panel>(rect_f {0, 0, 300, 300}, "Panel0")};
-        panel0.RelativeSize  = {100_pct, 100_pct};
+        panel0.RelativeSize  = {1, 1};
         panel0.ScrollEnabled = true;
         panel0.Movable       = true;
         panel0.Resizable     = true;
@@ -403,7 +403,7 @@ auto create_form1(window& wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     {
         auto& panel0 {retValue->create_container<panel>(rect_f {800, 0, 300, 300}, "Panel3")};
-        panel0.RelativeSize  = {.Width = 100_pct, .Height = 100_pct};
+        panel0.RelativeSize  = {1, 1};
         panel0.ScrollEnabled = true;
         panel0.Movable       = true;
         panel0.Resizable     = true;
@@ -414,7 +414,7 @@ auto create_form1(window& wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     {
         auto& panel0 {retValue->create_container<panel>(rect_f {800, 350, 300, 300}, "Panel4")};
-        panel0.RelativeSize  = {.Width = 100_pct, .Height = 100_pct};
+        panel0.RelativeSize  = {1, 1};
         panel0.ScrollEnabled = true;
         panel0.Movable       = true;
         panel0.Resizable     = true;
@@ -425,7 +425,7 @@ auto create_form1(window& wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     {
         auto& panel0 {retValue->create_container<panel>(rect_f {0, 350, 300, 300}, "Panel5")};
-        panel0.RelativeSize  = {.Width = 100_pct, .Height = 100_pct};
+        panel0.RelativeSize  = {1, 1};
         panel0.ScrollEnabled = true;
         panel0.Movable       = true;
         panel0.Resizable     = true;
@@ -442,7 +442,7 @@ auto create_form_terminal(window& wnd, assets::group const& resGrp) -> std::shar
     auto retValue {std::make_shared<form<dock_layout>>(form_init {"form2", wnd.bounds()})};
 
     auto& panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
-    panel0.RelativeSize = {.Width = 100_pct, .Height = 100_pct};
+    panel0.RelativeSize = {1, 1};
     auto& panel0Layout {panel0.get_layout<panel::default_layout>()};
     panel0.TabStop = {.Enabled = false};
 
@@ -597,7 +597,7 @@ auto create_form_displays(window& wnd, assets::group const& resGrp) -> std::shar
 
     {
         auto& panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
-        panel0.RelativeSize = {.Width = 100_pct, .Height = 25_pct};
+        panel0.RelativeSize = {1, 0.25f};
         auto& panel0Layout {panel0.create_layout<dock_layout>()};
 
         auto& canvas {panel0Layout.create_widget<canvas_widget>(dock_style::Fill, "Canvas1")};
@@ -621,7 +621,7 @@ auto create_form_displays(window& wnd, assets::group const& resGrp) -> std::shar
     }
     {
         auto& panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
-        panel0.RelativeSize = {.Width = 100_pct, .Height = 25_pct};
+        panel0.RelativeSize = {1, 0.25f};
         auto& panel0Layout {panel0.create_layout<dock_layout>()};
 
         auto& colorPicker00 {panel0Layout.create_widget<color_picker>(dock_style::Fill, "CP1")};
@@ -630,7 +630,7 @@ auto create_form_displays(window& wnd, assets::group const& resGrp) -> std::shar
     }
     {
         auto& panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
-        panel0.RelativeSize = {.Width = 100_pct, .Height = 30_pct};
+        panel0.RelativeSize = {1, 0.3f};
         auto& panel0Layout {panel0.create_layout<dock_layout>()};
 
         auto&    dotMatrix {panel0Layout.create_widget<dot_matrix_display>(dock_style::Fill, "DM1")};
@@ -657,7 +657,7 @@ auto create_form_displays(window& wnd, assets::group const& resGrp) -> std::shar
 
     {
         auto& panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
-        panel0.RelativeSize = {.Width = 100_pct, .Height = 20_pct};
+        panel0.RelativeSize = {1, 0.2f};
         auto& panel0Layout {panel0.create_layout<grid_layout>(size_i {200, 200})};
 
         auto& lcdDisplay0 {panel0Layout.create_widget<seven_segment_display>({0, 0, 100, 100}, "LCD0")};
@@ -711,13 +711,13 @@ auto create_form_tabcontainer(window& wnd, assets::group const& resGrp) -> std::
 
     {
         auto& tabContainer0 {retValue->create_container<tab_container>(dock_style::Left, "TabContainer0")};
-        tabContainer0.RelativeSize = {.Width = 50_pct, .Height = 100_pct};
+        tabContainer0.RelativeSize = {0.5f, 1};
         createTabs(tabContainer0);
     }
 
     {
         auto& tabContainer0 {retValue->create_container<tab_container>(dock_style::Left, "TabContainer1")};
-        tabContainer0.RelativeSize = {.Width = 50_pct, .Height = 100_pct};
+        tabContainer0.RelativeSize = {0.5f, 1};
 
         auto& tabContainer1 {tabContainer0.create_tab<tab_container>("TabContainer11", {.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
         createTabs(tabContainer1);
@@ -784,13 +784,13 @@ auto create_form_accordion(window& wnd, assets::group const& resGrp) -> std::sha
 
     {
         auto& accordion0 {retValue->create_container<accordion>(dock_style::Left, "Accordion1")};
-        accordion0.RelativeSize = {.Width = 30_pct, .Height = 100_pct};
+        accordion0.RelativeSize = {0.3f, 1};
         createSections(accordion0);
     }
 
     {
         auto& panel0 {retValue->create_container<panel>(dock_style::Left, "Panel0")};
-        panel0.RelativeSize  = {.Width = 30_pct, .Height = 100_pct};
+        panel0.RelativeSize  = {0.3f, 1};
         panel0.ScrollEnabled = true;
         auto& panel0Layout {panel0.get_layout<panel::default_layout>()};
 
@@ -800,7 +800,7 @@ auto create_form_accordion(window& wnd, assets::group const& resGrp) -> std::sha
 
     {
         auto& accordion0 {retValue->create_container<accordion>(dock_style::Left, "Accordion3")};
-        accordion0.RelativeSize          = {.Width = 30_pct, .Height = 100_pct};
+        accordion0.RelativeSize          = {0.3f, 1};
         accordion0.MaximizeActiveSection = true;
 
         auto& accordion1 {accordion0.create_section<accordion>("Accordion31", {.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
@@ -834,7 +834,7 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
     auto& panelLayout {panel0.create_layout<manual_layout>()};
 
     auto& lbl {panelLayout.create_widget<label>(rect_f {0, 0, bounds.width() * 1.f, 50}, "LBL1")};
-    lbl.RelativeSize = {.Width = 100_pct, .Height = 5_pct};
+    lbl.RelativeSize = {1, 0.05f};
     auto& ng {panelLayout.create_widget<node_graph_view>(rect_f {0, 50, bounds.width() * 0.9f, bounds.height() * 0.85f}, "NG1")};
 
     // helpers
@@ -1146,7 +1146,7 @@ auto create_form_toast(window& wnd, assets::group const& resGrp) -> std::shared_
             auto& layout {t.create_layout<dock_layout>()};
             auto& lbl {layout.create_widget<label>(dock_style::Bottom, "Lbl")};
             lbl.Label        = "Hello from top-left!";
-            lbl.RelativeSize = {100_pct, 75_pct};
+            lbl.RelativeSize = {1, 0.75f};
             auto& btn {layout.create_widget<button>(dock_style::Fill, "Close")};
             btn.Label = "X";
             btn.Click.connect([&t] { t.close(); });
