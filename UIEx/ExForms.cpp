@@ -20,7 +20,7 @@ auto create_form0(window& wnd, group const& resGrp) -> std::shared_ptr<form_base
     tooltip0->Popup.connect([&tooltipLabel0](auto const& event) { tooltipLabel0.Label = event.Widget->name(); });
 
     auto& panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
-    panel0.Flex = {.Width = 100_pct, .Height = 100_pct};
+    panel0.RelativeSize = {.Width = 100_pct, .Height = 100_pct};
     auto& panel0Layout {panel0.get_layout<panel::default_layout>()};
     panel0.TabStop       = {.Enabled = false};
     panel0.ScrollEnabled = true;
@@ -144,8 +144,8 @@ auto create_form0(window& wnd, group const& resGrp) -> std::shared_ptr<form_base
     auto& circlePanelLayout {circlePanel.create_layout<circle_layout>()};
     auto  createCircleButton([&circlePanelLayout](string const& lbl) {
         auto& btn {circlePanelLayout.create_widget<button>(lbl)};
-        btn.Flex  = {20_pct, 25_pct};
-        btn.Label = lbl;
+        btn.RelativeSize = {20_pct, 25_pct};
+        btn.Label        = lbl;
     });
     createCircleButton("1");
     createCircleButton("2");
@@ -168,8 +168,8 @@ auto create_form0(window& wnd, group const& resGrp) -> std::shared_ptr<form_base
 
     auto& gridPanel {panel0Layout.create_widget<panel>({230, 20, 250, 250}, "SPanel0")};
     gridPanel.TabStop = {.Enabled = false};
-    auto& gridLayout {gridPanel.create_layout<horizontal_layout>(
-        std::vector {std::vector {1.0f, 2.0f}, std::vector {1.0f}, std::vector {1.0f, .5f, .5f, 1.0f}})};
+    auto& gridLayout {gridPanel.create_layout<horizontal_layout>(std::vector {std::vector {1.0f, 2.0f}, std::vector {1.0f}, std::vector {1.0f, .5f, .5f, 1.0f}})};
+    // auto& gridLayout {gridPanel.create_layout<horizontal_layout>(std::vector {2, 1, 4})};
     auto  createGridWidget {
         [&](std::string const& name) {
             auto& b {gridLayout.create_widget<button>("gridB" + name)};
@@ -221,11 +221,11 @@ auto create_form0(window& wnd, group const& resGrp) -> std::shared_ptr<form_base
     for (i32 i {0}; i < 16; i++) {
         auto& fb {masonryLayout0.create_widget<button>("FButton" + std::to_string(i))};
         if (i % 3 == 0) {
-            fb.Flex = {.Width = 40_pct, .Height = 100_pct};
+            fb.RelativeSize = {.Width = 40_pct, .Height = 100_pct};
         } else if (i % 2 == 0) {
-            fb.Flex = {.Width = 30_pct, .Height = 100_pct};
+            fb.RelativeSize = {.Width = 30_pct, .Height = 100_pct};
         } else {
-            fb.Flex = {.Width = 20_pct, .Height = 100_pct};
+            fb.RelativeSize = {.Width = 20_pct, .Height = 100_pct};
         }
 
         fb.Label = std::to_string(i);
@@ -373,7 +373,7 @@ auto create_form1(window& wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     {
         auto& panel0 {retValue->create_container<panel>(rect_f {0, 0, 300, 300}, "Panel0")};
-        panel0.Flex          = {100_pct, 100_pct};
+        panel0.RelativeSize  = {100_pct, 100_pct};
         panel0.ScrollEnabled = true;
         panel0.Movable       = true;
         panel0.Resizable     = true;
@@ -403,7 +403,7 @@ auto create_form1(window& wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     {
         auto& panel0 {retValue->create_container<panel>(rect_f {800, 0, 300, 300}, "Panel3")};
-        panel0.Flex          = {.Width = 100_pct, .Height = 100_pct};
+        panel0.RelativeSize  = {.Width = 100_pct, .Height = 100_pct};
         panel0.ScrollEnabled = true;
         panel0.Movable       = true;
         panel0.Resizable     = true;
@@ -414,7 +414,7 @@ auto create_form1(window& wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     {
         auto& panel0 {retValue->create_container<panel>(rect_f {800, 350, 300, 300}, "Panel4")};
-        panel0.Flex          = {.Width = 100_pct, .Height = 100_pct};
+        panel0.RelativeSize  = {.Width = 100_pct, .Height = 100_pct};
         panel0.ScrollEnabled = true;
         panel0.Movable       = true;
         panel0.Resizable     = true;
@@ -425,7 +425,7 @@ auto create_form1(window& wnd, assets::group const& resGrp) -> std::shared_ptr<f
 
     {
         auto& panel0 {retValue->create_container<panel>(rect_f {0, 350, 300, 300}, "Panel5")};
-        panel0.Flex          = {.Width = 100_pct, .Height = 100_pct};
+        panel0.RelativeSize  = {.Width = 100_pct, .Height = 100_pct};
         panel0.ScrollEnabled = true;
         panel0.Movable       = true;
         panel0.Resizable     = true;
@@ -442,7 +442,7 @@ auto create_form_terminal(window& wnd, assets::group const& resGrp) -> std::shar
     auto retValue {std::make_shared<form<dock_layout>>(form_init {"form2", wnd.bounds()})};
 
     auto& panel0 {retValue->create_container<panel>(dock_style::Fill, "Panel0")};
-    panel0.Flex = {.Width = 100_pct, .Height = 100_pct};
+    panel0.RelativeSize = {.Width = 100_pct, .Height = 100_pct};
     auto& panel0Layout {panel0.get_layout<panel::default_layout>()};
     panel0.TabStop = {.Enabled = false};
 
@@ -499,7 +499,7 @@ auto create_form_charting(window& wnd, assets::group const& resGrp) -> std::shar
 
     {
         auto& panel0 {retValue->create_container<panel>("Panel0")};
-        auto& panel0Layout {panel0.create_layout<tile_layout>(size_i {3, 2})};
+        auto& panel0Layout {panel0.create_layout<vertical_layout>(weights_t {{3, 1}, {3, 1}, {3, 1}})};
 
         auto& barChart0 {panel0Layout.create_widget<bar_chart>("Bar")};
         barChart0.Datasets.mutate([](auto& val) {
@@ -511,6 +511,9 @@ auto create_form_charting(window& wnd, assets::group const& resGrp) -> std::shar
         barChart0.XAxis              = {.CustomLabels = {"Q1", "Q2", "Q3", "Q4"}};
         barChart0.YAxis              = {.Min = 0, .Max = 1, .SmallStep = 0.05f, .LargeStep = 0.20f};
 
+        auto& legend0 {panel0Layout.create_widget<legend>("Legend")};
+        legend0.For = &barChart0;
+
         auto& lineChart0 {panel0Layout.create_widget<line_chart>("Line")};
         lineChart0.Datasets.mutate([](auto& val) {
             val.push_back({.Name = "line1", .Value = {0.1f, 0.4f, 0.8f, 0.1f, 0.8f, 0.1f, 0.8f}, .Color = colors::SlateBlue, .Marker = {.Type = marker::type::Disc, .Filled = true}});
@@ -520,6 +523,9 @@ auto create_form_charting(window& wnd, assets::group const& resGrp) -> std::shar
         lineChart0.TransitionDuration = 250ms;
         lineChart0.XAxis              = {.Min = 1, .Max = 10, .SmallStep = 0.2f, .LargeStep = 1, .LabelPrecision = 2};
         lineChart0.YAxis              = {.Min = 0, .Max = 1, .SmallStep = 0.1f, .LargeStep = 0.5f};
+
+        auto& legend1 {panel0Layout.create_widget<legend>("Legend")};
+        legend1.For = &lineChart0;
 
         auto& pieChart0 {panel0Layout.create_widget<pie_chart>("Pie")};
 
@@ -531,22 +537,13 @@ auto create_form_charting(window& wnd, assets::group const& resGrp) -> std::shar
         });
         pieChart0.TransitionDuration = 500ms;
 
-        auto& legend0 {panel0Layout.create_widget<legend>("Legend")};
-        legend0.For  = &barChart0;
-        legend0.Flex = {100_pct, 50_pct};
-
-        auto& legend1 {panel0Layout.create_widget<legend>("Legend")};
-        legend1.For  = &lineChart0;
-        legend1.Flex = {100_pct, 50_pct};
-
         auto& legend2 {panel0Layout.create_widget<legend>("Legend")};
-        legend2.For  = &pieChart0;
-        legend2.Flex = {100_pct, 50_pct};
+        legend2.For = &pieChart0;
     }
 
     {
         auto& panel1 {retValue->create_container<panel>("Panel1")};
-        auto& panel1Layout {panel1.create_layout<horizontal_layout>()};
+        auto& panel1Layout {panel1.create_layout<horizontal_layout>(weights_t {{3, 1, 3, 1, 3, 1}})};
 
         auto& mekkoChart0 {panel1Layout.create_widget<marimekko_chart>("Mekko")};
 
@@ -559,8 +556,7 @@ auto create_form_charting(window& wnd, assets::group const& resGrp) -> std::shar
         mekkoChart0.XAxis              = {.CustomLabels = {"Q1", "Q2", "Q3", "Q4"}};
 
         auto& legend4 {panel1Layout.create_widget<legend>("Legend")};
-        legend4.For  = &mekkoChart0;
-        legend4.Flex = {50_pct, 100_pct};
+        legend4.For = &mekkoChart0;
 
         auto& scatterChart0 {panel1Layout.create_widget<scatter_chart>("Scatter")};
         scatterChart0.Datasets.mutate([](scatter_chart::dataset_type& val) {
@@ -573,8 +569,7 @@ auto create_form_charting(window& wnd, assets::group const& resGrp) -> std::shar
         scatterChart0.YAxis              = {.Min = 0, .Max = 12, .SmallStep = 1, .LargeStep = 3};
 
         auto& legend5 {panel1Layout.create_widget<legend>("Legend")};
-        legend5.For  = &scatterChart0;
-        legend5.Flex = {50_pct, 100_pct};
+        legend5.For = &scatterChart0;
 
         auto& radarChart0 {panel1Layout.create_widget<radar_chart>("Radar")};
         radarChart0.Datasets.mutate([](radar_chart::dataset_type& val) {
@@ -588,8 +583,7 @@ auto create_form_charting(window& wnd, assets::group const& resGrp) -> std::shar
         radarChart0.XAxis              = {.CustomLabels = {"A", "B", "C", "D", "E", "F"}};
 
         auto& legend6 {panel1Layout.create_widget<legend>("Legend")};
-        legend6.For  = &radarChart0;
-        legend6.Flex = {50_pct, 100_pct};
+        legend6.For = &radarChart0;
     }
 
     return retValue;
@@ -603,7 +597,7 @@ auto create_form_displays(window& wnd, assets::group const& resGrp) -> std::shar
 
     {
         auto& panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
-        panel0.Flex = {.Width = 100_pct, .Height = 25_pct};
+        panel0.RelativeSize = {.Width = 100_pct, .Height = 25_pct};
         auto& panel0Layout {panel0.create_layout<dock_layout>()};
 
         auto& canvas {panel0Layout.create_widget<canvas_widget>(dock_style::Fill, "Canvas1")};
@@ -627,7 +621,7 @@ auto create_form_displays(window& wnd, assets::group const& resGrp) -> std::shar
     }
     {
         auto& panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
-        panel0.Flex = {.Width = 100_pct, .Height = 25_pct};
+        panel0.RelativeSize = {.Width = 100_pct, .Height = 25_pct};
         auto& panel0Layout {panel0.create_layout<dock_layout>()};
 
         auto& colorPicker00 {panel0Layout.create_widget<color_picker>(dock_style::Fill, "CP1")};
@@ -636,7 +630,7 @@ auto create_form_displays(window& wnd, assets::group const& resGrp) -> std::shar
     }
     {
         auto& panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
-        panel0.Flex = {.Width = 100_pct, .Height = 30_pct};
+        panel0.RelativeSize = {.Width = 100_pct, .Height = 30_pct};
         auto& panel0Layout {panel0.create_layout<dock_layout>()};
 
         auto&    dotMatrix {panel0Layout.create_widget<dot_matrix_display>(dock_style::Fill, "DM1")};
@@ -663,7 +657,7 @@ auto create_form_displays(window& wnd, assets::group const& resGrp) -> std::shar
 
     {
         auto& panel0 {retValue->create_container<panel>(dock_style::Top, "Panel0")};
-        panel0.Flex = {.Width = 100_pct, .Height = 20_pct};
+        panel0.RelativeSize = {.Width = 100_pct, .Height = 20_pct};
         auto& panel0Layout {panel0.create_layout<grid_layout>(size_i {200, 200})};
 
         auto& lcdDisplay0 {panel0Layout.create_widget<seven_segment_display>({0, 0, 100, 100}, "LCD0")};
@@ -717,13 +711,13 @@ auto create_form_tabcontainer(window& wnd, assets::group const& resGrp) -> std::
 
     {
         auto& tabContainer0 {retValue->create_container<tab_container>(dock_style::Left, "TabContainer0")};
-        tabContainer0.Flex = {.Width = 50_pct, .Height = 100_pct};
+        tabContainer0.RelativeSize = {.Width = 50_pct, .Height = 100_pct};
         createTabs(tabContainer0);
     }
 
     {
         auto& tabContainer0 {retValue->create_container<tab_container>(dock_style::Left, "TabContainer1")};
-        tabContainer0.Flex = {.Width = 50_pct, .Height = 100_pct};
+        tabContainer0.RelativeSize = {.Width = 50_pct, .Height = 100_pct};
 
         auto& tabContainer1 {tabContainer0.create_tab<tab_container>("TabContainer11", {.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
         createTabs(tabContainer1);
@@ -790,13 +784,13 @@ auto create_form_accordion(window& wnd, assets::group const& resGrp) -> std::sha
 
     {
         auto& accordion0 {retValue->create_container<accordion>(dock_style::Left, "Accordion1")};
-        accordion0.Flex = {.Width = 30_pct, .Height = 100_pct};
+        accordion0.RelativeSize = {.Width = 30_pct, .Height = 100_pct};
         createSections(accordion0);
     }
 
     {
         auto& panel0 {retValue->create_container<panel>(dock_style::Left, "Panel0")};
-        panel0.Flex          = {.Width = 30_pct, .Height = 100_pct};
+        panel0.RelativeSize  = {.Width = 30_pct, .Height = 100_pct};
         panel0.ScrollEnabled = true;
         auto& panel0Layout {panel0.get_layout<panel::default_layout>()};
 
@@ -806,7 +800,7 @@ auto create_form_accordion(window& wnd, assets::group const& resGrp) -> std::sha
 
     {
         auto& accordion0 {retValue->create_container<accordion>(dock_style::Left, "Accordion3")};
-        accordion0.Flex                  = {.Width = 30_pct, .Height = 100_pct};
+        accordion0.RelativeSize          = {.Width = 30_pct, .Height = 100_pct};
         accordion0.MaximizeActiveSection = true;
 
         auto& accordion1 {accordion0.create_section<accordion>("Accordion31", {.Text = "abc", .Icon = {.Texture = resGrp.get<texture>("anim"), .TextureRegion = "l1"}})};
@@ -840,7 +834,7 @@ auto create_node_graph(window& wnd, assets::group const& resGrp) -> std::shared_
     auto& panelLayout {panel0.create_layout<manual_layout>()};
 
     auto& lbl {panelLayout.create_widget<label>(rect_f {0, 0, bounds.width() * 1.f, 50}, "LBL1")};
-    lbl.Flex = {.Width = 100_pct, .Height = 5_pct};
+    lbl.RelativeSize = {.Width = 100_pct, .Height = 5_pct};
     auto& ng {panelLayout.create_widget<node_graph_view>(rect_f {0, 50, bounds.width() * 0.9f, bounds.height() * 0.85f}, "NG1")};
 
     // helpers
@@ -1151,8 +1145,8 @@ auto create_form_toast(window& wnd, assets::group const& resGrp) -> std::shared_
             t.FadeOut  = 300ms;
             auto& layout {t.create_layout<dock_layout>()};
             auto& lbl {layout.create_widget<label>(dock_style::Bottom, "Lbl")};
-            lbl.Label = "Hello from top-left!";
-            lbl.Flex  = {100_pct, 75_pct};
+            lbl.Label        = "Hello from top-left!";
+            lbl.RelativeSize = {100_pct, 75_pct};
             auto& btn {layout.create_widget<button>(dock_style::Fill, "Close")};
             btn.Label = "X";
             btn.Click.connect([&t] { t.close(); });
