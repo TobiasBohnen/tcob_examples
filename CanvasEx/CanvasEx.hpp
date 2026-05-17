@@ -31,6 +31,7 @@ private:
     void canvas_fancy_lines();
     void canvas_text();
     void canvas_clip();
+    void canvas_border_rect();
 
     canvas          _canvas;
     canvas_renderer _renderer {_canvas};

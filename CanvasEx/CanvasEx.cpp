@@ -14,6 +14,7 @@ CanvasEx::CanvasEx(game& game)
     font_family::SingleFont(_font, std::as_bytes(std::span {trim_ttf}));
 
     _modes = {
+        &CanvasEx::canvas_border_rect,
         &CanvasEx::canvas_gradient,
         &CanvasEx::canvas_clip,
         &CanvasEx::canvas_text,
@@ -410,6 +411,107 @@ void CanvasEx::canvas_clip()
     _canvas.begin_path();
     _canvas.rect({10, 350, 1000, 100});
     _canvas.stroke();
+
+    _canvas.end_frame();
+}
+
+void CanvasEx::canvas_border_rect()
+{
+    _canvas.begin_frame(window().Size, 1);
+
+    // uniform border (baseline)
+    _canvas.set_fill_style(colors::SteelBlue);
+    _canvas.begin_path();
+    _canvas.border_rect({50, 50, 200, 150},
+                        8, 8, 8, 8,
+                        10, 10, 10, 10);
+    _canvas.fill();
+
+    // thick top/bottom, thin left/right
+    _canvas.set_fill_style(colors::Tomato);
+    _canvas.begin_path();
+    _canvas.border_rect({300, 50, 200, 150},
+                        20, 4, 20, 4,
+                        15, 15, 15, 15);
+    _canvas.fill();
+
+    // thick left only
+    _canvas.set_fill_style(colors::SeaGreen);
+    _canvas.begin_path();
+    _canvas.border_rect({550, 50, 200, 150},
+                        0, 0, 0, 24,
+                        90, 90, 90, 90);
+    _canvas.fill();
+
+    // top + sides only (tests partial rounded top)
+    _canvas.set_fill_style(colors::CornflowerBlue);
+    _canvas.begin_path();
+    _canvas.border_rect({800, 50, 200, 150},
+                        24, 24, 0, 24,
+                        90, 90, 90, 90);
+    _canvas.fill();
+
+    // asymmetric radii + varying sizes
+    _canvas.set_fill_style(colors::Gold);
+    _canvas.begin_path();
+    _canvas.border_rect({50, 280, 200, 150},
+                        4, 24, 4, 4,
+                        30, 0, 30, 0);
+    _canvas.fill();
+
+    // large bottom border, rounded
+    _canvas.set_fill_style(colors::Orchid);
+    _canvas.begin_path();
+    _canvas.border_rect({300, 280, 200, 150},
+                        4, 4, 30, 4,
+                        20, 20, 20, 20);
+    _canvas.fill();
+
+    // right only
+    _canvas.set_fill_style(colors::OrangeRed);
+    _canvas.begin_path();
+    _canvas.border_rect({550, 280, 200, 150},
+                        0, 18, 0, 0,
+                        40, 40, 40, 40);
+    _canvas.fill();
+
+    // top only
+    _canvas.set_fill_style(colors::MediumPurple);
+    _canvas.begin_path();
+    _canvas.border_rect({800, 280, 200, 150},
+                        20, 0, 0, 0,
+                        60, 60, 60, 60);
+    _canvas.fill();
+
+    // bottom only
+    _canvas.set_fill_style(colors::DeepPink);
+    _canvas.begin_path();
+    _canvas.border_rect({50, 510, 200, 150},
+                        0, 0, 28, 0,
+                        50, 50, 50, 50);
+    _canvas.fill();
+
+    // left + bottom
+    _canvas.set_fill_style(colors::DarkCyan);
+    _canvas.begin_path();
+    _canvas.border_rect({300, 510, 200, 150},
+                        0, 0, 20, 20,
+                        30, 30, 80, 80);
+    _canvas.fill();
+
+    // interactive: all sides driven by _value
+    _canvas.set_fill_style(colors::DodgerBlue);
+    _canvas.begin_path();
+    _canvas.border_rect({580, 740, 220, 160},
+                        _value,
+                        _value / 2,
+                        _value / 3,
+                        _value / 4,
+                        _value,
+                        _value,
+                        _value,
+                        _value);
+    _canvas.fill();
 
     _canvas.end_frame();
 }
