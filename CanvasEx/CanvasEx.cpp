@@ -418,110 +418,111 @@ void CanvasEx::canvas_clip()
 void CanvasEx::canvas_border_rect()
 {
     _canvas.begin_frame(window().Size, 1);
-
     _canvas.set_stroke_style(colors::Black);
-    // uniform border (baseline)
+
+    f32 const rad {5};
+    f32 const sz {20};
+    f32 const w {150};
+    f32 const h {100};
+
+    // row 1: single sides
     _canvas.set_fill_style(colors::SteelBlue);
     _canvas.begin_path();
-    _canvas.border_rect({50, 50, 200, 150},
-                        8, 8, 8, 8,
-                        10, 10, 10, 10);
+    _canvas.border_rect({50, 50, w, h}, sz, _value, _value, _value, rad, rad, rad, rad);
     _canvas.fill();
     _canvas.stroke();
 
-    // thick top/bottom, thin left/right
     _canvas.set_fill_style(colors::Tomato);
     _canvas.begin_path();
-    _canvas.border_rect({300, 50, 200, 150},
-                        20, 4, 20, 4,
-                        15, 15, 15, 15);
+    _canvas.border_rect({250, 50, w, h}, _value, sz, _value, _value, rad, rad, rad, rad);
     _canvas.fill();
     _canvas.stroke();
 
-    // thick left only
     _canvas.set_fill_style(colors::SeaGreen);
     _canvas.begin_path();
-    _canvas.border_rect({550, 50, 200, 150},
-                        0, 0, 24, 24,
-                        0, 0, 0, 0);
+    _canvas.border_rect({450, 50, w, h}, _value, _value, sz, _value, rad, rad, rad, rad);
     _canvas.fill();
     _canvas.stroke();
 
-    // top + sides only (tests partial rounded top)
-    _canvas.set_fill_style(colors::CornflowerBlue);
-    _canvas.begin_path();
-    _canvas.border_rect({800, 50, 200, 150},
-                        24, 24, 0, 24,
-                        90, 90, 90, 90);
-    _canvas.fill();
-    _canvas.stroke();
-
-    // asymmetric radii + varying sizes
     _canvas.set_fill_style(colors::Gold);
     _canvas.begin_path();
-    _canvas.border_rect({50, 280, 200, 150},
-                        4, 24, 4, 4,
-                        30, 0, 30, 0);
+    _canvas.border_rect({650, 50, w, h}, _value, _value, _value, sz, rad, rad, rad, rad);
     _canvas.fill();
     _canvas.stroke();
 
-    // large bottom border, rounded
-    _canvas.set_fill_style(colors::Orchid);
+    // row 2: adjacent pairs
+    _canvas.set_fill_style(colors::CornflowerBlue);
     _canvas.begin_path();
-    _canvas.border_rect({300, 280, 200, 150},
-                        4, 4, 30, 4,
-                        20, 20, 20, 20);
+    _canvas.border_rect({50, 200, w, h}, sz, sz, _value, _value, rad, rad, rad, rad);
     _canvas.fill();
     _canvas.stroke();
 
-    // right only
     _canvas.set_fill_style(colors::OrangeRed);
     _canvas.begin_path();
-    _canvas.border_rect({550, 280, 200, 150},
-                        0, 18, 0, 0,
-                        40, 40, 40, 40);
+    _canvas.border_rect({250, 200, w, h}, _value, sz, sz, _value, rad, rad, rad, rad);
     _canvas.fill();
     _canvas.stroke();
 
-    // top only
-    _canvas.set_fill_style(colors::MediumPurple);
+    _canvas.set_fill_style(colors::Orchid);
     _canvas.begin_path();
-    _canvas.border_rect({800, 280, 200, 150},
-                        20, 0, 0, 0,
-                        60, 60, 60, 60);
+    _canvas.border_rect({450, 200, w, h}, _value, _value, sz, sz, rad, rad, rad, rad);
     _canvas.fill();
     _canvas.stroke();
 
-    // bottom only
-    _canvas.set_fill_style(colors::DeepPink);
-    _canvas.begin_path();
-    _canvas.border_rect({50, 510, 200, 150},
-                        0, 0, 28, 0,
-                        50, 50, 50, 50);
-    _canvas.fill();
-    _canvas.stroke();
-
-    // left + bottom
     _canvas.set_fill_style(colors::DarkCyan);
     _canvas.begin_path();
-    _canvas.border_rect({300, 510, 200, 150},
-                        0, 0, 20, 20,
-                        30, 30, 80, 80);
+    _canvas.border_rect({650, 200, w, h}, sz, _value, _value, sz, rad, rad, rad, rad);
     _canvas.fill();
     _canvas.stroke();
 
-    // interactive: all sides driven by _value
+    // row 3: opposite pairs
+    _canvas.set_fill_style(colors::MediumPurple);
+    _canvas.begin_path();
+    _canvas.border_rect({50, 350, w, h}, sz, _value, sz, _value, rad, rad, rad, rad);
+    _canvas.fill();
+    _canvas.stroke();
+
+    _canvas.set_fill_style(colors::DeepPink);
+    _canvas.begin_path();
+    _canvas.border_rect({250, 350, w, h}, _value, sz, _value, sz, rad, rad, rad, rad);
+    _canvas.fill();
+    _canvas.stroke();
+
+    // row 4: three sides
+    _canvas.set_fill_style(colors::SteelBlue);
+    _canvas.begin_path();
+    _canvas.border_rect({50, 500, w, h}, sz, sz, sz, _value, rad, rad, rad, rad);
+    _canvas.fill();
+    _canvas.stroke();
+
+    _canvas.set_fill_style(colors::Tomato);
+    _canvas.begin_path();
+    _canvas.border_rect({250, 500, w, h}, sz, sz, _value, sz, rad, rad, rad, rad);
+    _canvas.fill();
+    _canvas.stroke();
+
+    _canvas.set_fill_style(colors::SeaGreen);
+    _canvas.begin_path();
+    _canvas.border_rect({450, 500, w, h}, sz, _value, sz, sz, rad, rad, rad, rad);
+    _canvas.fill();
+    _canvas.stroke();
+
+    _canvas.set_fill_style(colors::Gold);
+    _canvas.begin_path();
+    _canvas.border_rect({650, 500, w, h}, _value, sz, sz, sz, rad, rad, rad, rad);
+    _canvas.fill();
+    _canvas.stroke();
+
+    // row 5: full border
     _canvas.set_fill_style(colors::DodgerBlue);
     _canvas.begin_path();
-    _canvas.border_rect({580, 740, 220, 160},
-                        _value,
-                        _value / 2,
-                        _value / 3,
-                        _value / 4,
-                        _value,
-                        _value,
-                        _value,
-                        _value);
+    _canvas.border_rect({50, 650, w, h}, sz, sz, sz, sz, rad, rad, rad, rad);
+    _canvas.fill();
+    _canvas.stroke();
+
+    _canvas.set_fill_style(colors::DodgerBlue);
+    _canvas.begin_path();
+    _canvas.rounded_rect_varying({250, 650, w, h}, rad, rad, rad, rad);
     _canvas.fill();
     _canvas.stroke();
 
