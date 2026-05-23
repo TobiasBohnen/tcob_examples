@@ -22,6 +22,9 @@ static char const* services_html {
 static char const* contact_html {
 #include "./html/contact.html"
 };
+static char const* markdown_md {
+#include "./html/markdown.md"
+};
 static char const* style_css {
 #include "./html/style.css"
 };
@@ -55,6 +58,14 @@ void HtmlEx::on_start()
             _contentHtml->from_string(services_html, style_css);
         } else if (ev == "#contact") {
             _contentHtml->from_string(contact_html, style_css);
+        } else if (ev == "#markdown") {
+            {
+                io::ofstream html {"html.txt"};
+                html.write(html::md_to_html(markdown_md));
+            }
+            _contentHtml->from_string(
+                std::format("<html><head><meta charset=\"UTF-8\"></head><body>{}</body></html>", html::md_to_html(markdown_md)),
+                style_css);
         }
     });
     _navHtml->Bounds = {point_f::Zero, {winSize.Width * 1.f, winSize.Height / 5.f}};

@@ -1,7 +1,5 @@
 R"(
-
-
-html {
+ html {
     margin: 0px;
     padding: 0px;
 }
@@ -47,4 +45,95 @@ nav a:hover {
 
 p {
     margin: 10px 0;
+}
+
+/* headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 16px 0 8px 0;
+    line-height: 1.3;
+}
+
+/* code */
+code {
+    font-family: monospace;
+    background-color: #f4f4f4;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-size: 0.7em;
+}
+
+pre {
+    background-color: #f4f4f4;
+    padding: 10px;
+    overflow-x: auto;
+    border-left: 3px solid #aaa;
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+}
+
+/* blockquote */
+blockquote {
+    margin: 10px 0;
+    padding: 5px 10px;
+    border-left: 3px solid #aaa;
+    color: #555;
+}
+
+/* lists */
+ul,
+ol {
+    margin: 10px 0;
+    padding-left: 24px;
+}
+
+li {
+    margin: 4px 0;
+}
+
+/* links */
+a {
+    color: steelblue;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* images */
+img {
+    max-width: 100%;
+}
+
+/* hr */
+hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 16px 0;
+}
+
+/* table */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 10px 0;
+}
+
+th,
+td {
+    border: 1px solid #ccc;
+    padding: 6px 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f4f4f4;
 })"
