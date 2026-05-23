@@ -43,6 +43,14 @@ nav a:hover {
     height: 80%;
 }
 
+del {
+    text-decoration-line: line-through;
+    text-decoration-style: solid;
+    text-decoration-thickness: 3px;
+    text-decoration-color: #333;
+    color: #333;
+}
+
 p {
     margin: 10px 0;
 }
@@ -68,16 +76,20 @@ code {
 }
 
 pre {
-    background-color: #f4f4f4;
-    padding: 10px;
+    display: inline-block;
+    /* prevents full-width block */
+    max-width: 100%;
     overflow-x: auto;
-    border-left: 3px solid #aaa;
+    background-color: #f4f4f4;
+    padding: 6px 18px;
+    border-radius: 4px;
 }
 
 pre code {
-    background: none;
+    display: inline;
+    font-size: 0.7em;
+    background: transparent;
     padding: 0;
-    border-radius: 0;
 }
 
 /* blockquote */
@@ -125,15 +137,15 @@ hr {
 /* table */
 table {
     border-collapse: collapse;
-    width: 100%;
-    margin: 10px 0;
-    font-size: 0.6em;
+    margin: 1em 0;
+    font-size: 0.9em;
+    width: auto;
 }
 
 th,
 td {
-    border: 1px solid #ccc;
-    padding: 6px 10px;
+    padding: 0.5em 0.9em;
+    border: 1px solid #000000;
     text-align: left;
 }
 
