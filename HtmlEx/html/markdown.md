@@ -10,8 +10,10 @@ This is **bold**, *italic*, ~~strikethrough~~, and `inline code`.
   - blood orange
   - navel
 
-1. item 1
-1. item 2
+| foo         | bar            |
+| ----------- | -------------- |
+| {blue}(sky) | green          |
+| blue        | {green}(grass) |
 
 > blockquote
 

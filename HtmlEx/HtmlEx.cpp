@@ -59,10 +59,6 @@ void HtmlEx::on_start()
         } else if (ev == "#contact") {
             _contentHtml->from_string(contact_html, style_css);
         } else if (ev == "#markdown") {
-            {
-                io::ofstream html {"html.txt"};
-                html.write(html::md_to_html(markdown_md));
-            }
             _contentHtml->from_string(
                 std::format("<html><head><meta charset=\"UTF-8\"></head><body>{}</body></html>", html::md_to_html(markdown_md)),
                 style_css);

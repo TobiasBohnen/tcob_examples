@@ -93,10 +93,12 @@ ul,
 ol {
     margin: 10px 0;
     padding-left: 24px;
+    font-size: 0.8em;
 }
 
 li {
     margin: 4px 0;
+    font-size: 0.8em;
 }
 
 /* links */
@@ -125,6 +127,7 @@ table {
     border-collapse: collapse;
     width: 100%;
     margin: 10px 0;
+    font-size: 0.6em;
 }
 
 th,
