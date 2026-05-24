@@ -24,5 +24,7 @@ protected:
 
 private:
     std::shared_ptr<html::document> _navHtml;
+    canvas                          _navCanvas;
     std::shared_ptr<html::document> _contentHtml;
+    canvas                          _contentCanvas;
 };

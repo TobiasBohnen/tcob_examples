@@ -45,9 +45,11 @@ void HtmlEx::on_start()
 
     _navHtml = std::make_shared<html::document>(
         html::document::config {.AssetGroup      = resGrp,
-                                .Fonts           = resGrp->get<font_family>("Poppins"),
+                                .Fonts           = {{"Poppins", resGrp->get<font_family>("Poppins")}, {"RobotoMono", resGrp->get<font_family>("RobotoMono")}},
+                                .DefaultFont     = "Poppins",
                                 .DefaultFontSize = 24,
-                                .Window          = &window()});
+                                .Window          = &window(),
+                                .Canvas          = &_navCanvas});
 
     _navHtml->AnchorClick.connect([&](auto&& ev) {
         if (ev == "#home") {
@@ -69,9 +71,11 @@ void HtmlEx::on_start()
 
     _contentHtml = std::make_shared<html::document>(
         html::document::config {.AssetGroup      = resGrp,
-                                .Fonts           = resGrp->get<font_family>("Poppins"),
+                                .Fonts           = {{"Poppins", resGrp->get<font_family>("Poppins")}, {"RobotoMono", resGrp->get<font_family>("RobotoMono")}},
+                                .DefaultFont     = "Poppins",
                                 .DefaultFontSize = 24,
-                                .Window          = &window()});
+                                .Window          = &window(),
+                                .Canvas          = &_contentCanvas});
     _contentHtml->Bounds = {{0, winSize.Height / 5.f}, {winSize.Width * 1.f, winSize.Height / 5.f * 4.f}};
     _contentHtml->from_string(home_html, style_css);
 

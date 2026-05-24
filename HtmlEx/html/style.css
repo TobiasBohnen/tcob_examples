@@ -7,7 +7,7 @@ R"(
 body {
     margin: 0px;
     padding: 0px;
-    background-color: #ccc;
+    background-color: #666;
 }
 
 header {
@@ -68,7 +68,7 @@ h6 {
 
 /* code */
 code {
-    font-family: monospace;
+    font-family: RobotoMono;
     background-color: #f4f4f4;
     padding: 1px 4px;
     border-radius: 3px;
@@ -96,9 +96,18 @@ pre code {
 blockquote {
     margin: 10px 0;
     padding: 5px 10px;
-    border-left: 3px solid #aaa;
+    border-right: 3px solid #aaa;
+
+    background-color: #f7f7f7;
+    width: auto;
     color: #555;
+
+    display: inline-block;
+    width: fit-content;
+    max-width: 100%;
+
 }
+
 
 /* lists */
 ul,
