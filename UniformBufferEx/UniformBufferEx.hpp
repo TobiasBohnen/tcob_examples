@@ -111,7 +111,7 @@ void main()
 }
 )";
 
-} // namespace
+}
 
 class UniformBufferEx : public scene {
 public:
