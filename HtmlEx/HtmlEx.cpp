@@ -44,40 +44,40 @@ void HtmlEx::on_start()
     auto const winSize {*window().Size};
 
     _navHtml = std::make_shared<html::document>(
-        html::document::config {.AssetGroup      = resGrp,
-                                .Fonts           = {"Poppins", "RobotoMono"},
-                                .DefaultFont     = "Poppins",
-                                .DefaultFontSize = 24,
-                                .Canvas          = &_navCanvas},
+        html::config {.AssetGroup      = resGrp,
+                      .Fonts           = {"Poppins", "RobotoMono"},
+                      .DefaultFont     = "Poppins",
+                      .DefaultFontSize = 24,
+                      .Canvas          = &_navCanvas},
         window());
 
     _navHtml->AnchorClick.connect([&](auto&& ev) {
         if (ev == "#home") {
-            _contentHtml->from_string(home_html, style_css);
+            _contentHtml->create_from_string(home_html, style_css);
         } else if (ev == "#about") {
-            _contentHtml->from_string(about_html, style_css);
+            _contentHtml->create_from_string(about_html, style_css);
         } else if (ev == "#services") {
-            _contentHtml->from_string(services_html, style_css);
+            _contentHtml->create_from_string(services_html, style_css);
         } else if (ev == "#contact") {
-            _contentHtml->from_string(contact_html, style_css);
+            _contentHtml->create_from_string(contact_html, style_css);
         } else if (ev == "#markdown") {
-            _contentHtml->from_string(
+            _contentHtml->create_from_string(
                 std::format("<html><head><meta charset=\"UTF-8\"></head><body>{}</body></html>", html::md_to_html(markdown_md)),
                 style_css);
         }
     });
     _navHtml->Bounds = {point_f::Zero, {winSize.Width * 1.f, winSize.Height / 5.f}};
-    _navHtml->from_string(main_html, style_css);
+    _navHtml->create_from_string(main_html, style_css);
 
     _contentHtml = std::make_shared<html::document>(
-        html::document::config {.AssetGroup      = resGrp,
-                                .Fonts           = {"Poppins", "RobotoMono"},
-                                .DefaultFont     = "Poppins",
-                                .DefaultFontSize = 24,
-                                .Canvas          = &_contentCanvas},
+        html::config {.AssetGroup      = resGrp,
+                      .Fonts           = {"Poppins", "RobotoMono"},
+                      .DefaultFont     = "Poppins",
+                      .DefaultFontSize = 24,
+                      .Canvas          = &_contentCanvas},
         window());
     _contentHtml->Bounds = {{0, winSize.Height / 5.f}, {winSize.Width * 1.f, winSize.Height / 5.f * 4.f}};
-    _contentHtml->from_string(home_html, style_css);
+    _contentHtml->create_from_string(home_html, style_css);
 
     root_node().create_child().Entity = _navHtml;
     root_node().create_child().Entity = _contentHtml;
