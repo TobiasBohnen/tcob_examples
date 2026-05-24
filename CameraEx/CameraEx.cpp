@@ -48,10 +48,10 @@ void CameraEx::on_key_down(keyboard::event const& ev)
 
     case scan_code::P:
         _controller->pan({
-            {.Position = {384.0f, 0.0f}, .TimeToArrive = milliseconds {2000}},
-            {.Position = {384.0f, 672.0f}, .TimeToArrive = milliseconds {3000}},
-            {.Position = {0.0f, 336.0f}, .TimeToArrive = milliseconds {2000}},
-            {.Position = {336.0f, 336.0f}, .TimeToArrive = milliseconds {1000}},
+            {.Position = {384.0f, 0.0f}, .TimeToArrive = milliseconds {2000}, .Zoom = size_f {2.f, 2.f}},
+            {.Position = {384.0f, 672.0f}, .TimeToArrive = milliseconds {3000}, .Rotation = degree_f {15}},
+            {.Position = {0.0f, 336.0f}, .TimeToArrive = milliseconds {2000}, .Rotation = degree_f {0}},
+            {.Position = {336.0f, 336.0f}, .TimeToArrive = milliseconds {1000}, .Zoom = size_f {1.f, 1.f}},
         });
         break;
 
@@ -77,8 +77,21 @@ void CameraEx::on_mouse_wheel(mouse::wheel_event const& ev)
 
 void CameraEx::on_update(milliseconds deltaTime)
 {
+    static constexpr f32 MoveSpeed {300.0f};
     _layer0.update(deltaTime);
 
+    auto const& kb {locate_service<input::system>().keyboard()};
+    f32 const   dt {static_cast<f32>(deltaTime.count()) / 1000.0f};
+
+    point_f move {point_f::Zero};
+    if (kb.is_key_down(scan_code::W)) { move.Y -= MoveSpeed; }
+    if (kb.is_key_down(scan_code::S)) { move.Y += MoveSpeed; }
+    if (kb.is_key_down(scan_code::A)) { move.X -= MoveSpeed; }
+    if (kb.is_key_down(scan_code::D)) { move.X += MoveSpeed; }
+
+    if (move != point_f::Zero) {
+        _controller->move_by(move * dt);
+    }
     _controller->update(deltaTime);
 }
 
