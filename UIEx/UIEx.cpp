@@ -47,7 +47,7 @@ void UIEx::on_start()
     root_node().Entity = form0;
 }
 
-void UIEx::on_draw_to(render_target& target, transform const& xform)
+void UIEx::on_draw_to(render_target& /* target */, transform const& /* xform */)
 {
 }
 
@@ -55,7 +55,7 @@ void UIEx::on_update(milliseconds /* deltaTime */)
 {
 }
 
-void UIEx::on_fixed_update(milliseconds deltaTime)
+void UIEx::on_fixed_update(milliseconds /* deltaTime */)
 {
     auto const& stats {locate_service<gfx::render_system>().statistics()};
     auto const& mouse {locate_service<input::system>().mouse().get_position()};

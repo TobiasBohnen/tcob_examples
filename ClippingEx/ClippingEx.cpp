@@ -47,11 +47,11 @@ void ClippingEx::on_key_down(keyboard::event const& ev)
     }
 }
 
-void ClippingEx::on_mouse_motion(mouse::motion_event const& ev)
+void ClippingEx::on_mouse_motion(mouse::motion_event const& /* ev */)
 {
 }
 
-void ClippingEx::on_mouse_button_down(mouse::button_event const& ev)
+void ClippingEx::on_mouse_button_down(mouse::button_event const& /* ev */)
 {
     static i32 toggle {0};
     create_shapes();
@@ -73,16 +73,13 @@ void ClippingEx::on_mouse_button_down(mouse::button_event const& ev)
     toggle = (toggle + 1) % 5;
 }
 
-void ClippingEx::on_mouse_wheel(mouse::wheel_event const& ev)
+void ClippingEx::on_mouse_wheel(mouse::wheel_event const& /* ev */)
 {
 }
 
 void ClippingEx::create_shapes()
 {
     _layer0.clear();
-
-    auto& resMgr {library()};
-    auto* resGrp {resMgr.get_group("res")};
 
     _polyShape           = &_layer0.create_shape<gfx::poly_shape>();
     _polyShape->Material = material::Empty();

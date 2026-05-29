@@ -30,7 +30,7 @@ void LightingSystemEx::on_start()
         auto& shape0 {_layer0.create_shape<gfx::poly_shape>()};
         shape0.Material = _material;
         shape0.Color    = colors::Blue;
-        shape0.Polygons = {{.Outline = points}};
+        shape0.Polygons = {{.Outline = points, .Holes = {}}};
 
         auto& sc0 {_lightingSystem0.create_shadow_caster()};
         sc0.Polygon = points;

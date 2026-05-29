@@ -121,7 +121,7 @@ void ImageFilterEx::on_update(milliseconds deltaTime)
     _layer1.update(deltaTime);
 }
 
-void ImageFilterEx::on_fixed_update(milliseconds deltaTime)
+void ImageFilterEx::on_fixed_update(milliseconds /* deltaTime */)
 {
     auto const& stats {locate_service<gfx::render_system>().statistics()};
     auto const& mouse {locate_service<input::system>().mouse().get_position()};
@@ -141,6 +141,6 @@ void ImageFilterEx::on_key_down(keyboard::event const& ev)
     }
 }
 
-void ImageFilterEx::on_mouse_motion(mouse::motion_event const& ev)
+void ImageFilterEx::on_mouse_motion(mouse::motion_event const& /* ev */)
 {
 }

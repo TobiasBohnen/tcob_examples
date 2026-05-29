@@ -24,7 +24,7 @@ Diagnostics:
             - SDL_version.h
             - SDL_keyboard.h
             - SDL_keycode.h
-            - SDL_mouse.h     
+            - SDL_mouse.h
             - SDL_clipboard.h
             - SDL_video.h
             - SDL_surface.h

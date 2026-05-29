@@ -17,8 +17,6 @@ MusicEx::~MusicEx() = default;
 
 void MusicEx::on_start()
 {
-    auto& resMgr {library()};
-    auto& resGrp {resMgr.create_or_get_group("res")};
     root_node().Entity = _form0;
     _form0->Play.connect([&](auto const& val) {
         std::ignore = _music0.open(val);
@@ -26,11 +24,11 @@ void MusicEx::on_start()
     });
 }
 
-void MusicEx::on_draw_to(render_target& target, transform const& xform)
+void MusicEx::on_draw_to(render_target& /* target */, transform const& /* xform */)
 {
 }
 
-void MusicEx::on_update(milliseconds deltaTime)
+void MusicEx::on_update(milliseconds /* deltaTime */)
 {
 }
 

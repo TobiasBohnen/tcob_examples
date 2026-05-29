@@ -283,7 +283,7 @@ void hunter::on_idle_enter()
     Target.reset();
 }
 
-void hunter::on_idle_update(milliseconds dt)
+void hunter::on_idle_update(milliseconds /* dt */)
 {
     f32 const elapsed {static_cast<f32>(Behavior.time_in_state().count()) / 1000.0f};
     Position.X = Home.X + (std::cos(elapsed * 1.5f) * 150.0f);

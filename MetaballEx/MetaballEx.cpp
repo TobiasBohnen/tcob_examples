@@ -11,7 +11,7 @@ constexpr size_f msize {800, 600};
 MetaballEx::MetaballEx(game& game)
     : scene {game}
     , _metaball {size_i {msize / scale},
-                 color_gradient {{0, colors::DarkRed}, {0.25, colors::Red}, {0.75, colors::Orange}, {0.95, colors::Yellow}, {1, colors::Yellow}}}
+                 color_gradient {{0, colors::DarkRed}, {0.25f, colors::Red}, {0.75f, colors::Orange}, {0.95f, colors::Yellow}, {1, colors::Yellow}}}
 {
     rng                         rng;
     std::vector<metaball::ball> balls;
@@ -54,7 +54,7 @@ void MetaballEx::on_update(milliseconds deltaTime)
     _metaball.update(deltaTime);
 }
 
-void MetaballEx::on_draw_to(render_target& target, transform const& xform)
+void MetaballEx::on_draw_to(render_target& target, transform const& /* xform */)
 {
     _texture->update_data(_metaball.image(), 0);
     _renderer.render_to_target(target, transform::Identity);
@@ -69,16 +69,4 @@ void MetaballEx::on_key_down(keyboard::event const& ev)
     default:
         break;
     }
-}
-
-void MetaballEx::on_mouse_motion(mouse::motion_event const& ev)
-{
-}
-
-void MetaballEx::on_mouse_button_down(mouse::button_event const& ev)
-{
-}
-
-void MetaballEx::on_mouse_wheel(mouse::wheel_event const& ev)
-{
 }

@@ -41,7 +41,7 @@ void LSystemEx::on_start()
         _lstringpos = 0;
         _countdown  = 500ms;
 
-        _currentState.Position     = {(windowSize.Width - uiWidth) / 2.0f, windowSize.Height * 0.95f};
+        _currentState.Position     = {static_cast<f32>((windowSize.Width - uiWidth)) / 2.0f, static_cast<f32>(windowSize.Height) * 0.95f};
         _currentState.Angle        = degree_f {0};
         _currentState.LineLength   = settings.LineLength;
         _currentState.TurningAngle = settings.TurningAngle;
@@ -66,7 +66,7 @@ void LSystemEx::on_update(milliseconds deltaTime)
     }
 }
 
-void LSystemEx::on_draw_to(render_target& target, transform const& xform)
+void LSystemEx::on_draw_to(render_target& target, transform const& /* xform */)
 {
     _renderer.queue_layer(0);
     _renderer.set_bounds({point_f::Zero, size_f {*window().Size}});

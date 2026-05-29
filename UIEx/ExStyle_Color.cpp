@@ -716,8 +716,8 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Background = colors::Gray;
 
         auto hoverStyle {retValue.create<dot_matrix_display>("dot_matrix_display", {.Hover = true})};
-        for (isize i {0}; i < style->Colors.size(); ++i) {
-            hoverStyle->Colors[i] = style->Colors[style->Colors.size() - i - 1];
+        for (u8 i {0}; i < style->Colors.size(); ++i) {
+            hoverStyle->Colors[i] = style->Colors[static_cast<u8>(style->Colors.size() - i - 1)];
         }
         hoverStyle->Type = dot_matrix_display::dot_type::Disc;
     }

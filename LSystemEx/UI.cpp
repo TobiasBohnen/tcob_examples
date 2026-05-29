@@ -57,7 +57,7 @@ void lsystem_form::create_rule(grid_layout& layout)
         if (_grdRules->SelectedCellIndex->Y < 1) { return; }
         txbVariable.Text = _grdRules->get_cell({0, _grdRules->SelectedCellIndex->Y}).Text;
         txbRule.Text     = _grdRules->get_cell({1, _grdRules->SelectedCellIndex->Y}).Text;
-        spnProp.Value    = *helper::to_number<i32>(_grdRules->get_cell({2, _grdRules->SelectedCellIndex->Y}).Text);
+        spnProp.Value    = *helper::to_number<f32>(_grdRules->get_cell({2, _grdRules->SelectedCellIndex->Y}).Text);
     });
 
     grid<item> grid {{3, 2}};
@@ -149,7 +149,7 @@ auto lsystem_form::get_settings() const -> settings
             {.Replacement = _grdRules->get_cell({1, i + 1}).Text,
              .Probability = *helper::to_number<f32>(_grdRules->get_cell({2, i + 1}).Text) / 100.f});
     }
-    retValue.String = system.generate(*_txbAxiom->Text, _spnIterations->Value);
+    retValue.String = system.generate(*_txbAxiom->Text, static_cast<i32>(_spnIterations->Value));
 
     retValue.TurningAngle = degree_f {static_cast<f32>(_spnAngle->Value)};
 
