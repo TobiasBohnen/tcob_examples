@@ -48,7 +48,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->Text.Shadow.Color   = colors::White;
         style->Text.Shadow.OffsetX = 0_px;
         style->Text.Shadow.OffsetY = 1_px;
-        style->Text.Alignment      = {horizontal_alignment::Centered, vertical_alignment::Middle};
+        style->Text.Alignment      = {horizontal_alignment::Center, vertical_alignment::Middle};
         style->Margin              = {5_px};
         style->Padding             = {2_px};
 
@@ -271,7 +271,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->Text.Size                       = 50_pct;
         style->Text.Shadow.OffsetX             = 0_px;
         style->Text.Shadow.OffsetY             = 1_px;
-        style->Text.Alignment                  = {horizontal_alignment::Centered, vertical_alignment::Middle};
+        style->Text.Alignment                  = {horizontal_alignment::Center, vertical_alignment::Middle};
         style->ItemHeight                      = 150_pct;
         style->ItemClass                       = "list_items";
         style->VScrollBar.ThumbClass           = "v_scrollbar_thumb";
@@ -420,7 +420,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
         style->Item.Text.Size      = 25_pct;
         style->Item.Text.Color     = colors::Black;
-        style->Item.Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Middle};
+        style->Item.Text.Alignment = {horizontal_alignment::Center, vertical_alignment::Middle};
         style->Item.Border.Size    = 3_px;
 
         auto hoveredStyle {retValue.create<item_style>("tab_items", {.Hover = true})};
@@ -440,7 +440,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
         style->Item.Text.Size      = 50_pct;
         style->Item.Text.Color     = colors::Black;
-        style->Item.Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Middle};
+        style->Item.Text.Alignment = {horizontal_alignment::Center, vertical_alignment::Middle};
         style->Item.Border.Size    = 3_px;
 
         auto hoveredStyle {retValue.create<item_style>("section_items", {.Hover = true})};
@@ -491,7 +491,7 @@ auto create_skinned_styles(assets::group const& resGrp) -> style_collection
         style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
         style->Item.Text.Size      = 25_pct;
         style->Item.Text.Color     = colors::Black;
-        style->Item.Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Middle};
+        style->Item.Text.Alignment = {horizontal_alignment::Center, vertical_alignment::Middle};
         style->Item.Border.Size    = 5_px;
 
         auto hoveredStyle {retValue.create<item_style>("header_items", {.Hover = true})};

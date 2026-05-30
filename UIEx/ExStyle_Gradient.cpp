@@ -82,7 +82,7 @@ auto create_gradient_styles(assets::group const& resGrp) -> style_collection
         style->Text.Shadow.OffsetX = 0_px;
         style->Text.Shadow.OffsetY = 1_px;
         style->Text.AutoSize       = auto_size_mode::Always;
-        style->Text.Alignment      = {horizontal_alignment::Centered, vertical_alignment::Middle};
+        style->Text.Alignment      = {horizontal_alignment::Center, vertical_alignment::Middle};
         style->Margin              = {10_px};
         style->Padding             = {2_px};
 
@@ -450,7 +450,7 @@ auto create_gradient_styles(assets::group const& resGrp) -> style_collection
         style->Text.Size                  = 50_pct;
         style->Text.Shadow.OffsetX        = 0_px;
         style->Text.Shadow.OffsetY        = 1_px;
-        style->Text.Alignment             = {horizontal_alignment::Centered, vertical_alignment::Middle};
+        style->Text.Alignment             = {horizontal_alignment::Center, vertical_alignment::Middle};
         style->ItemHeight                 = 150_pct;
         style->ItemClass                  = "list_items";
         style->VScrollBar.ThumbClass      = "scrollbar_thumb";
@@ -719,7 +719,7 @@ auto create_gradient_styles(assets::group const& resGrp) -> style_collection
         style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
         style->Item.Text.Size      = 50_pct;
         style->Item.Text.AutoSize  = auto_size_mode::OnlyShrink;
-        style->Item.Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Middle};
+        style->Item.Text.Alignment = {horizontal_alignment::Center, vertical_alignment::Middle};
         style->Item.Border.Size    = 2_px;
 
         auto hoverStyle {retValue.create<item_style>("tab_items", {.Hover = true})};
@@ -797,7 +797,7 @@ auto create_gradient_styles(assets::group const& resGrp) -> style_collection
         style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
         style->Item.Text.AutoSize  = auto_size_mode::OnlyShrink;
         style->Item.Text.Size      = 15_px;
-        style->Item.Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Middle};
+        style->Item.Text.Alignment = {horizontal_alignment::Center, vertical_alignment::Middle};
         style->Item.Border.Size    = 5_px;
 
         auto hoverStyle {retValue.create<item_style>("header_items", {.Hover = true})};
@@ -824,7 +824,7 @@ auto create_gradient_styles(assets::group const& resGrp) -> style_collection
         style->Item.Text.AutoSize  = auto_size_mode::OnlyShrink;
         style->Item.Text.Size      = 20_px;
         style->Item.Text.Color     = normal.Text;
-        style->Item.Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Middle};
+        style->Item.Text.Alignment = {horizontal_alignment::Center, vertical_alignment::Middle};
         style->Item.Border.Size    = 2_px;
 
         auto hoverStyle  = retValue.create<item_style>(baseName, {.Hover = true});

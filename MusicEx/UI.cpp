@@ -51,7 +51,7 @@ void crtl_form::gen_styles()
         style->Text.Style     = {false, font::weight::Normal};
         style->Text.Font      = _font;
         style->Text.Size      = 50_pct;
-        style->Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Top};
+        style->Text.Alignment = {horizontal_alignment::Center, vertical_alignment::Top};
         style->Text.AutoSize  = auto_size_mode::OnlyShrink;
         style->Margin         = {2_px};
         style->Padding        = {2_px};
@@ -81,7 +81,7 @@ void crtl_form::gen_styles()
         style->Text.Style     = {false, font::weight::Normal};
         style->Text.Font      = _font;
         style->Text.Size      = 40_pct;
-        style->Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Middle};
+        style->Text.Alignment = {horizontal_alignment::Center, vertical_alignment::Middle};
         style->Text.AutoSize  = auto_size_mode::OnlyShrink;
         style->Margin         = {2_px};
         style->Padding        = {2_px};
@@ -135,7 +135,7 @@ void crtl_form::gen_styles()
         style->Text.Style     = {false, font::weight::Normal};
         style->Text.Font      = _font;
         style->Text.Size      = 50_pct;
-        style->Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Middle};
+        style->Text.Alignment = {horizontal_alignment::Center, vertical_alignment::Middle};
         style->Text.AutoSize  = auto_size_mode::OnlyShrink;
         style->ItemHeight     = 100_pct;
         style->ItemClass      = "list_items";

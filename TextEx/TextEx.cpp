@@ -47,7 +47,7 @@ void TextEx::on_start()
         effects.create(4, duration, effect::blink {.Color0 = colors::Orange, .Color1 = colors::Teal, .Frequency = 5.f});
         effects.create(5, duration, effect::shake {.Intensity = 3.f, .RNG = rng {12345}});
         effects.create(6, duration, effect::wave {.Height = 15.f, .Amplitude = 4.f});
-        effects.create(7, duration, effect::size {.WidthStart = 1.0f, .WidthEnd = 0.0f, .HeightStart = 1.0f, .HeightEnd = 0.0f, .Anchor = {.Horizontal = horizontal_alignment::Centered, .Vertical = vertical_alignment::Middle}});
+        effects.create(7, duration, effect::size {.WidthStart = 1.0f, .WidthEnd = 0.0f, .HeightStart = 1.0f, .HeightEnd = 0.0f, .Anchor = {.Horizontal = horizontal_alignment::Center, .Vertical = vertical_alignment::Middle}});
         effects.create(8, duration, effect::rotate {.Speed = 5.0f});
         effects.create(9, duration, effect::gradient {color_gradient {colors::Orange, colors::DarkGreen, colors::BlueViolet, colors::LightBlue}.colors()});
         effects.start_all(playback_mode::Looped);

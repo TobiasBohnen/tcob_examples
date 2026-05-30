@@ -171,7 +171,7 @@ void lsystem_form::gen_styles()
         style->Text.Style     = {false, font::weight::Normal};
         style->Text.Font      = _font;
         style->Text.Size      = 40_pct;
-        style->Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Middle};
+        style->Text.Alignment = {horizontal_alignment::Center, vertical_alignment::Middle};
         style->Text.AutoSize  = auto_size_mode::OnlyShrink;
         style->Margin         = {2_px};
         style->Padding        = {2_px};
@@ -201,7 +201,7 @@ void lsystem_form::gen_styles()
         style->Text.Style     = {false, font::weight::Normal};
         style->Text.Font      = _font;
         style->Text.Size      = 40_pct;
-        style->Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Middle};
+        style->Text.Alignment = {horizontal_alignment::Center, vertical_alignment::Middle};
         style->Text.AutoSize  = auto_size_mode::OnlyShrink;
         style->Margin         = {2_px};
         style->Padding        = {2_px};
@@ -253,7 +253,7 @@ void lsystem_form::gen_styles()
         style->Item.Text.Font         = _font;
         style->Item.Text.AutoSize     = auto_size_mode::OnlyShrink;
         style->Item.Text.Size         = 15_px;
-        style->Item.Text.Alignment    = {horizontal_alignment::Centered, vertical_alignment::Middle};
+        style->Item.Text.Alignment    = {horizontal_alignment::Center, vertical_alignment::Middle};
         style->Item.Text.Color        = colors::Black;
         style->Item.Background        = colors::DarkGray;
         style->Item.Border.Size       = 1_px;
@@ -295,7 +295,7 @@ void lsystem_form::gen_styles()
         style->Text.Style     = {false, font::weight::Normal};
         style->Text.Font      = _font;
         style->Text.Size      = 40_pct;
-        style->Text.Alignment = {horizontal_alignment::Centered, vertical_alignment::Middle};
+        style->Text.Alignment = {horizontal_alignment::Center, vertical_alignment::Middle};
         style->Text.AutoSize  = auto_size_mode::OnlyShrink;
         style->Margin         = {2_px};
         style->Padding        = {2_px};
