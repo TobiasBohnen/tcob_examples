@@ -37,7 +37,9 @@ void TextEx::on_start()
                         "{EFFECT:5}Sphinx of black quartz{EFFECT:0}, judge my vow.\n"
                         "{EFFECT:6}How vexingly quick{EFFECT:0} daft zebras jump!\n"
                         "{EFFECT:7}Jackdaws love{EFFECT:0} my {EFFECT:8}big sphinx{EFFECT:0} of quartz.\n"
-                        "{EFFECT:9}The five boxing wizards jump quickly{EFFECT:0}.\n\n";
+                        "{EFFECT:9}The five boxing wizards jump quickly{EFFECT:0}.\n"
+                        "{EFFECT:10}Bright vixens jump{EFFECT:0}; dozy fowl quack.\n"
+                        "{EFFECT:11}Waltz, nymph{EFFECT:0}, for quick jigs vex Bud.\n\n";
         text0->Style  = text::style {.Color = colors::White, .Alignment = {}, .KerningEnabled = false};
         text0->Bounds = {{420, 6}, {900, 1000}};
         auto& effects {text0->Effects};
@@ -49,7 +51,9 @@ void TextEx::on_start()
         effects.create(6, duration, effect::wave {.Height = 15.f, .Amplitude = 4.f});
         effects.create(7, duration, effect::size {.WidthStart = 1.0f, .WidthEnd = 0.0f, .HeightStart = 1.0f, .HeightEnd = 0.0f, .Anchor = {.Horizontal = horizontal_alignment::Center, .Vertical = vertical_alignment::Middle}});
         effects.create(8, duration, effect::rotate {.Speed = 5.0f});
-        effects.create(9, duration, effect::gradient {color_gradient {colors::Orange, colors::DarkGreen, colors::BlueViolet, colors::LightBlue}.colors()});
+        effects.create(9, duration, effect::gradient {color_gradient {colors::White, colors::Green, colors::Black, colors::Orange}.colors()});
+        effects.create(10, duration, effect::bounce {.Height = 12.f, .Bounces = 2.f, .Damping = 0.4f, .Spread = 0.4f});
+        effects.create(11, duration, effect::jitter {.Intensity = 2.f, .RNG = rng {67890}});
         effects.start_all(playback_mode::Looped);
     }
 
