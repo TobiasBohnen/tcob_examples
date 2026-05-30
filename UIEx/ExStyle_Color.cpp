@@ -97,7 +97,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Text.Shadow.OffsetX  = 0_px;
         style->Text.Shadow.OffsetY  = 1_px;
         style->Text.AutoSize        = auto_size_mode::Always;
-        style->Text.Alignment       = {horizontal_alignment::Center, vertical_alignment::Middle};
+        style->Text.Alignment       = alignment::MiddleCenter;
         style->Margin               = {10_px};
         style->Padding              = {2_px};
 
@@ -132,7 +132,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Text.Style     = {.IsItalic = false, .Weight = font::weight::Normal};
         style->Text.Font      = resGrp.get<font_family>("Poppins");
         style->Text.Size      = 50_pct;
-        style->Text.Alignment = {.Horizontal = horizontal_alignment::Left, .Vertical = vertical_alignment::Middle};
+        style->Text.Alignment = alignment::MiddleLeft;
         style->Text.AutoSize  = auto_size_mode::Always;
         normal.apply(style);
     }
@@ -331,7 +331,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Text.Size           = 25_pct;
         style->Text.Shadow.OffsetX = 0_px;
         style->Text.Shadow.OffsetY = 1_px;
-        style->Text.Alignment      = {horizontal_alignment::Left, vertical_alignment::Middle};
+        style->Text.Alignment      = alignment::MiddleLeft;
         style->Text.AutoSize       = auto_size_mode::Always;
         style->Margin              = {5_px};
         style->Padding             = {5_px};
@@ -483,7 +483,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Text.Size                  = 50_pct;
         style->Text.Shadow.OffsetX        = 0_px;
         style->Text.Shadow.OffsetY        = 1_px;
-        style->Text.Alignment             = {horizontal_alignment::Center, vertical_alignment::Middle};
+        style->Text.Alignment             = alignment::MiddleCenter;
         style->ItemHeight                 = 150_pct;
         style->ItemClass                  = "list_items";
         style->VScrollBar.ThumbClass      = "scrollbar_thumb";
@@ -623,7 +623,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Text.Size           = 50_pct;
         style->Text.Shadow.OffsetX = 0_px;
         style->Text.Shadow.OffsetY = 1_px;
-        style->Text.Alignment      = {horizontal_alignment::Left, vertical_alignment::Middle};
+        style->Text.Alignment      = alignment::MiddleLeft;
         style->Margin              = {5_px};
         style->Padding             = {2_px};
         style->Caret.BlinkRate     = 500ms;
@@ -663,21 +663,21 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->InputPortText.Size      = 12_px;
         style->InputPortText.Color     = colors::Black;
         style->InputPortText.AutoSize  = auto_size_mode::OnlyShrink;
-        style->InputPortText.Alignment = {.Horizontal = horizontal_alignment::Left, .Vertical = vertical_alignment::Middle};
+        style->InputPortText.Alignment = alignment::MiddleLeft;
 
         style->OutputPortText.Font      = resGrp.get<font_family>("DejaVuSansMono");
         style->OutputPortText.Style     = {.IsItalic = false, .Weight = font::weight::Normal};
         style->OutputPortText.Size      = 12_px;
         style->OutputPortText.Color     = colors::Black;
         style->OutputPortText.AutoSize  = auto_size_mode::OnlyShrink;
-        style->OutputPortText.Alignment = {.Horizontal = horizontal_alignment::Right, .Vertical = vertical_alignment::Middle};
+        style->OutputPortText.Alignment = alignment::MiddleRight;
 
         style->ParamText.Font      = resGrp.get<font_family>("DejaVuSansMono");
         style->ParamText.Style     = {.IsItalic = false, .Weight = font::weight::Normal};
         style->ParamText.Size      = 12_px;
         style->ParamText.Color     = colors::Black;
         style->ParamText.AutoSize  = auto_size_mode::OnlyShrink;
-        style->ParamText.Alignment = {.Horizontal = horizontal_alignment::Center, .Vertical = vertical_alignment::Middle};
+        style->ParamText.Alignment = alignment::MiddleCenter;
         style->MinimapSize         = {.Width = {0.1f, length::type::Relative}, .Height = {0.1f, length::type::Relative}};
 
         constexpr u32 TYPE_FLOAT {1 << 0};
@@ -848,7 +848,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
         style->Item.Text.Size      = 50_pct;
         style->Item.Text.AutoSize  = auto_size_mode::OnlyShrink;
-        style->Item.Text.Alignment = {horizontal_alignment::Center, vertical_alignment::Middle};
+        style->Item.Text.Alignment = alignment::MiddleCenter;
         style->Item.Border.Size    = 2_px;
 
         auto hoverStyle {retValue.create<item_style>("tab_items", {.Hover = true})};
@@ -868,7 +868,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Item.Text.Style     = {false, font::weight::Normal};
         style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
         style->Item.Text.Size      = 50_pct;
-        style->Item.Text.Alignment = {horizontal_alignment::Left, vertical_alignment::Middle};
+        style->Item.Text.Alignment = alignment::MiddleLeft;
         style->Item.Border.Size    = 2_px;
         style->Item.IconTextOrder  = icon_text_order::TextBeforeIcon;
 
@@ -889,7 +889,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Item.Text.Style     = {false, font::weight::Normal};
         style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
         style->Item.Text.Size      = 50_pct;
-        style->Item.Text.Alignment = {horizontal_alignment::Left, vertical_alignment::Middle};
+        style->Item.Text.Alignment = alignment::MiddleLeft;
         style->Item.Border.Size    = 2_px;
 
         auto hoverStyle {retValue.create<item_style>("list_items", {.Hover = true})};
@@ -908,7 +908,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Item.Text.Style     = {false, font::weight::Normal};
         style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
         style->Item.Text.Size      = 50_pct;
-        style->Item.Text.Alignment = {horizontal_alignment::Left, vertical_alignment::Middle};
+        style->Item.Text.Alignment = alignment::MiddleLeft;
         style->Item.Border.Size    = 2_px;
 
         normal.apply(style);
@@ -926,7 +926,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Item.Text.Font      = resGrp.get<font_family>("Poppins");
         style->Item.Text.AutoSize  = auto_size_mode::OnlyShrink;
         style->Item.Text.Size      = 15_px;
-        style->Item.Text.Alignment = {horizontal_alignment::Center, vertical_alignment::Middle};
+        style->Item.Text.Alignment = alignment::MiddleCenter;
         style->Item.Border.Size    = 5_px;
 
         auto hoverStyle {retValue.create<item_style>("header_items", {.Hover = true})};
@@ -953,7 +953,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Item.Text.AutoSize  = auto_size_mode::OnlyShrink;
         style->Item.Text.Size      = 20_px;
         style->Item.Text.Color     = normal.Text;
-        style->Item.Text.Alignment = {horizontal_alignment::Center, vertical_alignment::Middle};
+        style->Item.Text.Alignment = alignment::MiddleCenter;
         style->Item.Border.Size    = 2_px;
 
         auto hoverStyle  = retValue.create<item_style>(baseName, {.Hover = true});
@@ -1178,7 +1178,7 @@ auto create_color_styles(assets::group const& resGrp) -> style_collection
         style->Text.Font         = resGrp.get<font_family>("Poppins");
         style->Text.Size         = 25_pct;
         style->Text.AutoSize     = auto_size_mode::OnlyShrink;
-        style->Text.Alignment    = {.Horizontal = horizontal_alignment::Left, .Vertical = vertical_alignment::Middle};
+        style->Text.Alignment    = alignment::MiddleLeft;
         style->Text.Color        = colors::Black;
         style->Background        = colors::LightBlue;
         style->Border.Background = colors::Black;
