@@ -74,6 +74,13 @@ void TextEx::on_start()
                              effect::wave {.Height = 15.f, .Amplitude = 10.f});
         text0->create_effect(4, duration, effect::rotate {2.0f}, effect::wave {.Height = 30.f, .Amplitude = 10.f});
     }
+
+    {
+        auto& text0 {_texts.emplace_back(std::make_unique<text>(fontFam))};
+        text0->Text   = "Ready{WAIT:500} set{WAIT:500} go{WAIT:800} now{WAIT:300} move";
+        text0->Style  = text::style {.Color = colors::White, .Alignment = {}, .KerningEnabled = false, .FontStyle = {}, .FontSize = 32};
+        text0->Bounds = {{420, 500}, {500, 1000}};
+    }
 }
 
 void TextEx::on_draw_to(render_target& target, transform const& xform)
