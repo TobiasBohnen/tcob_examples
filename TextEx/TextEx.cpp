@@ -42,19 +42,18 @@ void TextEx::on_start()
                         "{EFFECT:11}Waltz, nymph{EFFECT:0}, for quick jigs vex Bud.\n\n";
         text0->Style  = text::style {.Color = colors::White, .Alignment = {}, .KerningEnabled = false, .FontStyle = {}, .FontSize = 40};
         text0->Bounds = {{420, 6}, {900, 1200}};
-        auto& effects {text0->Effects};
-        effects.create(1, duration, effect::typing {});
-        effects.create(2, duration, effect::fade_in {3});
-        effects.create(3, duration, effect::fade_out {2});
-        effects.create(4, duration, effect::blink {.Color0 = colors::Orange, .Color1 = colors::Teal, .Frequency = 5.f});
-        effects.create(5, duration, effect::shake {.Intensity = 3.f, .RNG = rng {12345}});
-        effects.create(6, duration, effect::wave {.Height = 15.f, .Amplitude = 4.f});
-        effects.create(7, duration, effect::size {.WidthStart = 1.0f, .WidthEnd = 0.0f, .HeightStart = 1.0f, .HeightEnd = 0.0f, .Anchor = {.Horizontal = horizontal_alignment::Center, .Vertical = vertical_alignment::Middle}});
-        effects.create(8, duration, effect::rotate {.Speed = 5.0f});
-        effects.create(9, duration, effect::gradient {color_gradient {colors::White, colors::Green, colors::Black, colors::Orange}.colors()});
-        effects.create(10, duration, effect::bounce {.Height = 12.f, .Bounces = 2.f, .Damping = 0.4f, .Spread = 0.4f});
-        effects.create(11, duration, effect::jitter {.Intensity = 2.f, .RNG = rng {67890}});
-        effects.start_all(playback_mode::Looped);
+
+        text0->create_effect(1, duration, effect::typing {});
+        text0->create_effect(2, duration, effect::fade_in {3});
+        text0->create_effect(3, duration, effect::fade_out {2});
+        text0->create_effect(4, duration, effect::blink {.Color0 = colors::Orange, .Color1 = colors::Teal, .Frequency = 5.f});
+        text0->create_effect(5, duration, effect::shake {.Intensity = 3.f, .RNG = rng {12345}});
+        text0->create_effect(6, duration, effect::wave {.Height = 15.f, .Amplitude = 4.f});
+        text0->create_effect(7, duration, effect::size {.WidthStart = 1.0f, .WidthEnd = 0.0f, .HeightStart = 1.0f, .HeightEnd = 0.0f, .Anchor = {.Horizontal = horizontal_alignment::Center, .Vertical = vertical_alignment::Middle}});
+        text0->create_effect(8, duration, effect::rotate {.Speed = 5.0f});
+        text0->create_effect(9, duration, effect::gradient {color_gradient {colors::White, colors::Green, colors::Black, colors::Orange}.colors()});
+        text0->create_effect(10, duration, effect::bounce {.Height = 24.f});
+        text0->create_effect(11, duration, effect::jitter {.Intensity = 2.f, .RNG = rng {67890}});
     }
 
     {
@@ -65,46 +64,15 @@ void TextEx::on_start()
                         "{EFFECT:4}{COLOR:Green}Spinning tornado{EFFECT:0}\n";
         text0->Style  = text::style {.Color = colors::White, .Alignment = {}, .KerningEnabled = false, .FontStyle = {}, .FontSize = 32};
         text0->Bounds = {{30, 206}, {500, 1000}};
-        auto& effects {text0->Effects};
-        effects.create(1, duration, effect::typing {}, effect::shake {.Intensity = 3.f, .RNG = rng {12345}})->Interval = 100ms;
-        effects.create(2, duration,
-                       effect::blink {.Color0 = colors::Blue, .Color1 = colors::LightBlue, .Frequency = 5.f},
-                       effect::wave {.Height = 15.f, .Amplitude = 10.f});
-        effects.create(3, duration,
-                       effect::size {.WidthStart = 0.0f, .WidthEnd = 1.0f, .HeightStart = 0.0f, .HeightEnd = 1.0f, .Anchor = {.Horizontal = horizontal_alignment::Left, .Vertical = vertical_alignment::Middle}},
-                       effect::wave {.Height = 15.f, .Amplitude = 10.f});
-        effects.create(4, duration, effect::rotate {2.0f}, effect::wave {.Height = 30.f, .Amplitude = 10.f});
-        effects.start_all(playback_mode::Looped);
-    }
 
-    {
-        // Vertex text
-
-        auto                 font2 {fontFam->get_font({.IsItalic = false, .Weight = font::weight::ExtraBold}, 128)};
-        string               text {"Vertex"};
-        std::vector<polygon> polys {polygonize_text(*font2, text, true)};
-
-        auto& shapeOutline {_layer0.create_shape<poly_shape>()};
-        shapeOutline.Color    = colors::Blue;
-        shapeOutline.Material = material::Empty();
-        shapeOutline.Polygons = polys;
-        shapeOutline.Polygons.mutate([&](auto& polys) { polygons::offset(polys, 5, offset_join::Square); });
-
-        shapeOutline.move_by({10, 650});
-
-        auto& shapeText {_layer0.create_shape<poly_shape>()};
-        shapeText.Color    = colors::Green;
-        shapeText.Material = material::Empty();
-        shapeText.Polygons = polys;
-        assert(polygons::check_winding(*shapeText.Polygons));
-        shapeText.move_by({10, 650});
-
-        transform xform0;
-        xform0.rotate_at(degree_f {45}, shapeText.Polygons->at(1).info().Centroid);
-        shapeText.Polygons.mutate([&](auto& poly) { poly[1].apply_transform(xform0); });
-        transform xform1;
-        xform1.rotate_at(degree_f {45}, shapeText.Polygons->at(4).info().Centroid);
-        shapeText.Polygons.mutate([&](auto& poly) { poly[4].apply_transform(xform1); });
+        text0->create_effect(1, duration, effect::typing {}, effect::shake {.Intensity = 3.f, .RNG = rng {12345}})->Interval = 100ms;
+        text0->create_effect(2, duration,
+                             effect::blink {.Color0 = colors::Blue, .Color1 = colors::LightBlue, .Frequency = 5.f},
+                             effect::wave {.Height = 15.f, .Amplitude = 10.f});
+        text0->create_effect(3, duration,
+                             effect::size {.WidthStart = 0.0f, .WidthEnd = 1.0f, .HeightStart = 0.0f, .HeightEnd = 1.0f, .Anchor = {.Horizontal = horizontal_alignment::Left, .Vertical = vertical_alignment::Middle}},
+                             effect::wave {.Height = 15.f, .Amplitude = 10.f});
+        text0->create_effect(4, duration, effect::rotate {2.0f}, effect::wave {.Height = 30.f, .Amplitude = 10.f});
     }
 }
 
@@ -142,6 +110,11 @@ void TextEx::on_key_down(keyboard::event const& ev)
     switch (ev.ScanCode) {
     case scan_code::BACKSPACE:
         parent().pop_current_scene();
+        break;
+    case scan_code::S:
+        for (auto& text : _texts) {
+            text->start(playback_mode::Looped);
+        }
         break;
     default:
         break;
