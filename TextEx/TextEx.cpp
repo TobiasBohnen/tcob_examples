@@ -25,21 +25,21 @@ void TextEx::on_start()
         auto& text0 {_texts.emplace_back(std::make_unique<text>(fontFam))};
         text0->Text   = "normal text \n"
                         "{COLOR:Red}c{COLOR:Blue}o{COLOR:Yellow}l{COLOR:LightBlue}o{COLOR:Cyan}r{COLOR:Orange}e{COLOR:Blue}d {COLOR:RebeccaPurple}t{COLOR:Green}e{COLOR:Indigo}x{COLOR:LimeGreen}t{COLOR:White}\n"
-                        "{ALPHA:1}t{ALPHA:0.9}r{ALPHA:0.8}a{ALPHA:0.7}n{ALPHA:0.6}s{ALPHA:0.5}p{ALPHA:0.4}a{ALPHA:0.3}r{ALPHA:0.2}e{ALPHA:0.1}n{ALPHA:1}t te{ALPHA:0.5}xt";
+                        "{ALPHA:1}t{ALPHA:0.9}r{ALPHA:0.8}a{ALPHA:0.7}n{ALPHA:0.6}s{ALPHA:0.5}p{ALPHA:0.4}a{ALPHA:0.3}r{ALPHA:0.2}e{ALPHA:0.1}n{/ALPHA}t te{ALPHA:0.5}xt";
         text0->Style  = text::style {.Color = colors::White, .Alignment = {}, .KerningEnabled = false, .FontStyle = {}, .FontSize = 32};
         text0->Bounds = {{30, 6}, {500, 500}};
     }
 
     {
         auto& text0 {_texts.emplace_back(std::make_unique<text>(fontFam))};
-        text0->Text   = "{EFFECT:1}The quick brown fox{EFFECT:0} jumps over {EFFECT:2}the lazy dog{EFFECT:0}.\n"
-                        "{EFFECT:3}PACK MY BOX{EFFECT:0} with {EFFECT:4}five dozen liquor jugs{EFFECT:0}!\n"
-                        "{EFFECT:5}Sphinx of black quartz{EFFECT:0}, judge my vow.\n"
-                        "{EFFECT:6}How vexingly quick{EFFECT:0} daft zebras jump!\n"
-                        "{EFFECT:7}Jackdaws love{EFFECT:0} my {EFFECT:8}big sphinx{EFFECT:0} of quartz.\n"
-                        "{EFFECT:9}The five boxing wizards jump quickly{EFFECT:0}.\n"
-                        "{EFFECT:10}Bright vixens jump{EFFECT:0}; dozy fowl quack.\n"
-                        "{EFFECT:11}Waltz, nymph{EFFECT:0}, for quick jigs vex Bud.\n\n";
+        text0->Text   = "{EFFECT:1}The quick brown fox{/EFFECT} jumps over {EFFECT:2}the lazy dog{/EFFECT}.\n"
+                        "{EFFECT:3}PACK MY BOX{/EFFECT} with {EFFECT:4}five dozen liquor jugs{/EFFECT}!\n"
+                        "{EFFECT:5}Sphinx of black quartz{/EFFECT}, judge my vow.\n"
+                        "{EFFECT:6}How vexingly quick{/EFFECT} daft zebras jump!\n"
+                        "{EFFECT:7}Jackdaws love{/EFFECT} my {EFFECT:8}big sphinx{/EFFECT} of quartz.\n"
+                        "{EFFECT:9}The five boxing wizards jump quickly{/EFFECT}.\n"
+                        "{EFFECT:10}Bright vixens jump{/EFFECT}; dozy fowl quack.\n"
+                        "{EFFECT:11}Waltz, nymph{/EFFECT}, for quick jigs vex Bud.\n\n";
         text0->Style  = text::style {.Color = colors::White, .Alignment = {}, .KerningEnabled = false, .FontStyle = {}, .FontSize = 40};
         text0->Bounds = {{420, 6}, {900, 1200}};
 
@@ -58,10 +58,10 @@ void TextEx::on_start()
 
     {
         auto& text0 {_texts.emplace_back(std::make_unique<text>(fontFam))};
-        text0->Text   = "{EFFECT:1}Earthquake detected...{EFFECT:0}\n"
-                        "{EFFECT:2}Ocean waves rolling in{EFFECT:0}\n\n"
-                        "{EFFECT:3}{COLOR:Purple}Balloon inflating{EFFECT:0}\n\n"
-                        "{EFFECT:4}{COLOR:Green}Spinning tornado{EFFECT:0}\n";
+        text0->Text   = "{EFFECT:1}Earthquake detected...{/EFFECT}\n"
+                        "{EFFECT:2}Ocean waves rolling in{/EFFECT}\n\n"
+                        "{EFFECT:3}{COLOR:Purple}Balloon inflating{/EFFECT}\n\n"
+                        "{EFFECT:4}{COLOR:Green}Spinning tornado{/EFFECT}\n";
         text0->Style  = text::style {.Color = colors::White, .Alignment = {}, .KerningEnabled = false, .FontStyle = {}, .FontSize = 32};
         text0->Bounds = {{30, 206}, {500, 1000}};
 
@@ -77,9 +77,11 @@ void TextEx::on_start()
 
     {
         auto& text0 {_texts.emplace_back(std::make_unique<text>(fontFam))};
-        text0->Text   = "Ready{WAIT:500} set{WAIT:500} go{WAIT:800} now{WAIT:300} move";
+        text0->Text   = "Ready{EFFECT:1} set{WAIT:2500}{EFFECT:2} go!{WAIT:1500}{/EFFECT} move{WAIT:3000} now!";
         text0->Style  = text::style {.Color = colors::White, .Alignment = {}, .KerningEnabled = false, .FontStyle = {}, .FontSize = 32};
         text0->Bounds = {{420, 500}, {500, 1000}};
+        text0->create_effect(1, 2500ms, effect::typing {});
+        text0->create_effect(2, 1500ms, effect::typing {});
     }
 }
 
@@ -119,6 +121,11 @@ void TextEx::on_key_down(keyboard::event const& ev)
         parent().pop_current_scene();
         break;
     case scan_code::S:
+        for (auto& text : _texts) {
+            text->start(playback_mode::Normal);
+        }
+        break;
+    case scan_code::L:
         for (auto& text : _texts) {
             text->start(playback_mode::Looped);
         }
