@@ -24,7 +24,7 @@ void TextEx::on_start()
     {
         auto& text0 {_texts.emplace_back(std::make_unique<text>(fontFam))};
         text0->Text   = "normal text \n"
-                        "{COLOR:Red}c{COLOR:Blue}o{COLOR:Yellow}l{COLOR:LightBlue}o{COLOR:Cyan}r{COLOR:Orange}e{COLOR:Blue}d {COLOR:RebeccaPurple}t{COLOR:Green}e{COLOR:Indigo}x{COLOR:LimeGreen}t{COLOR:White}\n"
+                        "{COLOR:Red,ALPHA:0.5}c{COLOR:Blue,/ALPHA}o{COLOR:Yellow}l{COLOR:LightBlue}o{COLOR:Cyan}r{COLOR:Orange}e{COLOR:Blue}d {COLOR:RebeccaPurple}t{COLOR:Green}e{COLOR:Indigo}x{COLOR:LimeGreen}t{COLOR:White}\n"
                         "{ALPHA:1}t{ALPHA:0.9}r{ALPHA:0.8}a{ALPHA:0.7}n{ALPHA:0.6}s{ALPHA:0.5}p{ALPHA:0.4}a{ALPHA:0.3}r{ALPHA:0.2}e{ALPHA:0.1}n{/ALPHA}t te{ALPHA:0.5}xt";
         text0->Style  = text::style {.Color = colors::White, .Alignment = {}, .KerningEnabled = false, .FontStyle = {}, .FontSize = 32};
         text0->Bounds = {{30, 6}, {500, 500}};
@@ -32,7 +32,7 @@ void TextEx::on_start()
 
     {
         auto& text0 {_texts.emplace_back(std::make_unique<text>(fontFam))};
-        text0->Text   = "{EFFECT:1}The quick brown fox{/EFFECT} jumps over {EFFECT:2}the lazy dog{/EFFECT}.\n"
+        text0->Text   = "{EFFECT:1,COLOR:RED}The quick brown fox{/EFFECT,/COLOR} jumps over {EFFECT:2}the lazy dog{/EFFECT}.\n"
                         "{EFFECT:3}PACK MY BOX{/EFFECT} with {EFFECT:4}five dozen liquor jugs{/EFFECT}!\n"
                         "{EFFECT:5}Sphinx of black quartz{/EFFECT}, judge my vow.\n"
                         "{EFFECT:6}How vexingly quick{/EFFECT} daft zebras jump!\n"
@@ -77,7 +77,7 @@ void TextEx::on_start()
 
     {
         auto& text0 {_texts.emplace_back(std::make_unique<text>(fontFam))};
-        text0->Text   = "Ready{EFFECT:1} set{WAIT:2500}{EFFECT:2} go!{WAIT:1500}{/EFFECT} move{WAIT:3000} now!";
+        text0->Text   = "Ready{EFFECT:1} set{WAIT:2500}{EFFECT:2} go!{WAIT:LONG}{/EFFECT} move{WAIT:SHORT} now!";
         text0->Style  = text::style {.Color = colors::White, .Alignment = {}, .KerningEnabled = false, .FontStyle = {}, .FontSize = 32};
         text0->Bounds = {{420, 500}, {500, 1000}};
         text0->create_effect(1, 2500ms, effect::typing {});
