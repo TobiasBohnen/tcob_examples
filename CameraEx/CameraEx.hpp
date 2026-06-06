@@ -28,7 +28,7 @@ protected:
 private:
     shape_batch                             _layer0;
     std::unique_ptr<gfx::camera_controller> _controller;
-    asset_owner_ptr<material>               _material {material::Empty()};
+    asset_owner_ptr<material>               _material {material::Dummy()};
 
     static constexpr f32 MoveStep {16.0f};
 };

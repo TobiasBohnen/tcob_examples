@@ -232,7 +232,7 @@ void PhysicsEx::create_box(point_f pos)
     body.create_shape<physics::rect_shape>(shape);
 
     auto& gfx {_objectLayer.create_shape<gfx::rect_shape>()};
-    gfx.Material = material::Empty();
+    gfx.Material = material::Dummy();
     gfx.Bounds   = rect * physicsWorldSize;
     gfx.Color    = colors::Red;
 
@@ -253,7 +253,7 @@ void PhysicsEx::create_circle(point_f pos)
 
     auto& gfx {_objectLayer.create_shape<gfx::circle_shape>()};
     gfx.Segments = 18;
-    gfx.Material = material::Empty();
+    gfx.Material = material::Dummy();
     gfx.Radius   = rect.width() / 2 * physicsWorldSize;
     gfx.Color    = colors::Yellow;
 
@@ -289,7 +289,7 @@ void PhysicsEx::create_polygon(point_f pos)
     }
 
     auto& gfx {_objectLayer.create_shape<gfx::poly_shape>()};
-    gfx.Material = material::Empty();
+    gfx.Material = material::Dummy();
     gfx.Color    = colors::Cyan;
     gfx.Polygons.mutate([&](auto& polys) { polys.push_back(gfxPoly); });
 
@@ -328,7 +328,7 @@ void PhysicsEx::create_capsule(point_f pos)
     }
 
     auto& gfx {_objectLayer.create_shape<gfx::poly_shape>()};
-    gfx.Material = material::Empty();
+    gfx.Material = material::Dummy();
     gfx.Color    = colors::Magenta;
     gfx.Polygons.mutate([&](auto& polys) { polys.push_back(gfxPoly); });
 
@@ -363,7 +363,7 @@ void PhysicsEx::create_obstacle(rect_f const& rect)
     _obstacles.Body->create_shape<physics::rect_shape>(shape);
 
     auto& gfx {_obstacleLayer.create_shape<gfx::rect_shape>()};
-    gfx.Material = material::Empty();
+    gfx.Material = material::Dummy();
     gfx.Bounds   = rect * physicsWorldSize;
     gfx.Color    = colors::Green;
     _obstacles.Sprites.push_back(&gfx);
@@ -378,7 +378,7 @@ void PhysicsEx::create_edge(point_f pos0, point_f pos1)
     _obstacles.Body->create_shape<segment_shape>(shape);
 
     auto& gfx {_obstacleLayer.create_shape<gfx::rect_shape>()};
-    gfx.Material = material::Empty();
+    gfx.Material = material::Dummy();
     gfx.Bounds   = rect_f::FromLTRB(pos0.X, pos0.Y, pos1.X, pos1.Y + 5) * physicsWorldSize;
     gfx.Color    = colors::Blue;
     _obstacles.Sprites.push_back(&gfx);

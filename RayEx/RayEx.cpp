@@ -49,7 +49,7 @@ void RayEx::on_update(milliseconds deltaTime)
     case 5: {
         auto& polyShape {_batch.create_shape<gfx::poly_shape>()};
         polyShape.Color    = colors::Blue;
-        polyShape.Material = material::Empty();
+        polyShape.Material = material::Dummy();
         auto const [x, y] {_center - point_f {150, 50}};
         polygon poly {
             .Outline = {{x, y}, {80 + x, 40 + y}, {80 + x, 120 + y}, {x, 180 + y}, {180 + x, 180 + y}, {240 + x, 120 + y}, {240 + x, 40 + y}, {180 + x, y}},
@@ -60,14 +60,14 @@ void RayEx::on_update(milliseconds deltaTime)
     case 1: {
         auto& circleShape {_batch.create_shape<gfx::circle_shape>()};
         circleShape.Color    = colors::Blue;
-        circleShape.Material = material::Empty();
+        circleShape.Material = material::Dummy();
         circleShape.Center   = _center;
         circleShape.Radius   = 100;
     } break;
     case 2: {
         auto& rectShape {_batch.create_shape<gfx::rect_shape>()};
         rectShape.Color    = colors::Blue;
-        rectShape.Material = material::Empty();
+        rectShape.Material = material::Dummy();
         size_f const rectSize {250, 250};
         rectShape.Bounds   = {_center - point_f {rectSize.Width / 2, rectSize.Height / 2}, rectSize};
         rectShape.Rotation = degree_f {_rotation};
@@ -77,7 +77,7 @@ void RayEx::on_update(milliseconds deltaTime)
         std::span<std::byte const> bytes {reinterpret_cast<std::byte const*>(obj_mesh.data()), obj_mesh.size()};
         io::isstream               str {bytes};
         auto                       _ = meshShape.load(str, ".obj");
-        meshShape.Material           = material::Empty();
+        meshShape.Material           = material::Dummy();
         meshShape.Color              = colors::Blue;
         meshShape.Rotation           = degree_f {_rotation};
         meshShape.move_by(_center - point_i {100, 100});
@@ -87,7 +87,7 @@ void RayEx::on_update(milliseconds deltaTime)
         std::span<std::byte const> bytes {reinterpret_cast<std::byte const*>(ply_mesh.data()), ply_mesh.size()};
         io::isstream               str {bytes};
         auto                       _ = meshShape.load(str, ".ply");
-        meshShape.Material           = material::Empty();
+        meshShape.Material           = material::Dummy();
         meshShape.Color              = colors::White;
         meshShape.Rotation           = degree_f {_rotation};
         meshShape.move_by(_center - point_i {100, 100});
@@ -96,7 +96,7 @@ void RayEx::on_update(milliseconds deltaTime)
         auto&        meshShape {_batch.create_shape<gfx::mesh_shape>()};
         io::isstream str {std::as_bytes(std::span {ply_mesh_binary})};
         auto         _     = meshShape.load(str, ".ply");
-        meshShape.Material = material::Empty();
+        meshShape.Material = material::Dummy();
         meshShape.Color    = colors::White;
         meshShape.Rotation = degree_f {_rotation};
         meshShape.move_by(_center - point_i {100, 100});
@@ -121,7 +121,7 @@ void RayEx::on_update(milliseconds deltaTime)
         rayShape.Pivot         = rayShape.Bounds->top_left();
         rayShape.Rotation      = deg - degree_f {180};
         rayShape.Color         = colors::Red;
-        rayShape.Material      = material::Empty();
+        rayShape.Material      = material::Dummy();
         rayShape.IntersectMask = 0;
     }};
     castRay({_tween0.Value, 50}, degree_f {135});
@@ -139,7 +139,7 @@ void RayEx::on_update(milliseconds deltaTime)
         dotShape.Center   = p.Point;
         dotShape.Radius   = 10;
         dotShape.Color    = colors::Green;
-        dotShape.Material = material::Empty();
+        dotShape.Material = material::Dummy();
     }
     _batch.update(deltaTime);
 }

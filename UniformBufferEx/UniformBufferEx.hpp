@@ -129,7 +129,7 @@ private:
     gfx::shape_batch _layer1;
 
     asset_owner_ptr<texture>        _tex0 {};
-    asset_owner_ptr<material>       _mat {material::Empty()};
+    asset_owner_ptr<material>       _mat {material::Dummy()};
     asset_owner_ptr<shader>         _shader0 {"", VERT_SRC, FRAG0_SRC};
     asset_owner_ptr<shader>         _shader1 {"", VERT_SRC, FRAG1_SRC};
     std::shared_ptr<uniform_buffer> _ubo0 {std::make_shared<uniform_buffer>(sizeof(f32))};

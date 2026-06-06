@@ -84,14 +84,14 @@ auto sim_manager::spawn_hunter(point_f pos) -> std::shared_ptr<hunter>
     auto& hunterShape {_batch.create_shape<gfx::rect_shape>()};
     hunterShape.Bounds   = {{h->Position.X - 15.0f, h->Position.Y - 15.0f}, {30.0f, 30.0f}};
     hunterShape.Color    = colors::Orange;
-    hunterShape.Material = material::Empty();
+    hunterShape.Material = material::Dummy();
     h->Shape             = &hunterShape;
 
     auto& rangeShape {_batch.create_shape<gfx::circle_shape>()};
     rangeShape.Center   = hunterShape.Bounds->center();
     rangeShape.Radius   = DETECTION_RANGE;
     rangeShape.Color    = color {255, 165, 0, 30};
-    rangeShape.Material = material::Empty();
+    rangeShape.Material = material::Dummy();
     h->RangeShape       = &rangeShape;
     _hunter             = h;
 
@@ -131,7 +131,7 @@ auto sim_manager::spawn_prey(point_f pos, point_f vel) -> std::shared_ptr<prey>
     auto& shape {_batch.create_shape<gfx::rect_shape>()};
     shape.Bounds   = {{p->Position.X - 10.0f, p->Position.Y - 10.0f}, {20.0f, 20.0f}};
     shape.Color    = colors::CornflowerBlue;
-    shape.Material = material::Empty();
+    shape.Material = material::Dummy();
     p->Shape       = &shape;
 
     _preyList.emplace_back(p);

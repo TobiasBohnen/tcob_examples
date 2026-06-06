@@ -64,7 +64,7 @@ void ClippingEx::on_mouse_button_down(mouse::button_event const& /* ev */)
         i32        i {0};
         for (auto const& poly : *_polyShape->Polygons) {
             auto& shape    = _layer0.create_shape<gfx::poly_shape>();
-            shape.Material = material::Empty();
+            shape.Material = material::Dummy();
             shape.Color    = colors[i++ % colors.size()];
             shape.Polygons = {poly};
         }
@@ -82,7 +82,7 @@ void ClippingEx::create_shapes()
     _layer0.clear();
 
     _polyShape           = &_layer0.create_shape<gfx::poly_shape>();
-    _polyShape->Material = material::Empty();
+    _polyShape->Material = material::Dummy();
     _polyShape->Color    = colors::Black;
     _polyShape->Polygons = {{
         .Outline = {{110, 110}, {300, 200}, {300, 400}, {110, 550}, {550, 550}, {700, 400}, {700, 200}, {550, 110}},
@@ -90,11 +90,11 @@ void ClippingEx::create_shapes()
     }};
 
     _cutShape           = &_layer0.create_shape<gfx::poly_shape>();
-    _cutShape->Material = material::Empty();
+    _cutShape->Material = material::Dummy();
     _cutShape->Color    = colors::White;
 
     _cutShape           = &_layer0.create_shape<gfx::poly_shape>();
-    _cutShape->Material = material::Empty();
+    _cutShape->Material = material::Dummy();
     _cutShape->Color    = colors::White;
     _cutShape->Polygons = {{
         .Outline = {{160, 150}, {160, 420}, {750, 420}, {720, 150}},
