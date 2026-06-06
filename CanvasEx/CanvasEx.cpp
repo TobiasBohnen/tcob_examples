@@ -128,15 +128,12 @@ void CanvasEx::canvas_ray_cast()
 
     auto castRay {
         [&](auto&& ray) {
-            auto points0 {ray.intersect_circle(_mp, size)};
-            points.insert(points.end(), points0.begin(), points0.end());
+            ray.intersect_circle(_mp, size, [&](ray::result const& r) { points.push_back(r); });
             point_f const topLeft {xform * rect.top_left()};
             point_f const topRight {xform * rect.top_right()};
             point_f const bottomLeft {xform * rect.bottom_left()};
             point_f const bottomRight {xform * rect.bottom_right()};
-            auto          points1 {ray.intersect_rect(topLeft, topRight, bottomLeft, bottomRight)};
-            points.insert(points.end(), points1.begin(), points1.end());
-
+            ray.intersect_rect(topLeft, topRight, bottomLeft, bottomRight, [&](ray::result const& r) { points.push_back(r); });
             _canvas.begin_path();
             _canvas.move_to(ray.get_point(0));
             _canvas.line_to(ray.get_point(1000));
