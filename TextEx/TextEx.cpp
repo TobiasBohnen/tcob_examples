@@ -122,7 +122,7 @@ void TextEx::on_key_down(keyboard::event const& ev)
         break;
     case scan_code::S:
         for (auto& text : _texts) {
-            text->start(playback_mode::Normal);
+            text->start(playback_mode::Once);
         }
         break;
     case scan_code::L:
