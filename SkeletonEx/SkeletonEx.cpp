@@ -52,7 +52,7 @@ void SkeletonEx::on_start()
 
     using ms = milliseconds;
 
-    std::map<i32, std::vector<keyframe>> tracks;
+    skeletal_animation::tracks tracks;
 
     tracks[0] = {
         // root
@@ -198,7 +198,7 @@ void SkeletonEx::on_start()
         key(ms {2400}, {0, 24}, degree_f {11.0f}),
     };
 
-    skeletal_animation const ani {bones, milliseconds {2400}, tracks};
+    skeletal_animation const ani {bones, tracks};
     create_shapes(ani.bone_count());
 
     _anim = std::make_shared<skeletal_animation_tween>(ani.duration(), ani);
