@@ -23,7 +23,7 @@ protected:
 
 private:
     void create_shapes(isize boneCount);
-    void update_shapes(std::vector<transform> const& pose);
+    void update_shapes(skeletal_animation::poses const& poses);
 
     gfx::shape_batch                               _layer0 {};
     asset_owner_ptr<gfx::material>                 _material {};

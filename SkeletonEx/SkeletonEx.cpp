@@ -156,8 +156,8 @@ void SkeletonEx::on_start()
     create_shapes(ani.bone_count());
 
     _anim = std::make_shared<skeletal_animation_tween>(ani.duration(), ani);
-    _anim->Value.Changed.connect([&](skeletal_animation::pose const& pose) {
-        update_shapes(pose);
+    _anim->Value.Changed.connect([&](skeletal_animation::poses const& poses) {
+        update_shapes(poses);
     });
     _anim->start(playback_mode::Looped);
 }
@@ -239,10 +239,10 @@ void SkeletonEx::create_shapes(isize boneCount)
     }
 }
 
-void SkeletonEx::update_shapes(std::vector<transform> const& pose)
+void SkeletonEx::update_shapes(skeletal_animation::poses const& poses)
 {
     for (isize i {0}; i < std::ssize(_slots); ++i) {
-        point_f const pos {pose[i].transform_point({0, 0})};
+        point_f const pos {poses[i].Transform.transform_point({0, 0})};
         _slots[i]->Bounds = {pos.X, pos.Y, _slots[i]->Bounds->width(), _slots[i]->Bounds->height()};
     }
 }
