@@ -20,189 +20,143 @@ void SkeletonEx::on_fixed_update(milliseconds /* deltaTime */)
 {
     auto const& stats {locate_service<gfx::render_system>().statistics()};
     auto const& mouse {locate_service<input::system>().mouse().get_position()};
-    window().Title = std::format("TestGame | FPS avg:{:.2f} best:{:.2f} worst:{:.2f} | x:{} y:{} ",
+    window().Title = std::format("TestGame | FPS avg:{:.2f} best:{:.2f} worst:{:.2f} | x:{} y:{} | {}",
                                  stats.average_FPS(), stats.best_FPS(), stats.worst_FPS(),
-                                 mouse.X, mouse.Y);
+                                 mouse.X, mouse.Y, _anim->playback_progress());
 }
 
 void SkeletonEx::on_start()
 {
-    std::vector<skeletal_animation::bone> const bones {
-        {.Name = "root"},
-        {.Name = "torso", .Parent = 0},
-        {.Name = "neck", .Parent = 1},
-        {.Name = "head", .Parent = 2},
-        {.Name = "upper_l", .Parent = 1},
-        {.Name = "lower_l", .Parent = 4},
-        {.Name = "hand_l", .Parent = 5},
-        {.Name = "upper_r", .Parent = 1},
-        {.Name = "lower_r", .Parent = 7},
-        {.Name = "hand_r", .Parent = 8},
-        {.Name = "thigh_l", .Parent = 0},
-        {.Name = "shin_l", .Parent = 10},
-        {.Name = "foot_l", .Parent = 11},
-        {.Name = "thigh_r", .Parent = 0},
-        {.Name = "shin_r", .Parent = 13},
-        {.Name = "foot_r", .Parent = 14},
-    };
-
-    auto key {[](milliseconds t, point_f tr, degree_f ro, size_f sc = {1, 1}) {
-        return keyframe {.Timestamp = t, .Translation = tr, .Rotation = radian_f {ro}, .Scale = sc};
+    auto key {[](milliseconds dur, point_f tr, degree_f ro, size_f sc = {1, 1}) {
+        return skeletal_animation::frame {.Duration = dur, .Translation = tr, .Rotation = radian_f {ro}, .Scale = sc};
     }};
 
     using ms = milliseconds;
 
-    skeletal_animation::tracks tracks;
-
-    tracks[0] = {
-        // root
-        key(ms {0}, {400, 300}, degree_f {0.0f}),
-        key(ms {300}, {410, 290}, degree_f {6.0f}),
-        key(ms {600}, {420, 300}, degree_f {0.0f}),
-        key(ms {900}, {410, 308}, degree_f {-6.0f}),
-        key(ms {1200}, {400, 300}, degree_f {0.0f}),
-        key(ms {1500}, {390, 290}, degree_f {6.0f}),
-        key(ms {1800}, {380, 300}, degree_f {0.0f}),
-        key(ms {2100}, {390, 308}, degree_f {-6.0f}),
-        key(ms {2400}, {400, 300}, degree_f {0.0f}),
-    };
-    tracks[1] = {
-        // torso
-        key(ms {0}, {0, -70}, degree_f {-12.0f}),
-        key(ms {600}, {0, -70}, degree_f {17.0f}),
-        key(ms {1200}, {0, -70}, degree_f {-12.0f}),
-        key(ms {1800}, {0, -70}, degree_f {17.0f}),
-        key(ms {2400}, {0, -70}, degree_f {-12.0f}),
-    };
-    tracks[2] = {
-        // neck
-        key(ms {0}, {0, -20}, degree_f {0}),
-        key(ms {2400}, {0, -20}, degree_f {0}),
-    };
-    tracks[3] = {
-        // head
-        key(ms {0}, {0, -30}, degree_f {9.0f}),
-        key(ms {400}, {0, -28}, degree_f {-9.0f}),
-        key(ms {800}, {0, -30}, degree_f {9.0f}),
-        key(ms {1200}, {0, -28}, degree_f {-9.0f}),
-        key(ms {1600}, {0, -30}, degree_f {9.0f}),
-        key(ms {2000}, {0, -28}, degree_f {-9.0f}),
-        key(ms {2400}, {0, -30}, degree_f {9.0f}),
-    };
-    tracks[4] = {
-        // upper_l
-        key(ms {0}, {-22, -50}, degree_f {-69.0f}),
-        key(ms {400}, {-22, -50}, degree_f {-17.0f}),
-        key(ms {800}, {-22, -50}, degree_f {-80.0f}),
-        key(ms {1200}, {-22, -50}, degree_f {11.0f}),
-        key(ms {1600}, {-22, -50}, degree_f {-69.0f}),
-        key(ms {2000}, {-22, -50}, degree_f {-17.0f}),
-        key(ms {2400}, {-22, -50}, degree_f {-69.0f}),
-    };
-    tracks[5] = {
-        // lower_l
-        key(ms {0}, {0, -28}, degree_f {11.0f}),
-        key(ms {400}, {0, -28}, degree_f {69.0f}),
-        key(ms {800}, {0, -28}, degree_f {6.0f}),
-        key(ms {1200}, {0, -28}, degree_f {80.0f}),
-        key(ms {1600}, {0, -28}, degree_f {11.0f}),
-        key(ms {2000}, {0, -28}, degree_f {69.0f}),
-        key(ms {2400}, {0, -28}, degree_f {11.0f}),
-    };
-    tracks[6] = {
-        // hand_l
-        key(ms {0}, {0, -20}, degree_f {-23.0f}),
-        key(ms {600}, {0, -20}, degree_f {34.0f}),
-        key(ms {1200}, {0, -20}, degree_f {-34.0f}),
-        key(ms {1800}, {0, -20}, degree_f {23.0f}),
-        key(ms {2400}, {0, -20}, degree_f {-23.0f}),
-    };
-    tracks[7] = {
-        // upper_r
-        key(ms {0}, {22, -50}, degree_f {11.0f}),
-        key(ms {400}, {22, -50}, degree_f {-80.0f}),
-        key(ms {800}, {22, -50}, degree_f {-17.0f}),
-        key(ms {1200}, {22, -50}, degree_f {-69.0f}),
-        key(ms {1600}, {22, -50}, degree_f {11.0f}),
-        key(ms {2000}, {22, -50}, degree_f {-80.0f}),
-        key(ms {2400}, {22, -50}, degree_f {11.0f}),
-    };
-    tracks[8] = {
-        // lower_r
-        key(ms {0}, {0, -28}, degree_f {80.0f}),
-        key(ms {400}, {0, -28}, degree_f {6.0f}),
-        key(ms {800}, {0, -28}, degree_f {69.0f}),
-        key(ms {1200}, {0, -28}, degree_f {11.0f}),
-        key(ms {1600}, {0, -28}, degree_f {80.0f}),
-        key(ms {2000}, {0, -28}, degree_f {6.0f}),
-        key(ms {2400}, {0, -28}, degree_f {80.0f}),
-    };
-    tracks[9] = {
-        // hand_r
-        key(ms {0}, {0, -20}, degree_f {34.0f}),
-        key(ms {600}, {0, -20}, degree_f {-23.0f}),
-        key(ms {1200}, {0, -20}, degree_f {23.0f}),
-        key(ms {1800}, {0, -20}, degree_f {-34.0f}),
-        key(ms {2400}, {0, -20}, degree_f {34.0f}),
-    };
-    tracks[10] = {
-        // thigh_l
-        key(ms {0}, {-15, 0}, degree_f {0.0f}),
-        key(ms {300}, {-15, 0}, degree_f {-46.0f}),
-        key(ms {600}, {-15, 0}, degree_f {6.0f}),
-        key(ms {1200}, {-15, 0}, degree_f {-34.0f}),
-        key(ms {1800}, {-15, 0}, degree_f {6.0f}),
-        key(ms {2400}, {-15, 0}, degree_f {0.0f}),
-    };
-    tracks[11] = {
-        // shin_l
-        key(ms {0}, {0, 28}, degree_f {6.0f}),
-        key(ms {300}, {0, 28}, degree_f {80.0f}),
-        key(ms {600}, {0, 28}, degree_f {6.0f}),
-        key(ms {1200}, {0, 28}, degree_f {69.0f}),
-        key(ms {1800}, {0, 28}, degree_f {6.0f}),
-        key(ms {2400}, {0, 28}, degree_f {6.0f}),
-    };
-    tracks[12] = {
-        // foot_l
-        key(ms {0}, {0, 24}, degree_f {0.0f}),
-        key(ms {300}, {0, 24}, degree_f {-29.0f}),
-        key(ms {600}, {0, 24}, degree_f {11.0f}),
-        key(ms {1200}, {0, 24}, degree_f {-17.0f}),
-        key(ms {2400}, {0, 24}, degree_f {0.0f}),
-    };
-    tracks[13] = {
-        // thigh_r
-        key(ms {0}, {15, 0}, degree_f {6.0f}),
-        key(ms {600}, {15, 0}, degree_f {-34.0f}),
-        key(ms {1200}, {15, 0}, degree_f {0.0f}),
-        key(ms {1500}, {15, 0}, degree_f {-46.0f}),
-        key(ms {1800}, {15, 0}, degree_f {6.0f}),
-        key(ms {2400}, {15, 0}, degree_f {6.0f}),
-    };
-    tracks[14] = {
-        // shin_r
-        key(ms {0}, {0, 28}, degree_f {6.0f}),
-        key(ms {600}, {0, 28}, degree_f {69.0f}),
-        key(ms {1200}, {0, 28}, degree_f {6.0f}),
-        key(ms {1500}, {0, 28}, degree_f {80.0f}),
-        key(ms {1800}, {0, 28}, degree_f {6.0f}),
-        key(ms {2400}, {0, 28}, degree_f {6.0f}),
-    };
-    tracks[15] = {
-        // foot_r
-        key(ms {0}, {0, 24}, degree_f {11.0f}),
-        key(ms {600}, {0, 24}, degree_f {-17.0f}),
-        key(ms {1200}, {0, 24}, degree_f {0.0f}),
-        key(ms {1500}, {0, 24}, degree_f {-29.0f}),
-        key(ms {2400}, {0, 24}, degree_f {11.0f}),
+    std::vector<skeletal_animation::bone> const bones {
+        {.Name = "root", .Track = {
+                             key(ms {300}, {400, 300}, degree_f {0}),
+                             key(ms {300}, {410, 290}, degree_f {6}),
+                             key(ms {300}, {420, 300}, degree_f {0}),
+                             key(ms {300}, {410, 308}, degree_f {-6}),
+                             key(ms {300}, {400, 300}, degree_f {0}),
+                             key(ms {300}, {390, 290}, degree_f {6}),
+                             key(ms {300}, {380, 300}, degree_f {0}),
+                             key(ms {300}, {390, 308}, degree_f {-6}),
+                         }},
+        {.Name = "torso", .Parent = "root", .Track = {
+                                                key(ms {600}, {0, -70}, degree_f {-12}),
+                                                key(ms {600}, {0, -70}, degree_f {17}),
+                                                key(ms {600}, {0, -70}, degree_f {-12}),
+                                                key(ms {600}, {0, -70}, degree_f {17}),
+                                            }},
+        {.Name = "neck", .Parent = "torso", .Track = {
+                                                key(ms {600}, {0, -20}, degree_f {0}),
+                                                key(ms {600}, {0, -20}, degree_f {45}),
+                                                key(ms {600}, {0, -20}, degree_f {0}),
+                                                key(ms {600}, {0, -20}, degree_f {-75}),
+                                            }},
+        {.Name = "head", .Parent = "neck", .Track = {
+                                               key(ms {400}, {0, -30}, degree_f {9}),
+                                               key(ms {400}, {0, -28}, degree_f {-9}),
+                                               key(ms {400}, {0, -30}, degree_f {9}),
+                                               key(ms {400}, {0, -28}, degree_f {-9}),
+                                               key(ms {400}, {0, -30}, degree_f {9}),
+                                               key(ms {400}, {0, -28}, degree_f {-9}),
+                                           }},
+        {.Name = "upper_l", .Parent = "torso", .Track = {
+                                                   key(ms {400}, {-22, -50}, degree_f {-69}),
+                                                   key(ms {400}, {-22, -50}, degree_f {-17}),
+                                                   key(ms {400}, {-22, -50}, degree_f {-80}),
+                                                   key(ms {400}, {-22, -50}, degree_f {11}),
+                                                   key(ms {400}, {-22, -50}, degree_f {-69}),
+                                                   key(ms {400}, {-22, -50}, degree_f {-17}),
+                                               }},
+        {.Name = "lower_l", .Parent = "upper_l", .Track = {
+                                                     key(ms {400}, {0, -28}, degree_f {11}),
+                                                     key(ms {400}, {0, -28}, degree_f {69}),
+                                                     key(ms {400}, {0, -28}, degree_f {6}),
+                                                     key(ms {400}, {0, -28}, degree_f {80}),
+                                                     key(ms {400}, {0, -28}, degree_f {11}),
+                                                     key(ms {400}, {0, -28}, degree_f {69}),
+                                                 }},
+        {.Name = "hand_l", .Parent = "lower_l", .Track = {
+                                                    key(ms {600}, {0, -20}, degree_f {-23}),
+                                                    key(ms {600}, {0, -20}, degree_f {34}),
+                                                    key(ms {600}, {0, -20}, degree_f {-34}),
+                                                    key(ms {600}, {0, -20}, degree_f {23}),
+                                                }},
+        {.Name = "upper_r", .Parent = "torso", .Track = {
+                                                   key(ms {400}, {22, -50}, degree_f {11}),
+                                                   key(ms {400}, {22, -50}, degree_f {-80}),
+                                                   key(ms {400}, {22, -50}, degree_f {-17}),
+                                                   key(ms {400}, {22, -50}, degree_f {-69}),
+                                                   key(ms {400}, {22, -50}, degree_f {11}),
+                                                   key(ms {400}, {22, -50}, degree_f {-80}),
+                                               }},
+        {.Name = "lower_r", .Parent = "upper_r", .Track = {
+                                                     key(ms {400}, {0, -28}, degree_f {80}),
+                                                     key(ms {400}, {0, -28}, degree_f {6}),
+                                                     key(ms {400}, {0, -28}, degree_f {69}),
+                                                     key(ms {400}, {0, -28}, degree_f {11}),
+                                                     key(ms {400}, {0, -28}, degree_f {80}),
+                                                     key(ms {400}, {0, -28}, degree_f {6}),
+                                                 }},
+        {.Name = "hand_r", .Parent = "lower_r", .Track = {
+                                                    key(ms {600}, {0, -20}, degree_f {34}),
+                                                    key(ms {600}, {0, -20}, degree_f {-23}),
+                                                    key(ms {600}, {0, -20}, degree_f {23}),
+                                                    key(ms {600}, {0, -20}, degree_f {-34}),
+                                                }},
+        {.Name = "thigh_l", .Parent = "root", .Track = {
+                                                  key(ms {300}, {-15, 0}, degree_f {0}),
+                                                  key(ms {300}, {-15, 0}, degree_f {-46}),
+                                                  key(ms {600}, {-15, 0}, degree_f {6}),
+                                                  key(ms {600}, {-15, 0}, degree_f {-34}),
+                                                  key(ms {600}, {-15, 0}, degree_f {6}),
+                                              }},
+        {.Name = "shin_l", .Parent = "thigh_l", .Track = {
+                                                    key(ms {300}, {0, 28}, degree_f {6}),
+                                                    key(ms {300}, {0, 28}, degree_f {80}),
+                                                    key(ms {600}, {0, 28}, degree_f {6}),
+                                                    key(ms {600}, {0, 28}, degree_f {69}),
+                                                    key(ms {600}, {0, 28}, degree_f {6}),
+                                                }},
+        {.Name = "foot_l", .Parent = "shin_l", .Track = {
+                                                   key(ms {300}, {0, 24}, degree_f {0}),
+                                                   key(ms {300}, {0, 24}, degree_f {-29}),
+                                                   key(ms {600}, {0, 24}, degree_f {11}),
+                                                   key(ms {600}, {0, 24}, degree_f {-17}),
+                                                   key(ms {600}, {0, 24}, degree_f {0}),
+                                               }},
+        {.Name = "thigh_r", .Parent = "root", .Track = {
+                                                  key(ms {600}, {15, 0}, degree_f {6}),
+                                                  key(ms {600}, {15, 0}, degree_f {-34}),
+                                                  key(ms {300}, {15, 0}, degree_f {0}),
+                                                  key(ms {300}, {15, 0}, degree_f {-46}),
+                                                  key(ms {600}, {15, 0}, degree_f {6}),
+                                              }},
+        {.Name = "shin_r", .Parent = "thigh_r", .Track = {
+                                                    key(ms {600}, {0, 28}, degree_f {6}),
+                                                    key(ms {600}, {0, 28}, degree_f {69}),
+                                                    key(ms {300}, {0, 28}, degree_f {6}),
+                                                    key(ms {300}, {0, 28}, degree_f {80}),
+                                                    key(ms {600}, {0, 28}, degree_f {6}),
+                                                }},
+        {.Name = "foot_r", .Parent = "shin_r", .Track = {
+                                                   key(ms {600}, {0, 24}, degree_f {11}),
+                                                   key(ms {600}, {0, 24}, degree_f {-17}),
+                                                   key(ms {300}, {0, 24}, degree_f {0}),
+                                                   key(ms {300}, {0, 24}, degree_f {-29}),
+                                                   key(ms {600}, {0, 24}, degree_f {11}),
+                                               }},
     };
 
-    skeletal_animation const ani {bones, tracks};
+    skeletal_animation const ani {bones};
     create_shapes(ani.bone_count());
 
     _anim = std::make_shared<skeletal_animation_tween>(ani.duration(), ani);
-    _anim->Value.Changed.connect([&](std::vector<transform> const& pose) {
+    _anim->Value.Changed.connect([&](skeletal_animation::pose const& pose) {
         update_shapes(pose);
     });
     _anim->start(playback_mode::Looped);

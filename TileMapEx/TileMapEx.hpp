@@ -39,5 +39,5 @@ private:
 
     basic_cam _cam;
 
-    std::shared_ptr<frame_animation_tween> _tween;
+    std::shared_ptr<sprite_animation_tween> _tween;
 };
