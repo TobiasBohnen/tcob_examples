@@ -11,12 +11,12 @@ class pathfinding_form : public form<dock_layout> {
 public:
     pathfinding_form(rect_i const& bounds);
 
-    signal<> OnRegenerate;
-    signal<> OnSmooth;
-    signal<> OnToggleWall;
-    signal<> OnDStarMove;
-    signal<> OnMapChanged;
-    signal<> OnAlgoChanged;
+    signal<void, pathfinding_form> OnRegenerate;
+    signal<void, pathfinding_form> OnSmooth;
+    signal<void, pathfinding_form> OnToggleWall;
+    signal<void, pathfinding_form> OnDStarMove;
+    signal<void, pathfinding_form> OnMapChanged;
+    signal<void, pathfinding_form> OnAlgoChanged;
 
     auto map_mode_name() const -> string;
     auto algo_mode_name() const -> string;

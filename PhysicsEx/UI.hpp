@@ -39,8 +39,8 @@ public:
 
     bool DebugMode {false};
 
-    signal<> CreateObstacles;
-    signal<> ClearObjects;
+    signal<void, physics_form> CreateObstacles;
+    signal<void, physics_form> ClearObjects;
 
 private:
     void gen_styles();

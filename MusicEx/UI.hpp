@@ -14,7 +14,7 @@ class crtl_form : public form<dock_layout> {
 public:
     crtl_form(window& window);
 
-    signal<string const> Play;
+    signal<string const, crtl_form> Play;
 
 private:
     void gen_styles();

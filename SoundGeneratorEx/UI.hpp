@@ -34,7 +34,7 @@ public:
 
     canvas_widget* Canvas {nullptr};
 
-    signal<> NewWave;
+    signal<void, generator_form> NewWave;
 
     void set_values(sound_wave const& wave);
     void get_values(sound_wave& wave);

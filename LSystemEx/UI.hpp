@@ -20,8 +20,8 @@ class lsystem_form : public form<dock_layout> {
 public:
     lsystem_form(rect_i const& bounds);
 
-    signal<> Start;
-    auto     get_settings() const -> settings;
+    signal<void, lsystem_form> Start;
+    auto                       get_settings() const -> settings;
 
 private:
     void gen_styles();
