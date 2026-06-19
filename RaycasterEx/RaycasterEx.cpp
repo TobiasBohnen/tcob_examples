@@ -17,6 +17,19 @@ RaycasterEx::RaycasterEx(game& game)
 
     _texture->resize(_cache->screen_size(), 1, texture::format::RGBA8);
     _texture->Filtering = texture::filtering::Linear;
+
+    _screenWidth  = _texture->info().Size.Width;
+    _screenHeight = _texture->info().Size.Height;
+    _texWidth     = _cache->tex_size().Width;
+    _texHeight    = _cache->tex_size().Height;
+    _texBpp       = _cache->tex_bpp();
+
+    if (static_cast<isize>(_rowDist.size()) != _screenHeight) {
+        _rowDist.resize(_screenHeight);
+    }
+    for (i32 y {0}; y < _screenHeight; y++) {
+        _rowDist[y] = _screenHeight / ((2.0 * y) - _screenHeight);
+    }
 }
 
 RaycasterEx::~RaycasterEx() = default;
@@ -93,24 +106,20 @@ void RaycasterEx::on_update(milliseconds deltaTime)
 
 void RaycasterEx::draw()
 {
-    auto const [w, h] {_texture->info().Size};
     locate_service<task_manager>().run_parallel(
         [&](par_task const& ctx) {
             for (isize x {ctx.Start}; x < ctx.End; x++) {
-                cast(static_cast<i32>(x), w, h);
+                cast(static_cast<i32>(x));
             }
         },
-        w);
+        _screenWidth);
 }
 
-void RaycasterEx::cast(i32 x, i32 w, i32 h)
+void RaycasterEx::cast(i32 x)
 {
-    auto const [texWidth, texHeight] {_cache->tex_size()};
-    auto const texBpp {_cache->tex_bpp()};
-
     // WALL CASTING
     // calculate ray position and direction
-    f64 const     cameraX {(2.0 * x / w) - 1.0}; // x-coordinate in camera space
+    f64 const     cameraX {(2.0 * x / _screenWidth) - 1.0}; // x-coordinate in camera space
     point_d const rayDir {_dir + (_plane * cameraX)};
 
     // which box of the map we're in
@@ -165,11 +174,11 @@ void RaycasterEx::cast(i32 x, i32 w, i32 h)
     f64 const perpWallDist {!side ? sideDist.X - deltaDist.X : sideDist.Y - deltaDist.Y};
 
     // Calculate height of line to draw on screen
-    i32 const lineHeight {static_cast<i32>(h / perpWallDist)};
+    i32 const lineHeight {static_cast<i32>(_screenHeight / perpWallDist)};
 
     // calculate lowest and highest pixel to fill in current stripe
-    i32 const drawStart {std::max((-lineHeight / 2) + (h / 2), 0)};
-    i32       drawEnd {std::min((lineHeight / 2) + (h / 2), h - 1)};
+    i32 const drawStart {std::max((-lineHeight / 2) + (_screenHeight / 2), 0)};
+    i32       drawEnd {std::min((lineHeight / 2) + (_screenHeight / 2), _screenHeight - 1)};
 
     // calculate value of wallX
     f64 wallX {!side ? _pos.Y + (perpWallDist * rayDir.Y) : _pos.X + (perpWallDist * rayDir.X)}; // where exactly the wall was hit
@@ -180,20 +189,20 @@ void RaycasterEx::cast(i32 x, i32 w, i32 h)
         auto const* tex {_cache->texture(texNum)};
 
         // x coordinate on the texture
-        i32 texX {static_cast<i32>(wallX * static_cast<f64>(texWidth))};
+        i32 texX {static_cast<i32>(wallX * static_cast<f64>(_texWidth))};
         if ((!side && rayDir.X > 0) || (side && rayDir.Y < 0)) {
-            texX = texWidth - texX - 1;
+            texX = _texWidth - texX - 1;
         }
 
         // How much to increase the texture coordinate per screen pixel
-        f64 const texStep {1.0 * texHeight / lineHeight};
+        f64 const texStep {1.0 * _texHeight / lineHeight};
         // Starting texture coordinate
-        f64       texPos {(drawStart - (h / 2) + (lineHeight / 2)) * texStep};
+        f64       texPos {(drawStart - (_screenHeight / 2) + (lineHeight / 2)) * texStep};
         for (i32 y {drawStart}; y < drawEnd; y++) {
             // Cast the texture coordinate to integer, and mask with (cache::TexSize.Height - 1) in case of overflow
-            i32 const texY {static_cast<i32>(texPos) & (texHeight - 1)};
+            i32 const texY {static_cast<i32>(texPos) & (_texHeight - 1)};
             texPos += texStep;
-            _cache->copy(x + ((h - y - 1) * w), tex, (texX + (texY * texWidth)) * texBpp);
+            _cache->copy(x + ((_screenHeight - y - 1) * _screenWidth), tex, (texX + (texY * _texWidth)) * _texBpp);
         }
     }
 
@@ -216,24 +225,24 @@ void RaycasterEx::cast(i32 x, i32 w, i32 h)
     }
 
     // draw the floor from drawEnd to the bottom of the screen
-    for (i32 y {drawEnd}; y < h; y++) {
-        f64 const currentDist {h / ((2.0 * y) - h)};
-        f64 const weight {std::min(currentDist / perpWallDist, 1.0)};
+    f64 const   invPerpWallDist {1.0 / perpWallDist};
+    auto const* floorTex {_cache->texture(floorTexture)};
+    auto const* ceilTex {_cache->texture(ceilingTexture)};
+    for (i32 y {drawEnd}; y < _screenHeight; y++) {
+        f64 const weight {std::min(_rowDist[y] * invPerpWallDist, 1.0)};
 
         point_d const currentFloor {(weight * floorWall.X) + ((1.0 - weight) * _pos.X), (weight * floorWall.Y) + ((1.0 - weight) * _pos.Y)};
 
-        assert(h - y - 1 >= 0);
-        // floor
-        auto const* floorTex {_cache->texture(floorTexture)};
-        i32 const   floorTexX {static_cast<i32>(currentFloor.X * texWidth) % texWidth};
-        i32 const   floorTexY {static_cast<i32>(currentFloor.Y * texHeight) % texHeight};
-        _cache->copy(x + ((h - y - 1) * w), floorTex, (floorTexX + (floorTexY * texWidth)) * texBpp);
+        assert(_screenHeight - y - 1 >= 0);
 
-        // ceil
-        auto const* ceilTex {_cache->texture(ceilingTexture)};
-        i32 const   ceilTexX {static_cast<i32>(currentFloor.X * texWidth) % texWidth};
-        i32 const   ceilTexY {static_cast<i32>(currentFloor.Y * texHeight) % texHeight};
-        _cache->copy(x + (y * w), ceilTex, (ceilTexX + (ceilTexY * texWidth)) * texBpp);
+        // floor and ceiling sample the same (x, y) texel position, just
+        // from different textures -- compute the texcoords once.
+        i32 const texelX {static_cast<i32>(currentFloor.X * _texWidth) & (_texWidth - 1)};
+        i32 const texelY {static_cast<i32>(currentFloor.Y * _texHeight) & (_texHeight - 1)};
+        i32 const texelOffset {(texelX + (texelY * _texWidth)) * _texBpp};
+
+        _cache->copy(x + ((_screenHeight - y - 1) * _screenWidth), floorTex, texelOffset);
+        _cache->copy(x + (y * _screenWidth), ceilTex, texelOffset);
     }
 }
 
