@@ -7,7 +7,7 @@
 
 #include <algorithm>
 
-using gfx_cache = cache<{800, 600}, {256, 256}>;
+using gfx_cache = cache<{400, 300}, {256, 256}>;
 
 RaycasterEx::RaycasterEx(game& game)
     : scene {game}
@@ -24,10 +24,12 @@ RaycasterEx::RaycasterEx(game& game)
     _texHeight    = _cache->tex_size().Height;
     _texBpp       = _cache->tex_bpp();
 
-    if (static_cast<isize>(_rowDist.size()) != _screenHeight) {
-        _rowDist.resize(_screenHeight);
-    }
+    _rowDist.resize(_screenHeight);
     for (i32 y {0}; y < _screenHeight; y++) {
+        if (2.0 * y == _screenHeight) {
+            _rowDist[y] = std::numeric_limits<f64>::infinity();
+            continue;
+        }
         _rowDist[y] = _screenHeight / ((2.0 * y) - _screenHeight);
     }
 }
@@ -175,7 +177,7 @@ void RaycasterEx::cast(i32 x)
 
     // calculate lowest and highest pixel to fill in current stripe
     i32 const drawStart {std::max((-lineHeight / 2) + (_screenHeight / 2), 0)};
-    i32       drawEnd {std::min((lineHeight / 2) + (_screenHeight / 2), _screenHeight - 1)};
+    i32 const drawEnd {std::min((lineHeight / 2) + (_screenHeight / 2), _screenHeight - 1)};
 
     // calculate value of wallX
     f64 wallX {!side ? _pos.Y + (perpWallDist * rayDir.Y) : _pos.X + (perpWallDist * rayDir.X)}; // where exactly the wall was hit
@@ -230,10 +232,6 @@ void RaycasterEx::cast(i32 x)
 
         point_d const currentFloor {(weight * floorWall.X) + ((1.0 - weight) * _pos.X), (weight * floorWall.Y) + ((1.0 - weight) * _pos.Y)};
 
-        assert(_screenHeight - y - 1 >= 0);
-
-        // floor and ceiling sample the same (x, y) texel position, just
-        // from different textures -- compute the texcoords once.
         i32 const texelX {static_cast<i32>(currentFloor.X * _texWidth) & (_texWidth - 1)};
         i32 const texelY {static_cast<i32>(currentFloor.Y * _texHeight) & (_texHeight - 1)};
         i32 const texelOffset {(texelX + (texelY * _texWidth)) * _texBpp};
