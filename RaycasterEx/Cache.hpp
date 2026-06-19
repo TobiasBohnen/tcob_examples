@@ -15,7 +15,7 @@ class cache_base {
 public:
     virtual ~cache_base() = default;
 
-    auto virtual screen(i32 idx) -> u32*       = 0;
+    auto virtual screen() -> u32*              = 0;
     auto virtual screen_size() const -> size_i = 0;
 
     auto virtual texture(i32 idx) -> u8*    = 0;
@@ -48,9 +48,9 @@ public:
         loadTex(ceilingTexture, "res/ceiling.png");
     }
 
-    void copy(i32 dstIdx, u8 const* src, i32 srcIdx)
+    static void copy(u32* dst, u8 const* src, i32 srcIdx)
     {
-        set(screen(dstIdx), get(src, srcIdx), true);
+        set(dst, get(src, srcIdx), true);
     }
 
 private:
@@ -74,9 +74,9 @@ private:
 };
 
 template <size_i S, size_i T>
-class cache : public cache_base {
+class cache final : public cache_base {
 public:
-    auto screen(i32 idx) -> u32* override { return _screen.data() + idx; }
+    auto screen() -> u32* override { return _screen.data(); }
     auto screen_size() const -> size_i override { return S; }
 
     auto texture(i32 idx) -> u8* override { return _textures[idx].data(); }

@@ -65,9 +65,6 @@ static_grid<u8, mapWidth, mapHeight> worldMap {
 
 void RaycasterEx::on_start()
 {
-    auto& resMgr {library()};
-    auto* resGrp {resMgr.get_group("res")};
-
     _cache->load();
 }
 
@@ -100,7 +97,7 @@ void RaycasterEx::on_update(milliseconds deltaTime)
     if (_update) {
         draw();
         _update = false;
-        _texture->update_data(_cache->screen(0), 0);
+        _texture->update_data(_cache->screen(), 0);
     }
 }
 
@@ -183,7 +180,7 @@ void RaycasterEx::cast(i32 x)
     // calculate value of wallX
     f64 wallX {!side ? _pos.Y + (perpWallDist * rayDir.Y) : _pos.X + (perpWallDist * rayDir.X)}; // where exactly the wall was hit
     wallX -= std::floor(wallX);
-
+    u32* const screenBuf {_cache->screen()};
     {                                                                                            // texturing calculations
         i32 const   texNum {worldMap[map] - 1};                                                  // 1 subtracted from it so that texture 0 can be used!
         auto const* tex {_cache->texture(texNum)};
@@ -202,7 +199,7 @@ void RaycasterEx::cast(i32 x)
             // Cast the texture coordinate to integer, and mask with (cache::TexSize.Height - 1) in case of overflow
             i32 const texY {static_cast<i32>(texPos) & (_texHeight - 1)};
             texPos += texStep;
-            _cache->copy(x + ((_screenHeight - y - 1) * _screenWidth), tex, (texX + (texY * _texWidth)) * _texBpp);
+            cache_base::copy(screenBuf + x + ((_screenHeight - y - 1) * _screenWidth), tex, (texX + (texY * _texWidth)) * _texBpp);
         }
     }
 
@@ -241,8 +238,8 @@ void RaycasterEx::cast(i32 x)
         i32 const texelY {static_cast<i32>(currentFloor.Y * _texHeight) & (_texHeight - 1)};
         i32 const texelOffset {(texelX + (texelY * _texWidth)) * _texBpp};
 
-        _cache->copy(x + ((_screenHeight - y - 1) * _screenWidth), floorTex, texelOffset);
-        _cache->copy(x + (y * _screenWidth), ceilTex, texelOffset);
+        cache_base::copy(screenBuf + x + ((_screenHeight - y - 1) * _screenWidth), floorTex, texelOffset);
+        cache_base::copy(screenBuf + x + (y * _screenWidth), ceilTex, texelOffset);
     }
 }
 
