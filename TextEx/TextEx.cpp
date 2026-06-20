@@ -43,17 +43,17 @@ void TextEx::on_start()
         text0->Style  = text::style {.Color = colors::White, .Alignment = {}, .KerningEnabled = false, .FontStyle = {}, .FontSize = 40};
         text0->Bounds = {{420, 6}, {900, 1200}};
 
-        text0->create_effect(1, duration, effect::typing {});
-        text0->create_effect(2, duration, effect::fade_in {3});
-        text0->create_effect(3, duration, effect::fade_out {2});
-        text0->create_effect(4, duration, effect::blink {.Color0 = colors::Orange, .Color1 = colors::Teal, .Frequency = 5.f});
-        text0->create_effect(5, duration, effect::shake {.Intensity = 3.f, .RNG = rng {12345}});
-        text0->create_effect(6, duration, effect::wave {.Height = 15.f, .Amplitude = 4.f});
-        text0->create_effect(7, duration, effect::size {.WidthStart = 1.0f, .WidthEnd = 0.0f, .HeightStart = 1.0f, .HeightEnd = 0.0f, .Anchor = {.Horizontal = horizontal_alignment::Center, .Vertical = vertical_alignment::Middle}});
-        text0->create_effect(8, duration, effect::rotate {.Speed = 5.0f});
-        text0->create_effect(9, duration, effect::gradient {color_gradient {colors::White, colors::Green, colors::Black, colors::Orange}.colors()});
-        text0->create_effect(10, duration, effect::bounce {.Height = 24.f});
-        text0->create_effect(11, duration, effect::jitter {.Intensity = 2.f, .RNG = rng {67890}});
+        text0->create_effect(1, duration, effects::typing {});
+        text0->create_effect(2, duration, effects::fade_in {3});
+        text0->create_effect(3, duration, effects::fade_out {2});
+        text0->create_effect(4, duration, effects::blink {.Color0 = colors::Orange, .Color1 = colors::Teal, .Frequency = 5.f});
+        text0->create_effect(5, duration, effects::shake {.Intensity = 3.f, .RNG = rng {12345}});
+        text0->create_effect(6, duration, effects::wave {.Height = 15.f, .Amplitude = 4.f});
+        text0->create_effect(7, duration, effects::size {.WidthStart = 1.0f, .WidthEnd = 0.0f, .HeightStart = 1.0f, .HeightEnd = 0.0f, .Anchor = {.Horizontal = horizontal_alignment::Center, .Vertical = vertical_alignment::Middle}});
+        text0->create_effect(8, duration, effects::rotate {.Speed = 5.0f});
+        text0->create_effect(9, duration, effects::gradient {color_gradient {colors::White, colors::Green, colors::Black, colors::Orange}.colors()});
+        text0->create_effect(10, duration, effects::bounce {.Height = 24.f});
+        text0->create_effect(11, duration, effects::jitter {.Intensity = 2.f, .RNG = rng {67890}});
     }
 
     {
@@ -65,14 +65,14 @@ void TextEx::on_start()
         text0->Style  = text::style {.Color = colors::White, .Alignment = {}, .KerningEnabled = false, .FontStyle = {}, .FontSize = 32};
         text0->Bounds = {{30, 206}, {500, 1000}};
 
-        text0->create_effect(1, duration, effect::typing {}, effect::shake {.Intensity = 3.f, .RNG = rng {12345}})->Interval = 100ms;
+        text0->create_effect(1, duration, effects::typing {}, effects::shake {.Intensity = 3.f, .RNG = rng {12345}})->Interval = 100ms;
         text0->create_effect(2, duration,
-                             effect::blink {.Color0 = colors::Blue, .Color1 = colors::LightBlue, .Frequency = 5.f},
-                             effect::wave {.Height = 15.f, .Amplitude = 10.f});
+                             effects::blink {.Color0 = colors::Blue, .Color1 = colors::LightBlue, .Frequency = 5.f},
+                             effects::wave {.Height = 15.f, .Amplitude = 10.f});
         text0->create_effect(3, duration,
-                             effect::size {.WidthStart = 0.0f, .WidthEnd = 1.0f, .HeightStart = 0.0f, .HeightEnd = 1.0f, .Anchor = {.Horizontal = horizontal_alignment::Left, .Vertical = vertical_alignment::Middle}},
-                             effect::wave {.Height = 15.f, .Amplitude = 10.f});
-        text0->create_effect(4, duration, effect::rotate {2.0f}, effect::wave {.Height = 30.f, .Amplitude = 10.f});
+                             effects::size {.WidthStart = 0.0f, .WidthEnd = 1.0f, .HeightStart = 0.0f, .HeightEnd = 1.0f, .Anchor = {.Horizontal = horizontal_alignment::Left, .Vertical = vertical_alignment::Middle}},
+                             effects::wave {.Height = 15.f, .Amplitude = 10.f});
+        text0->create_effect(4, duration, effects::rotate {2.0f}, effects::wave {.Height = 30.f, .Amplitude = 10.f});
     }
 
     {
@@ -80,8 +80,8 @@ void TextEx::on_start()
         text0->Text   = "Ready{EFFECT:1} set{WAIT:2500}{EFFECT:2} go!{WAIT:LONG}{/EFFECT} move{WAIT:SHORT} now!";
         text0->Style  = text::style {.Color = colors::White, .Alignment = {}, .KerningEnabled = false, .FontStyle = {}, .FontSize = 32};
         text0->Bounds = {{420, 500}, {500, 1000}};
-        text0->create_effect(1, 2500ms, effect::typing {});
-        text0->create_effect(2, 1500ms, effect::typing {});
+        text0->create_effect(1, 2500ms, effects::typing {});
+        text0->create_effect(2, 1500ms, effects::typing {});
     }
 }
 
