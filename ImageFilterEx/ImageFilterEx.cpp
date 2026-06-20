@@ -21,7 +21,7 @@ ImageFilterEx::ImageFilterEx(game& game)
     regs["normal"] = {{0, 0, 1, 1}, 0};
 
     {
-        edge_detect_filter filter;
+        filters::edge_detect filter;
         filter.IncludeAlpha = true;
         image filterImg {filter(img0)};
         _tex0->update_data(filterImg.data(), 1);
@@ -29,21 +29,21 @@ ImageFilterEx::ImageFilterEx(game& game)
     }
 
     {
-        blur_filter filter;
-        image       filterImg {filter(img0)};
+        filters::blur filter;
+        image         filterImg {filter(img0)};
         _tex0->update_data(filterImg.data(), 2);
         regs["blur"] = {{0, 0, 1, 1}, 2};
     }
 
     {
-        emboss_filter filter;
-        image         filterImg {filter(img0)};
+        filters::emboss filter;
+        image           filterImg {filter(img0)};
         _tex0->update_data(filterImg.data(), 3);
         regs["emboss"] = {{0, 0, 1, 1}, 3};
     }
 
     {
-        edge_enhance_filter filter;
+        filters::edge_enhance filter;
         filter.IncludeAlpha = true;
         image filterImg {filter(img0)};
         _tex0->update_data(filterImg.data(), 4);
@@ -51,15 +51,15 @@ ImageFilterEx::ImageFilterEx(game& game)
     }
 
     {
-        motion_blur_filter filter;
-        image              filterImg {filter(img0)};
+        filters::motion_blur filter;
+        image                filterImg {filter(img0)};
         _tex0->update_data(filterImg.data(), 5);
         regs["motionblur"] = {{0, 0, 1, 1}, 5};
     }
 
     {
-        sharpen_filter filter;
-        image          filterImg {filter(img0)};
+        filters::sharpen filter;
+        image            filterImg {filter(img0)};
         _tex0->update_data(filterImg.data(), 6);
         regs["sharpen"] = {{0, 0, 1, 1}, 6};
     }
