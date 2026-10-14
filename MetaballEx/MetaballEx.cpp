@@ -8,6 +8,51 @@
 constexpr i32    scale {2};
 constexpr size_f msize {800, 600};
 
+////////////////////////////////////////////////////////////
+
+metaball_image::metaball_image(size_i gridSize, color_gradient const& gradient)
+    : metaball {gridSize}
+    , _colors {gradient.colors(false)}
+    , _image {image::CreateEmpty(gridSize, image::format::RGBA)}
+{
+}
+
+auto metaball_image::image() -> gfx::image const&
+{
+    if (is_dirty()) { update_image(); }
+    return _image;
+}
+
+void metaball_image::update_image()
+{
+    mark_clean();
+
+    auto const& imgInfo {_image.info()};
+    i32 const   width {imgInfo.Size.Width};
+    i32 const   height {imgInfo.Size.Height};
+
+    _image.clear();
+
+    locate_service<task_manager>().run_parallel(
+        [&](par_task const& ctx) {
+            for (isize pixIdx {ctx.Start}; pixIdx < ctx.End; ++pixIdx) {
+                isize const x {pixIdx % width};
+                isize const y {pixIdx / width};
+                f32 const   fieldValue {calculate_field(static_cast<f32>(x), static_cast<f32>(y))};
+
+                if (fieldValue >= 1) {
+                    f32 const   t {std::clamp(1.0f - (1.0f / fieldValue), 0.0f, 1.0f)};
+                    u32 const   gradientIdx {static_cast<u32>(t * (color_gradient::Size - 1))};
+                    color const pixelColor {_colors[gradientIdx]};
+                    _image.set_pixel(pixIdx, pixelColor);
+                }
+            }
+        },
+        width * height);
+}
+
+////////////////////////////////////////////////////////////
+
 MetaballEx::MetaballEx(game& game)
     : scene {game}
     , _metaball {size_i {msize / scale},

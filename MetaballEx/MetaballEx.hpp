@@ -6,6 +6,19 @@
 #pragma once
 #include "../_common/Common.hpp"
 
+class metaball_image : public metaball {
+public:
+    metaball_image(size_i gridSize, color_gradient const& gradient);
+
+    auto image() -> image const&;
+
+private:
+    void update_image();
+
+    std::array<color, 256> _colors;
+    gfx::image             _image;
+};
+
 class MetaballEx : public scene {
 public:
     MetaballEx(game& game);
