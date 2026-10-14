@@ -17,6 +17,7 @@ using namespace tcob::physics;
 using namespace tcob::audio;
 using namespace tcob::data;
 using namespace tcob::input;
+using namespace tcob::procgen;
 
 ////////////////////////////////////////////////////////////
 
