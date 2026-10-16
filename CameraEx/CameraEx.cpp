@@ -36,11 +36,11 @@ void CameraEx::on_key_down(keyboard::event const& ev)
         parent().pop_current_scene();
         break;
 
-    case scan_code::Q:     cam.zoom_by({0.9f, 0.9f}); break;
-    case scan_code::E:     cam.zoom_by({1.1f, 1.1f}); break;
+    case scan_code::Q:     _controller->zoom_by({0.9f, 0.9f}); break;
+    case scan_code::E:     _controller->zoom_by({1.1f, 1.1f}); break;
 
-    case scan_code::LEFT:  cam.rotate_by(degree_f {-5.0f}); break;
-    case scan_code::RIGHT: cam.rotate_by(degree_f {5.0f}); break;
+    case scan_code::LEFT:  _controller->rotate_by(degree_f {-5.0f}); break;
+    case scan_code::RIGHT: _controller->rotate_by(degree_f {5.0f}); break;
 
     case scan_code::SPACE:
         _controller->add_trauma(0.6f);
